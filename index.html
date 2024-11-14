@@ -87,6 +87,7 @@
             justify-content: center;
             align-items: center;
             font-family: 'Apple SD Gothic Neo', Arial, sans-serif;
+            user-select: none; /* 텍스트 선택 비활성화 */
         }
         
         img {
@@ -95,6 +96,8 @@
             width: auto;
             height: auto;
             cursor: pointer;
+            user-select: none; /* 이미지 선택 비활성화 */
+            -webkit-user-drag: none; /* 이미지 드래그 비활성화 */
         }
     </style>
 </head>
