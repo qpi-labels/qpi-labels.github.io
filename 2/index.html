@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="shortcut icon" type="image/x-icon" href="logo.ico">
+    <meta property="og:url" content="">
+    <meta property="og:title" content="qpi">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="image.png">
+    <meta property="og:description" content="QPI">
+    <title>QPI</title>
+    <style>
+        @font-face {
+            font-family: 'Apple SD Gothic Neo';
+            font-weight: 100;
+            font-style: normal;
+            font-display: swap;
+            src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Thin.woff2') format('woff2'),
+                 url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Thin.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: 'Apple SD Gothic Neo';
+            font-weight: 200;
+            font-style: normal;
+            font-display: swap;
+            src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-ExtraLight.woff2') format('woff2'),
+                 url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-ExtraLight.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: 'Apple SD Gothic Neo';
+            font-weight: 300;
+            font-style: normal;
+            font-display: swap;
+            src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Light.woff2') format('woff2'),
+                 url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Light.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: 'Apple SD Gothic Neo';
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+            src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Regular.woff2') format('woff2'),
+                 url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Regular.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: 'Apple SD Gothic Neo';
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+            src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Medium.woff2') format('woff2'),
+                 url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Medium.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: 'Apple SD Gothic Neo';
+            font-weight: 600;
+            font-style: normal;
+            font-display: swap;
+            src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-SemiBold.woff2') format('woff2'),
+                 url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-SemiBold.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: 'Apple SD Gothic Neo';
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+            src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Bold.woff2') format('woff2'),
+                 url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Bold.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: 'Apple SD Gothic Neo';
+            font-weight: 800;
+            font-style: normal;
+            font-display: swap;
+            src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-ExtraBold.woff2') format('woff2'),
+                 url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-ExtraBold.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: 'Apple SD Gothic Neo';
+            font-weight: 900;
+            font-style: normal;
+            font-display: swap;
+            src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Black.woff2') format('woff2'),
+                 url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Black.ttf') format('truetype');
+        }
+
+        body {
+        background: linear-gradient(135deg, #d3d7ff, #de97ff);
+        color: #ffffff;
+        height: 100vh;
+        margin: 0;
+        display: flex;
+        flex-direction: column; /* 이 줄을 추가하세요 */
+        justify-content: center;
+        align-items: center;
+        font-family: 'Apple SD Gothic Neo';
+        user-select: text;
+        -webkit-user-select: text;
+        -ms-user-select: text;
+        -moz-user-select: text;
+        }
+        
+        img {
+            max-width: 25vw;
+            max-height: 25vh;
+            width: auto;
+            height: auto;
+            cursor: pointer;
+        }
+        p {
+            margin-top: 2px; /* 위쪽 여백 */
+            margin-bottom: 2px; /* 아래쪽 여백 */
+        }
+        p {
+        line-height: 1; /* 텍스트 줄 간격을 1.2배로 설정 */
+        }
+        
+        .button {
+            background-color: #4F4F4F; /* Apple-like blue */
+            color: white;
+            padding: 20px 30px; /* Increased padding for better appearance */
+            font-size: large;
+            border: none;
+            border-radius: 50px; /* More rounded corners */
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+            margin: 20px 0; /* Margin to space the button out */
+        }
+
+        .button-container {
+        display: flex; /* Flexbox 사용 */
+        justify-content: center; /* 버튼들을 중앙에 정렬 */
+        gap: 20px; /* 버튼 사이 간격을 20px로 설정 */
+        }
+    </style>
+</head>
+<body>
+    <p style="font-weight: 650; font-size: xxx-large;">저희가 뭘 하냐면요...</p>
+    <p style="font-weight: 650; font-size: xxx-large;"></p>
+    <br><br>
+    <div class="button-container">
+        <a href="https://qpi-labels.github.io/qpi/page#1" class="button" target="_blank">< 이전으로</a>   
+        <a href="https://qpi-labels.github.io/qpi/page#3" class="button" target="_blank">다음으로 ></a>
+    </div>
+</body>
+</html>
