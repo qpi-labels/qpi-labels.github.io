@@ -1,113 +1,218 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QPI</title>
+    <title>쿼터파이</title>
+    <link rel="shortcut icon" type="image/x-icon" href="logo.ico">
+    <meta property="og:url" content="https://qpi-labels.github.io/main/">
+    <meta property="og:title" content="쿼터파이">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="og.png">
+    <meta property="og:description" content="만족도 1년연속 1위! 쿼터파이">
     <style>
-        @font-face {
-            font-family: 'Apple SD Gothic Neo';
-            font-weight: 100;
-            font-style: normal;
-            font-display: swap;
-            src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Thin.woff2') format('woff2'),
-                 url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Thin.ttf') format('truetype');
-        }
-        @font-face {
-            font-family: 'Apple SD Gothic Neo';
-            font-weight: 200;
-            font-style: normal;
-            font-display: swap;
-            src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-ExtraLight.woff2') format('woff2'),
-                 url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-ExtraLight.ttf') format('truetype');
-        }
-        @font-face {
-            font-family: 'Apple SD Gothic Neo';
-            font-weight: 300;
-            font-style: normal;
-            font-display: swap;
-            src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Light.woff2') format('woff2'),
-                 url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Light.ttf') format('truetype');
-        }
-        @font-face {
-            font-family: 'Apple SD Gothic Neo';
-            font-weight: 400;
-            font-style: normal;
-            font-display: swap;
-            src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Regular.woff2') format('woff2'),
-                 url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Regular.ttf') format('truetype');
-        }
-        @font-face {
-            font-family: 'Apple SD Gothic Neo';
-            font-weight: 500;
-            font-style: normal;
-            font-display: swap;
-            src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Medium.woff2') format('woff2'),
-                 url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Medium.ttf') format('truetype');
-        }
-        @font-face {
+    @font-face {
+        font-family: 'Apple SD Gothic Neo';
+        font-weight: 100;
+        font-style: normal;
+        font-display: swap;
+        src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Thin.woff2') format('woff2'),
+             url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Thin.ttf') format('truetype');
+    }
+    @font-face {
+        font-family: 'Apple SD Gothic Neo';
+        font-weight: 200;
+        font-style: normal;
+        font-display: swap;
+        src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-ExtraLight.woff2') format('woff2'),
+             url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-ExtraLight.ttf') format('truetype');
+    }
+    @font-face {
+        font-family: 'Apple SD Gothic Neo';
+        font-weight: 300;
+        font-style: normal;
+        font-display: swap;
+        src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Light.woff2') format('woff2'),
+             url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Light.ttf') format('truetype');
+    }
+    @font-face {
+        font-family: 'Apple SD Gothic Neo';
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+        src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Regular.woff2') format('woff2'),
+             url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Regular.ttf') format('truetype');
+    }
+    @font-face {
+        font-family: 'Apple SD Gothic Neo';
+        font-weight: 500;
+        font-style: normal;
+        font-display: swap;
+        src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Medium.woff2') format('woff2'),
+             url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Medium.ttf') format('truetype');
+    }
+    @font-face {
+        font-family: 'Apple SD Gothic Neo';
+        font-weight: 600;
+        font-style: normal;
+        font-display: swap;
+        src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-SemiBold.woff2') format('woff2'),
+             url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-SemiBold.ttf') format('truetype');
+    }
+    @font-face {
+        font-family: 'Apple SD Gothic Neo';
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+        src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Bold.woff2') format('woff2'),
+             url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Bold.ttf') format('truetype');
+    }
+    @font-face {
+        font-family: 'Apple SD Gothic Neo';
+        font-weight: 800;
+        font-style: normal;
+        font-display: swap;
+        src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-ExtraBold.woff2') format('woff2'),
+             url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-ExtraBold.ttf') format('truetype');
+    }
+    @font-face {
+        font-family: 'Apple SD Gothic Neo';
+        font-weight: 900;
+        font-style: normal;
+        font-display: swap;
+        src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Black.woff2') format('woff2'),
+             url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Black.ttf') format('truetype');
+    }
+    </style>
+    <style>
+        body {
+            background-color: white;
+            color: black;
             font-family: 'Apple SD Gothic Neo';
             font-weight: 600;
-            font-style: normal;
-            font-display: swap;
-            src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-SemiBold.woff2') format('woff2'),
-                 url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-SemiBold.ttf') format('truetype');
-        }
-        @font-face {
-            font-family: 'Apple SD Gothic Neo';
-            font-weight: 700;
-            font-style: normal;
-            font-display: swap;
-            src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Bold.woff2') format('woff2'),
-                 url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Bold.ttf') format('truetype');
-        }
-        @font-face {
-            font-family: 'Apple SD Gothic Neo';
-            font-weight: 800;
-            font-style: normal;
-            font-display: swap;
-            src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-ExtraBold.woff2') format('woff2'),
-                 url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-ExtraBold.ttf') format('truetype');
-        }
-        @font-face {
-            font-family: 'Apple SD Gothic Neo';
-            font-weight: 900;
-            font-style: normal;
-            font-display: swap;
-            src: url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Black.woff2') format('woff2'),
-                 url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo-Black.ttf') format('truetype');
-        }
-
-        body {
-            /* 선형 그라데이션 (linear gradient) 적용 */
-            background: linear-gradient(135deg, #d3d7ff, #de97ff);
-            height: 100vh;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Apple SD Gothic Neo', Arial, sans-serif;
-            user-select: none; /* 텍스트 선택 비활성화 */
-            -webkit-user-select: none;
-            -ms-user-select: none;
-            -moz-user-select: none;
+            text-align: center;
+            user-select: none;
+            -webkit-user-select: none; 
+            -moz-user-select: none;    
+            -ms-user-select: none;     
         }
         
         img {
-            max-width: 25vw;
-            max-height: 25vh;
-            width: auto;
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
             height: auto;
-            cursor: pointer;
-            user-select: none; /* 이미지 선택 비활성화 */
-            -webkit-user-drag: none; /* 이미지 드래그 비활성화 */
-            pointer-events: none; /* 이미지 상호작용 비활성화 */
         }
     </style>
+
+    <script>
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+        });
+    </script>
 </head>
+
 <body>
-    <a href="https://qpi-labels.github.io/qpi/1">
-        <img src="QPIlogo.png" alt="logo">
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+    <img src="logo.png" alt="QPILABELS" width="1000" height="300">
+
+    <br><br><br><br><br><br><br><br><br>
+
+    <p style="font-size: xxx-large; margin-bottom: 0; font-weight: 300;">쿼터파이</p>
+
+    <br><br><br>
+
+    <p style="font-size: xx-large; margin-bottom: 0">쿼터파이 회원용 앱</p>
+    <p style="margin-top: 0">이제 ANDROID에서 쿼터파이를 만나보세요</p>
+    <a href="https://qpi-labels.github.io/Download/" target="_blank">
+        <img src="https://ifh.cc/g/LaDRdB.png" alt="GotoGISS" width="120" height="30">
     </a>
+
+    <br><br><br><br><br><br>
+
+    <br><br><br>
+
+    <p style="font-size: xx-large; margin-bottom: 0">쿼터파이 첫 참여형 프로젝트</p>
+    <p style="margin-top: 0">-NOFLATEARTH-</p>
+    <a href="https://qpi-labels.github.io/NFE/" target="_blank">
+        <img src="https://ifh.cc/g/LaDRdB.png" alt="GotoGISS" width="120" height="30">
+    </a>
+
+    <br><br><br><br><br><br><br><br><br>
+
+    <p style="font-size: xxx-large; margin-bottom: 0">신규</p>
+
+    <br><br><br>
+
+    <p style="font-size: xx-large; margin-bottom: 0">QPI-CNSH (beta)</p>
+    <p style="margin-top: 0">충남과학고를 가장 잘 아는 GPTs</p>
+    <a href="https://qpi-labels.github.io/GPTs/" target="_blank">
+        <img src="https://ifh.cc/g/LaDRdB.png" alt="GotoGISS" width="120" height="30">
+    </a>
+
+    <br><br><br><br><br><br><br><br><br>
+
+    <p style="font-size: xxx-large; margin-bottom: 0">프로모션</p>
+
+    <br><br><br>
+
+    <p style="font-size: xx-large; margin-bottom: 0">QPI 광고판</p>
+    <p style="margin-top: 0">work in progress</p>
+    <a href="https://qpi-labels.github.io/ads/" target="_blank">
+        <img src="https://ifh.cc/g/LaDRdB.png" alt="GotoGISS" width="120" height="30">
+    </a>
+
+    <br><br><br><br><br><br><br><br><br>
+
+    <p style="font-size: xxx-large; margin-bottom: 0">상상을 현실로</p>
+
+    <br><br><br>
+
+    <p style="font-size: xx-large; margin-bottom: 0">구글부터 DBpia까지.</p>
+    <p style="margin-top: 0">세상에서 가장 빠른 학술 검색</p>
+    <a href="https://Jaewon0418.github.io/QISS" target="_blank">
+        <img src="https://ifh.cc/g/LaDRdB.png" alt="GotoGISS" width="120" height="30">
+    </a>
+
+    <br><br><br>
+
+    <p style="font-size: xx-large; margin-bottom: 0">세상의 모든 원소가 당신의 손 위에.</p>
+    <p style="margin-top: 0">주기율표를 쉽고 빠르게</p>
+    <a href="https://qpi-labels.github.io/qets/" target="_blank">
+        <img src="https://ifh.cc/g/LaDRdB.png" alt="GotoGISS" width="120" height="30">
+    </a>
+
+    <br><br><br>
+
+    <p style="font-size: xx-large; margin-bottom: 0">CNSH 플레이리스트</p>
+    <p style="margin-top: 0">Apple Music에서 충남과학고등학교를 느껴보세요</p>
+    <a href="https://qpi-labels.github.io/Download/" target="_blank">
+        <img src="https://ifh.cc/g/LaDRdB.png" alt="GotoGISS" width="120" height="30">
+    </a>
+
+    <br><br><br><br><br><br><br><br><br>
+
+    <p style="font-size: xxx-large; margin-bottom: 0">문제해결</p>
+
+    <br><br><br>
+
+    <p style="font-size: xx-large; margin-bottom: 0">문제가 발생했나요?</p>
+    <p style="margin-top: 0">문의 페이지 바로가기</p>
+    <a href="https://qpi-labels.github.io/help/" target="_blank">
+        <img src="https://ifh.cc/g/LaDRdB.png" alt="GotoGISS" width="120" height="30">
+    </a>
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+    <p>work in progress</p>
+    <img src="https://ifh.cc/g/VfmDvp.png" alt="empty" width="30" height="20">
+
+    <p>2024 Q-PI, All Rights Reserved.</p>
 </body>
 </html>
