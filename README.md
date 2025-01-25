@@ -12,7 +12,7 @@
     + ${\textsf{\color{rgb(142, 142, 147)}GRAY (142, 142, 147)}}$
     + ${\textsf{\color{rgb(0, 122, 255)}BLUE (0, 122, 255)}}$
       
-### Interface
+### Source Code
 + **button**
   ![hover](https://github.com/qpi-labels/qpi-labels.github.io/blob/cf5ccdca1aae841e1974f232eabb6522db81e396/image%20source/hover.gif)
   ```
