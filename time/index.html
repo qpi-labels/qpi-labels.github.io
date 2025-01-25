@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시간</title>
+    <script>
+        function getNaverTime() {
+            fetch('https://www.naver.com')
+                .then(response => response.text())
+                .then(html => {
+                    // HTML을 파싱하여 서버 시간을 추출하는 코드
+                    let parser = new DOMParser();
+                    let doc = parser.parseFromString(html, 'text/html');
+                    let dateElement = doc.querySelector('meta[name="date"]'); // 예시로 메타 태그에서 날짜 정보 가져옴
+                    if (dateElement) {
+                        let serverTime = dateElement.getAttribute('content');
+                        document.getElementById('time').innerText = "네이버 서버 시간: " + serverTime;
+                    } else {
+                        document.getElementById('time').innerText = "서버 시간 정보를 찾을 수 없습니다.";
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('time').innerText = "서버 시간을 가져오는 데 실패했습니다.";
+                    console.error(error);
+                });
+        }
+    </script>
+</head>
+<body>
+    <h1>네이버 서버 시간 확인</h1>
+    <button onclick="getNaverTime()">서버 시간 가져오기</button>
+    <p id="time"></p>
+</body>
+</html>
