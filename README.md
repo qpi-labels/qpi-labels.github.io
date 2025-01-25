@@ -25,5 +25,8 @@
             transform: scale(1.05);
         }
   ```
-  + **color**
-    ${\textsf{\color{rgb(0, 122, 255)}BLUE}}$
++ **color**
+
+  ${\textsf{\color{rgb(0, 122, 255)}BLUE}}$
+  ${\textsf{\color{rgb(142, 142, 147)}GRAY}}$
+  
