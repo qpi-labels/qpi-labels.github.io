@@ -8,7 +8,7 @@
 + **button**
   ![hover](https://github.com/qpi-labels/qpi-labels.github.io/blob/cf5ccdca1aae841e1974f232eabb6522db81e396/image%20source/hover.gif)
   ```
-  .access-button {
+        .access-button {
             background-color: rgb(0, 122, 255); //Apple human-interface 'blue' color
             color: #fff;
             border: none;
@@ -25,3 +25,5 @@
             transform: scale(1.05);
         }
   ```
+  + **color**
+    ${\textsf{\color{rgb(0, 122, 255)}BLUE}}$
