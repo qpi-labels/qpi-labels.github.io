@@ -12,6 +12,7 @@
 + **button**
   ![hover](https://github.com/qpi-labels/qpi-labels.github.io/blob/cf5ccdca1aae841e1974f232eabb6522db81e396/image%20source/hover.gif)
   ```
+     <style>
         .access-button {
             background-color: rgb(0, 122, 255); //Apple human-interface 'blue' color
             color: #fff;
@@ -28,6 +29,7 @@
             background-color: rgb(0, 150, 255);
             transform: scale(1.05);
         }
+     </style>
   ```
 + **color**
 
