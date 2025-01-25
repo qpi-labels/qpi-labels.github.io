@@ -1,8 +1,8 @@
 ### 쿼터파이
 
-### Credit
-+ **color** : [Apple human-interface](https://developer.apple.com/design/human-interface-guidelines/color)
-+ **font** : [Apple SD Gothic Neo](https://support.apple.com/ko-kr/103203) [Gmarket Sans](https://corp.gmarket.com/fonts/) [Pretendard](https://github.com/orioncactus/pretendard)
+### Design
++ **minimalism**
+  + 
 
 ### Interface
 + **button**
@@ -29,4 +29,7 @@
 
   + ${\textsf{\color{rgb(0, 122, 255)}BLUE (0, 122, 255)}}$
   + ${\textsf{\color{rgb(142, 142, 147)}GRAY (142, 142, 147)}}$
-  
+
+### Credit
++ **color** : [Apple human-interface](https://developer.apple.com/design/human-interface-guidelines/color)
++ **font** : [Apple SD Gothic Neo](https://support.apple.com/ko-kr/103203) [Gmarket Sans](https://corp.gmarket.com/fonts/) [Pretendard](https://github.com/orioncactus/pretendard)
