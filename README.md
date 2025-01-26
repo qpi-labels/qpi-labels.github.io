@@ -13,7 +13,7 @@
     + ${\textsf{\color{rgb(0, 122, 255)}BLUE (0, 122, 255)}}$
       
 ### Source Code
-+ **font**
++ **web font import**
   ```
   <style>
      @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
