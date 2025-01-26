@@ -41,6 +41,12 @@
         }
      </style>
   ```
+  ```
+    <body>
+      <div class="button-container">
+          <button class="access-button" onclick="window.location.href='링크'">더 알아보기</button>
+      </div>
+    </body>
 
 ### Credit
 + **color** : [Apple human-interface](https://developer.apple.com/design/human-interface-guidelines/color)
