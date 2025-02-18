@@ -21,13 +21,14 @@
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
+            transition: background-color 0.3s ease, color 0.3s ease; /* 배경색 및 글자색 전환 효과 추가 */
         }
         img {
             display: block;
             margin: 0 auto;
             max-width: 100%;
             height: auto;
-            transition: opacity 0.3s ease; /* opacity 전환 효과 추가 */
+            transition: opacity 0.3s ease;
         }
         .button-container {
             margin-top: 20px;
@@ -75,11 +76,11 @@
         function updateLogo() {
             const logoImg = document.getElementById('logo');
             const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            logoImg.style.opacity = 0; // 이미지 투명하게 만들기
+            logoImg.style.opacity = 0;
             setTimeout(() => {
                 logoImg.src = isDarkMode ? 'logo_dark.png' : 'logo.png';
-                logoImg.style.opacity = 1; // 이미지 다시 보이게 하기
-            }, 200); // 0.2초 후에 이미지 변경 및 표시
+                logoImg.style.opacity = 1;
+            }, 200);
         }
 
         // 페이지가 로드된 후 실행
