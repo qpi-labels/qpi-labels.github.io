@@ -27,6 +27,7 @@
             margin: 0 auto;
             max-width: 100%;
             height: auto;
+            transition: opacity 0.3s ease; /* opacity 전환 효과 추가 */
         }
         .button-container {
             margin-top: 20px;
@@ -72,21 +73,25 @@
         });
 
         function updateLogo() {
-        const logoImg = document.getElementById('logo');
-        const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        logoImg.src = isDarkMode ? 'logo_dark.png' : 'logo.png';
-    }
+            const logoImg = document.getElementById('logo');
+            const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            logoImg.style.opacity = 0; // 이미지 투명하게 만들기
+            setTimeout(() => {
+                logoImg.src = isDarkMode ? 'logo_dark.png' : 'logo.png';
+                logoImg.style.opacity = 1; // 이미지 다시 보이게 하기
+            }, 200); // 0.2초 후에 이미지 변경 및 표시
+        }
 
-    // 페이지가 로드된 후 실행
-    document.addEventListener("DOMContentLoaded", updateLogo);
+        // 페이지가 로드된 후 실행
+        document.addEventListener("DOMContentLoaded", updateLogo);
 
-    // 시스템 다크 모드 변경 감지하여 업데이트
-    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    if (darkModeMediaQuery.addEventListener) {
-        darkModeMediaQuery.addEventListener('change', updateLogo);
-    } else if (darkModeMediaQuery.addListener) {
-        darkModeMediaQuery.addListener(updateLogo); // 구버전 브라우저 호환
-    }
+        // 시스템 다크 모드 변경 감지하여 업데이트
+        const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        if (darkModeMediaQuery.addEventListener) {
+            darkModeMediaQuery.addEventListener('change', updateLogo);
+        } else if (darkModeMediaQuery.addListener) {
+            darkModeMediaQuery.addListener(updateLogo); // 구버전 브라우저 호환
+        }
     </script>
 </head>
 
