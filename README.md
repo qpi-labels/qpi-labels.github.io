@@ -2,7 +2,10 @@
 
 ### Design
 + **UI/UX**
-  + UI에 사용된 색상은 다음과 같습니다.
+  + 배경에 사용된 색상은 다음과 같습니다.
+    + <kbd style="background-color: #121212; color: white;">Light (255, 255, 255)</kbd>
+    + ${\textsf{\color{rgb(18, 18, 18)}Dark (18, 18, 18)}}$
+  + 오브젝트에 사용된 색상은 다음과 같습니다.
     + ${\textsf{\color{rgb(0, 0, 0)}BLACK (0, 0, 0)}}$
     + ${\textsf{\color{rgb(142, 142, 147)}GRAY (142, 142, 147)}}$
     + ${\textsf{\color{rgb(0, 122, 255)}BLUE (0, 122, 255)}}$
