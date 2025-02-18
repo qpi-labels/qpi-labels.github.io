@@ -72,17 +72,21 @@
         });
 
         function updateLogo() {
-            const logoImg = document.getElementById('logo');
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                logoImg.src = 'logo_dark.png'; // 다크 모드 이미지
-            } else {
-                logoImg.src = 'logo.png'; // 라이트 모드 이미지
-            }
-        }
+        const logoImg = document.getElementById('logo');
+        const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        logoImg.src = isDarkMode ? 'logo_dark.png' : 'logo.png';
+    }
 
-        // 초기 로드 시 및 시스템 테마 변경 시 로고 업데이트
-        updateLogo();
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateLogo);
+    // 페이지가 로드된 후 실행
+    document.addEventListener("DOMContentLoaded", updateLogo);
+
+    // 시스템 다크 모드 변경 감지하여 업데이트
+    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    if (darkModeMediaQuery.addEventListener) {
+        darkModeMediaQuery.addEventListener('change', updateLogo);
+    } else if (darkModeMediaQuery.addListener) {
+        darkModeMediaQuery.addListener(updateLogo); // 구버전 브라우저 호환
+    }
     </script>
 </head>
 
