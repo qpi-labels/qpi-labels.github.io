@@ -50,7 +50,7 @@
       }
       .access-button {
             background-color: rgb(10, 132, 255);
-            box-shadow: none; /* 다크 모드에서는 그림자 제거 */
+            box-shadow: none;
       }
       .access-button:hover {
             background-color: rgb(10, 160, 255);
