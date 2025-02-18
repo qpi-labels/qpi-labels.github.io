@@ -52,7 +52,7 @@
         }
         @media (prefers-color-scheme: dark) {
             body {
-                background-color: black;
+                background-color: #222222;
                 color: white;
             }
             .access-button {
@@ -84,11 +84,9 @@
                 logoImg.style.opacity = 1;
             }, 200);
         }
-
-        // 페이지가 로드된 후 실행
+        
         document.addEventListener("DOMContentLoaded", updateLogo);
 
-        // 시스템 다크 모드 변경 감지하여 업데이트
         const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
         if (darkModeMediaQuery.addEventListener) {
             darkModeMediaQuery.addEventListener('change', updateLogo);
