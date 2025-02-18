@@ -3,7 +3,7 @@
 ### Design
 + **UI/UX**
   + 배경에 사용된 색상은 다음과 같습니다.
-    + ${\textsf{\color{rgb(255, 255, 255)}Light (255, 255, 255)}}$
+    + ${\textsf{\color{rgb(250, 250, 250)}Light (250, 250, 250)}}$
     + ${\textsf{\color{rgb(18, 18, 18)}Dark (18, 18, 18)}}$
   + 오브젝트에 사용된 색상은 다음과 같습니다.
     + ${\textsf{\color{rgb(0, 0, 0)}BLACK (0, 0, 0)}}$
@@ -43,5 +43,5 @@
   ```
   
 ### Credit
-+ **color** : [Apple human-interface](https://developer.apple.com/design/human-interface-guidelines/color)
++ **color** : [Apple human-interface](https://developer.apple.com/design/human-interface-guidelines/color) *모든 색상을 참고한것은 아님
 + **font** : [**Pretendard**](https://github.com/orioncactus/pretendard) [Gmarket Sans](https://corp.gmarket.com/fonts/)
