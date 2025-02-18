@@ -41,6 +41,23 @@
       </div>
     </body>
   ```
++ Light/Dark transistion
+  ```
+    @media (prefers-color-scheme: dark) {
+      body {
+            background-color: #121212;
+            color: white;
+      }
+      .access-button {
+            background-color: rgb(10, 132, 255);
+            box-shadow: none; /* 다크 모드에서는 그림자 제거 */
+      }
+      .access-button:hover {
+            background-color: rgb(10, 160, 255);
+            box-shadow: none;
+      }
+        }
+  ```
   
 ### Credit
 + **color** : [Apple human-interface](https://developer.apple.com/design/human-interface-guidelines/color) *모든 색상을 참고한것은 아님
