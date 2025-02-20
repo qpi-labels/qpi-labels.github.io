@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>쿼터파이</title>
+    <link rel="shortcut icon" type="image/x-icon" href="logo.ico">
+    <meta property="og:url" content="https://qpi-labels.github.io/main/">
+    <meta property="og:title" content="쿼터파이">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="og.png">
+    <meta property="og:description" content="만족도 2년연속 1위! 쿼터파이">
+    <style>
+        @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+        body {
+            background-color: #fafafa;
+            color: black;
+            font-family: 'Pretendard Variable';
+            text-align: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(250, 250, 250, 0.8);
+            backdrop-filter: blur(10px); /* 블러 효과 추가 */
+            padding: 13px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            border-bottom: 1.5px solid rgba(229, 229, 234); /* 하단 선 추가 */
+        }
+        
+        header h1 {
+            font-size: x-large;
+            margin: 0;
+            font-weight: 700;
+            margin-left: 20px;
+        }
+
+        body img {
+            display: block;
+            margin: 0 auto;
+            width: 800px;
+            height: auto;
+            border: 1px solid #ffffff00;
+            border-radius: 5px;
+        }
+
+        #search-bar {
+            width: 80%;
+            padding: 10px;
+            border-radius: 30px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        .search-button {
+            background-color: rgb(0, 122, 255);
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 16px;
+            font-size: small;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease-out, background-color 0.3s ease, box-shadow 0.3s ease; /* box-shadow 전환 효과 추가 */
+        }
+        .search-button:hover {
+            background-color: rgb(0, 150, 255);
+        }
+
+        #response-container {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            display: inline-block;
+            text-align: left;
+            width: 80%;
+        }
+
+        #current-time {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        #credit {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        #version {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        #empty {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+    </style>
+</head>
+<body>
+    <header>
+        <h1 style="font-size: x-large; margin-bottom: 0; font-weight: 550;">QISS</h1>
+    </header>
+    <br><br><br><br><br><br><br><br><br><br>
+        <h1 style="font-size: xxx-large; margin-bottom: 0; font-weight: 700;">QISS</h1>
+        <input type="text" id="search-bar" placeholder="무엇이 궁금하신가요?">
+        <br><br>
+        <div id="search-buttons">
+            <button class="search-button" onclick="searchInGoogle()">Google</button>
+            <button class="search-button" onclick="searchInNaver()">Naver</button>
+            <button class="search-button" onclick="searchInDBpia()">DBpia</button>
+            <button class="search-button" onclick="searchInGs()">Scholar</button>
+            <button class="search-button" onclick="searchInRISS()">RISS</button>
+        </div>
+
+        <br>
+
+        <div id="current-time">현재 시간: <span id="time-display"></span></div>
+
+        <div id="credit">2025 Q-PI, All Rights Reserved.</div>
+    
+    <br><br><br><br><br><br><br>
+    
+    <script src="script.js"></script>
+    <script>
+        function searchInGoogle() {
+            const searchTerm = document.getElementById('search-bar').value;
+            window.open('https://www.google.com/search?q=' + encodeURIComponent(searchTerm));
+        }
+
+        function searchInNaver() {
+            const searchTerm = document.getElementById('search-bar').value;
+            window.open('https://search.naver.com/search.naver?where=nexearch&sm=tab_hty&query=' + encodeURIComponent(searchTerm));
+        }
+
+        function searchInDBpia() {
+            const searchTerm = document.getElementById('search-bar').value;
+            window.open('https://www.dbpia.co.kr/search/topSearch?searchOption=all&query=' + encodeURIComponent(searchTerm));
+        }
+
+        function searchInGs() {
+            const searchTerm = document.getElementById('search-bar').value;
+            window.open('https://scholar.google.com/scholar?hl=ko&as_sdt=0%2C5&q=' + encodeURIComponent(searchTerm));
+        }
+
+        function searchInRISS() {
+            const searchTerm = document.getElementById('search-bar').value;
+            window.open('https://www.riss.kr/search/Search.do?colName=all&isDetailSearch=N&searchGubun=true&oldQuery=&sflag=1&fsearchMethod=search&isFDetailSearch=N&searchQuery=1&kbid=&pageNumber=1&query=' + encodeURIComponent(searchTerm));
+        }
+
+        
+
+        const timeDisplay = document.getElementById('time-display');
+
+        setInterval(() => {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            const hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+
+            timeDisplay.textContent = `${year}년 ${month}월 ${day}일 ${hours}:${minutes}:${seconds}`;
+        }, 1000);
+    </script>
+    
+</body>
+</html>
