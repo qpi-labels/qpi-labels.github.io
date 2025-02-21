@@ -56,12 +56,25 @@
     </style>
 </head>
 <body>
-    <form action="?" method="POST">
+    <form id="recaptchaForm" action="?" method="POST" onsubmit="handleSubmit(event)">
         <div class="recaptcha-container">
             <div class="g-recaptcha" data-sitekey="6Lf-zd0qAAAAABTOARgZbTs4IPbEmFky7VlyKmew"></div>
         </div>
-        <br/>
-        <input type="submit" value="인증">
     </form>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault(); // 폼 제출 방지
+
+            // 리캡차 인증을 완료한 후 처리
+            const recaptchaResponse = grecaptcha.getResponse();
+            if (recaptchaResponse.length > 0) {
+                // 인증이 완료되면 페이지 리디렉션
+                window.location.href = "https://qpi-labels.github.io";
+            } else {
+                alert("리캡차 인증을 완료해주세요.");
+            }
+        }
+    </script>
 </body>
 </html>
