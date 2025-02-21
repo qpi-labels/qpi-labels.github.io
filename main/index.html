@@ -9,6 +9,7 @@
     <meta property="og:type" content="website">
     <meta property="og:image" content="og.png">
     <meta property="og:description" content="충남과학고등학교">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
         @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
 
@@ -16,12 +17,18 @@
             background-color: #fafafa;
             color: black;
             font-family: 'Pretendard Variable';
-            text-align: center;
+            text-align: center; /* 전체 텍스트 가운데 정렬 */
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             transition: background-color 0.3s ease, color 0.3s ease;
+            display: flex; /* Flexbox 사용 */
+            flex-direction: column; /* 수직 방향 정렬 */
+            align-items: center; /* 가로 방향 가운데 정렬 */
+            justify-content: center; /* 세로 방향 가운데 정렬 */
+            min-height: 100vh; /* 최소 뷰포트 높이 100% */
+            margin: 0; /* body margin 제거 */
         }
         img {
             display: block;
@@ -50,27 +57,18 @@
             box-shadow: 5px 5px 10px #d1d9e6, -5px -5px 10px #ffffff;
             transform: scale(1.05);
         }
-    </style>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script>
-        function onRecaptchaSubmit(token) {
-            // reCAPTCHA 인증 성공 시 실행되는 함수
-            // 여기서는 폼을 제출하거나 원하는 동작을 수행합니다.
-            window.location.href = "https://qpi-labels.github.io/"; // 리디렉션
+        .g-recaptcha {
+            margin-bottom: 10px; /* reCAPTCHA 아래 여백 추가 */
         }
-    </script>
+
+    </style>
 </head>
 <body>
-    <img src="logo.png" alt="쿼터파이 로고">
-    <h1>쿼터파이로 이동</h1>
+    <img src="your_image.png" alt="쿼터파이 로고"> <--- 로고 이미지 추가
+    <form action="?" method="POST">
+        <div class="g-recaptcha" data-sitekey="6Lf-zd0qAAAAABTOARgZbTs4IPbEmFky7VlyKmew"></div>
+        <input type="submit" value="인증"> <--- submit 버튼으로 변경
+    </form>
     
-
-    <div class="button-container">
-       <form action="?" method="POST">
-            <div class="g-recaptcha" data-sitekey="6Lf-zd0qAAAAABTOARgZbTs4IPbEmFky7VlyKmew" data-callback="onRecaptchaSubmit"></div>
-            <br/>
-            <input type="submit" value="인증" style="display:none;"> </form>
-
-    </div>
 </body>
 </html>
