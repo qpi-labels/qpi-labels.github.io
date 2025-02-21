@@ -21,33 +21,6 @@
             user-select: none;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
-        img {
-            display: block;
-            margin: 0 auto;
-            max-width: 100%;
-            height: auto;
-            transition: opacity 0.3s ease;
-        }
-        .button-container {
-            margin-top: 20px;
-        }
-        .access-button {
-            background-color: rgb(0, 122, 255);
-            color: #fff;
-            border: none;
-            padding: 15px 35px;
-            border-radius: 30px;
-            font-size: medium;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 5px 5px 10px #d1d9e6, -5px -5px 10px #ffffff;
-            transition: transform 0.2s ease-out, background-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        .access-button:hover {
-            background-color: rgb(0, 150, 255);
-            box-shadow: 5px 5px 10px #d1d9e6, -5px -5px 10px #ffffff;
-            transform: scale(1.05);
-        }
         .recaptcha-container {
             display: flex;
             justify-content: center;
@@ -56,24 +29,14 @@
     </style>
 </head>
 <body>
-    <form id="recaptchaForm" action="?" method="POST" onsubmit="handleSubmit(event)">
-        <div class="recaptcha-container">
-            <div class="g-recaptcha" data-sitekey="6Lf-zd0qAAAAABTOARgZbTs4IPbEmFky7VlyKmew"></div>
-        </div>
-    </form>
+    <div class="recaptcha-container">
+        <div class="g-recaptcha" data-sitekey="6Lf-zd0qAAAAABTOARgZbTs4IPbEmFky7VlyKmew" data-callback="onCaptchaSuccess"></div>
+    </div>
 
     <script>
-        function handleSubmit(event) {
-            event.preventDefault(); // 폼 제출 방지
-
-            // 리캡차 인증을 완료한 후 처리
-            const recaptchaResponse = grecaptcha.getResponse();
-            if (recaptchaResponse.length > 0) {
-                // 인증이 완료되면 페이지 리디렉션
-                window.location.href = "https://qpi-labels.github.io";
-            } else {
-                alert("리캡차 인증을 완료해주세요.");
-            }
+        function onCaptchaSuccess() {
+            // 리캡차 인증이 완료되면 자동으로 이동
+            window.location.href = "https://qpi-labels.github.io";
         }
     </script>
 </body>
