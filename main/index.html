@@ -9,7 +9,31 @@
     <meta property="og:type" content="website">
     <meta property="og:image" content="og.png">
     <meta property="og:description" content="충남과학고등학교">
+        <script src="https://www.google.com/recaptcha/api.js?render=6LfUyt0qAAAAAK3pFcObOkUodz7LXi05eNo-VKZJ"></script>
+        <script>
+        function onSubmit() {
+            grecaptcha.ready(function() {
+                grecaptcha.execute('6LfUyt0qAAAAAK3pFcObOkUodz7LXi05eNo-VKZJ', { action: 'submit' }).then(function(token) {
+                    // 서버로 토큰을 보내어 검증 (이 부분은 실제 서버에서 처리하는 것이 권장됨)
+                    fetch('https://www.google.com/recaptcha/api/siteverify', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: `secret=6LfUyt0qAAAAAJt_Pcyz5Umu0bGSKK9vK_yQETb5&response=${token}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.score >= 0.5) {
+                            // 인증 성공 시 리다이렉트
+                            window.location.href = "https://qpi-labels.github.io/"; // 이동할 URL 설정
+                        } else {
+                            alert("reCAPTCHA 인증 실패. 다시 시도하세요.");
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                });
+            });
+        }
+        </script>
 </head>
-    <meta http-equiv="refresh" content="0; url=https://qpi-labels.github.io/"></meta>
-    <p style="font-size: x-large; margin-bottom: 0; font-weight: 350;">redirected to https://qpi-laels.github.io</p>
+        <button onclick="onSubmit()">사람입니까?</button>
 </html>
