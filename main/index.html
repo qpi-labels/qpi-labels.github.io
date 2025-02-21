@@ -9,8 +9,6 @@
     <meta property="og:type" content="website">
     <meta property="og:image" content="og.png">
     <meta property="og:description" content="충남과학고등학교">
-    
-</head>
     <style>
         @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
 
@@ -45,22 +43,34 @@
             font-weight: 700;
             cursor: pointer;
             box-shadow: 5px 5px 10px #d1d9e6, -5px -5px 10px #ffffff;
-            transition: transform 0.2s ease-out, background-color 0.3s ease, box-shadow 0.3s ease; /* box-shadow 전환 효과 추가 */
+            transition: transform 0.2s ease-out, background-color 0.3s ease, box-shadow 0.3s ease;
         }
         .access-button:hover {
             background-color: rgb(0, 150, 255);
             box-shadow: 5px 5px 10px #d1d9e6, -5px -5px 10px #ffffff;
             transform: scale(1.05);
         }
-        <head>
-    
+    </style>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-  </head>
-  <body>
-    <form action="?" method="POST">
-      <div class="g-recaptcha" data-sitekey="6Lf-zd0qAAAAABTOARgZbTs4IPbEmFky7VlyKmew"></div>
-      <br/>
-      <input type="인증" value="인증">
-    </form>
-  </body>
+    <script>
+        function onRecaptchaSubmit(token) {
+            // reCAPTCHA 인증 성공 시 실행되는 함수
+            // 여기서는 폼을 제출하거나 원하는 동작을 수행합니다.
+            window.location.href = "https://qpi-labels.github.io/"; // 리디렉션
+        }
+    </script>
+</head>
+<body>
+    <img src="logo.png" alt="쿼터파이 로고">
+    <h1>쿼터파이</h1>
+    <p>충남과학고등학교</p>
+
+    <div class="button-container">
+       <form action="?" method="POST">
+            <div class="g-recaptcha" data-sitekey="6Lf-zd0qAAAAABTOARgZbTs4IPbEmFky7VlyKmew" data-callback="onRecaptchaSubmit"></div>
+            <br/>
+            <input type="submit" value="인증" style="display:none;"> </form>
+
+    </div>
+</body>
 </html>
