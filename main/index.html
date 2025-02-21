@@ -17,18 +17,9 @@
             background-color: #fafafa;
             color: black;
             font-family: 'Pretendard Variable';
-            text-align: center; /* 전체 텍스트 가운데 정렬 */
+            text-align: center;
             user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
             transition: background-color 0.3s ease, color 0.3s ease;
-            display: flex; /* Flexbox 사용 */
-            flex-direction: column; /* 수직 방향 정렬 */
-            align-items: center; /* 가로 방향 가운데 정렬 */
-            justify-content: center; /* 세로 방향 가운데 정렬 */
-            min-height: 100vh; /* 최소 뷰포트 높이 100% */
-            margin: 0; /* body margin 제거 */
         }
         img {
             display: block;
@@ -57,18 +48,20 @@
             box-shadow: 5px 5px 10px #d1d9e6, -5px -5px 10px #ffffff;
             transform: scale(1.05);
         }
-        .g-recaptcha {
-            margin-bottom: 10px; /* reCAPTCHA 아래 여백 추가 */
+        .recaptcha-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
         }
-
     </style>
 </head>
 <body>
-    <img src="your_image.png" alt="쿼터파이 로고"> <--- 로고 이미지 추가
     <form action="?" method="POST">
-        <div class="g-recaptcha" data-sitekey="6Lf-zd0qAAAAABTOARgZbTs4IPbEmFky7VlyKmew"></div>
-        <input type="submit" value="인증"> <--- submit 버튼으로 변경
+        <div class="recaptcha-container">
+            <div class="g-recaptcha" data-sitekey="6Lf-zd0qAAAAABTOARgZbTs4IPbEmFky7VlyKmew"></div>
+        </div>
+        <br/>
+        <input type="submit" value="인증">
     </form>
-    
 </body>
 </html>
