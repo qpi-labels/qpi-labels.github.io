@@ -67,6 +67,18 @@
     </style>
 
     <script>
+                document.addEventListener("DOMContentLoaded", function () {
+            const allowedReferrer = "https://qpi-labels.github.io/main/"; // 허용할 사이트
+            const redirectURL = "https://qpi-labels.github.io/main/"; // 차단된 경우 보낼 사이트
+
+            // sessionStorage에 'verified'가 없고, 리퍼러가 허용된 사이트가 아니면 리디렉션
+            if (!sessionStorage.getItem("verified") && document.referrer.indexOf(allowedReferrer) !== 0) {
+                window.location.href = redirectURL;
+            } else {
+                // 허용된 경우 sessionStorage에 값 저장 (새로고침 허용)
+                sessionStorage.setItem("verified", "true");
+            }
+        });
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
         });
