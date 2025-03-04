@@ -23,6 +23,26 @@
             -ms-user-select: none;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(250, 250, 250, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 13px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            border-bottom: 1.5px solid rgba(229, 229, 234);
+        }
+        
+        header h1 {
+            font-size: x-large;
+            margin: 0;
+            font-weight: 700;
+            margin-left: 20px;
+        }
         img {
             display: block;
             margin: 0 auto;
@@ -43,7 +63,7 @@
             font-weight: 700;
             cursor: pointer;
             box-shadow: 5px 5px 10px #d1d9e6, -5px -5px 10px #ffffff;
-            transition: transform 0.2s ease-out, background-color 0.3s ease, box-shadow 0.3s ease; /* box-shadow 전환 효과 추가 */
+            transition: transform 0.2s ease-out, background-color 0.3s ease, box-shadow 0.3s ease;
         }
         .access-button:hover {
             background-color: rgb(0, 150, 255);
@@ -57,28 +77,30 @@
             }
             .access-button {
                 background-color: rgb(10, 132, 255);
-                box-shadow: none; /* 다크 모드에서는 그림자 제거 */
+                box-shadow: none;
             }
             .access-button:hover {
                 background-color: rgb(10, 160, 255);
                 box-shadow: none;
+            }
+            header {
+            background-color: rgba(0, 0, 0, 0.8);
+            border-bottom: 1.5px solid rgba(60, 60, 60);
             }
         }
     </style>
 
     <script>
         /* document.addEventListener("DOMContentLoaded", function () {
-            const allowedReferrer = "https://qpi-labels.github.io/main/"; // 허용할 사이트
-            const redirectURL = "https://qpi-labels.github.io/main/"; // 차단된 경우 보낼 사이트
+            const allowedReferrer = "https://qpi-labels.github.io/main/";
+            const redirectURL = "https://qpi-labels.github.io/main/";
 
-            // sessionStorage에 'verified'가 없고, 리퍼러가 허용된 사이트가 아니면 리디렉션
             if (!sessionStorage.getItem("verified") && document.referrer.indexOf(allowedReferrer) !== 0) {
                 window.location.href = redirectURL;
             } else {
-                // 허용된 경우 sessionStorage에 값 저장 (새로고침 허용)
                 sessionStorage.setItem("verified", "true");
             }
-        }); */  
+        }); */  //캡챠 페이지로 보내는 코드 필요시 주석 해제하고 사용할것
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
         });
@@ -103,12 +125,19 @@
         if (darkModeMediaQuery.addEventListener) {
             darkModeMediaQuery.addEventListener('change', updateLogo);
         } else if (darkModeMediaQuery.addListener) {
-            darkModeMediaQuery.addListener(updateLogo); // 구버전 브라우저 호환
+            darkModeMediaQuery.addListener(updateLogo);
         }
     </script>
 </head>
 
 <body>
+    <header>
+        
+        <a href="https://qpi-labels.github.io/" style="text-decoration: none; color: inherit;">
+        <h1 style="font-size: x-large; margin-bottom: 0; font-weight: 550;">QPI</h1>
+        </a>
+    
+    </header>
 
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
@@ -155,6 +184,5 @@
     <br><br><br><br><br><br><br><br><br><br><br><br><br>
 
     <p>2025 Q-PI, All Rights Reserved.</p>
-    <p>문의사항 : 2308 이재원 | cnsh31_1410@cnsh.hs.kr</p>
 </body>
 </html>
