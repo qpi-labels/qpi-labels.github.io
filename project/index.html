@@ -23,6 +23,26 @@
             -moz-user-select: none;    
             -ms-user-select: none;     
         }
+        header {
+            position: fixed;
+            top: 0px;
+            left: 0;
+            width: 100%;
+            background-color: rgba(250, 250, 250, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 13px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            border-bottom: 1.5px solid rgba(229, 229, 234);
+        }
+        
+        header h1 {
+            font-size: x-large;
+            margin: 0;
+            font-weight: 700;
+            margin-left: 20px;
+        }
         img {
             display: block;
             margin: 0 auto;
@@ -76,6 +96,14 @@
         .access-button:hover {
             background-color: rgb(10, 160, 255);
             box-shadow: none;
+        }
+        .main-button {
+            box-shadow: none;
+        }
+        header {
+            background-color: rgba(18, 18, 18, 0.8);
+            border-bottom: 1.5px solid rgba(60, 60, 60);
+        }
     </style>
 
     <script>
@@ -90,6 +118,13 @@
 </head>
 
 <body>
+    <header>
+        
+        <a href="https://qpi-labels.github.io/" style="text-decoration: none; color: inherit;">
+        <h1 style="font-size: x-large; margin-bottom: 0; font-weight: 550;">QPI</h1>
+        </a>
+    
+    </header>
 
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
