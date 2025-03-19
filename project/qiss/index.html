@@ -156,7 +156,7 @@
         .header-links {
             display: flex;
             gap: 20px;
-            margin-right: 60px; /* Add margin to the right */
+            margin-right: 50px; /* Add margin to the right */
         }
 
         .header-link {
@@ -184,13 +184,14 @@
         <div class="header-links">
             <a href="https://mail.google.com/" class="header-link" target="_blank">Gmail</a>
             <a href="https://drive.google.com/" class="header-link" target="_blank">Drive</a>
+            <a href="https://classroom.google.com/" class="header-link" target="_blank">Classroom</a>
         </div>
     </header>
 
     <main>
         <br><br><br><br><br><br><br><br><br><br>
         <h1 class="page-title">QISS</h1>
-        <input type="text" id="search-bar" placeholder="무엇이 궁금하신가요?">
+        <input type="text" id="search-bar" placeholder="무엇이 궁금하신가요?" onkeydown="handleEnter(event)">
         <br><br>
         <div id="search-buttons">
             <button class="search-button" onclick="searchInGoogle()">Google</button>
@@ -210,29 +211,46 @@
     <br><br><br><br><br><br><br>
 
     <script>
+        // Function to handle Enter key press
+        function handleEnter(event) {
+            if (event.key === 'Enter') {
+                searchInGoogle(); // Call the Google search function
+            }
+        }
+
         // JavaScript (Combined from script.js)
         function searchInGoogle() {
             const searchTerm = document.getElementById('search-bar').value;
-            window.open('https://www.google.com/search?q=' + encodeURIComponent(searchTerm), '_blank'); // Open in new tab
+            if (searchTerm.trim() !== "") { // Check if search term is not empty
+                window.open('https://www.google.com/search?q=' + encodeURIComponent(searchTerm), '_blank'); // Open in new tab
+            }
         }
 
         function searchInNaver() {
             const searchTerm = document.getElementById('search-bar').value;
-            window.open('https://search.naver.com/search.naver?where=nexearch&sm=tab_hty&query=' + encodeURIComponent(searchTerm), '_blank');
+             if (searchTerm.trim() !== "") {
+                window.open('https://search.naver.com/search.naver?where=nexearch&sm=tab_hty&query=' + encodeURIComponent(searchTerm), '_blank');
+             }
         }
 
         function searchInDBpia() {
             const searchTerm = document.getElementById('search-bar').value;
-            window.open('https://www.dbpia.co.kr/search/topSearch?searchOption=all&query=' + encodeURIComponent(searchTerm), '_blank');
+            if (searchTerm.trim() !== "") {
+                window.open('https://www.dbpia.co.kr/search/topSearch?searchOption=all&query=' + encodeURIComponent(searchTerm), '_blank');
+            }
         }
         function searchInGs() {
             const searchTerm = document.getElementById('search-bar').value;
-            window.open('https://scholar.google.com/scholar?hl=ko&as_sdt=0%2C5&q=' + encodeURIComponent(searchTerm), '_blank');
+            if (searchTerm.trim() !== "") {
+                window.open('https://scholar.google.com/scholar?hl=ko&as_sdt=0%2C5&q=' + encodeURIComponent(searchTerm), '_blank');
+            }
         }
 
         function searchInRISS() {
             const searchTerm = document.getElementById('search-bar').value;
-            window.open('https://www.riss.kr/search/Search.do?colName=all&isDetailSearch=N&searchGubun=true&oldQuery=&sflag=1&fsearchMethod=search&isFDetailSearch=N&searchQuery=1&kbid=&pageNumber=1&query=' + encodeURIComponent(searchTerm),'_blank');
+            if (searchTerm.trim() !== "") {
+                window.open('https://www.riss.kr/search/Search.do?colName=all&isDetailSearch=N&searchGubun=true&oldQuery=&sflag=1&fsearchMethod=search&isFDetailSearch=N&searchQuery=1&kbid=&pageNumber=1&query=' + encodeURIComponent(searchTerm),'_blank');
+            }
         }
 
         const timeDisplay = document.getElementById('time-display');
