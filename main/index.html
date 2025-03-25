@@ -29,6 +29,42 @@
             height: auto;
             transition: opacity 0.3s ease;
         }
+        .access-button {
+            background-color: rgb(0, 122, 255);
+            color: #fff;
+            border: none;
+            padding: 14px 35px;
+            border-radius: 28px;
+            font-size: large;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 5px 5px 10px #d1d9e6, -5px -5px 10px #ffffff;
+            transition: transform 0.2s ease-out, background-color 0.3s ease;
+        }
+        .access-button:hover {
+            background-color: rgb(0, 150, 255);
+            transform: scale(1.05);
+        }
+        @media (prefers-color-scheme: dark) {
+        body {
+            background-color: #121212;
+            color: white;
+        }
+        .access-button {
+            background-color: rgb(10, 132, 255);
+            box-shadow: none;
+        }
+        .access-button:hover {
+            background-color: rgb(10, 160, 255);
+            box-shadow: none;
+        }
+        .main-button {
+            box-shadow: none;
+        }
+        header {
+            background-color: rgba(18, 18, 18, 0.8);
+            border-bottom: 1.5px solid rgba(60, 60, 60);
+        }
     </style>
 </head>
 <body>
@@ -37,10 +73,10 @@
     <img id="logo" src="logo.png" alt="QPILABELS" width="400" height="200">
 
     <br>
-    <p style="font-size: large; margin-bottom: 0; font-weight: 350;">비정상적인 접근으로부터 보호하기 위해 사람인지 확인합니다.</p>
-        function {
-        
-            window.location.href = "https://qpi-labels.github.io";
-        }
+    <p style="font-size: large; margin-bottom: 0; font-weight: 350;">안녕하세요, 쿼터파이 입니다.</p>
+    <div class="button-container">
+        <button class="access-button" onclick="window.location.href='https://qpi-labels.github.io/qets/'">이동하기</button>
+    </div>
+    
 </body>
 </html>
