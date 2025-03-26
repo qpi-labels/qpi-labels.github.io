@@ -94,12 +94,12 @@
             flex-wrap: wrap; /* Allow wrapping on smaller screens */
             margin-left: auto; /* Center the section if its content is narrower than the page */
             margin-right: auto;
-            max-width: 900px; /* Optional: constrain max width */
+            max-width: 1000px; /* Optional: Increased max width to accommodate larger image */
             padding: 0 20px; /* Add some padding */
         }
 
         .qiss-image-container {
-            flex-basis: 400px; /* Suggest initial width for image container */
+            flex-basis: 500px; /* <<< INCREASED */
             flex-shrink: 0; /* Prevent image container from shrinking */
             text-align: center; /* Center image within its container if needed */
         }
@@ -119,7 +119,7 @@
         }
 
         /* Responsive adjustments */
-         @media (max-width: 768px) {
+         @media (max-width: 880px) { /* Adjusted breakpoint slightly */
              .qiss-section {
                  flex-direction: column; /* Stack vertically on smaller screens */
                  gap: 20px;
@@ -130,7 +130,7 @@
              .qiss-image-container {
                  flex-basis: auto; /* Reset basis */
                  width: 80%; /* Adjust width */
-                 max-width: 400px;
+                 max-width: 500px; /* <<< INCREASED */
              }
          }
         /* --- End QISS CSS --- */
@@ -189,8 +189,10 @@
     <div class="qiss-section">
         <div class="qiss-image-container">
             <picture>
+                <!-- 다크 모드일 때 D_QISS.png 로드 -->
                 <source media="(prefers-color-scheme: dark)" srcset="D_QISS.png">
-                <img id="logo" src="L_QISS.png" alt="QPI QISS Logo" width="800" height="400">
+                <!-- 기본(라이트 모드) 및 대체 이미지로 L_QISS.png 사용 -->
+                <img id="logo" src="L_QISS.png" alt="QPI QISS Logo">
             </picture>
         </div>
         <div class="qiss-details">
