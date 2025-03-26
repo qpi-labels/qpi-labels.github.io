@@ -104,6 +104,31 @@
             background-color: rgba(18, 18, 18, 0.8);
             border-bottom: 1.5px solid rgba(60, 60, 60);
         }
+        .project-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center; /* 가운데 정렬 */
+        margin-bottom: 40px; /* 각 프로젝트 섹션 간 간격 */
+    }
+    .project-image {
+        max-width: 100px; /* 이미지 최대 너비 조절 */
+        height: auto;
+        margin-right: 20px; /* 이미지와 텍스트 간 간격 */
+        border-radius: 10px; /* 이미지 모서리 둥글게 */
+        box-shadow: 2px 2px 5px #d1d9e6;
+    }
+    .project-info {
+        text-align: left; /* 텍스트 왼쪽 정렬 */
+    }
+    .project-info p:first-child {
+        font-size: xx-large;
+        margin-bottom: 0;
+        font-weight: 600;
+    }
+    .project-info p:last-child {
+        margin-top: 0;
+    }
     </style>
 
     <script>
@@ -114,6 +139,26 @@
         document.addEventListener('selectstart', function(e) {
             e.preventDefault();
         });
+
+        function updateLogo() {
+            const logoImg = document.getElementById('L_QISS');
+            const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            logoImg.style.opacity = 0;
+            setTimeout(() => {
+                logoImg.src = isDarkMode ? 'D_QISS.png' : 'L_QISS.png';
+                logoImg.style.opacity = 1;
+            }, 200);
+        }
+        
+        document.addEventListener("DOMContentLoaded", updateLogo);
+
+        const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        if (darkModeMediaQuery.addEventListener) {
+            darkModeMediaQuery.addEventListener('change', updateLogo);
+        } else if (darkModeMediaQuery.addListener) {
+            darkModeMediaQuery.addListener(updateLogo);
+        }
+
     </script>
 </head>
 
@@ -128,8 +173,16 @@
 
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
-    <p style="font-size: xxx-large; margin-bottom: 0; font-weight: 700;">쿼터파이 프로젝트</p>
-    <p style="font-size: x-large; margin-bottom: 0; font-weight: 550;">쿼터파이가 진행한 프로젝트</p>
+    <div class="project-container">
+    <img src="L_QISS.png" alt="L_QISS" class="project-image">
+    <div class="project-info">
+        <p>QISS</p>
+        <p>QISS 학술 검색 도우미</p>
+        <div class="button-container">
+            <button class="access-button" onclick="window.location.href='https://qpi-labels.github.io/project/qiss/'">이동하기</button>
+        </div>
+    </div>
+</div>
 
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
