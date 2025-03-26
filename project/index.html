@@ -110,7 +110,8 @@
             margin-bottom: 80px; /* Space between projects */
         }
 
-        .project-section {
+        /* --- CSS for QISS section --- */
+        .qiss-section {
             display: flex; /* Enable Flexbox */
             justify-content: center; /* Center items horizontally */
             align-items: center; /* Align items vertically center */
@@ -123,44 +124,46 @@
             box-sizing: border-box; /* Include padding in width */
         }
 
-        .project-image-container {
+        .qiss-image-container {
             flex-basis: 750px; /* <<< INCREASED */
             flex-shrink: 0; /* Prevent image container from shrinking */
             text-align: center; /* Center image within its container if needed */
         }
 
-        .project-image-container picture img {
+        /* Style the img element inside picture */
+        .qiss-image-container picture img {
              max-width: 100%;
              height: auto;
              display: block; /* Ensure proper block behavior */
              margin: 0 auto; /* Center image if container is wider */
         }
 
-        .project-details {
+        .qiss-details {
             flex-basis: 200px; /* Keep text area width */
             flex-grow: 1; /* Allow text area to grow */
             text-align: center;
             box-sizing: border-box; /* Include padding/border in width */
         }
 
-        .project-details p:first-of-type { /* QISS Title */
+        /* Adjust paragraph margins within details */
+        .qiss-details p:first-of-type { /* QISS Title */
              font-size: xx-large; margin-bottom: 0; font-weight: 600;
         }
-        .project-details p:nth-of-type(2) { /* QISS Description */
+        .qiss-details p:nth-of-type(2) { /* QISS Description */
             margin-top: 5px; margin-bottom: 20px;
         }
-        .project-details .button-container {
+        .qiss-details .button-container {
              margin-top: 0; /* Reset top margin if needed */
         }
 
 
-       
+        /* --- Footer Section --- */
         .footer {
-            margin-top: 80px;
+            margin-top: 80px; /* Space above footer */
             padding-bottom: 40px; /* Space below last element */
         }
 
-    
+        /* --- Dark Mode --- */
         @media (prefers-color-scheme: dark) {
             body {
                 background-color: #121212;
@@ -186,19 +189,20 @@
                 border-bottom: 1.5px solid rgba(60, 60, 60);
             }
         }
-        
+
+        /* --- Responsive adjustments --- */
          @media (max-width: 1100px) { /* Adjusted breakpoint */
-             .project-section {
+             .qiss-section {
                  flex-direction: column; /* Stack vertically */
                  gap: 150px; /* Adjust gap for vertical stacking */
              }
-             .project-details {
+             .qiss-details {
                  flex-basis: auto; /* Reset basis */
                  width: 100%; /* Take full width when stacked */
                  max-width: 750px; /* Limit text width */
                  margin: 0 auto; /* Center text block */
              }
-             .project-image-container {
+             .qiss-image-container {
                  flex-basis: auto; /* Reset basis */
                  width: 90%; /* Adjust width for smaller screens */
                  max-width: 750px; /* <<< INCREASED max-width */
@@ -247,20 +251,23 @@
         </div>
     </header>
 
+    
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     <div class="page-title-section">
         <p style="font-size: xxx-large; margin-bottom: 0; font-weight: 700;">쿼터파이 프로젝트</p>
         <p style="font-size: x-large; margin-top: 5px; margin-bottom: 0; font-weight: 550;">쿼터파이가 진행한 프로젝트</p>
     </div>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
-    
-    <div class="project-item project-section">
-        <div class="project-image-container">
+    <!-- QISS Project Item -->
+    <div class="project-item qiss-section">
+        <div class="qiss-image-container">
             <picture>
                 <source media="(prefers-color-scheme: dark)" srcset="D_QISS.png">
                 <img id="logo" src="L_QISS.png" alt="QPI QISS Logo">
             </picture>
         </div>
-        <div class="project-details">
+        <div class="qiss-details">
             <p>QISS</p>
             <p>QISS 학술검색 도우미</p>
             <div class="button-container">
