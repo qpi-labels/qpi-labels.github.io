@@ -85,7 +85,6 @@
             transform: scale(1.05);
         }
 
-        /* --- CSS for QISS section --- */
         .qiss-section {
             display: flex; /* Enable Flexbox */
             justify-content: center; /* Center items horizontally */
@@ -99,12 +98,11 @@
         }
 
         .qiss-image-container {
-            flex-basis: 500px; /* <<< INCREASED */
+            flex-basis: 800px;
             flex-shrink: 0; /* Prevent image container from shrinking */
             text-align: center; /* Center image within its container if needed */
         }
 
-        /* Style the img element inside picture */
         .qiss-image-container picture img {
              max-width: 100%;
              height: auto;
@@ -116,24 +114,7 @@
             flex-basis: 300px; /* Suggest initial width for details */
             flex-grow: 1; /* Allow details block to grow */
             text-align: center; /* Align text and button TO THE CENTER within this block */
-        }
-
-        /* Responsive adjustments */
-         @media (max-width: 880px) { /* Adjusted breakpoint slightly */
-             .qiss-section {
-                 flex-direction: column; /* Stack vertically on smaller screens */
-                 gap: 20px;
-             }
-             .qiss-details {
-                 flex-basis: auto; /* Reset basis */
-             }
-             .qiss-image-container {
-                 flex-basis: auto; /* Reset basis */
-                 width: 80%; /* Adjust width */
-                 max-width: 500px; /* <<< INCREASED */
-             }
-         }
-        /* --- End QISS CSS --- */
+        }    
 
         @media (prefers-color-scheme: dark) {
             body {
