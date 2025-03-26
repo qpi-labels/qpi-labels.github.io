@@ -104,30 +104,83 @@
             background-color: rgba(18, 18, 18, 0.8);
             border-bottom: 1.5px solid rgba(60, 60, 60);
         }
-        .project-container {
+        header h1 {
+        font-size: x-large;
+        margin: 0;
+        font-weight: 700;
+        margin-left: 20px;
+    }
+    img {
+        display: block;
+        margin: 0 auto;
+        max-width: 100%;
+        height: auto;
+    }
+    .button-container {
+        margin-top: 10px; /* 버튼 간 간격 조절 */
+    }
+    .access-button {
+        background-color: rgb(0, 122, 255);
+        color: #fff;
+        border: none;
+        padding: 14px 35px;
+        border-radius: 28px;
+        font-size: large;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 5px 5px 10px #d1d9e6, -5px -5px 10px #ffffff;
+        transition: transform 0.2s ease-out, background-color 0.3s ease;
+    }
+    .access-button:hover {
+        background-color: rgb(0, 150, 255);
+        transform: scale(1.05);
+    }
+    .main-button {
+        background-color: rgb(142, 142, 147);
+        color: #fff;
+        border: none;
+        padding: 9px 20px;
+        border-radius: 20px;
+        font-size: medium;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 5px 5px 10px #d1d9e6, -5px -5px 10px #ffffff;
+        transition: transform 0.2s ease-out, background-color 0.3s ease;
+    }
+    .main-button:hover {
+        background-color: rgb(174, 174, 178);
+        transform: scale(1.05);
+    }
+    .project-container {
         display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 40px;
+        flex-direction: row; /* 가로 방향으로 배치 */
+        align-items: center; /* 세로 방향으로 가운데 정렬 */
+        justify-content: center; /* 가로 방향으로 가운데 정렬 */
+        margin-bottom: 40px; /* 각 프로젝트 섹션 간 간격 */
+        width: 80%; /* 컨테이너 너비 조정 */
+        max-width: 700px; /* 최대 너비 설정 */
+        margin-left: auto;
+        margin-right: auto;
     }
     .project-image {
-        max-width: 50px;
-        height: 100px;
-        margin-right: 20px;
-        border-radius: 10px;
+        max-width: 150px; /* 이미지 최대 너비 조절 */
+        height: auto;
+        margin-right: 20px; /* 이미지와 텍스트 간 간격 */
+        border-radius: 10px; /* 이미지 모서리 둥글게 */
         box-shadow: 2px 2px 5px #d1d9e6;
     }
     .project-info {
-        text-align: left;
+        text-align: left; /* 텍스트 왼쪽 정렬 */
+        flex-grow: 1; /* 남은 공간을 모두 차지하도록 설정 */
     }
     .project-info p:first-child {
         font-size: xx-large;
-        margin-bottom: 0;
+        margin-bottom: 5px;
         font-weight: 600;
     }
     .project-info p:last-child {
         margin-top: 0;
+        margin-bottom: 10px;
     }
     </style>
 
