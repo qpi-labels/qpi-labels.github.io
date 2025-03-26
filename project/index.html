@@ -151,37 +151,6 @@
         background-color: rgb(174, 174, 178);
         transform: scale(1.05);
     }
-    .project-container {
-        display: flex;
-        flex-direction: row; /* 가로 방향으로 배치 */
-        align-items: center; /* 세로 방향으로 가운데 정렬 */
-        justify-content: center; /* 가로 방향으로 가운데 정렬 */
-        margin-bottom: 40px; /* 각 프로젝트 섹션 간 간격 */
-        width: 80%; /* 컨테이너 너비 조정 */
-        max-width: 700px; /* 최대 너비 설정 */
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .project-image {
-        max-width: 150px; /* 이미지 최대 너비 조절 */
-        height: auto;
-        margin-right: 20px; /* 이미지와 텍스트 간 간격 */
-        border-radius: 10px; /* 이미지 모서리 둥글게 */
-        box-shadow: 2px 2px 5px #d1d9e6;
-    }
-    .project-info {
-        text-align: left; /* 텍스트 왼쪽 정렬 */
-        flex-grow: 1; /* 남은 공간을 모두 차지하도록 설정 */
-    }
-    .project-info p:first-child {
-        font-size: xx-large;
-        margin-bottom: 5px;
-        font-weight: 600;
-    }
-    .project-info p:last-child {
-        margin-top: 0;
-        margin-bottom: 10px;
-    }
     </style>
 
     <script>
@@ -212,16 +181,14 @@
 
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
-    <div class="project-container">
-    <img src="L_QISS.png" alt="L_QISS" class="project-image">
-    <div class="project-info">
-        <p style="font-size: xx-large; margin-bottom: 0; font-weight: 600;">QISS</p>
-        <p style="margin-top: 0">QISS 학술검색 도우미미</p>
-        <div class="button-container">
-            <button class="access-button" onclick="window.location.href='https://qpi-labels.github.io/project/qiss/'">이동하기</button>
-        </div>
+    <img id="logo" src="L_QISS.png" alt="QPI" width="400" height="200">
+    <br>
+    <p style="font-size: xx-large; margin-bottom: 0; font-weight: 600;">QISS</p>
+    <p style="margin-top: 0">QISS 학술검색 도우미미</p>
+    <div class="button-container">
+        <button class="access-button" onclick="window.location.href='https://qpi.kro.kr/qiss/'">이동하기</button>
     </div>
-</div>
+
 
     <br><br><br>
 
