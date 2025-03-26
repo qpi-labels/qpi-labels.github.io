@@ -111,9 +111,9 @@
         }
 
         .qiss-details {
-            flex-basis: 300px; /* Suggest initial width for details */
-            flex-grow: 1; /* Allow details block to grow */
-            text-align: center; /* Align text and button TO THE CENTER within this block */
+            flex-basis: 200px;
+            flex-grow: 1;
+            text-align: center;
         }    
 
         @media (prefers-color-scheme: dark) {
@@ -137,6 +137,20 @@
                 border-bottom: 1.5px solid rgba(60, 60, 60);
             }
         }
+        @media (max-width: 880px) {
+             .qiss-section {
+                 flex-direction: column;
+                 gap: 20px;
+             }
+             .qiss-details {
+                 flex-basis: auto;
+             }
+             .qiss-image-container {
+                 flex-basis: auto;
+                 width: 80%;
+                 max-width: 800px;
+             }
+         }
 
     </style>
 
