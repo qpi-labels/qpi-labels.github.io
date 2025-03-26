@@ -43,11 +43,11 @@
             font-weight: 700;
             margin-left: 20px;
         }
+        /* General img styling */
         img {
-            /* display: block; */ /* Removed to allow inline-like behavior within flex */
-            /* margin: 0 auto; */ /* Centering handled by flex container */
             max-width: 100%;
             height: auto;
+            vertical-align: middle; /* Fix potential extra space below image */
         }
         .button-container {
             margin-top: 20px;
@@ -85,7 +85,7 @@
             transform: scale(1.05);
         }
 
-        /* --- Added CSS for QISS section --- */
+        /* --- CSS for QISS section --- */
         .qiss-section {
             display: flex; /* Enable Flexbox */
             justify-content: center; /* Center items horizontally */
@@ -104,10 +104,10 @@
             text-align: center; /* Center image within its container if needed */
         }
 
-        .qiss-image-container img {
-             max-width: 100%; /* Ensure image doesn't overflow container */
+        /* Style the img element inside picture */
+        .qiss-image-container picture img {
+             max-width: 100%;
              height: auto;
-             /* width: 400px; */ /* Let max-width handle responsiveness */
              display: block; /* Ensure proper block behavior */
              margin: 0 auto; /* Center image if container is wider */
         }
@@ -125,7 +125,6 @@
                  gap: 20px;
              }
              .qiss-details {
-                 /* text-align: center; */ /* Already center aligned by default rule */
                  flex-basis: auto; /* Reset basis */
              }
              .qiss-image-container {
@@ -133,9 +132,8 @@
                  width: 80%; /* Adjust width */
                  max-width: 400px;
              }
-             /* Image width is handled by the rule inside .qiss-image-container img now */
          }
-        /* --- End Added CSS --- */
+        /* --- End QISS CSS --- */
 
         @media (prefers-color-scheme: dark) {
             body {
@@ -187,15 +185,18 @@
 
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
-    <!-- Modified QISS Section -->
+    <!-- Modified QISS Section with <picture> -->
     <div class="qiss-section">
         <div class="qiss-image-container">
-            <img id="logo" src="L_QISS.png" alt="QPI QISS Logo">
+            <picture>
+                <source media="(prefers-color-scheme: dark)" srcset="D_QISS.png">
+                <img id="logo" src="L_QISS.png" alt="QPI QISS Logo" width="800" height="400">
+            </picture>
         </div>
         <div class="qiss-details">
             <p style="font-size: xx-large; margin-bottom: 0; font-weight: 600;">QISS</p>
-            <p style="margin-top: 5px; margin-bottom: 20px;">QISS 학술검색 도우미</p> <!-- Added margin-bottom -->
-            <div class="button-container" style="margin-top: 0;"> <!-- Removed default top margin -->
+            <p style="margin-top: 5px; margin-bottom: 20px;">QISS 학술검색 도우미</p>
+            <div class="button-container" style="margin-top: 0;">
                 <button class="access-button" onclick="window.location.href='https://qpi.kro.kr/qiss/'">이동하기</button>
             </div>
         </div>
