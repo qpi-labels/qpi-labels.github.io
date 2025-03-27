@@ -57,9 +57,9 @@
         }
         .header-links {
             display: flex;
-            gap: 20px;
-            margin-right: 50px;
-            text-allign: right;
+            gap: 25px; /* Increased gap slightly */
+            /* margin-right: 50px; <-- Removed, using header padding instead */
+            /* text-allign: right; <-- Removed typo and unnecessary style */
         }
 
         .header-link {
@@ -67,6 +67,7 @@
             text-decoration: none;
             font-weight: 500;
             transition: color 0.2s ease;
+            white-space: nowrap; /* Prevent links from wrapping */
         }
 
         .header-link:hover {
