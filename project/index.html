@@ -49,25 +49,22 @@
             min-height: 60px; /* Ensure header has a minimum height */
         }
 
-        header .header-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between; /* <<< Aligns title left, links right */
-            width: 100%;
-            max-width: 1200px;
-            padding: 0 20px;
-            box-sizing: border-box;
+        .header-title-link {
+            text-decoration: none;
+            color: inherit;
         }
 
         header h1 {
             font-size: x-large;
-            margin: 0;
-            font-weight: 700;
+            margin: 0; /* Remove default margin */
+            font-weight: 550;
+            /* margin-left: 20px; <-- Removed, using header padding instead */
         }
-
         .header-links {
             display: flex;
-            gap: 30px; /* Slightly more gap */
+            gap: 25px; /* Increased gap slightly */
+            /* margin-right: 50px; <-- Removed, using header padding instead */
+            /* text-allign: right; <-- Removed typo and unnecessary style */
         }
 
         .header-link {
@@ -75,7 +72,7 @@
             text-decoration: none;
             font-weight: 500;
             transition: color 0.2s ease;
-            white-space: nowrap;
+            white-space: nowrap; /* Prevent links from wrapping */
         }
 
         .header-link:hover {
