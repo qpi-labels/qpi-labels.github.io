@@ -2,6 +2,407 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <title>쿼터파이 프로젝트</title> <!-- Updated Title -->
+    <link rel="shortcut icon" type="image/x-icon" href="logo.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Added Viewport -->
+    <meta property="og:url" content="https://qpi-labels.github.io/main/">
+    <meta property="og:title" content="쿼터파이 프로젝트"> <!-- Updated OG Title -->
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="og.png">
+    <meta property="og:description" content="쿼터파이가 진행한 프로젝트들을 확인해보세요."> <!-- Updated OG Description -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+    <style>
+        :root {
+          --header-link-color: black;
+          --header-link-hover-color: rgb(0, 122, 255);
+          --header-link-visited-color: black;
+        }
+
+        body {
+            background-color: #fafafa;
+            color: black;
+            font-family: 'Pretendard Variable', Pretendard, Apple Color Emoji, sans-serif;
+            text-align: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            margin: 0;
+            padding-top: 70px; /* Adjusted based on header height */
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(250, 250, 250, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 10px 0; /* Reduced top/bottom padding slightly */
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1.5px solid rgba(229, 229, 234);
+            box-sizing: border-box;
+            min-height: 70px; /* Ensure header height consistency */
+        }
+
+        header .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* <<< Aligns title left, links right */
+            width: 100%;
+            max-width: 1200px;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        header h1 {
+            font-size: x-large;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .header-links {
+            display: flex;
+            gap: 30px; /* Slightly more gap */
+        }
+
+        .header-link {
+            color: var(--header-link-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .header-link:hover {
+            color: var(--header-link-hover-color);
+            text-decoration: underline;
+        }
+
+        .header-link:visited {
+          color: var(--header-link-visited-color);
+        }
+
+        img {
+            display: block; /* Use block for better layout control */
+            max-width: 100%;
+            height: auto;
+            margin-left: auto; /* Center images within containers if needed */
+            margin-right: auto;
+        }
+
+        .button-container {
+            margin-top: 25px; /* Slightly more top margin */
+        }
+
+        .access-button {
+            background-color: rgb(0, 122, 255);
+            color: #fff;
+            border: none;
+            padding: 14px 35px;
+            border-radius: 28px;
+            font-size: large;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 5px 5px 10px rgba(209, 217, 230, 0.7), -5px -5px 10px #ffffff;
+            transition: transform 0.2s ease-out, background-color 0.3s ease, box-shadow 0.3s ease;
+            display: inline-block;
+        }
+        .access-button:hover {
+            background-color: rgb(0, 150, 255);
+            transform: scale(1.05);
+        }
+
+        .main-button {
+            background-color: rgb(142, 142, 147);
+            color: #fff;
+            border: none;
+            padding: 9px 20px;
+            border-radius: 20px;
+            font-size: medium;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 5px 5px 10px rgba(209, 217, 230, 0.7), -5px -5px 10px #ffffff;
+            transition: transform 0.2s ease-out, background-color 0.3s ease, box-shadow 0.3s ease;
+            display: inline-block;
+        }
+        .main-button:hover {
+            background-color: rgb(174, 174, 178);
+            transform: scale(1.05);
+        }
+
+        .page-title-section {
+            margin-top: 10vh; /* Space above title */
+            margin-bottom: 15vh; /* Space below title */
+        }
+
+        .project-item {
+            margin-bottom: 15vh; /* Space between projects */
+            max-width: 1200px; /* Limit width for consistency */
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 20px; /* Add padding for content inside */
+            box-sizing: border-box;
+        }
+
+        .qiss-section { /* Inherits .project-item margin-bottom */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 100px; /* Adjusted gap */
+            flex-wrap: wrap;
+        }
+
+        .qiss-image-container {
+            flex-basis: 650px; /* Adjusted basis */
+            flex-shrink: 0;
+            text-align: center;
+        }
+
+        /* No extra style needed for picture img if general img style is block */
+
+        .qiss-details {
+            flex-basis: 300px; /* Adjusted basis */
+            flex-grow: 1;
+            max-width: 400px; /* Limit text growth */
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .qiss-details p:first-of-type {
+             font-size: xx-large; margin-bottom: 0.2em; font-weight: 600;
+        }
+        .qiss-details p:nth-of-type(2) {
+            font-size: large; /* Make description slightly larger */
+            margin-top: 0.5em; margin-bottom: 1.5em; line-height: 1.5; /* Improve readability */
+        }
+        .qiss-details .button-container {
+             margin-top: 0;
+        }
+
+        /* Standard Project Item Titles */
+         .project-item > p:first-of-type {
+             font-size: xx-large; margin-bottom: 0.2em; font-weight: 600;
+        }
+         .project-item > p:nth-of-type(2) {
+            font-size: large; margin-top: 0.5em; margin-bottom: 1.5em; color: #666; /* Subdue subtitle color */
+        }
+
+
+        footer { /* Changed from .footer */
+            margin-top: 15vh;
+            padding-bottom: 40px;
+            font-size: small;
+            color: #888; /* Slightly darker gray */
+        }
+
+        footer p {
+             margin-bottom: 0.5em;
+        }
+
+        /* --- Dark Mode --- */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --header-link-color: white;
+                --header-link-hover-color: rgb(10, 160, 255);
+                --header-link-visited-color: white;
+            }
+            body {
+                background-color: #121212;
+                color: white;
+            }
+            .access-button {
+                background-color: rgb(10, 132, 255);
+                box-shadow: none;
+            }
+            .access-button:hover {
+                background-color: rgb(10, 160, 255);
+            }
+            .main-button {
+                background-color: rgb(44, 44, 46);
+                box-shadow: none;
+            }
+             .main-button:hover {
+                 background-color: rgb(58, 58, 60);
+            }
+            header {
+                background-color: rgba(18, 18, 18, 0.8);
+                border-bottom: 1.5px solid rgba(60, 60, 60);
+            }
+            .project-item > p:nth-of-type(2) {
+                 color: #aaa; /* Lighter gray for dark mode subtitle */
+            }
+             footer {
+                 color: #aaa;
+            }
+        }
+
+        /* --- Responsive adjustments --- */
+         @media (max-width: 1100px) {
+             .qiss-section {
+                 flex-direction: column;
+                 gap: 60px; /* Reduce gap for vertical */
+                 text-align: center; /* Ensure text remains centered */
+             }
+             .qiss-details {
+                 flex-basis: auto;
+                 width: 90%; /* Allow text to take more width */
+                 max-width: 600px; /* Slightly wider max */
+                 margin: 0 auto;
+             }
+             .qiss-image-container {
+                 flex-basis: auto;
+                 width: 90%;
+                 max-width: 650px; /* Consistent max-width */
+             }
+         }
+
+         @media (max-width: 600px) { /* Consolidated smaller screen adjustments */
+             body {
+                 padding-top: 60px; /* Adjust if header height changes */
+             }
+             header {
+                 min-height: 60px;
+             }
+             header h1 {
+                 font-size: large;
+             }
+              .header-links {
+                 gap: 15px;
+             }
+             .header-link {
+                 font-size: small;
+             }
+
+             .page-title-section {
+                 margin-top: 8vh;
+                 margin-bottom: 12vh;
+             }
+             .page-title-section p:first-of-type {
+                 font-size: xx-large;
+             }
+             .page-title-section p:nth-of-type(2) {
+                 font-size: large;
+             }
+
+             .project-item {
+                 margin-bottom: 12vh;
+                 padding: 0 15px; /* Reduce padding */
+             }
+              .project-item > p:first-of-type,
+              .qiss-details p:first-of-type {
+                 font-size: x-large;
+             }
+              .project-item > p:nth-of-type(2),
+              .qiss-details p:nth-of-type(2) {
+                 font-size: medium; /* Smaller subtitles */
+             }
+
+             .access-button {
+                 padding: 12px 30px;
+                 font-size: medium;
+             }
+             .main-button {
+                 font-size: small;
+                 padding: 8px 18px;
+             }
+
+             .qiss-section {
+                 gap: 40px;
+             }
+         }
+
+    </style>
+
+    <script>
+        // Prevent context menu
+        document.addEventListener('contextmenu', function(e) {
+            // Allow context menu on input/textarea if needed in the future
+            // if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            e.preventDefault();
+        });
+
+        // Prevent text selection (consider usability implications)
+        document.addEventListener('selectstart', function(e) {
+            // Allow selection on input/textarea if needed in the future
+            // if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            e.preventDefault();
+        });
+    </script>
+
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <a href="https://qpi-labels.github.io/" style="text-decoration: none; color: inherit;">
+                <h1>QPI</h1>
+            </a>
+            <div class="header-links">
+                <a href="https://qpi.kro.kr/project/" class="header-link" target="_blank" rel="noopener noreferrer">Project</a>
+                <a href="https://github.com/qpi-labels/qpi-labels.github.io/discussions" class="header-link" target="_blank" rel="noopener noreferrer">Community</a>
+                <a href="mailto:cnsh31_1410@cnsh.hs.kr" class="header-link">Contact</a> <!-- mailto doesn't need target blank -->
+            </div>
+        </div>
+    </header>
+
+    <div class="page-title-section">
+        <p style="font-size: xxx-large; margin-bottom: 0.1em; font-weight: 700;">쿼터파이 프로젝트</p>
+        <p style="font-size: x-large; margin-top: 0.5em; margin-bottom: 0; font-weight: 550;">쿼터파이가 진행한 프로젝트</p>
+    </div>
+
+    <!-- QISS Project Item -->
+    <div class="project-item qiss-section">
+        <div class="qiss-image-container">
+            <picture>
+                <source media="(prefers-color-scheme: dark)" srcset="D_QISS.png">
+                <img src="L_QISS.png" alt="QPI QISS 서비스 미리보기"> <!-- Updated Alt Text -->
+            </picture>
+        </div>
+        <div class="qiss-details">
+            <p>QISS</p>
+            <p>학술검색을 쉽고 빠르게<br>QISS 학술검색 도우미</p>
+            <div class="button-container">
+                <button class="access-button" onclick="window.location.href='https://qpi.kro.kr/project/qiss/'">이동하기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- QETS Project Item -->
+    <div class="project-item">
+        <p>QETS</p>
+        <p>쿼터파이 주기율표</p>
+        <div class="button-container">
+            <button class="access-button" onclick="window.location.href='https://qpi-labels.github.io/qets/'">이동하기</button>
+        </div>
+    </div>
+
+    <!-- Q알리미 Project Item -->
+    <div class="project-item">
+        <p>Q알리미</p>
+        <p>학교 생활 정보 알리미</p> <!-- Slightly more descriptive -->
+        <div class="button-container">
+            <button class="access-button" onclick="window.location.href='https://qpi-ipret.github.io/q-alim/'">이동하기</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer> <!-- Changed from div -->
+        <p>2025 Q-PI, All Rights Reserved.</p>
+        <div class="button-container" style="margin-top: 15px;"> <!-- Reduced margin for footer button -->
+            <button class="main-button" onclick="window.location.href='https://qpi-labels.github.io/'">메인으로</button>
+        </div>
+    </footer>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
     <title>쿼터파이</title>
     <link rel="shortcut icon" type="image/x-icon" href="logo.ico">
     <meta property="og:url" content="https://qpi-labels.github.io/main/">
