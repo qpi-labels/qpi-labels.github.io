@@ -9,206 +9,52 @@
     <meta property="og:type" content="website">
     <meta property="og:image" content="og.png">
     <meta property="og:description" content="쿼터파이 - 충남과학고등학교 웹개발 동아리">
-    <style>
-        @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
 
-        :root {
-          /* Define default colors */
-          --header-link-color: black;
-          --header-link-hover-color: rgb(0, 122, 255);
-          --header-link-visited-color: black; /* Or choose a different visited color */
-        }
+    <!-- REMOVE the entire <style> block -->
 
-        body {
-            background-color: #fafafa;
-            color: black;
-            font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
-            text-align: center;
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            margin: 0; /* Remove default body margin */
-            padding-top: 60px; /* Add padding to prevent content from hiding behind fixed header */
-        }
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: rgba(250, 250, 250, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px); /* Safari */
-            padding: 10px 20px; /* Adjust padding: top/bottom left/right */
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: space-between; /* Pushes title left and links right */
-            border-bottom: 1.5px solid rgba(229, 229, 234);
-            box-sizing: border-box; /* Include padding and border in element's total width and height */
-            min-height: 60px; /* Ensure header has a minimum height */
-        }
-
-        .header-title-link {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        header h1 {
-            font-size: x-large;
-            margin: 0; /* Remove default margin */
-            font-weight: 550;
-            /* margin-left: 20px; <-- Removed, using header padding instead */
-        }
-        img {
-            display: block;
-            margin: 0 auto;
-            max-width: 100%;
-            height: auto;
-            transition: opacity 0.3s ease;
-        }
-        .button-container {
-            margin-top: 20px;
-        }
-        .access-button {
-            background-color: rgb(0, 122, 255);
-            color: #fff;
-            border: none;
-            padding: 15px 35px;
-            border-radius: 30px;
-            font-size: medium;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 5px 5px 10px rgba(209, 217, 230, 0.7), -5px -5px 10px #ffffff; /* Adjusted shadow */
-            transition: transform 0.2s ease-out, background-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        .access-button:hover {
-            background-color: rgb(0, 150, 255);
-            box-shadow: 5px 5px 10px rgba(209, 217, 230, 0.7), -5px -5px 10px #ffffff; /* Consistent shadow on hover */
-            transform: scale(1.05);
-        }
-        .header-links {
-            display: flex;
-            gap: 25px; /* Increased gap slightly */
-            /* margin-right: 50px; <-- Removed, using header padding instead */
-            /* text-allign: right; <-- Removed typo and unnecessary style */
-        }
-
-        .header-link {
-            color: var(--header-link-color);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s ease;
-            white-space: nowrap; /* Prevent links from wrapping */
-        }
-
-        .header-link:hover {
-            color: var(--header-link-hover-color);
-            text-decoration: underline;
-        }
-
-        .header-link:visited {
-          color: var(--header-link-visited-color);
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                /* Define dark mode colors */
-                --header-link-color: white;
-                --header-link-hover-color: rgb(10, 160, 255);
-                --header-link-visited-color: white; /* Or choose a different visited color */
-            }
-            body {
-                background-color: #121212;
-                color: white;
-            }
-            .access-button {
-                background-color: rgb(10, 132, 255);
-                box-shadow: none; /* Remove neumorphic shadow in dark mode */
-            }
-            .access-button:hover {
-                background-color: rgb(10, 160, 255);
-                box-shadow: none;
-            }
-            header {
-                background-color: rgba(18, 18, 18, 0.8);
-                border-bottom: 1.5px solid rgba(60, 60, 60);
-            }
-        }
-
-        /* Optional: Adjust spacing for smaller screens */
-        @media (max-width: 600px) {
-            header {
-                padding: 10px 15px; /* Reduce padding on smaller screens */
-            }
-            .header-links {
-                gap: 15px; /* Reduce gap between links */
-            }
-            header h1 {
-                 font-size: large; /* Slightly smaller title */
-            }
-            .header-link {
-                 font-size: small; /* Slightly smaller links */
-            }
-            body {
-                padding-top: 55px; /* Adjust body padding if header height changes */
-            }
-             h1 { /* Adjust main headings */
-                font-size: xx-large;
-            }
-             p { /* Adjust main paragraphs */
-                font-size: large;
-             }
-            .access-button {
-                padding: 12px 30px;
-                font-size: small;
-            }
-        }
-
-    </style>
+    <!-- Link the external stylesheets -->
+    <link rel="stylesheet" href="header-style.css">
+    <link rel="stylesheet" href="style.css">
 
     <script>
+        
         document.addEventListener('contextmenu', function(e) {
             // Allow context menu in specific cases if needed, e.g., on input fields
             // if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
             e.preventDefault();
         });
 
-        // Consider if preventing selection is truly necessary, it can harm usability.
-        // If needed, uncomment the following:
-        /*
         document.addEventListener('selectstart', function(e) {
             // Allow selection in specific cases if needed
             // if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
             e.preventDefault();
         });
-        */
 
         function updateLogo() {
             const logoImg = document.getElementById('logo');
-            if (!logoImg) return; // Exit if logo element not found
+            if (!logoImg) return;
             const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
             const targetSrc = isDarkMode ? 'logo_dark.png' : 'logo.png';
 
-            // Only update if the src needs changing to avoid unnecessary flicker
             if (logoImg.src.endsWith(targetSrc)) return;
 
-            logoImg.style.opacity = 0;
+            logoImg.style.opacity = 0; // Start fade out
             setTimeout(() => {
                 logoImg.src = targetSrc;
-                logoImg.style.opacity = 1;
-            }, 200); // Match transition duration
+                // Ensure image is loaded before fading in (optional but good)
+                logoImg.onload = () => { logoImg.style.opacity = 1; };
+                // Fallback if onload doesn't fire quickly (e.g., cached)
+                setTimeout(() => { logoImg.style.opacity = 1; }, 50); // Short delay
+            }, 150); // Slightly shorter than transition to allow fade in time
         }
 
         document.addEventListener("DOMContentLoaded", () => {
             updateLogo(); // Initial check
 
-            // Modern way to listen for changes
             const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
             if (darkModeMediaQuery.addEventListener) {
                 darkModeMediaQuery.addEventListener('change', updateLogo);
-            } else if (darkModeMediaQuery.addListener) { // Fallback for older browsers
+            } else if (darkModeMediaQuery.addListener) {
                 darkModeMediaQuery.addListener(updateLogo);
             }
         });
@@ -218,45 +64,47 @@
 
 <body>
     <header>
-        <a href="https://qpi-labels.github.io/" class="header-title-link">
-            <h1>QPI</h1>
-        </a>
-        <div class="header-links">
-            <a href="https://qpi.kro.kr/project/" class="header-link">Project</a>
-            <a href="https://github.com/qpi-labels/qpi-labels.github.io/discussions" class="header-link">Community</a>
-            <a href="mailto:cnsh31_1410@cnsh.hs.kr" class="header-link">Contact</a>
-        </div>
+            <a href="https://qpi-labels.github.io/" class="header-title-link">
+                <h1>QPI</h1>
+            </a>
+            <div class="header-links">
+                <a href="https://qpi.kro.kr/project/" class="header-link">Project</a>
+                <a href="https://github.com/qpi-labels/qpi-labels.github.io/discussions" class="header-link">Community</a>
+                <a href="mailto:cnsh31_1410@cnsh.hs.kr" class="header-link">Contact</a>
+            </div>
     </header>
 
-    
     <div style="margin-top: 32vh; margin-bottom: 48vh;">
-        
-        <img id="logo" src="logo.png" alt="QPI" width="400" height="200" style="max-width: 80vw;"> <!-- Added max-width for responsiveness -->
+        <img id="logo" src="logo.png" alt="QPI" width="400" height="200" style="max-width: 80vw; transition: opacity 0.3s ease;">
     </div>
 
-    <div style="margin-bottom: 30vh;">
-        <h1 style="font-size: xxx-large; margin-bottom: 0; font-weight: 700;">쿼터파이</h1>
-        <h1 style="font-size: xx-large; margin-top: 0.5em; margin-bottom: 1em; font-weight: 450;">Since 2024</h1>
-        <p style="font-size: x-large; margin-bottom: 0; font-weight: 350;">쿼터파이는 실용적인 웹사이트를 제작하는 웹 개발 동아리입니다.</p>
+    <!-- Main Title Section - Apply classes from style.css -->
+    <div class="page-title-section" style="margin-bottom: 30vh;"> <!-- Keep margin-bottom if different from default -->
+        <p class="page-title">쿼터파이</p>
+        <!-- "Since 2024" - Style might need adjustment or a new class -->
+        <p style="font-size: xx-large; margin-top: 0.5em; margin-bottom: 1em; font-weight: 450;">Since 2024</p>
+        <p class="page-subtitle">쿼터파이는 실용적인 웹사이트를 제작하는 웹 개발 동아리입니다.</p>
     </div>
 
-    <div style="margin-bottom: 15vh;">
-        <p style="font-size: xx-large; margin-bottom: 0; font-weight: 700;">상상을 현실로</p>
-        <p style="font-size: x-large; margin-top: 0.5em; margin-bottom: 1em; font-weight: 500;">쿼터파이 프로젝트</p>
+    <!-- Project Section - Apply classes from style.css -->
+    <div class="project-item"> <!-- project-item handles its own bottom margin -->
+        <p class="project-title">상상을 현실로</p>
+        <p class="project-description">쿼터파이 프로젝트</p>
         <div class="button-container">
-            <button class="access-button" onclick="window.location.href='https://qpi-labels.github.io/project/'">더 알아보기</button>
+            <button class="button button-large button-access" onclick="window.location.href='https://qpi-labels.github.io/project/'" target="blank">더 알아보기</button>
         </div>
     </div>
 
-    <div style="margin-bottom: 15vh;">
-        <p style="font-size: xx-large; margin-bottom: 0; font-weight: 700;">쿼터파이 커뮤니티</p>
-         <p style="font-size: x-large; margin-top: 0.5em; margin-bottom: 1em; font-weight: 500;">자유롭게 소통하고 참여하세요.</p> <!-- Added subtitle -->
+    <div class="project-item"> <!-- project-item handles its own bottom margin -->
+        <p class="project-title">쿼터파이 커뮤니티</p>
+        <p class="project-description">자유롭게 소통하고 참여하세요.</p>
         <div class="button-container">
-            <button class="access-button" onclick="window.location.href='https://github.com/qpi-labels/qpi-labels.github.io/discussions'">이동하기</button>
+            <button class="button button-large button-access" onclick="window.location.href='https://github.com/qpi-labels/qpi-labels.github.io/discussions'" target="blank">이동하기</button>
         </div>
     </div>
 
-    <footer style="margin-top: 10vh; padding-bottom: 30px; font-size: small; color: #888;">
+    <!-- Footer - Styles mainly come from the 'footer' tag selector in style.css -->
+    <footer> <!-- Removed inline margin/padding, handled by CSS -->
         <p>2025 Q-PI, All Rights Reserved.</p>
         <p>문의사항 : 2308 이재원 | <a href="mailto:cnsh31_1410@cnsh.hs.kr" style="color: inherit;">cnsh31_1410@cnsh.hs.kr</a></p>
     </footer>
