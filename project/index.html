@@ -5,7 +5,7 @@
     <title>쿼터파이 프로젝트</title>
     <link rel="shortcut icon" type="image/x-icon" href="logo.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta property="og:url" content="https://qpi-labels.github.io/main/">
+    <meta property="og:url" content="https://qpi.kro.kr/project/">
     <meta property="og:title" content="쿼터파이 프로젝트">
     <meta property="og:type" content="website">
     <meta property="og:image" content="og.png">
@@ -16,17 +16,46 @@
           --header-link-color: black;
           --header-link-hover-color: rgb(0, 122, 255);
           --header-link-visited-color: black;
+          --background-color: #fafafa;
+          --text-color: black;
+          --header-bg-color: rgba(250, 250, 250, 0.8);
+          --header-border-color: rgba(229, 229, 234);
+          --button-shadow: 5px 5px 10px rgba(209, 217, 230, 0.7), -5px -5px 10px #ffffff;
+          --button-access-bg: rgb(0, 122, 255);
+          --button-access-hover-bg: rgb(0, 150, 255);
+          --button-not-available-bg: rgb(180, 180, 180);
+          --button-main-bg: rgb(142, 142, 147);
+          --button-main-hover-bg: rgb(174, 174, 178);
+          --secondary-text-color: #666;
+          --footer-text-color: #888;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --header-link-color: white;
+                --header-link-hover-color: rgb(10, 160, 255);
+                --header-link-visited-color: white;
+                --background-color: #121212;
+                --text-color: white;
+                --header-bg-color: rgba(18, 18, 18, 0.8);
+                --header-border-color: rgba(60, 60, 60);
+                --button-shadow: none;
+                --button-access-bg: rgb(10, 132, 255);
+                --button-access-hover-bg: rgb(10, 160, 255);
+                --button-main-bg: rgb(44, 44, 46);
+                --button-main-hover-bg: rgb(58, 58, 60);
+                --secondary-text-color: #aaa;
+                --footer-text-color: #aaa;
+            }
         }
 
         body {
-            background-color: #fafafa;
-            color: black;
-            font-family: 'Pretendard Variable', Pretendard, Apple Color Emoji, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Pretendard Variable', Pretendard, 'Apple Color Emoji', sans-serif;
             text-align: center;
             user-select: none;
             -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
             margin: 0;
             padding-top: 70px;
         }
@@ -36,7 +65,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            background-color: rgba(250, 250, 250, 0.8);
+            background-color: var(--header-bg-color);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             padding: 10px 5px;
@@ -44,28 +73,27 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1.5px solid rgba(229, 229, 234);
+            border-bottom: 1.5px solid var(--header-border-color);
             box-sizing: border-box;
             min-height: 60px;
-            text-align: left;
         }
 
         .header-title-link {
             text-decoration: none;
             color: inherit;
-            text-align: left;
+            margin-left: 15px;
         }
 
-        header h1 {
+        .header-title-link h1 {
             font-size: x-large;
             margin: 0;
             font-weight: 550;
-            margin-left: 15px;
+            display: inline;
         }
+
         .header-links {
             display: flex;
             gap: 25px;
-            text-align: right;
             margin-right: 15px;
         }
 
@@ -75,11 +103,6 @@
             font-weight: 500;
             transition: color 0.2s ease;
             white-space: nowrap;
-        }
-
-        .header-link:hover {
-            color: var(--header-link-hover-color);
-            text-decoration: underline;
         }
 
         .header-link:visited {
@@ -95,61 +118,69 @@
         }
 
         .button-container {
-            margin-top: 25px; /* Slightly more top margin */
+            margin-top: 25px;
         }
 
-        .access-button {
-            background-color: rgb(0, 122, 255);
+        .button {
             color: #fff;
             border: none;
-            padding: 14px 35px;
-            border-radius: 28px;
-            font-size: large;
-            font-weight: 700;
             cursor: pointer;
-            box-shadow: 5px 5px 10px rgba(209, 217, 230, 0.7), -5px -5px 10px #ffffff;
+            box-shadow: var(--button-shadow);
             transition: transform 0.2s ease-out, background-color 0.3s ease, box-shadow 0.3s ease;
             display: inline-block;
+            text-decoration: none;
         }
-        .not-available {
-            background-color: rgb(180, 180, 180);
-            color: #fff;
-            border: none;
-            padding: 14px 35px;
-            border-radius: 28px;
-            font-size: large;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 5px 5px 10px rgba(209, 217, 230, 0.7), -5px -5px 10px #ffffff;
-            transition: transform 0.2s ease-out, background-color 0.3s ease, box-shadow 0.3s ease;
-            display: inline-block;
-        }
-        .access-button:hover {
-            background-color: rgb(0, 150, 255);
+
+        .button:hover {
             transform: scale(1.05);
         }
 
-        .main-button {
-            background-color: rgb(142, 142, 147);
-            color: #fff;
-            border: none;
+        .button-large {
+            padding: 14px 35px;
+            border-radius: 28px;
+            font-size: large;
+            font-weight: 700;
+        }
+
+        .button-medium {
             padding: 9px 20px;
             border-radius: 20px;
             font-size: medium;
             font-weight: 600;
-            cursor: pointer;
-            box-shadow: 5px 5px 10px rgba(209, 217, 230, 0.7), -5px -5px 10px #ffffff;
-            transition: transform 0.2s ease-out, background-color 0.3s ease, box-shadow 0.3s ease;
-            display: inline-block;
         }
-        .main-button:hover {
-            background-color: rgb(174, 174, 178);
-            transform: scale(1.05);
+
+        .button-access {
+            background-color: var(--button-access-bg);
+        }
+
+        .button-access:hover {
+            background-color: var(--button-access-hover-bg);
+        }
+
+        .button-not-available {
+            background-color: var(--button-not-available-bg);
+        }
+
+        .button-not-available:hover {
+             transform: none;
+        }
+
+        .button-main {
+            background-color: var(--button-main-bg);
+        }
+        .button-main:hover {
+            background-color: var(--button-main-hover-bg);
         }
 
         .page-title-section {
             margin-top: 10vh;
             margin-bottom: 15vh;
+        }
+        .page-title {
+             font-size: xxx-large; margin-bottom: 0.1em; font-weight: 700;
+        }
+        .page-subtitle {
+            font-size: x-large; margin-top: 0.5em; margin-bottom: 0; font-weight: 550;
         }
 
         .project-item {
@@ -159,6 +190,19 @@
             margin-right: auto;
             padding: 0 20px;
             box-sizing: border-box;
+        }
+
+        .project-item > .project-title,
+        .qiss-details > .project-title {
+             font-size: xx-large; margin-bottom: 0.2em; font-weight: 600;
+        }
+         .project-item > .project-description,
+         .qiss-details > .project-description {
+            font-size: large;
+            margin-top: 0.5em;
+            margin-bottom: 1.5em;
+            color: var(--secondary-text-color);
+            line-height: 1.5;
         }
 
         .qiss-section {
@@ -183,77 +227,28 @@
             box-sizing: border-box;
         }
 
-        .qiss-details p:first-of-type {
-             font-size: xx-large; margin-bottom: 0.2em; font-weight: 600;
-        }
-        .qiss-details p:nth-of-type(2) {
-            font-size: large;
-            margin-top: 0.5em; margin-bottom: 1.5em; line-height: 1.5;
-        }
         .qiss-details .button-container {
              margin-top: 0;
-        }
-
-         .project-item > p:first-of-type {
-             font-size: xx-large; margin-bottom: 0.2em; font-weight: 600;
-        }
-        
-         .project-item > p:nth-of-type(2) {
-            font-size: large; margin-top: 0.5em; margin-bottom: 1.5em; color: #666;
         }
 
         footer {
             margin-top: 15vh;
             padding-bottom: 40px;
             font-size: small;
-            color: #888;
+            color: var(--footer-text-color);
         }
 
         footer p {
              margin-bottom: 0.5em;
         }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --header-link-color: white;
-                --header-link-hover-color: rgb(10, 160, 255);
-                --header-link-visited-color: white;
-            }
-            body {
-                background-color: #121212;
-                color: white;
-            }
-            .access-button {
-                background-color: rgb(10, 132, 255);
-                box-shadow: none;
-            }
-            .access-button:hover {
-                background-color: rgb(10, 160, 255);
-            }
-            .main-button {
-                background-color: rgb(44, 44, 46);
-                box-shadow: none;
-            }
-             .main-button:hover {
-                 background-color: rgb(58, 58, 60);
-            }
-            header {
-                background-color: rgba(18, 18, 18, 0.8);
-                border-bottom: 1.5px solid rgba(60, 60, 60);
-            }
-            .project-item > p:nth-of-type(2) {
-                 color: #aaa;
-            }
-             footer {
-                 color: #aaa;
-            }
+        footer .button-container {
+             margin-top: 15px;
         }
 
          @media (max-width: 1100px) {
              .qiss-section {
                  flex-direction: column;
                  gap: 60px;
-                 text-align: center
              }
              .qiss-details {
                  flex-basis: auto;
@@ -265,17 +260,18 @@
                  flex-basis: auto;
                  width: 90%;
                  max-width: 650px;
+                 margin: 0 auto;
              }
          }
 
          @media (max-width: 600px) {
              body {
-                 padding-top: 60px; 
+                 padding-top: 60px;
              }
              header {
                  min-height: 60px;
              }
-             header h1 {
+             .header-title-link h1 {
                  font-size: large;
              }
               .header-links {
@@ -289,10 +285,10 @@
                  margin-top: 8vh;
                  margin-bottom: 12vh;
              }
-             .page-title-section p:first-of-type {
+             .page-title {
                  font-size: xx-large;
              }
-             .page-title-section p:nth-of-type(2) {
+             .page-subtitle {
                  font-size: large;
              }
 
@@ -300,20 +296,20 @@
                  margin-bottom: 12vh;
                  padding: 0 15px;
              }
-              .project-item > p:first-of-type,
-              .qiss-details p:first-of-type {
+              .project-item > .project-title,
+              .qiss-details > .project-title {
                  font-size: x-large;
              }
-              .project-item > p:nth-of-type(2),
-              .qiss-details p:nth-of-type(2) {
+              .project-item > .project-description,
+              .qiss-details > .project-description {
                  font-size: medium;
              }
 
-             .access-button {
+             .button-large {
                  padding: 12px 30px;
                  font-size: medium;
              }
-             .main-button {
+             .button-medium {
                  font-size: small;
                  padding: 8px 18px;
              }
@@ -339,7 +335,7 @@
 
 <body>
     <header>
-            <a href="https://qpi-labels.github.io/" style="text-decoration: none; color: inherit;">
+            <a href="https://qpi-labels.github.io/" class="header-title-link">
                 <h1>QPI</h1>
             </a>
             <div class="header-links">
@@ -350,63 +346,89 @@
     </header>
 
     
-    <div style="margin-top: 40vh;"></div>
-    <div class="page-title-section">
-        <p style="font-size: xxx-large; margin-bottom: 0.1em; font-weight: 700;">쿼터파이 프로젝트</p>
-        <p style="font-size: x-large; margin-top: 0.5em; margin-bottom: 0; font-weight: 550;">쿼터파이가 진행한 프로젝트</p>
-    </div>
-    <div style="margin-top: 48vh;"><div>
-    
-    
-    <div class="project-item qiss-section">
-        <div class="qiss-image-container">
-            <picture>
-                <source media="(prefers-color-scheme: dark)" srcset="D_QISS.png">
-                <img src="L_QISS.png" alt="QPI QISS 서비스 미리보기"> <!-- Updated Alt Text -->
-            </picture>
+    <main>
+        <div style="margin-top: 40vh;"></div>
+
+
+
+        <div class="page-title-section">
+            <p class="page-title">쿼터파이 프로젝트</p>
+            <p class="page-subtitle">쿼터파이가 진행한 프로젝트</p>
         </div>
-        <div class="qiss-details">
-            <p>QISS</p>
-            <p>한가지 주제를 여러 사이트에서 편하게 찾아보세요.<br>QISS는 충곽인이 가장 많이 사용하는 5개의<br>검색엔진과 논문 사이트¹에서 검색할 수 있습니다.</p>
-            <div class="button-container">
-                <button class="access-button" onclick="window.location.href='https://qpi.kro.kr/project/qiss/'">이동하기</button>
+
+      
+
+        <div style="margin-top: 48vh;"></div>
+
+
+
+        <div class="project-item qiss-section">
+            <div class="qiss-image-container">
+                <picture>
+                    <source media="(prefers-color-scheme: dark)" srcset="D_QISS.png">
+                    <img src="L_QISS.png" alt="QISS with iPad Pro 11-inch">
+                </picture>
+            </div>
+            <div class="qiss-details">
+                <p class="project-title">QISS</p>
+                <p>QISS 학술검색 도우미</p>
+                <div class="button-container">
+                    <button class="button button-large button-access" onclick="window.location.href='https://qpi.kro.kr/project/qiss/'">이동하기</button>
+                </div>
             </div>
         </div>
-    </div>
-        <div style="margin-top: 25vh;"><div>
 
-    
-    <div class="project-item">
-        <p>QETS</p>
-        <p>쿼터파이 주기율표</p>
-        <div class="button-container">
-            <button class="access-button" onclick="window.location.href='https://qpi-labels.github.io/qets/'">이동하기</button>
-        </div>
-    </div>
-    <div style="margin-top: 15vh;"><div>
 
-    <div class="project-item qiss-section">
-        <div class="qiss-image-container">
-            <picture>
-                <source media="(prefers-color-scheme: dark)" srcset="D_NOTIQ.png">
-                <img src="L_NOTIQ.png" alt="QPI NOTIQ 서비스 미리보기">
-            </picture>
-        </div>
-        <div class="qiss-details">
-            <p>NOTIQ</p>
-            <p>빠르고 정확하게.<br>NOTIQ는 교내 여러 행사와 수행평가를² 손쉽게<br>학년별로 확인할 수 있습니다. 초 단위로 알려주는³<br>잔여시간으로 누구보다 정확하게 기한을 지켜보세요.</p>
+
+        <div style="margin-top: 15vh;"></div>
+
+
+
+
+        <div style="margin-top: 25vh;"></div>
+
+        <div class="project-item">
+            <p class="project-title">QETS</p>
+            <p class="project-description">쿼터파이 주기율표</p>
             <div class="button-container">
-                <button class="not-available">  준비중  </button>
+                 <button class="button button-large button-access" onclick="window.location.href='https://qpi-labels.github.io/qets/'">이동하기</button>
             </div>
         </div>
-    </div>
 
-    <div style="margin-top: 40vh;"><div>
-    
-    <footer> <!-- Changed from div -->
+
+
+        <div style="margin-top: 15vh;"></div>
+
+
+
+        <div class="project-item qiss-section">
+            <div class="qiss-image-container">
+                <picture>
+                    <source media="(prefers-color-scheme: dark)" srcset="D_NOTIQ.png">
+                    <img src="L_NOTIQ.png" alt="NOTIQ with iPhone 15 Pro">
+                </picture>
+            </div>
+            <div class="qiss-details">
+                <p class="project-title">NOTIQ</p>
+                <p>교내 이벤트 알림</p>
+                <div class="button-container">
+                    <button class="button button-large button-not-available">준비중</button>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div style="margin-top: 40vh;"></div>
+
+
+
+    </main>
+
+    <footer>
         <p>2025 Q-PI, All Rights Reserved.</p>
-        <div class="button-container" style="margin-top: 15px;"> <!-- Reduced margin for footer button -->
-            <button class="main-button" onclick="window.location.href='https://qpi-labels.github.io/'">메인으로</button>
+        <div class="button-container">
+            <button class="button button-medium button-main" onclick="window.location.href='https://qpi-labels.github.io/'">메인으로</button>
         </div>
     </footer>
 
