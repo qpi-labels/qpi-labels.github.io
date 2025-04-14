@@ -10,10 +10,7 @@
     <meta property="og:image" content="og.png">
     <meta property="og:description" content="만족도 2년연속 1위! 쿼터파이">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <style>
-        <link rel="stylesheet" href="/qpi-labels.github.io/style.css">
-
         @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
 
         :root {
@@ -60,6 +57,27 @@
             transition: background-color 0.3s ease, color 0.3s ease;
             margin: 0;
             padding-top: 60px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--header-bg-color);
+            backdrop-filter: blur(10px);
+            padding: 13px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1.5px solid var(--header-border-color);
+        }
+
+        header h1 {
+            font-size: x-large;
+            margin: 0 0 0 20px;
+            font-weight: 700;
         }
 
         .logo-link {
