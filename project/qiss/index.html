@@ -60,25 +60,58 @@
         }
 
         header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: var(--header-bg-color);
-            backdrop-filter: blur(10px);
-            padding: 13px;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1.5px solid var(--header-border-color);
-        }
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--header-bg-color);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 10px 5px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1.5px solid var(--header-border-color);
+    box-sizing: border-box;
+    min-height: 60px;
+}
 
-        header h1 {
-            font-size: x-large;
-            margin: 0 0 0 20px;
-            font-weight: 700;
-        }
+.header-title-link {
+    text-decoration: none;
+    color: inherit;
+    margin-left: 15px;
+}
+
+.header-title-link h1 {
+    font-size: x-large;
+    margin: 0;
+    font-weight: 550;
+    display: inline;
+}
+
+.header-links {
+    display: flex;
+    gap: 25px;
+    margin-right: 15px;
+}
+
+.header-link {
+    color: var(--header-link-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+}
+
+.header-link:hover {
+    color: var(--header-link-hover-color);
+    text-decoration: underline;
+}
+
+.header-link:visited {
+  color: var(--header-link-visited-color);
+}
 
         .logo-link {
             text-decoration: none;
@@ -165,7 +198,7 @@
 </head>
 <body>
     <header>
-        <a href="https://qpi-labels.github.io/" class="logo-link">
+        <a href="https://qpi-labels.github.io/" class="header-title-link">
             <h1>QPI</h1>
         </a>
         <div class="header-links">
