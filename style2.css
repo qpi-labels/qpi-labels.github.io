@@ -49,10 +49,6 @@ body {
     padding-top: 70px; /* Space for fixed header */
 }
 
-.tossface {
-  font-family: 'Helvetica Neue', Tossface;
-}
-
 header {
     position: fixed;
     top: 0;
