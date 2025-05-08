@@ -41,7 +41,7 @@
 body {
     background-color: var(--background-color);
     color: var(--text-color);
-    font-family: "Helvetica Neue", 'Pretendard Variable', TossFace, sans-serif;
+    font-family: 'Pretendard Variable', TossFace, sans-serif;
     text-align: center;
     user-select: none;
     -webkit-user-select: none;
