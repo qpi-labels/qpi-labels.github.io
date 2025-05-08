@@ -39,14 +39,16 @@
 body {
     background-color: var(--background-color);
     color: var(--text-color);
-    font-family: "orbit", Apple Color Emoji, sans-serif;
+    font-family: "Pretendard Variable", Apple Color Emoji, sans-serif;
     text-align: center;
     user-select: none;
     -webkit-user-select: none;
     margin: 0;
     padding-top: 70px; /* Space for fixed header */
 }
-
+:lang(en) {
+  font-family: "orbit", "Apple Color Emoji", sans-serif; /* 영어 부분 */
+}
 header {
     position: fixed;
     top: 0;
