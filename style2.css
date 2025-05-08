@@ -39,7 +39,7 @@
 body {
     background-color: var(--background-color);
     color: var(--text-color);
-    font-family: "Orbit", "Pretendard Variable", Apple Color Emoji, sans-serif;
+    font-family: TossFace, "Orbit", "Pretendard Variable", Apple Color Emoji, sans-serif;
     text-align: center;
     user-select: none;
     -webkit-user-select: none;
