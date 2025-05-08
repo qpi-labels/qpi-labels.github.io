@@ -41,7 +41,7 @@
 body {
     background-color: var(--background-color);
     color: var(--text-color);
-    font-family: 'Helvetica Neue', "Pretendard Variable", TossFace, sans-serif;
+    font-family: "Helvetica Neue", 'Pretendard Variable', TossFace, sans-serif;
     text-align: center;
     user-select: none;
     -webkit-user-select: none;
@@ -50,7 +50,7 @@ body {
 }
 
 .tossface {
-  font-family: Tossface;
+  font-family: 'Helvetica Neue', Tossface;
 }
 
 header {
