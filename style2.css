@@ -1,3 +1,5 @@
+@import url('https://fonts.cdnfonts.com/css/helvetica-neue-55');
+
 :root {
   --header-link-color: black;
   --header-link-hover-color: rgb(0, 122, 255);
@@ -35,18 +37,20 @@
         --footer-text-color: #aaa;
     }
 }
-.tossface {
-  font-family: Tossface;
-}
+
 body {
     background-color: var(--background-color);
     color: var(--text-color);
-    font-family: TossFace, "Orbit", "Pretendard Variable", Apple Color Emoji, sans-serif;
+    font-family: 'Helvetica Neue', "Pretendard Variable", TossFace, sans-serif;
     text-align: center;
     user-select: none;
     -webkit-user-select: none;
     margin: 0;
     padding-top: 70px; /* Space for fixed header */
+}
+
+.tossface {
+  font-family: Tossface;
 }
 
 header {
