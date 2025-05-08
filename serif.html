@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>쿼터파이</title>
+    <link rel="shortcut icon" type="image/x-icon" href="logo.ico">
+    <meta property="og:url" content="https://qpi.kro.kr/">
+    <meta property="og:title" content="쿼터파이">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="og.png">
+    <meta property="og:description" content="쿼터파이 - 웹개발 동아리">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbit&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style2.css">
+
+    <script>
+        
+        document.addEventListener('contextmenu', function(e) {
+            // Allow context menu in specific cases if needed, e.g., on input fields
+            // if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            e.preventDefault();
+        });
+
+        document.addEventListener('selectstart', function(e) {
+            // Allow selection in specific cases if needed
+            // if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            e.preventDefault();
+        });
+
+        function updateLogo() {
+            const logoImg = document.getElementById('logo');
+            if (!logoImg) return;
+            const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const targetSrc = isDarkMode ? 'logo_dark.png' : 'logo.png';
+
+            if (logoImg.src.endsWith(targetSrc)) return;
+
+            logoImg.style.opacity = 0; // Start fade out
+            setTimeout(() => {
+                logoImg.src = targetSrc;
+                // Ensure image is loaded before fading in (optional but good)
+                logoImg.onload = () => { logoImg.style.opacity = 1; };
+                // Fallback if onload doesn't fire quickly (e.g., cached)
+                setTimeout(() => { logoImg.style.opacity = 1; }, 50); // Short delay
+            }, 150); // Slightly shorter than transition to allow fade in time
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            updateLogo(); // Initial check
+
+            const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            if (darkModeMediaQuery.addEventListener) {
+                darkModeMediaQuery.addEventListener('change', updateLogo);
+            } else if (darkModeMediaQuery.addListener) {
+                darkModeMediaQuery.addListener(updateLogo);
+            }
+        });
+
+    </script>
+</head>
+
+<body>
+    <header>
+            <a href="https://qpi-labels.github.io/" class="header-title-link">
+                <h1>QPI</h1>
+            </a>
+            <div class="header-links">
+                <a href="https://qpi.kro.kr/project/" class="header-link">Project</a>
+                <a href="https://github.com/qpi-labels/qpi-labels.github.io/discussions" class="header-link">Community</a>
+                <a href="mailto:cnsh31_1410@cnsh.hs.kr" class="header-link">Contact</a>
+            </div>
+    </header>
+
+    <div style="margin-top: 32vh; margin-bottom: 48vh;">
+        <img id="logo" src="logo.png" alt="QPI" width="400" height="200" style="max-width: 80vw; transition: opacity 0.3s ease;">
+    </div>
+
+    <div class="page-title-section" style="margin-bottom: 30vh;">
+        <p style="font-size: 3vw; margin-top: 0.5em; margin-bottom: 0em; font-weight: 800;">작은 조각이 만드는 큰 가능성.</p>
+        <p style="font-size: xx-large; margin-top: 0.5em; margin-bottom: 1em; font-weight: 450;">쿼터파이</p>
+        <p class="page-subtitle">쿼터파이는 충남과학고등학교의 웹 개발 동아리입니다.</p>
+    </div>
+
+    <div class="project-item"> <!-- project-item handles its own bottom margin -->
+        <p class="project-title">쿼터파이 프로젝트</p>
+        <p class="project-description">다양한 프로젝트</p>
+        <div class="button-container">
+            <button class="button button-large button-access" onclick="window.location.href='https://qpi-labels.github.io/project/'" target="blank">더 알아보기</button>
+        </div>
+    </div>
+
+    <div class="project-item"> <!-- project-item handles its own bottom margin -->
+        <p class="project-title">쿼터파이 커뮤니티</p>
+        <p class="project-description">자유롭게 소통하고 참여하세요.</p>
+        <div class="button-container">
+            <button class="button button-large button-access" onclick="window.location.href='https://github.com/qpi-labels/qpi-labels.github.io/discussions'" target="blank">이동하기</button>
+        </div>
+    </div>
+
+    <footer> <!-- Removed inline margin/padding, handled by CSS -->
+        <p>2025 QPI, All Rights Reserved.</p>
+        <p>문의사항 : 2308 이재원 | <a href="mailto:cnsh31_1410@cnsh.hs.kr" style="color: inherit;">cnsh31_1410@cnsh.hs.kr</a></p>
+    </footer>
+    <iframe allow="autoplay *; encrypted-media *;" frameborder="0" height="150" style="width:100%;max-width:660px;overflow:hidden;background:transparent;" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation" src="https://embed.music.apple.com/kr/album/black-star/1097862703?i=1097863219"></iframe>
+</body>
+</html>
