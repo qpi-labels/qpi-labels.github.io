@@ -166,10 +166,10 @@ img {
 .page-title-section {
     /* Adjusted margins back to original values, considering the spacer divs */
     margin-top: 10vh;
-    margin-bottom: 40vh;
+    margin-bottom: 30vh;
 }
 .page-title {
-     font-size: xx-large; margin-bottom: 0.1em; font-weight: 800;
+     font-size: xxx-large; margin-bottom: 0.1em; font-weight: 800;
 }
 .page-subtitle {
     font-size: x-large; margin-top: 0.5em; margin-bottom: 0; font-weight: 550;
