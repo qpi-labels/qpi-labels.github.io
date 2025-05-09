@@ -22,47 +22,8 @@
 
     <script>
         
-        document.addEventListener('contextmenu', function(e) {
-            // Allow context menu in specific cases if needed, e.g., on input fields
-            // if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-            e.preventDefault();
-        });
-
-        document.addEventListener('selectstart', function(e) {
-            // Allow selection in specific cases if needed
-            // if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-            e.preventDefault();
-        });
-
-        function updateLogo() {
-            const logoImg = document.getElementById('logo');
-            if (!logoImg) return;
-            const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const targetSrc = isDarkMode ? 'logo_dark.png' : 'logo.png';
-
-            if (logoImg.src.endsWith(targetSrc)) return;
-
-            logoImg.style.opacity = 0; // Start fade out
-            setTimeout(() => {
-                logoImg.src = targetSrc;
-                // Ensure image is loaded before fading in (optional but good)
-                logoImg.onload = () => { logoImg.style.opacity = 1; };
-                // Fallback if onload doesn't fire quickly (e.g., cached)
-                setTimeout(() => { logoImg.style.opacity = 1; }, 50); // Short delay
-            }, 150); // Slightly shorter than transition to allow fade in time
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            updateLogo(); // Initial check
-
-            const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-            if (darkModeMediaQuery.addEventListener) {
-                darkModeMediaQuery.addEventListener('change', updateLogo);
-            } else if (darkModeMediaQuery.addListener) {
-                darkModeMediaQuery.addListener(updateLogo);
-            }
-        });
-
+    <!-- 쓸 스크립트가 딱히 없음 --!>
+        
     </script>
 </head>
 
