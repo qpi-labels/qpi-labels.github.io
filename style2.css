@@ -172,10 +172,13 @@ img {
     margin-bottom: 40vh;
 }
 .page-title {
-     font-size: 6rem; margin-bottom: 0.1em; font-weight: 800;
+     font-size: xxx-large; margin-top: 0em; margin-bottom: 0em; font-weight: 800; TossFace;
 }
 .page-subtitle {
-    font-size: x-large; margin-top: 0.5em; margin-bottom: 0; font-weight: 550;
+    font-size: xx-large; margin-top: 0em; margin-bottom: 0; font-weight: 400;
+}
+.page-upper {
+    font-size: x-large; margin-top: 0em; margin-bottom: 0; font-weight: 400;
 }
 
 .project-item {
