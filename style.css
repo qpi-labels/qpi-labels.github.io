@@ -1,3 +1,6 @@
+@import url('https://fonts.cdnfonts.com/css/helvetica-neue-55');
+@import url('https://fonts.cdnfonts.com/css/br-cobane');
+
 :root {
   --header-link-color: black;
   --header-link-hover-color: rgb(0, 122, 255);
@@ -39,7 +42,7 @@
 body {
     background-color: var(--background-color);
     color: var(--text-color);
-    font-family: 'Pretendard Variable', Pretendard, Apple Color Emoji, sans-serif;
+    font-family: "BR Cobane", 'Pretendard Variable', TossFace, sans-serif;
     text-align: center;
     user-select: none;
     -webkit-user-select: none;
@@ -166,13 +169,16 @@ img {
 .page-title-section {
     /* Adjusted margins back to original values, considering the spacer divs */
     margin-top: 10vh;
-    margin-bottom: 30vh;
+    margin-bottom: 40vh;
 }
 .page-title {
-     font-size: xxx-large; margin-bottom: 0.1em; font-weight: 800;
+     font-size: xxx-large; margin-top: 0em; margin-bottom: 0em; font-weight: 800; TossFace;
 }
 .page-subtitle {
-    font-size: x-large; margin-top: 0.5em; margin-bottom: 0; font-weight: 550;
+    font-size: xx-large; margin-top: 0em; margin-bottom: 0; font-weight: 400;
+}
+.page-upper {
+    font-size: x-large; margin-top: 0em; margin-bottom: 0; font-weight: 400;
 }
 
 .project-item {
