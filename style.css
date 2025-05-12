@@ -56,8 +56,8 @@ header {
     left: 0;
     width: 100%;
     background-color: var(--header-bg-color);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
     padding: 10px 5px;
     z-index: 100;
     display: flex;
