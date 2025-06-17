@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Live Stream</title>
+    <!-- HLS.js 라이브러리: HLS 스트리밍을 재생하기 위한 필수 스크립트 -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        /* 간단한 디자인 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #18181b; /* 다크 모드 배경 */
+            color: #efeff1; /* 밝은 텍스트 색상 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        #stream-wrapper {
+            width: 100%;
+            max-width: 1280px; /* 최대 너비 설정 */
+            aspect-ratio: 16 / 9; /* 16:9 비율 유지 */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            background-color: #000;
+        }
+        #video-player {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        h1 {
+            margin-bottom: 24px;
+            font-size: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🔴 MY LIVE STREAM</h1>
+
+    <div id="stream-wrapper">
+        <video id="video-player" controls autoplay muted playsinline></video>
+    </div>
+
+    <script>
+        // ==================================================================
+        // ⚠️ 이 아래 두 개의 값만 당신의 정보로 정확하게 수정하세요! ⚠️
+        // ==================================================================
+
+        // 1. 당신의 Oracle Cloud 서버 공인 IP 주소를 입력하세요.
+        const YOUR_SERVER_IP = "155.248.205.232"; // 예시 IP입니다. 본인 IP로 변경!
+
+        // 2. OBS에서 설정한 스트림 키를 입력하세요. (예: "test")
+        const YOUR_STREAM_KEY = "test";
+
+        // ==================================================================
+        // 아래 코드는 수정할 필요 없습니다.
+        // ==================================================================
+
+        const videoPlayer = document.getElementById('video-player');
+        
+        // HLS 스트림 주소 자동 생성
+        const hlsUrl = `http://155.248.205.232:8080/hls/test.m3u8`;
+
+        console.log("스트리밍 주소:", hlsUrl);
+
+        if (Hls.isSupported()) {
+            console.log("HLS.js를 사용하여 재생합니다.");
+            const hls = new Hls();
+            hls.loadSource(hlsUrl);
+            hls.attachMedia(videoPlayer);
+            hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                videoPlayer.play().catch(error => {
+                    console.warn("자동 재생이 브라우저 정책에 의해 차단되었습니다. 사용자의 클릭이 필요합니다.", error);
+                });
+            });
+            // 오류 발생 시 로그 출력
+            hls.on(Hls.Events.ERROR, function(event, data) {
+                if (data.fatal) {
+                    console.error("치명적인 오류 발생:", data.type, data.details);
+                }
+            });
+        } 
+        // HLS.js를 지원하지 않는 브라우저(예: Safari)의 경우
+        else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+            console.log("브라우저의 기본 HLS 기능을 사용하여 재생합니다.");
+            videoPlayer.src = hlsUrl;
+            videoPlayer.addEventListener('loadedmetadata', function () {
+                videoPlayer.play().catch(error => {
+                    console.warn("자동 재생이 브라우저 정책에 의해 차단되었습니다. 사용자의 클릭이 필요합니다.", error);
+                });
+            });
+        } else {
+            alert("이 브라우저에서는 스트리밍을 재생할 수 없습니다.");
+        }
+    </script>
+
+</body>
+</html>
