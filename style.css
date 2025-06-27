@@ -241,7 +241,7 @@ img {
     background-image: url(https://i.namu.wiki/i/S7jecHtsA50s60wuXJrlInXIAvJXT4kzxu9X64zHDH0xs2C55lHmVYCmArZPnkIrIW8ZZ_dPA6mAnk_dUjlU_g.webp);
     background-size: cover;
     background-position: center;
-    height: 400px;
+    aspect-ratio: 16 / 9;
     width: 100%;
     display: flex;
     justify-content: center;
