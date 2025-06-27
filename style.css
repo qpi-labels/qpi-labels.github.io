@@ -343,3 +343,67 @@ footer .button-container {
          gap: 40px;
      }
  }
+footer {
+    background-color: #1a1a1a; /* 어두운 배경색 */
+    color: RGB(250, 250, 250); /* 기본 텍스트 색상 (회색) */
+    padding: 50px 20px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.footer-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.footer-links {
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+}
+
+.footer-links a {
+    color: #f0f0f0; /* 링크 텍스트 색상 (밝은 회색) */
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #ffffff; /* 호버 시 흰색으로 변경 */
+    text-decoration: underline;
+}
+
+.footer-disclaimer {
+    font-size: 12px;
+    color: #777; /* 면책조항은 더 연한 색상으로 */
+    text-align: left; /* 긴 글은 왼쪽 정렬이 가독성이 좋음 */
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
+    padding: 25px 0;
+    margin-bottom: 25px;
+}
+
+.footer-disclaimer p {
+    margin-bottom: 12px;
+}
+
+.footer-disclaimer p:last-child {
+    margin-bottom: 0;
+}
+
+.footer-info {
+    font-size: 13px;
+    margin-bottom: 25px;
+}
+
+.footer-info p {
+    margin: 5px 0;
+}
+
+.footer-copyright {
+    font-size: 13px;
+    color: #888;
+}
