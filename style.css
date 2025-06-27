@@ -172,7 +172,7 @@ img {
     margin-bottom: 40vh;
 }
 .page-title {
-     font-size: xxx-large; margin-top: 0em; margin-bottom: 0em; font-weight: 800; TossFace;
+     font-size: xxx-large; margin-top: 0em; margin-bottom: 0em; font-weight: 700; TossFace;
 }
 .page-subtitle {
     font-size: xx-large; margin-top: 0em; margin-bottom: 0; font-weight: 400;
@@ -193,7 +193,14 @@ img {
 
 .project-item > .project-title,
 .qiss-details > .project-title {
-     font-size: xx-large; margin-bottom: 0.2em; font-weight: 600;
+     font-size: xx-large; margin-bottom: 0.2em; font-weight: 700;
+}
+ .project-item > .project-subtitle,
+ .qiss-details > .project-subtitle {
+    font-size: x-large;
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+	font-weight: 600;
 }
  .project-item > .project-description,
  .qiss-details > .project-description {
@@ -228,6 +235,21 @@ img {
 
 .qiss-details .button-container {
      margin-top: 0;
+}
+
+.hero-banner {
+    background-image: url(https://i.namu.wiki/i/S7jecHtsA50s60wuXJrlInXIAvJXT4kzxu9X64zHDH0xs2C55lHmVYCmArZPnkIrIW8ZZ_dPA6mAnk_dUjlU_g.webp);
+    background-size: cover;
+    background-position: center;
+    height: 400px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 2.5rem;
+    font-weight: medium;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 footer {
