@@ -237,7 +237,6 @@
             border-radius: 15px;
             padding: 3rem;
             margin-bottom: 3rem;
-            box-shadow: var(--button-shadow);
         }
 
         .philosophy-quote {
@@ -294,7 +293,6 @@
             background-color: var(--background-color);
             border-radius: 10px;
             padding: 2rem;
-            box-shadow: var(--button-shadow);
         }
 
         .color-theme-card h3 {
@@ -335,11 +333,8 @@
         }
 
         .font-card {
-            background-color: var(--background-color);
-            border: 1px solid var(--header-border-color);
             border-radius: 10px;
             padding: 2rem;
-            box-shadow: var(--button-shadow);
         }
 
         .font-name {
