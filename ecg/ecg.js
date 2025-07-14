@@ -21,8 +21,14 @@ const elBpm      = $('bpm');
 const elTimer    = $('timer');
 
 /* -------- 차트 생성 -------- */
-function initChart() {
-  chart = new Chart($('chart'), {
+function initChart () {
+  const canvas = $('chart');
+
+  /* 🔐 이미 묶여 있던 Chart 인스턴스가 있으면 먼저 제거 */
+  const oldChart = Chart.getChart(canvas);   // Chart.js v4 전용
+  if (oldChart) oldChart.destroy();
+
+  chart = new Chart(canvas, {
     type : 'line',
     data : { labels: [], datasets: [{
       label       : 'ADC',
@@ -37,6 +43,7 @@ function initChart() {
     }
   });
 }
+
 
 /* -------- 세션 리셋 -------- */
 function resetSession(hard = false) {
