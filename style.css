@@ -260,10 +260,10 @@
         }
 
         .principle-item {
+            border: 1px solid var(--header-border-color);
             border-radius: 10px;
             padding: 2rem;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: var(--button-shadow);
         }
 
         .principle-item:hover {
@@ -291,6 +291,7 @@
 
         .color-theme-card {
             background-color: var(--background-color);
+            border: 1px solid var(--header-border-color);
             border-radius: 10px;
             padding: 2rem;
         }
@@ -333,6 +334,7 @@
         }
 
         .font-card {
+            border: 1px solid var(--header-border-color);
             border-radius: 10px;
             padding: 2rem;
         }
@@ -366,6 +368,7 @@
 
         .pretendard {
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-weight: 500;
         }
 
         .year-badge {
@@ -481,5 +484,10 @@
 
             .philosophy-author {
                 font-size: medium;
+            }
+            .color-item span {
+                width: 70px; /* 원하는 너비로 조절하세요 */
+                display: inline-block;
+                text-align: left;
             }
         }
