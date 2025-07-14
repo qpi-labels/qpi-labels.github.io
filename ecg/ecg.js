@@ -1,60 +1,66 @@
-const SERVICE     = 0x180D;
-const CHARACTERISTIC = 0x2A37;
-let chart;
-let x = 0;
-let lastPeak = 0
+/***************** ECG Live (BPM 포함) *****************/
+const SERVICE = 0x180D;             // Heart-Rate Service
+const CHAR    = 0x2A37;             // Measurement Char.
+let chart, x = 0;                   // 샘플 번호
+let baseline = 0, calCount = 0;     // 베이스라인 계산용
+let lastPeak = 0;                   // 직전 피크 시각(ms)
 
+/* ─ 연결 버튼 ─ */
 document.getElementById('connectBtn').onclick = async () => {
   try {
     const dev = await navigator.bluetooth.requestDevice({
-      filters: [{ name: 'ECG_R4' }],
-      optionalServices: [SERVICE],
-    });
-    const chr = await (await dev.gatt.connect())
-                    .getPrimaryService(SERVICE)
-                    .then(s => s.getCharacteristic(CHARACTERISTIC));
+      filters:[{name:'ECG_R4'}], optionalServices:[SERVICE]});
+    const server = await dev.gatt.connect();
+    await new Promise(r => setTimeout(r, 100));   // 초기화 여유
+    const svc = await server.getPrimaryService(SERVICE);
+    const chr = await svc.getCharacteristic(CHAR);
 
     initChart();
     await chr.startNotifications();
     chr.addEventListener('characteristicvaluechanged', e => {
-      const v = e.target.value.getUint16(0, true);
+      const v = e.target.value.getUint16(0,true);
       pushData(v);
     });
     setStatus('Connected');
-  } catch (e) { setStatus('Error: ' + e); }
+  } catch(e){ setStatus('Error: '+e.message); }
 };
 
-function initChart() {
-  chart = new Chart(
-    document.getElementById('chart'),
-    { type: 'line',
-      data:{labels:[],datasets:[{data:[],borderWidth:1}]},
-      data:{labels:[],datasets:[{label:'ADC',data:[],borderWidth:1}]},
-      options: { animation: false, scales: { x: { display: false } } } }
-  );
+/* ─ 차트 초기화 ─ */
+function initChart(){
+  chart = new Chart(document.getElementById('chart'),{
+    type:'line',
+    data:{labels:[],datasets:[{label:'ADC',data:[],borderWidth:1}]},
+    options:{animation:false, scales:{x:{display:false}}}
+  });
 }
-function pushData(val) {
+
+/* ─ 데이터 푸시 + BPM 계산 ─ */
+function pushData(v){
   const d = chart.data.datasets[0].data;
-  d.push(val); if (d.length>500) d.shift();
-  d.push(val); chart.data.labels.push(x++);
-  if (d.length>500) { d.shift(); chart.data.labels.shift(); }
+  d.push(v); chart.data.labels.push(x++);
+  if(d.length>500){ d.shift(); chart.data.labels.shift(); }
 
+  /* 1) 처음 1초(~100샘플) 평균 → baseline */
+  if(calCount < 100){ baseline += v; calCount++; return; }
+  if(calCount === 100){ baseline /= 100; calCount++; }
 
-  /* ─ 피크(맥박) 탐지 ─ 매우 단순 방법:
-       ▸ 이번 값이 직전 두 값보다 크고
-       ▸ 값이 2000(10-bit 기준) 이상일 때만 심박으로 판단            */
-  if (d.length > 3) {
-      const a = d[d.length-4], b = d[d.length-3], c = d[d.length-2], e = d[d.length-1];
-      if (Math.max([a,b,c,e])>=560 && Math.min([a,b,c,e])<560) {
-          const now = Date.now();
-          if (lastPeak) {
-              const bpm = 60000 / (now - lastPeak);
-              document.getElementById('bpm').textContent =
-                  bpm.toFixed(0) + ' BPM';
-          }
-          lastPeak = now;
+  const thresh = baseline + 80;      // 임계 = 베이스라인+80
+  /* 2) 아주 단순한 피크 판정 ↓ */
+  const l = d.length;
+  if(l>2){
+    const a=d[l-3], b=d[l-2], c=d[l-1];
+    if(b>a && b>c && b>thresh){
+      const now = Date.now();
+      if(lastPeak){
+        const bpm = 60000/(now-lastPeak);
+        document.getElementById('bpm').textContent =
+          bpm.toFixed(0)+' BPM';
       }
+      lastPeak = now;
+    }
   }
   chart.update('none');
 }
-const setStatus = txt => document.getElementById('status').textContent = txt;
+
+/* ─ 상태 텍스트 변경 ─ */
+const setStatus = t => document.getElementById('status').textContent = t;
