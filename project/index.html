@@ -69,6 +69,8 @@
 
         <div style="margin-top: 48vh;"></div>
 
+
+        
         <div style="margin-top: 25vh;"></div>
 
         <div class="project-item">
@@ -100,8 +102,9 @@
                 </div>
             </div>
         </div>
-
         <div style="margin-top: 40vh;"></div>
+
+
         
         <div class="project-item">
             <p class="project-title">HEART Q</p>
@@ -112,62 +115,65 @@
         </div>
 
         <div style="margin-top: 40vh;"></div>
-    <!DOCTYPE html>
+
+
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <title>SPACE Q</title>
+<meta charset="utf-8" />
+<title>SPACE Q</title>
 
-  <!-- ① 여기부터: CSS 를 문서 안에 직접 작성 -->
-  <style>
-    /* 배경 그림이 깔리고 글씨·버튼이 가운데 오는 히어로 섹션 */
-    .hero {
-      min-height: 100vh;                       /* 화면 꽉 채우기 */
-      background: url("SPACE-Q.img.png")       /* 배경 그림 */
-                  center/cover no-repeat;
-      display: flex;                           /* 가운데 정렬용 */
-      justify-content: center;
-      align-items: center;
-      color: #fff;                             /* 글자 흰색 */
-      text-align: center;
-    }
+<style>
+/* ---------- Hero 영역 ---------- */
+.hero{
+  min-height:100vh;
+  background:url("rocket.jpg") center/cover no-repeat; /* 로고 없는 로켓 이미지 */
+  display:flex; justify-content:center; align-items:center;
+  color:#fff; text-align:center;
+}
+.hero-content{display:flex; flex-direction:column; align-items:center;}
 
-    .project-title       { font-size: 4.5rem; margin: 0; }
-    .project-description { font-size: 1.3rem; margin: 1rem 0 2.5rem; }
+/* ---------- 버튼 공통 크기 ---------- */
+.button.button-large{
+  padding:0.9rem 2.4rem;
+  font-size:1rem;
+  border:none; border-radius:2rem;
+  color:#fff;
+}
 
-    /* 버튼 모양(원래 쓰시던 클래스 활용) */
-    .button.button-large {
-      padding: 0.9rem 2.4rem;
-      font-size: 1rem;
-      border-radius: 2rem;
-      border: none;
-      background: #777;
-      color: #fff;
-      cursor: not-allowed;     /* 준비중이라 비활성 느낌 */
-      opacity: 0.8;
-    }
-  </style>
-  <!-- ① 여기까지 -->
+/* ---------- 버튼 색상(기존 정의 유지) ---------- */
+.button-primary       { background:#007bff; }  /* 이동하기: 파란색 */
+.button-not-available { background:#777;       /* 준비중: 회색 */
+                        cursor:not-allowed; opacity:.8; }
 
+/* 로고 이미지(원하면 텍스트 대신) */
+.logo{width:clamp(180px,40vw,520px); margin-bottom:1.2rem;}
+.project-description{margin:0 0 2.4rem; font-size:1.2rem;}
+</style>
 </head>
+
 <body>
 
-  <!-- ② 여기부터: 실제 화면에 보일 내용 -->
-  <section class="hero">
-    <div>
-      <h1 class="project-title">SPACE Q</h1>
-      <p class="project-description">상상을 우주로 만드는 길</p>
-      <button class="button button-large button-not-available">준비중</button>
-    </div>
-  </section>
-  <!-- ② 여기까지 -->
+<section class="hero">
+  <div class="hero-content">
+    <!-- 로고 → 필요에 따라 텍스트 대신 이미지로 -->
+    <!-- <h1 class="project-title">SPACE Q</h1> -->
+    <img src="spaceq-logo.svg" alt="SPACE Q" class="logo" />
+
+    <p class="project-description">상상을 우주로 만드는 길</p>
+
+    <!-- 파란색 이동하기 버튼 예시 -->
+    <button class="button button-large button-primary">이동하기</button>
+
+    <!-- 회색 준비중 버튼 -->
+    <button class="button button-large button-not-available">준비중</button>
+  </div>
+</section>
 
 </body>
 </html>
 
-
-
-
+        
         
     </main>
 
