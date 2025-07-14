@@ -505,12 +505,6 @@
                 display: inline-block;
                 text-align: left;
             }
-            .smooth-corners {
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M100 0C44.77 0 0 44.77 0 100s44.77 100 100 100s100-44.77 100-100S155.23 0 100 0z' fill-rule='evenodd' clip-rule='evenodd'/%3E%3C/svg%3E");
-    mask-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M100 0C44.77 0 0 44.77 0 100s44.77 100 100 100s100-44.77 100-100S155.23 0 100 0z' fill-rule='evenodd' clip-rule='evenodd'/%3E%3C/svg%3E");
-    -webkit-mask-size: 100% 100%;
-    mask-size: 100% 100%;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-}
+
+         
         }
