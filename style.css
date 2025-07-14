@@ -234,8 +234,6 @@
         }
 
         .philosophy-card {
-            background-color: rgba(0, 122, 255, 0.05);
-            border: 1px solid rgba(0, 122, 255, 0.1);
             border-radius: 15px;
             padding: 3rem;
             margin-bottom: 3rem;
@@ -263,8 +261,6 @@
         }
 
         .principle-item {
-            background-color: var(--background-color);
-            border: 1px solid var(--header-border-color);
             border-radius: 10px;
             padding: 2rem;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -287,34 +283,6 @@
             font-size: medium;
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .stat-item {
-            background-color: rgba(0, 122, 255, 0.05);
-            border: 1px solid rgba(0, 122, 255, 0.1);
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: var(--button-shadow);
-        }
-
-        .stat-number {
-            font-size: xxx-large;
-            font-weight: 700;
-            color: var(--button-access-bg);
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: var(--secondary-text-color);
-            font-size: medium;
-        }
-
         .color-section {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -324,7 +292,6 @@
 
         .color-theme-card {
             background-color: var(--background-color);
-            border: 1px solid var(--header-border-color);
             border-radius: 10px;
             padding: 2rem;
             box-shadow: var(--button-shadow);
