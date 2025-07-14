@@ -28,21 +28,18 @@ function initChart() {
       label       : 'ADC',
       data        : [],
       borderWidth : 1,
-      pointRadius : 0,   // 점 숨김
-      tension     : 0.3  // 곡선 스무딩
+      pointRadius : 0,
+      tension     : 0.3
     }]},
     options : {
       animation : false,
       scales    : { x: { display:false } }
     }
   });
-
-  resetSession();      // 새 차트 만들어지면 상태도 초기화
 }
 
 /* -------- 세션 리셋 -------- */
 function resetSession(hard = false) {
-  /* 상태 변수 초기화 */
   buffer.length = 0;
   x = baseline = calCnt = lastPeak = 0;
   t0 = 0;
@@ -51,37 +48,33 @@ function resetSession(hard = false) {
   elTimer.textContent = '(0 s)';
   btnDL.disabled = btnClear.disabled = true;
 
-  /* 하드 리셋(사용자 Clear) : 차트 파괴 후 새로 생성 */
-  if (hard && chart) {
-    chart.destroy();      // 축‧메모리 캐시 전부 제거
-    initChart();          // 새 차트 + 상태 초기화
-    return;               // 아래 코드 재실행 방지
+  if (hard && chart) {          // Clear 버튼
+    chart.destroy();
+    initChart();
+    return;
   }
 
-  /* 소프트 리셋(CSV 저장 등) : 데이터만 비우고 축 캐시 삭제 */
-  if (chart) {
+  if (chart) {                  // 일반 리셋
     chart.data.labels = [];
     chart.data.datasets[0].data = [];
-
-    // Y 축 min/max 캐시 제거 → 새 데이터 들어오면 자동 재계산
-    if (chart.options.scales?.y) {
-      delete chart.options.scales.y.min;
-      delete chart.options.scales.y.max;
-    }
-    chart.update();       // 'none' 대신 일반 update → 축 재계산
+    delete chart.options.scales.y?.min;
+    delete chart.options.scales.y?.max;
+    chart.update();
   }
 }
 
 /* -------- BLE Connect -------- */
 btnConnect.onclick = async () => {
   try {
+    /* ★ 차트 새로 만들지 않고 상태만 초기화 */
+    resetSession();                       // ← initChart() 삭제
+
     const dev = await navigator.bluetooth.requestDevice({
       filters:[{name:'ECG_R4'}], optionalServices:[SERVICE]
     });
     const chr = await (await (await dev.gatt.connect())
                   .getPrimaryService(SERVICE)).getCharacteristic(CHAR);
 
-    initChart();                              // 새 차트
     isPaused = false; btnPause.textContent = '⏸ Pause';
     setStatus('Connected');
 
@@ -128,11 +121,11 @@ function pushData(v){
   D.push(v); chart.data.labels.push(x++);
   if (D.length > 500) { D.shift(); chart.data.labels.shift(); }
 
-  /* baseline 계산: 처음 1초(≈100샘플) */
+  /* baseline 계산 */
   if (calCnt < 100) { baseline += v; calCnt++; return; }
   if (calCnt === 100){ baseline /= 100; calCnt++; }
 
-  /* BPM 계산: 단순 피크 검출 */
+  /* BPM 계산 */
   const thr = baseline + 80;
   const n = D.length;
   if (n > 2) {
@@ -153,12 +146,12 @@ function pushData(v){
 
   buffer.push({t:dt, v});
   if (buffer.length >= 60) { btnDL.disabled = btnClear.disabled = false; }
-
   if (dt >= MAX_MS) { isPaused = true; btnPause.textContent = '▶ Resume'; }
 }
 
 /* -------- 상태 표시 -------- */
 const setStatus = txt => elStatus.textContent = txt;
 
-/* -------- 최초 초기화 -------- */
-initChart();           // 페이지 로드 시 차트 생성
+/* -------- 초기 로딩 -------- */
+initChart();
+resetSession();
