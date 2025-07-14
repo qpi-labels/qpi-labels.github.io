@@ -43,9 +43,9 @@ function pushData(val) {
   /* ─ 피크(맥박) 탐지 ─ 매우 단순 방법:
        ▸ 이번 값이 직전 두 값보다 크고
        ▸ 값이 2000(10-bit 기준) 이상일 때만 심박으로 판단            */
-  if (d.length > 2) {
-      const a = d[d.length-3], b = d[d.length-2], c = d[d.length-1];
-      if (b > a && b > c && b > 2000) {
+  if (d.length > 3) {
+      const a = d[d.length-4], b = d[d.length-3], c = d[d.length-2], e = d[d.length-1];
+      if (Math.max([a,b,c,e])>=560 && Math.min([a,b,c,e])<560) {
           const now = Date.now();
           if (lastPeak) {
               const bpm = 60000 / (now - lastPeak);
