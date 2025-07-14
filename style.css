@@ -306,25 +306,22 @@
         .color-item {
             display: flex;
             align-items: center;
-            justify-content: space-between;
             padding: 1rem;
             margin-bottom: 1rem;
             background-color: rgba(0, 122, 255, 0.05);
             border-radius: 8px;
         }
 
-        .color-box {
-            width: 40px;
-            height: 40px;
-            border-radius: 4px;
-            border: 1px solid var(--header-border-color);
+        .color-item span {
+            width: 90px;
+            flex-shrink: 0;
+            text-align: left;
         }
 
         .color-code {
-            font-family: 'Courier New', monospace;
+            margin-left: auto;
             font-size: small;
             color: var(--secondary-text-color);
-            justify-self: end;
         }
 
         .typography-grid {
