@@ -324,6 +324,7 @@
             font-family: 'Courier New', monospace;
             font-size: small;
             color: var(--secondary-text-color);
+            justify-self: end;
         }
 
         .typography-grid {
