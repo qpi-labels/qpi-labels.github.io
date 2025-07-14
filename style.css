@@ -303,26 +303,43 @@
             color: var(--text-color);
         }
 
-        .color-item {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            background-color: rgba(0, 122, 255, 0.05);
-            border-radius: 8px;
-        }
+        /* 1. .color-item은 flex 컨테이너로 설정하고, 요소들 사이의 간격을 줍니다. */
+.color-item {
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 */
+    gap: 1rem; /* 요소들 사이의 최소 간격을 1rem으로 설정 */
 
-        .color-item span {
-            width: 90px;
-            flex-shrink: 0;
-            text-align: left;
-        }
+    /* 기존 스타일 유지 */
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: rgba(0, 122, 255, 0.05);
+    border-radius: 8px;
+}
 
-        .color-code {
-            margin-left: auto;
-            font-size: small;
-            color: var(--secondary-text-color);
-        }
+/* 2. span(레이블)에 고정 너비를 부여합니다. */
+.color-item span {
+    width: 90px;
+    flex-shrink: 0; /* 너비가 줄어들지 않도록 설정 */
+    text-align: left;
+}
+
+/* 3. 컬러 박스(중간 요소)의 오른쪽에만 auto 마진을 줍니다. (핵심) */
+.color-box {
+    margin-right: auto; /* 이 요소의 오른쪽 여백을 최대로 만들어, 뒤따르는 요소를 오른쪽 끝으로 밀어냄 */
+
+    /* 기존 스타일 유지 */
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    border: 1px solid var(--header-border-color);
+}
+
+/* 4. color-code에는 특별한 정렬 스타일이 필요 없습니다. */
+.color-code {
+    font-family: 'Courier New', monospace;
+    font-size: small;
+    color: var(--secondary-text-color);
+}
 
         .typography-grid {
             display: grid;
