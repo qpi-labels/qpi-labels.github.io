@@ -3,11 +3,11 @@ const SERVICE = 0x180D;
 const CHAR    = 0x2A37;
 
 /* -------- 전역 상태 -------- */
-let chart, x = 0;
-let baseline = 0, calCnt = 0, lastPeak = 0;
+let chart;                       // Chart.js 인스턴스
+let x = 0, baseline = 0, calCnt = 0, lastPeak = 0;
 let isPaused = false;
-const buffer = [];                    // [{t, v}]
-const MAX_MS = 10 * 60 * 1000;        // 10 min
+const buffer = [];               // [{t, v}]
+const MAX_MS = 10 * 60 * 1000;   // 10 min
 let t0 = 0;
 
 /* -------- UI -------- */
@@ -20,37 +20,80 @@ const elStatus   = $('status');
 const elBpm      = $('bpm');
 const elTimer    = $('timer');
 
-/* -------- 리셋 함수 -------- */
-function resetSession() {
-  buffer.length = 0; x = 0; baseline = 0; calCnt = 0; lastPeak = 0; t0 = 0;
-  chart.data.labels.length = 0;
-  chart.data.datasets[0].data.length = 0;
-  chart.update('none');
-  btnDL.disabled = true; btnClear.disabled = true;
-  elBpm.textContent = '-- BPM';
-  elTimer.textContent = '(0 s)';
+/* -------- 차트 생성 -------- */
+function initChart() {
+  chart = new Chart($('chart'), {
+    type : 'line',
+    data : { labels: [], datasets: [{
+      label       : 'ADC',
+      data        : [],
+      borderWidth : 1,
+      pointRadius : 0,   // 점 숨김
+      tension     : 0.3  // 곡선 스무딩
+    }]},
+    options : {
+      animation : false,
+      scales    : { x: { display:false } }
+    }
+  });
+
+  resetSession();      // 새 차트 만들어지면 상태도 초기화
 }
 
-/* -------- Connect -------- */
+/* -------- 세션 리셋 -------- */
+function resetSession(hard = false) {
+  /* 상태 변수 초기화 */
+  buffer.length = 0;
+  x = baseline = calCnt = lastPeak = 0;
+  t0 = 0;
+
+  elBpm.textContent   = '-- BPM';
+  elTimer.textContent = '(0 s)';
+  btnDL.disabled = btnClear.disabled = true;
+
+  /* 하드 리셋(사용자 Clear) : 차트 파괴 후 새로 생성 */
+  if (hard && chart) {
+    chart.destroy();      // 축‧메모리 캐시 전부 제거
+    initChart();          // 새 차트 + 상태 초기화
+    return;               // 아래 코드 재실행 방지
+  }
+
+  /* 소프트 리셋(CSV 저장 등) : 데이터만 비우고 축 캐시 삭제 */
+  if (chart) {
+    chart.data.labels = [];
+    chart.data.datasets[0].data = [];
+
+    // Y 축 min/max 캐시 제거 → 새 데이터 들어오면 자동 재계산
+    if (chart.options.scales?.y) {
+      delete chart.options.scales.y.min;
+      delete chart.options.scales.y.max;
+    }
+    chart.update();       // 'none' 대신 일반 update → 축 재계산
+  }
+}
+
+/* -------- BLE Connect -------- */
 btnConnect.onclick = async () => {
   try {
     const dev = await navigator.bluetooth.requestDevice({
-      filters:[{name:'ECG_R4'}], optionalServices:[SERVICE]});
-    const server = await dev.gatt.connect();
-    await new Promise(r=>setTimeout(r,100));
-    const chr = await (await server.getPrimaryService(SERVICE))
-                    .getCharacteristic(CHAR);
+      filters:[{name:'ECG_R4'}], optionalServices:[SERVICE]
+    });
+    const chr = await (await (await dev.gatt.connect())
+                  .getPrimaryService(SERVICE)).getCharacteristic(CHAR);
 
-    initChart();
+    initChart();                              // 새 차트
     isPaused = false; btnPause.textContent = '⏸ Pause';
+    setStatus('Connected');
+
     chr.startNotifications().then(c=>{
-      c.addEventListener('characteristicvaluechanged', e=>{
-        const v = e.target.value.getUint16(0, true);
-        pushData(v);
+      c.addEventListener('characteristicvaluechanged', e => {
+        pushData(e.target.value.getUint16(0, true));
       });
     });
-    setStatus('Connected');
-  } catch(e){ setStatus('Error: '+e.message); }
+
+    dev.addEventListener('gattserverdisconnected',
+                         () => setStatus('Disconnected'));
+  } catch(e) { setStatus('Error: ' + e.message); }
 };
 
 /* -------- Pause / Resume -------- */
@@ -61,60 +104,42 @@ btnPause.onclick = () => {
 
 /* -------- CSV 다운로드 -------- */
 btnDL.onclick = () => {
-  const csv = 'ms,adc\n' + buffer.map(r => `${r.t},${r.v}`).join('\n');
+  const csv  = 'ms,adc\n' + buffer.map(r => `${r.t},${r.v}`).join('\n');
   const blob = new Blob([csv], {type:'text/csv'});
   const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url;
-  a.download = `ecg_${new Date().toISOString().replace(/[:.]/g,'-')}.csv`;
+
+  const a = Object.assign(document.createElement('a'), {
+    href:url,
+    download:`ecg_${new Date().toISOString().replace(/[:.]/g,'-')}.csv`
+  });
   a.click(); URL.revokeObjectURL(url);
 
-  /* 저장 후 자동 리셋 */
-  resetSession();
+  resetSession();          // 소프트 리셋
 };
 
 /* -------- Clear 버튼 -------- */
-btnClear.onclick = () => resetSession();
+btnClear.onclick = () => resetSession(true);   // 하드 리셋
 
-/* -------- 차트 초기화 -------- */
-function initChart(){
-  chart = new Chart($('chart'), {
-    type:'line',
-    data:{labels:[],datasets:[{
-      label:'ADC',
-      data:[],
-      borderWidth:1,
-      pointRadius:0,          // 점 숨기기 → 덜 빽빽
-      tension:0.3             // 곡선 스무딩
-    }]},
-    options:{animation:false, scales:{x:{display:false}}}
-  });
-  resetSession();
-}
-
-/* -------- 데이터 처리 -------- */
+/* -------- 실시간 데이터 처리 -------- */
 function pushData(v){
-  if(isPaused) return;
+  if (isPaused || !chart) return;
 
-  const d = chart.data.datasets[0].data;
-  d.push(v); chart.data.labels.push(x++);
-  if(d.length > 500){ d.shift(); chart.data.labels.shift(); }
+  const D = chart.data.datasets[0].data;
+  D.push(v); chart.data.labels.push(x++);
+  if (D.length > 500) { D.shift(); chart.data.labels.shift(); }
 
-  /* baseline 계산: 처음 1초 평균 */
-  if(calCnt < 100){ baseline += v; calCnt++; return; }
-  if(calCnt === 100){ baseline /= 100; calCnt++; }
+  /* baseline 계산: 처음 1초(≈100샘플) */
+  if (calCnt < 100) { baseline += v; calCnt++; return; }
+  if (calCnt === 100){ baseline /= 100; calCnt++; }
 
-  /* BPM 계산 (단순 피크 검출) */
+  /* BPM 계산: 단순 피크 검출 */
   const thr = baseline + 80;
-  const n = d.length;
-  if(n > 2){
-    const a = d[n-3], b = d[n-2], c = d[n-1];
-    if(b > a && b > c && b > thr){
+  const n = D.length;
+  if (n > 2) {
+    const a = D[n-3], b = D[n-2], c = D[n-1];
+    if (b > a && b > c && b > thr) {
       const now = Date.now();
-      if(lastPeak){
-        const bpm = 60000 / (now - lastPeak);
-        elBpm.textContent = bpm.toFixed(0) + ' BPM';
-      }
+      if (lastPeak) elBpm.textContent = (60000/(now-lastPeak)).toFixed(0) + ' BPM';
       lastPeak = now;
     }
   }
@@ -122,19 +147,18 @@ function pushData(v){
 
   /* 버퍼 & 타이머 & 자동정지 */
   const now = Date.now();
-  if(!t0) t0 = now;
+  if (!t0) t0 = now;
   const dt = now - t0;
-  elTimer.textContent = '(' + (dt/1000|0) + ' s)';
-  buffer.push({t: dt, v});
-  if(buffer.length >= 60){
-    btnDL.disabled = false;
-    btnClear.disabled = false;
-  }
-  if(dt >= MAX_MS){
-    isPaused = true;
-    btnPause.textContent = '▶ Resume';
-  }
+  elTimer.textContent = `(${dt/1000|0} s)`;
+
+  buffer.push({t:dt, v});
+  if (buffer.length >= 60) { btnDL.disabled = btnClear.disabled = false; }
+
+  if (dt >= MAX_MS) { isPaused = true; btnPause.textContent = '▶ Resume'; }
 }
 
 /* -------- 상태 표시 -------- */
 const setStatus = txt => elStatus.textContent = txt;
+
+/* -------- 최초 초기화 -------- */
+initChart();           // 페이지 로드 시 차트 생성
