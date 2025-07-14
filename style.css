@@ -344,8 +344,8 @@ footer .button-container {
      }
  }
 footer {
-    background-color: #1a1a1a; /* 어두운 배경색 */
-    color: RGB(250, 250, 250); /* 기본 텍스트 색상 (회색) */
+    background-color: #fafafa;
+    color: #232323;
     padding: 50px 20px;
     font-size: 14px;
     line-height: 1.6;
