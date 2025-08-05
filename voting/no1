@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>1번 후보 - 회장·부회장 소개</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --primary: #007aff;
+      --bg: #f9f9f9;
+      --card-bg: #ffffff;
+      --text: #222;
+      --shadow: 0 4px 10px rgba(0,0,0,.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    a { text-decoration: none; color: var(--primary); }
+
+    /* ================= Hero Banner ================= */
+    /* 원하는 배경 이미지를 img/hero.jpg 위치에 넣고, 아래 url 경로를 맞춰 주세요 */
+    .hero {
+      background: url('img/background.jpg') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 1rem;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 2.4rem;
+      color: #fff;
+      text-shadow: 0 2px 6px rgba(0,0,0,.35);
+      margin-bottom: .5rem;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: #fff;
+      opacity: .9;
+    }
+
+    /* ================= Layout ================= */
+    .container {
+      width: 90%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1.5rem 0 4rem;
+    }
+
+    /* 듀오(회장·부회장) 레이아웃 */
+    .ticket { margin-top: 1.5rem; }
+    .member {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .avatar {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: var(--shadow);
+    }
+    .info h2 {
+      font-size: 1.5rem;
+      margin-bottom: .5rem;
+      color: var(--primary);
+    }
+    .info ul {
+      list-style: none;
+      display: grid;
+      gap: .4rem;
+      font-size: 1rem;
+    }
+    .info ul li { display: flex; align-items: center; gap: .5rem; }
+    .info ul li .icon { font-size: 1.1rem; }
+
+    /* Manifesto */
+    .manifesto { margin-top: 3rem; }
+    .manifesto h2 { font-size: 1.6rem; margin-bottom: 1rem; }
+    .pledges { display: grid; gap: 1rem; }
+    .pledge {
+      background: var(--card-bg);
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+    .pledge h3 { font-size: 1.2rem; margin-bottom: .4rem; color: var(--primary); }
+    @media (min-width: 600px) {
+      .pledges { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .bottom-nav { margin-top: 4rem; text-align: center; }
+  </style>
+</head>
+<body>
+  <!-- ================= Hero Banner ================= -->
+  <section class="hero">
+    <div class="hero-inner">
+      <h1>기호 1번 이재원&amp; 이재형</h1>
+      <p>“내용”</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <!-- 후보 듀오 -->
+    <section class="ticket">
+      <!-- 회장 -->
+      <div class="member">
+        <img src="img/gildong.image.jpeg" alt="회장" class="avatar">
+        <div class="info">
+          <h2>회장 이재원</h2>
+          <ul>
+            <li><span class="icon">🏫</span>...</li>
+            <li><span class="icon">📚</span>...</li>
+            <li><span class="icon">🏆</span>...</li>
+            <li><span class="icon">🗳️</span>...</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 부회장 -->
+      <div class="member">
+        <img src="img/gildong.image.jpeg" alt="부회장" class="avatar">
+        <div class="info">
+          <h2>부회장 이재형</h2>
+          <ul>
+            <li><span class="icon">🏫</span>...</li>
+            <li><span class="icon">🔬</span>...</li>
+            <li><span class="icon">🥇</span>...</li>
+            <li><span class="icon">🤝</span>...</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Manifesto -->
+    <section class="manifesto">
+      <h2>핵심 공약</h2>
+      <div class="pledges">
+        <div class="pledge">
+          <h3>내용</h3>
+          <p>내용</p>
+        </div>
+        <div class="pledge">
+          <h3>내용</h3>
+          <p>내용</p>
+        </div>
+        <div class="pledge">
+          <h3>내용</h3>
+          <p>내용</p>
+        </div>
+      </div>
+    </section>
+
+    <nav class="bottom-nav">
+      <a href="index.html">← 후보 목록으로</a>
+    </nav>
+  </div>
+</body>
+</html>
