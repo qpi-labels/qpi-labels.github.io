@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>3번 후보 - 회장·부회장 소개</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"> -->
+<style>
+    :root {
+      --primary: #007aff;
+      /* --bg: #f9f9f9; */
+      --bg: linear-gradient(180deg, #000 0%, #0a0a0a 100%);
+      --card-bg: #ffffff;
+      --bright-text: #f9f9f9;
+      --text: #222;
+      --shadow: 0 4px 10px rgba(0,0,0,.08);
+      --candidate: rgb(255,215,0);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    a { text-decoration: none; color: var(--primary); }
+
+    /* ================= Hero Banner ================= */
+    /* 원하는 배경 이미지를 img/hero.jpg 위치에 넣고, 아래 url 경로를 맞춰 주세요 */
+    .hero {
+      /* background: url('img/background.jpg') center/cover no-repeat; */
+      background-color: var(--candidate);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 1rem;
+      text-align: center;
+      box-shadow: 0 0 60px var(--candidate);
+    }
+    .hero h1 {
+      font-family: 'Gmarket';
+      font-size: 2.4rem;
+      color: #fff;
+      text-shadow: 0 2px 6px rgba(0,0,0,.35);
+      margin-bottom: .5rem;
+    }
+    .hero p {
+      font-family: 'Danjo';
+      font-size: 1.5rem;
+      color: #fff;
+      opacity: .9;
+    }
+
+    /* ================= Layout ================= */
+    .container {
+      width: 90%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1.5rem 0 4rem;
+    }
+
+    /* 듀오(회장·부회장) 레이아웃 */
+    .ticket { margin-top: 1.5rem; }
+    .member {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .avatar {
+      width: 175px;
+      height: 225px;
+      border-radius: 8%;
+      object-fit: inherit;
+      /* box-shadow: 0 0 10px var(--card-bg); */
+      z-index: 1;
+    }
+    .avatar-blur {
+      position: absolute;
+      width: 175px;
+      height: 225px;
+      border-radius: 8%;
+      object-fit: inherit;
+      filter: blur(8px) brightness(1.5);
+      z-index: 0;
+    }
+    .info h2 {
+      font-size: 1.5rem;
+      text-shadow: 0 0 10px currentColor;
+      margin-bottom: .5rem;
+      color: var(--candidate);
+    }
+    .info ul {
+      color: var(--bright-text);
+      list-style: none;
+      display: grid;
+      gap: .4rem;
+      font-size: 1rem;
+      text-shadow: 0 0 20px currentColor;
+    }
+    .info ul li { display: flex; align-items: center; gap: .5rem; }
+    .info ul li .icon { font-size: 1.1rem; }
+
+    /* Manifesto */
+    .manifesto { margin-top: 3rem }
+    .manifesto h2 { color: var(--bright-text); font-size: 1.6rem; margin-bottom: 1rem; text-shadow: 0 0 20px currentColor; }
+    .pledges { display: grid; gap: 1rem; }
+    .pledge {
+      background: var(--bg);
+      outline: var();
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
+      box-shadow: 0 0 8px var(--candidate);
+    }
+    .pledge h3 { font-size: 1.2rem; margin-bottom: .4rem; color: var(--candidate); text-shadow: 0 0 7px currentColor; }
+    .pledge p { color: var(--bright-text); text-shadow: 0 0 10px currentColor; }
+    @media (min-width: 600px) {
+      .pledges { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .bottom-nav { margin-top: 4rem; text-align: center; }
+    .bottom-nav a {color: var(--candidate); text-shadow: 0 0 10px currentColor;}
+  </style>
+</head>
+<body>
+  <!-- ================= Hero Banner ================= -->
+  <section class="hero">
+    <div class="hero-inner">
+      <h1>기호 3번 김시은 &amp; 박주언</h1>
+      <p>“기호 <b>3</b>번 뽑아주세요!”</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <!-- 후보 듀오 -->
+    <section class="ticket">
+      <!-- 회장 -->
+      <div class="member">
+        <img src="img/no3/회장.png" alt="회장" class="avatar">
+        <img src="img/no3/회장.png" alt="회장" class="avatar-blur">
+        <div class="info">
+          <h2>회장 김시은</h2>
+          <ul>
+            <li><span class="icon"></span>...</li>
+            <li><span class="icon"></span>...</li>
+            <li><span class="icon"></span>...</li>
+            <li><span class="icon"></span>...</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 부회장 -->
+      <div class="member">
+        <img src="img/no3/부회장.png" alt="부회장" class="avatar">
+        <img src="img/no3/부회장.png" alt="부회장" class="avatar-blur">
+        <div class="info">
+          <h2>부회장 박주언</h2>
+          <ul>
+            <li><span class="icon"></span>...</li>
+            <li><span class="icon"></span>...</li>
+            <li><span class="icon"></span>...</li>
+            <li><span class="icon"></span>...</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Manifesto -->
+    <section class="manifesto">
+      <h2>핵심 공약</h2>
+      <div class="pledges">
+        <div class="pledge">
+          <h3>1. 바른 인성 새김마당 축소</h3>
+          <p>내용</p>
+        </div>
+        <div class="pledge">
+          <h3>2. 학생회 조직 개편</h3>
+          <p>내용</p>
+        </div>
+        <div class="pledge">
+          <h3>3. 기숙사 물컵, 디퓨저 설치</h3>
+          <p>내용</p>
+        </div>
+        <div class="pledge">
+          <h3>4. 충곽 SNS 활성화</h3>
+          <p>내용</p>
+        </div>
+        <div class="pledge">
+          <h3>5. 생활 관련 물품 지원</h3>
+          <p>내용</p>
+        </div>
+        <div class="pledge">
+          <h3>6. 타학교 연계 활동 추진</h3>
+          <p>내용</p>
+        </div>
+      </div>
+    </section>
+
+    <nav class="bottom-nav">
+      <a href="index.html">← 후보 목록으로</a>
+    </nav>
+  </div>
+</body>
+</html>
