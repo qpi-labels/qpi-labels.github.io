@@ -4,13 +4,17 @@
   <meta charset="UTF-8">
   <title>4번 후보 - 회장·부회장 소개</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"> -->
+<style>
     :root {
       --primary: #007aff;
-      --bg: #f9f9f9;
+      /* --bg: #f9f9f9; */
+      --bg: linear-gradient(180deg, #000 0%, #0a0a0a 100%);
       --card-bg: #ffffff;
+      --bright-text: #f9f9f9;
       --text: #222;
       --shadow: 0 4px 10px rgba(0,0,0,.08);
+      --candidate: rgb(0,255,128);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -24,21 +28,25 @@
     /* ================= Hero Banner ================= */
     /* 원하는 배경 이미지를 img/hero.jpg 위치에 넣고, 아래 url 경로를 맞춰 주세요 */
     .hero {
-      background: url('img/background.jpg') center/cover no-repeat;
+      /* background: url('img/background.jpg') center/cover no-repeat; */
+      background-color: var(--candidate);
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 4rem 1rem;
       text-align: center;
+      box-shadow: 0 0 60px var(--candidate);
     }
     .hero h1 {
+      font-family: 'Gmarket';
       font-size: 2.4rem;
       color: #fff;
       text-shadow: 0 2px 6px rgba(0,0,0,.35);
       margin-bottom: .5rem;
     }
     .hero p {
-      font-size: 1.2rem;
+      font-family: 'Danjo';
+      font-size: 1.5rem;
       color: #fff;
       opacity: .9;
     }
@@ -61,50 +69,68 @@
       flex-wrap: wrap;
     }
     .avatar {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      object-fit: cover;
-      box-shadow: var(--shadow);
+      width: 175px;
+      height: 225px;
+      border-radius: 8%;
+      object-fit: inherit;
+      /* box-shadow: 0 0 10px var(--card-bg); */
+      z-index: 1;
+    }
+    .avatar-blur {
+      position: absolute;
+      width: 175px;
+      height: 225px;
+      border-radius: 8%;
+      object-fit: inherit;
+      filter: blur(8px) brightness(1.5);
+      z-index: 0;
     }
     .info h2 {
       font-size: 1.5rem;
+      text-shadow: 0 0 10px currentColor;
       margin-bottom: .5rem;
-      color: var(--primary);
+      color: var(--candidate);
     }
     .info ul {
+      color: var(--bright-text);
       list-style: none;
       display: grid;
       gap: .4rem;
       font-size: 1rem;
+      text-shadow: 0 0 20px currentColor;
     }
     .info ul li { display: flex; align-items: center; gap: .5rem; }
     .info ul li .icon { font-size: 1.1rem; }
 
     /* Manifesto */
-    .manifesto { margin-top: 3rem; }
-    .manifesto h2 { font-size: 1.6rem; margin-bottom: 1rem; }
+    .manifesto { margin-top: 3rem }
+    .manifesto h2 { color: var(--bright-text); font-size: 1.6rem; margin-bottom: 1rem; text-shadow: 0 0 20px currentColor; }
     .pledges { display: grid; gap: 1rem; }
-    .pledge {
-      background: var(--card-bg);
+    .pledges { display: grid; gap: 1rem; }
+    .pledge, .big-item {
+      background: var(--bg);
+      outline: var();
       padding: 1rem 1.25rem;
       border-radius: 12px;
-      box-shadow: var(--shadow);
+      box-shadow: 0 0 8px var(--candidate);
     }
-    .pledge h3 { font-size: 1.2rem; margin-bottom: .4rem; color: var(--primary); }
+    .pledge h3, .big-item h3 { font-size: 1.2rem; margin-bottom: .4rem; color: var(--candidate); text-shadow: 0 0 7px currentColor; }
+    .pledge p, .big-item p { color: var(--bright-text); text-shadow: 0 0 10px currentColor; }
     @media (min-width: 600px) {
       .pledges { grid-template-columns: repeat(2, 1fr); }
     }
+    .big-item { grid-column: 2; grid-row-start: 1; grid-row-end: 3; }
 
     .bottom-nav { margin-top: 4rem; text-align: center; }
+    .bottom-nav a {color: var(--candidate); text-shadow: 0 0 10px currentColor;}
   </style>
 </head>
 <body>
   <!-- ================= Hero Banner ================= -->
   <section class="hero">
     <div class="hero-inner">
-      <h1>기호 4번 이주호&amp; 김도윤</h1>
-      <p>“내용”</p>
+      <h1>기호 4번 이주호 &amp; 김도윤</h1>
+      <p>“미래를 여는 당신의 선택”</p>
     </div>
   </section>
 
@@ -113,28 +139,30 @@
     <section class="ticket">
       <!-- 회장 -->
       <div class="member">
-        <img src="img/gildong.image.jpeg" alt="회장" class="avatar">
+        <img src="img/no4/회장.png" alt="회장" class="avatar">
+        <img src="img/no4/회장.png" alt="회장" class="avatar-blur">
         <div class="info">
           <h2>회장 이주호</h2>
           <ul>
-            <li><span class="icon">🏫</span>...</li>
-            <li><span class="icon">📚</span>...</li>
-            <li><span class="icon">🏆</span>...</li>
-            <li><span class="icon">🗳️</span>...</li>
+            <li><span class="icon"></span>...</li>
+            <li><span class="icon"></span>...</li>
+            <li><span class="icon"></span>...</li>
+            <li><span class="icon"></span>...</li>
           </ul>
         </div>
       </div>
 
       <!-- 부회장 -->
       <div class="member">
-        <img src="img/gildong.image.jpeg" alt="부회장" class="avatar">
+        <img src="img/no4/부회장.png" alt="부회장" class="avatar">
+        <img src="img/no4/부회장.png" alt="부회장" class="avatar-blur">
         <div class="info">
           <h2>부회장 김도윤</h2>
           <ul>
-            <li><span class="icon">🏫</span>...</li>
-            <li><span class="icon">🔬</span>...</li>
-            <li><span class="icon">🥇</span>...</li>
-            <li><span class="icon">🤝</span>...</li>
+            <li><span class="icon"></span>...</li>
+            <li><span class="icon"></span>...</li>
+            <li><span class="icon"></span>...</li>
+            <li><span class="icon"></span>...</li>
           </ul>
         </div>
       </div>
@@ -145,15 +173,15 @@
       <h2>핵심 공약</h2>
       <div class="pledges">
         <div class="pledge">
-          <h3>내용</h3>
+          <h3>1. 학생 이동 확인 간편화</h3>
           <p>내용</p>
         </div>
         <div class="pledge">
-          <h3>내용</h3>
+          <h3>2. 운동장 안전설비 확충</h3>
           <p>내용</p>
         </div>
-        <div class="pledge">
-          <h3>내용</h3>
+        <div class="big-item">
+          <h3>3. 기숙사 계단용 끌차 배치</h3>
           <p>내용</p>
         </div>
       </div>
