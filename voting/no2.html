@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <title>2번 후보 - 회장·부회장 소개</title>
+  <link rel="shortcut icon" type="image/x-icon" href="img/no2/icon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"> -->
 <style>
     :root {
       --primary: #007aff;
       /* --bg: #f9f9f9; */
-      --bg: linear-gradient(180deg, #000 0%, #0a0a0a 100%);
-      --card-bg: #ffffff;
+      --bg: linear-gradient(180deg, #000000 0%, #0a0a0a 100%);
+      --card-bg: 6,6,6;
       --bright-text: #f9f9f9;
       --text: #222;
       --shadow: 0 4px 10px rgba(0,0,0,.08);
@@ -19,9 +20,10 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Noto Sans KR', sans-serif;
-      background: var(--bg);
       color: var(--text);
       line-height: 1.6;
+      background: var(--bg);
+      background-color: #000;
     }
     a { text-decoration: none; color: var(--primary); }
 
@@ -54,9 +56,27 @@
     /* ================= Layout ================= */
     .container {
       width: 90%;
-      max-width: 900px;
+      
+      /* max-width: 900px; */
       margin: 0 auto;
       padding: 1.5rem 0 4rem;
+      display: grid;
+      grid-template-columns: 55% 45%;
+    }
+
+    .bg {
+      background-image: url("img/no2/선거\ 포스터1_1.jpg");
+      min-height: 100px;
+      /* position: absolute; */
+      /* opacity: 0.5; */
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    .bg-trans {
+      background-color: rgba(var(--card-bg), 0.7);
     }
 
     /* 듀오(회장·부회장) 레이아웃 */
@@ -74,7 +94,7 @@
       border-radius: 8%;
       object-fit: inherit;
       /* box-shadow: 0 0 10px var(--card-bg); */
-      z-index: 1;
+      z-index: 2;
     }
     .avatar-blur {
       position: absolute;
@@ -83,7 +103,14 @@
       border-radius: 8%;
       object-fit: inherit;
       filter: blur(8px) brightness(1.5);
-      z-index: 0;
+      z-index: 1;
+    }
+    .reels {
+      grid-column: 2;
+    }
+    .reels-img {
+      position: absolute;
+      border-radius: 12px;
     }
     .info h2 {
       font-size: 1.5rem;
@@ -101,13 +128,18 @@
     }
     .info ul li { display: flex; align-items: center; gap: .5rem; }
     .info ul li .icon { font-size: 1.1rem; }
+    
+    .mediabg { grid-column: 2; grid-row-start: 1; grid-row-end: 3; }
+    .mediabox { display: grid; grid-template-columns: repeat(2, 1fr); }
+    .videobg { width: 100%; height: 100%; align-content: center; padding: 5%; }
+    .videobox { width: inherit; border-radius: 12px; overflow: hidden; aspect-ratio: 9/16; box-shadow: 0 0 30px var(--candidate); }
 
     /* Manifesto */
-    .manifesto { margin-top: 3rem }
+    .manifesto { margin-top: 3rem; grid-column: 1; grid-row: 2; }
     .manifesto h2 { color: var(--bright-text); font-size: 1.6rem; margin-bottom: 1rem; text-shadow: 0 0 20px currentColor; }
     .pledges { display: grid; gap: 1rem; }
     .pledge, .big-item {
-      background: var(--bg);
+      background: rgba(var(--card-bg), 0.7);
       outline: var();
       padding: 1rem 1.25rem;
       border-radius: 12px;
@@ -120,83 +152,119 @@
     }
     .big-item { grid-column: 2; grid-row-start: 1; grid-row-end: 3; }
 
-    .bottom-nav { margin-top: 4rem; text-align: center; }
+    .bottom-nav { margin-top: 4rem; text-align: center; grid-column-start: 1; grid-column-end: 4; }
     .bottom-nav a {color: var(--candidate); text-shadow: 0 0 10px currentColor;}
   </style>
 </head>
 <body>
   <!-- ================= Hero Banner ================= -->
-  <section class="hero">
-    <div class="hero-inner">
-      <h1>기호 2번 유현규 &amp; 김지후</h1>
-      <p>“충남과학고는 2번이 답이다”</p>
-    </div>
+  <section class="bg">
+    <section class="bg-trans">
+      <section class="hero">
+        <div class="hero-inner">
+          <h1>기호 2번 유현규 &amp; 김지후</h1>
+          <p>“충남과학고는 2번이 답이다”</p>
+        </div>
+      </section>
+
+      <div class="container">
+        <!-- 후보 듀오 -->
+        <section class="ticket">
+          <!-- 회장 -->
+          <div class="member">
+            <img src="img/no2/회장.png" alt="회장" class="avatar">
+            <img src="img/no2/회장.png" alt="회장" class="avatar-blur">
+            <div class="info">
+              <h2>회장 유현규</h2>
+              <ul>
+                <li><span class="icon"></span></li>
+                <li><span class="icon"></span></li>
+                <li><span class="icon"></span></li>
+                <li><span class="icon"></span></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 부회장 -->
+          <div class="member">
+            <img src="img/no2/부회장.png" alt="부회장" class="avatar">
+            <img src="img/no2/부회장.png" alt="부회장" class="avatar-blur">
+            <div class="info">
+              <h2>부회장 김지후</h2>
+              <ul>
+                <li><span class="icon"></span></li>
+                <li><span class="icon"></span></li>
+                <li><span class="icon"></span></li>
+                <li><span class="icon"></span></li>
+              </ul>
+            </div>
+          </div>
+        </section>
+        
+        <!-- <a href = "https://www.instagram.com/reel/DM_0_yGyDVq/?igsh=MXZudDh5aWtjeHI0Nw==">
+          <img src="img/no2/릴스.png" class="reels-img">
+          <img src="img/no2/릴스.png" class="reels-img-blur">
+        </a> -->
+
+        <div class="mediabg">
+          <div class="mediabox">  
+            <div class="videobg" style="grid-column: 1; grid-row: 1;">
+              <div class="videobox" style="width: 100%;">
+                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/ykeP0Em0BYI?fs=0" title="기호 2번 화이팅 🔥 🔥" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+              </div>
+            </div>
+            
+            <div class="videobg" style="grid-column: 2; grid-row: 1;">
+              <div class="videobox" style="position: relative;">
+                <!-- <img src="img/no2/릴스.png" width="100%" height="100%"> -->
+                <a href = "https://www.instagram.com/reel/DM_0_yGyDVq/?igsh=MXZudDh5aWtjeHI0Nw==">
+                  <img width="100%" height="100%" src="img/no2/릴스.png" class="reels-img">
+                  <!-- <img width="100%" height="100%" src="img/no2/릴스.png" class="reels-img-blur"> -->
+                </a>
+              </div>
+            </div>
+
+            <div class="videobg" style="padding: 2.5%; grid-column-start: 1; grid-column-end: 3; grid-row: 2; align-content: start;">
+              <div class="videobox" style="aspect-ratio: 16/9;">
+                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/45a8qRJ0VQk?fs=0" title="기호 2번 유현규, 김지후 🔥🔥 " frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Manifesto -->
+        <section class="manifesto" style="margin-right: 15%;">
+          <h2>핵심 공약</h2>
+          <div class="pledges">
+            <div class="pledge">
+              <h3>생활기록부가 살아나는</h3>
+              <p>- 학급 내 학생회 부서별 부원 모집</p>
+              <p>- 학생회 산하 메이킹 부서 운영</p>
+            </div>
+            <div class="big-item">
+              <h3>편하고, 눈치 보지않는</h3>
+              <p>- 체력 단련실 샤워실 샤워 용품,</p>
+              <p>&nbsp; 세면실, 샤워실 청소</p>
+              <p>- 제빙기 설치</p>
+              <p>- 학기말 스포츠 / e스포츠 대회 추진</p>
+              <p>- 주기적 학생회 이벤트 운영</p>
+              <p>&nbsp; <i>(버스킹, 포토부스 등)</i></p>
+            </div>
+            <div class="pledge">
+              <h3>공부 걱정 없는</h3>
+              <p>- 열람실 개방 <i>(신청)</i></p>
+              <p>&nbsp; 열람실 스탠딩 책상 설치</p>
+              <p>- 자습 공간 개편</p>
+            </div>
+          </div>
+        </section>
+
+        <nav class="bottom-nav">
+          <a href="index.html">← 후보 목록으로</a>
+        </nav>
+      </div>
+
+    </section>
   </section>
-
-  <div class="container">
-    <!-- 후보 듀오 -->
-    <section class="ticket">
-      <!-- 회장 -->
-      <div class="member">
-        <img src="img/no2/회장.png" alt="회장" class="avatar">
-        <img src="img/no2/회장.png" alt="회장" class="avatar-blur">
-        <div class="info">
-          <h2>회장 유현규</h2>
-          <ul>
-            <li><span class="icon"></span>...</li>
-            <li><span class="icon"></span>...</li>
-            <li><span class="icon"></span>...</li>
-            <li><span class="icon"></span>...</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- 부회장 -->
-      <div class="member">
-        <img src="img/no2/부회장.png" alt="부회장" class="avatar">
-        <img src="img/no2/부회장.png" alt="부회장" class="avatar-blur">
-        <div class="info">
-          <h2>부회장 김지후</h2>
-          <ul>
-            <li><span class="icon"></span>...</li>
-            <li><span class="icon"></span>...</li>
-            <li><span class="icon"></span>...</li>
-            <li><span class="icon"></span>...</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- Manifesto -->
-    <section class="manifesto">
-      <h2>핵심 공약</h2>
-      <div class="pledges">
-        <div class="pledge">
-          <h3>생활기록부가 살아나는</h3>
-          <p>- 학급 내 학생회 부서별 부원 모집</p>
-          <p>- 학생회 산하 메이킹 부서 운영</p>
-        </div>
-        <div class="big-item">
-          <h3>편하고, 눈치 보지않는</h3>
-          <p>- 체력 단련실 샤워실 샤워 용품,</p>
-          <p>&nbsp; 세면실, 샤워실 청소</p>
-          <p>- 제빙기 설치</p>
-          <p>- 학기말 스포츠 / e스포츠 대회 추진</p>
-          <p>- 주기적 학생회 이벤트 운영</p>
-          <p>&nbsp; <i>(버스킹, 포토부스 등)</i></p>
-        </div>
-        <div class="pledge">
-          <h3>공부 걱정 없는</h3>
-          <p>- 열람실 개방 <i>(신청)</i></p>
-          <p>&nbsp; 열람실 스탠딩 책상 설치</p>
-          <p>- 자습 공간 개편</p>
-        </div>
-      </div>
-    </section>
-
-    <nav class="bottom-nav">
-      <a href="index.html">← 후보 목록으로</a>
-    </nav>
-  </div>
 </body>
 </html>
