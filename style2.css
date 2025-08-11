@@ -174,7 +174,7 @@ img {
     margin-bottom: 40vh;
 }
 .page-title {
-     font-size: xxx-large; margin-top: 0em; margin-bottom: 0em; font-weight: 800; /* TossFace; <-- ??? */
+     font-size: xxx-large; margin-top: 0em; margin-bottom: 0em; font-weight: 800; TossFace; /* <-- ??? */
 }
 .page-subtitle {
     font-size: xx-large; margin-top: 0em; margin-bottom: 0; font-weight: 400;
