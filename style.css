@@ -194,40 +194,66 @@ img {
     font-weight: 400;
 }
 
-/* 프로젝트 아이템 좌우 레이아웃 */
 .project-item {
+    margin-bottom: 15vh;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.project-item > .project-title {
+    font-size: xx-large;
+    margin-bottom: 0.2em;
+    font-weight: 700;
+}
+
+.project-item > .project-subtitle {
+    font-size: x-large;
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+    font-weight: 600;
+}
+
+.project-item > .project-description {
+    font-size: large;
+    margin-top: 0.5em;
+    margin-bottom: 1.5em;
+    color: var(--secondary-text-color);
+    line-height: 1.5;
+}
+
+/* 프로젝트 페이지 전용 좌우 레이아웃 */
+.project-item.layout-horizontal {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 15vh;
     max-width: 1400px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0 40px;
-    box-sizing: border-box;
     gap: 2rem;
+    padding: 0 40px;
 }
 
-.project-image-container {
+.project-item.layout-horizontal .project-image-container {
     flex: 1;
     max-width: 500px;
     display: flex;
     justify-content: center;
 }
 
-.project-details {
+.project-item.layout-horizontal .project-details {
     flex: 1;
     text-align: center;
 }
 
-.project-item .project-title {
+.project-item.layout-horizontal .project-title {
     font-size: xx-large;
     margin-bottom: 0.2em;
     font-weight: 700;
     text-align: center;
 }
 
-.project-item .project-subtitle {
+.project-item.layout-horizontal .project-subtitle {
     font-size: x-large;
     margin-top: 0.2em;
     margin-bottom: 0.2em;
@@ -235,7 +261,7 @@ img {
     text-align: center;
 }
 
-.project-item .project-description {
+.project-item.layout-horizontal .project-description {
     font-size: large;
     margin-top: 0.5em;
     margin-bottom: 1.5em;
@@ -528,29 +554,29 @@ footer .button-container {
         font-size: large;
     }
 
-    .project-item {
+    .project-item.layout-horizontal {
         flex-direction: column;
         gap: 2rem;
         margin-bottom: 10vh;
         padding: 0 15px;
     }
 
-    .project-image-container {
+    .project-item.layout-horizontal .project-image-container {
         width: 100%;
         max-width: none;
     }
 
-    .project-details {
+    .project-item.layout-horizontal .project-details {
         text-align: center;
     }
 
-    .project-item .project-title,
-    .project-item .project-subtitle,
-    .project-item .project-description {
+    .project-item.layout-horizontal .project-title,
+    .project-item.layout-horizontal .project-subtitle,
+    .project-item.layout-horizontal .project-description {
         text-align: center;
     }
 
-    .placeholder-image {
+    .project-item.layout-horizontal .placeholder-image {
         aspect-ratio: 16/9;
         font-size: large;
         width: 100%;
