@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>4번 후보 - 회장·부회장 소개</title>
-  <link rel="shortcut icon" type="image/x-icon" href="img/no4/icon.png">
+  <link rel="shortcut icon" type="image/x-icon" href="img/no4/icon1.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     :root {
@@ -12,7 +12,7 @@
       --card-bg: 6,6,6;
       --bright-text: #f9f9f9;
       --text: #222;
-      --candidate: rgb(0,255,128);
+      --candidate: rgb(128,128,128);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -74,6 +74,7 @@
       border-radius: 8%;
       object-fit: inherit;
       z-index: 1;
+      filter: grayscale(0.7);
     }
     .avatar-blur {
       position: absolute;
@@ -81,7 +82,7 @@
       height: 225px;
       border-radius: 8%;
       object-fit: inherit;
-      filter: blur(8px) brightness(1.5);
+      filter: blur(8px) brightness(1.5) grayscale(0.7);
       z-index: 0;
     }
     .info h2 {
@@ -134,8 +135,17 @@
   <!-- Hero Banner -->
   <section class="hero">
     <div class="hero-inner">
-      <h1>기호 4번 이주호 &amp; 김도윤</h1>
+      <i>
+      <s style="color: rgb(128,128,128);">
+      <h1>기호 4번 이주호 &amp; 김도윤 (사퇴)</h1>
+      </s>
+      </i>
+      <a href="./no5.html" style="color: rgb(255,140,0); text-shadow: 0 0 10px rgb(255,140,0);"><h2>기호 5번으로 병합됨</h2></a>
+      <i>
+      <s style="color: rgb(128,128,128);">
       <p>“미래를 여는 당신의 선택”</p>
+      </s>
+      </i>
     </div>
   </section>
 
