@@ -1,252 +1,143 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>3번 후보 - 회장·부회장 소개</title>
-  <link rel="shortcut icon" type="image/x-icon" href="img/no3/icon.png">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"> -->
-<style>
-    :root {
-      --primary: #007aff;
-      /* --bg: #f9f9f9; */
-      --bg: linear-gradient(180deg, #000 0%, #0a0a0a 100%);
-      --card-bg: 6,6,6;
-      --bright-text: #f9f9f9;
-      --text: #222;
-      --shadow: 0 4px 10px rgba(0,0,0,.08);
-      --candidate: rgb(255,215,0);
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Noto Sans KR', sans-serif;
-      background: var(--bg);
-      background-color: #000;
-      color: var(--text);
-      line-height: 1.6;
-    }
-    a { text-decoration: none; color: var(--candidate); align-content: end; }
-
-    /* ================= Hero Banner ================= */
-    /* 원하는 배경 이미지를 img/hero.jpg 위치에 넣고, 아래 url 경로를 맞춰 주세요 */
-    .hero {
-      /* background: url('img/background.jpg') center/cover no-repeat; */
-      background-color: var(--candidate);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 4rem 1rem;
-      text-align: center;
-      box-shadow: 0 0 60px var(--candidate);
-    }
-    .hero h1 {
-      font-family: 'Gmarket';
-      font-size: 2.4rem;
-      color: #fff;
-      text-shadow: 0 2px 6px rgba(0,0,0,.35);
-      margin-bottom: .5rem;
-    }
-    .hero p {
-      font-family: 'Danjo';
-      font-size: 1.5rem;
-      color: #fff;
-      opacity: .9;
-    }
-
-    /* ================= Layout ================= */
-    .container {
-      width: 90%;
-      /* max-width: 900px; */
-      margin: 0 auto;
-      padding: 1.5rem 0 4rem;
-      display: grid;
-      grid-template-columns: 50% 50%;
-    }
-
-    /* 듀오(회장·부회장) 레이아웃 */
-    .ticket { margin-top: 1.5rem; grid-row: 1; grid-column: 1; }
-    .member {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-    }
-    .avatar {
-      width: 175px;
-      height: 225px;
-      border-radius: 8%;
-      object-fit: inherit;
-      /* box-shadow: 0 0 10px var(--card-bg); */
-      z-index: 1;
-    }
-    .avatar-blur {
-      position: absolute;
-      width: 175px;
-      height: 225px;
-      border-radius: 8%;
-      object-fit: inherit;
-      filter: blur(8px) brightness(1.5);
-      z-index: 0;
-    }
-    .info h2 {
-      font-size: 1.5rem;
-      text-shadow: 0 0 10px currentColor;
-      margin-bottom: .5rem;
-      color: var(--candidate);
-    }
-    .info ul {
-      color: var(--bright-text);
-      list-style: none;
-      display: grid;
-      gap: .4rem;
-      font-size: 1rem;
-      text-shadow: 0 0 20px currentColor;
-    }
-    .info ul li { display: flex; align-items: center; gap: .5rem; }
-    .info ul li .icon { font-size: 1.1rem; }
-    
-    .mediabg { grid-column: 2; grid-row-start: 1; grid-row-end: 3; }
-    .mediabox { display: grid; grid-template-columns: 35% 65%; }
-    .videobg { width: 100%; height: 100%; align-content: center; padding: 5%; }
-    .videobox { width: inherit; border-radius: 12px; overflow: hidden; aspect-ratio: 16/9; box-shadow: 0 0 30px var(--candidate); }
-
-    /* Manifesto */
-    .manifesto { margin-top: 3rem; grid-column: 1; }
-    .manifesto h2 { color: var(--bright-text); font-size: 1.6rem; margin-bottom: 1rem; text-shadow: 0 0 20px currentColor; }
-    .pledges { display: grid; gap: 1rem; }
-    .pledge, .big-item {
-      background: rgba(var(--card-bg), 0.7);
-      outline: var();
-      padding: 1rem 1.25rem;
-      border-radius: 12px;
-      box-shadow: 0 0 8px var(--candidate);
-    }
-    .pledge h3, .big-item h3 { font-size: 1.2rem; margin-bottom: .4rem; color: var(--candidate); text-shadow: 0 0 7px currentColor; }
-    .pledge p, .big-item p { color: var(--bright-text); text-shadow: 0 0 10px currentColor; }
-    @media (min-width: 600px) {
-      .pledges { grid-template-columns: repeat(2, 1fr); }
-    }
-    .big-item { grid-column-start: 1; grid-column-end: 3; }
-
-    .bottom-nav { margin-top: 4rem; text-align: center; grid-column-start: 1; grid-column-end: 3; }
-    .bottom-nav a {color: var(--candidate); text-shadow: 0 0 10px currentColor;}
-  </style>
+    <meta charset="UTF-8">
+    <title>3번 후보 - 회장·부회장 소개</title>
+    <link rel="shortcut icon" type="image/x-icon" href="img/no3/icon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <style>
+        :root { --candidate: rgb(255,215,0); }
+        
+        .container { grid-template-columns: 50% 50%; }
+        
+        .mediabg { grid-column: 2; grid-row-start: 1; grid-row-end: 3; }
+        .mediabox { display: grid; grid-template-columns: 35% 65%; }
+        .videobg { width: 100%; height: 100%; align-content: center; padding: 5%; }
+        .videobox { width: inherit; border-radius: 12px; overflow: hidden; aspect-ratio: 16/9; box-shadow: 0 0 30px var(--candidate); }
+        
+        /* Manifesto */
+        .manifesto { margin-top: 3rem; grid-column: 1; }
+        @media (min-width: 600px) { .pledges { grid-template-columns: repeat(2, 1fr); } }
+        .big-item { grid-column-start: 1; grid-column-end: 3; }
+        
+        .bottom-nav { grid-column-start: 1; grid-column-end: 3; }
+    </style>
 </head>
 <body>
-  <!-- ================= Hero Banner ================= -->
-  <section class="hero">
-    <div class="hero-inner">
-      <h1>기호 3번 김시은 &amp; 박주언</h1>
-      <p>“말보다 행동으로, 조용히 크게 일하는 회장단”</p>
-    </div>
-  </section>
-
-  <div class="container">
-    <!-- 후보 듀오 -->
-    <section class="ticket">
-      <!-- 회장 -->
-      <div class="member">
-        <img src="img/no3/회장.jpg" alt="회장" class="avatar">
-        <img src="img/no3/회장.jpg" alt="회장" class="avatar-blur">
-        <div class="info">
-          <h2>회장 김시은</h2>
-          <ul>
-            <li><span class="icon"></span></li>
-            <li><span class="icon"></span></li>
-            <li><span class="icon"></span></li>
-            <li><span class="icon"></span></li>
-          </ul>
+    <!-- ================= Hero Banner ================= -->
+    <section class="hero">
+        <div class="hero-inner">
+            <h1>기호 3번 김시은 &amp; 박주언</h1>
+            <p>“말보다 행동으로, 조용히 크게 일하는 회장단”</p>
         </div>
-      </div>
-
-      <!-- 부회장 -->
-      <div class="member">
-        <img src="img/no3/부회장.png" alt="부회장" class="avatar">
-        <img src="img/no3/부회장.png" alt="부회장" class="avatar-blur">
-        <div class="info">
-          <h2>부회장 박주언</h2>
-          <ul>
-            <li><span class="icon"></span></li>
-            <li><span class="icon"></span></li>
-            <li><span class="icon"></span></li>
-            <li><span class="icon"></span></li>
-          </ul>
-        </div>
-      </div>
     </section>
-
-    <div class="mediabg">
-      <div class="mediabox">
-        <div class="videobg" style="grid-column-start: 1; grid-column-end: 3;">
-          <div class="videobox">
-            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/GwpAbga8d3g?autoplay=1&mute=1&loop=1&fs=0" title="기호 3번 김시은, 박주언 홍보 영상" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-          </div>
+    
+    <div class="container">
+        <!-- 후보 듀오 -->
+        <section class="ticket">
+            <!-- 회장 -->
+            <div class="member">
+                <img src="img/no3/회장.jpg" alt="회장" class="avatar">
+                <img src="img/no3/회장.jpg" alt="회장" class="avatar-blur">
+                <div class="info">
+                    <h2>회장 김시은</h2>
+                    <ul>
+                        <li><span class="icon"></span></li>
+                        <li><span class="icon"></span></li>
+                        <li><span class="icon"></span></li>
+                        <li><span class="icon"></span></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 부회장 -->
+            <div class="member">
+                <img src="img/no3/부회장.png" alt="부회장" class="avatar">
+                <img src="img/no3/부회장.png" alt="부회장" class="avatar-blur">
+                <div class="info">
+                    <h2>부회장 박주언</h2>
+                    <ul>
+                        <li><span class="icon"></span></li>
+                        <li><span class="icon"></span></li>
+                        <li><span class="icon"></span></li>
+                        <li><span class="icon"></span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <div class="mediabg">
+            <div class="mediabox">
+                <div class="videobg" style="grid-column-start: 1; grid-column-end: 3;">
+                    <div class="videobox">
+                        <iframe width="100%" height="100%" src="https://www.youtube.com/embed/GwpAbga8d3g?autoplay=1&mute=1&loop=1&fs=0" title="기호 3번 김시은, 박주언 홍보 영상" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                </div>
+                
+                <div class="videobg" style="padding: 7.692307692%; grid-column: 2;">
+                    <div class="videobox" style="aspect-ratio: 9/16;">
+                        <iframe width="100%" height="100%" src="https://www.youtube.com/embed/2pj4F2ulPI0?fs=0" title="기호 3번 와이파이 공약 실현 가능한지 알아봄" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div class="videobg" style="padding: 7.692307692%; grid-column: 2;">
-          <div class="videobox" style="aspect-ratio: 9/16;">
-            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/2pj4F2ulPI0?fs=0" title="기호 3번 와이파이 공약 실현 가능한지 알아봄" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-          </div>
+        
+        <!-- Manifesto -->
+        <section class="manifesto">
+            <div style="display: grid; grid-template-columns: 1fr 1fr;">
+                <h2 style="grid-column: 1;">핵심 공약</h2>
+                <h3 style="grid-column: 2; text-align: right; align-content: end; margin-bottom: 1em;"><a href="https://www.notion.so/3-23e580c52b1480ed8665fac3469cca22?source=copy_link">[노션 페이지 참고]</a></h3>
+            </div>
+            
+            <div class="pledges">
+                <div class="pledge">
+                    <h3>1. 후배 지원단 운영</h3>
+                    <p>- 꿈의 대학 선배님분들과의 1:1 진학 상담과 입시 상담</p>
+                    <p>- 대학교 생활 이야기 공유</p>
+                </div>
+                <div class="pledge">
+                    <h3>2. 교내 와이파이 개선</h3>
+                    <p>- 와이파이 품질 점검</p>
+                    <p>- 와이파이 공유기 추가 설치</p>
+                </div>
+                <div class="pledge">
+                    <h3>3. 봄 맞이 동행길</h3>
+                    <p>- 한마음 트레킹의 부활!!</p>
+                    <p>- 청벽산 넘어 금강수목원 나들이</p>
+                </div>
+                <div class="pledge">
+                    <h3>4. 현장체험학습 추진</h3>
+                    <p>- 전 학년 모두 함께 가는 추억여행</p>
+                    <p>- 추후 설문을 통해 장소 지정</p>
+                </div>
+                <div class="pledge">
+                    <h3>5. 바른인성새김마당 개편</h3>
+                    <p>- 참여형 프로그램</p>
+                    <p>&nbsp; <i>(반 대항 퀴즈, 짧은 사연 공유 등)</i> 도입</p>
+                    <p>- 시험 2주 전에는 전면 중단</p>
+                </div>
+                <div class="pledge">
+                    <h3>6. 서머 워터 페스타</h3>
+                    <p>- 물총 놀이로 날려버리는 더위</p>
+                    <p>- 수박 화채와 함께 즐기는 낭만!!</p>
+                </div>
+                <div class="pledge">
+                    <h3>7. 생리대 및 머리끈 비치</h3>
+                    <p>- 여자 화장실마다 구비하여 급하게 필요할 때 이용 가능
+                        <p>- 생리대함 이용한 체계적 관리</p>
+                    </div>
+                    <div class="pledge">
+                        <h3>8. 충전기 대여소 운영</h3>
+                        <p>- 보조 배터리 대여로 언제, 어디서든 충전 가능</p>
+                        <p>- 명부 작성을 통한 관리</p>
+                    </div>
+                </div>
+            </section>
+            
+            <nav class="bottom-nav">
+                <a href="index.html">← 후보 목록으로</a>
+            </nav>
         </div>
-      </div>
-    </div>
-
-    <!-- Manifesto -->
-    <section class="manifesto">
-      <div style="display: grid; grid-template-columns: 1fr 1fr;">
-        <h2 style="grid-column: 1;">핵심 공약</h2>
-        <h3 style="grid-column: 2; text-align: right; align-content: end; margin-bottom: 1em;"><a href="https://www.notion.so/3-23e580c52b1480ed8665fac3469cca22?source=copy_link">[노션 페이지 참고]</a></h3>
-      </div>
-
-      <div class="pledges">
-        <div class="pledge">
-          <h3>1. 후배 지원단 운영</h3>
-          <p>- 꿈의 대학 선배님분들과의 1:1 진학 상담과 입시 상담</p>
-          <p>- 대학교 생활 이야기 공유</p>
-        </div>
-        <div class="pledge">
-          <h3>2. 교내 와이파이 개선</h3>
-          <p>- 와이파이 품질 점검</p>
-          <p>- 와이파이 공유기 추가 설치</p>
-        </div>
-        <div class="pledge">
-          <h3>3. 봄 맞이 동행길</h3>
-          <p>- 한마음 트레킹의 부활!!</p>
-          <p>- 청벽산 넘어 금강수목원 나들이</p>
-        </div>
-        <div class="pledge">
-          <h3>4. 현장체험학습 추진</h3>
-          <p>- 전 학년 모두 함께 가는 추억여행</p>
-          <p>- 추후 설문을 통해 장소 지정</p>
-        </div>
-        <div class="pledge">
-          <h3>5. 바른인성새김마당 개편</h3>
-          <p>- 참여형 프로그램</p>
-          <p>&nbsp; <i>(반 대항 퀴즈, 짧은 사연 공유 등)</i> 도입</p>
-          <p>- 시험 2주 전에는 전면 중단</p>
-        </div>
-        <div class="pledge">
-          <h3>6. 서머 워터 페스타</h3>
-          <p>- 물총 놀이로 날려버리는 더위</p>
-          <p>- 수박 화채와 함께 즐기는 낭만!!</p>
-        </div>
-        <div class="pledge">
-          <h3>7. 생리대 및 머리끈 비치</h3>
-          <p>- 여자 화장실마다 구비하여 급하게 필요할 때 이용 가능
-          <p>- 생리대함 이용한 체계적 관리</p>
-        </div>
-        <div class="pledge">
-          <h3>8. 충전기 대여소 운영</h3>
-          <p>- 보조 배터리 대여로 언제, 어디서든 충전 가능</p>
-          <p>- 명부 작성을 통한 관리</p>
-        </div>
-      </div>
-    </section>
-
-    <nav class="bottom-nav">
-      <a href="index.html">← 후보 목록으로</a>
-    </nav>
-  </div>
-</body>
-</html>
+    </body>
+    </html>

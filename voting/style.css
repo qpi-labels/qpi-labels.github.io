@@ -1,0 +1,125 @@
+:root {
+    --bg: linear-gradient(180deg, #000 0%, #0a0a0a 100%);
+    --card-bg: 6,6,6;
+    --bright-text: #f9f9f9;
+    --text: #222;
+    --shadow: 0 4px 10px rgba(0,0,0,.08);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: var(--candidate);
+    align-content: end;
+}
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    background-color: #000;
+    color: var(--text);
+    line-height: 1.6;
+}
+
+/* ================= Hero Banner ================= */
+/* 원하는 배경 이미지를 img/hero.jpg 위치에 넣고, 아래 url 경로를 맞춰 주세요 */
+.hero {
+    /* background: url('img/background.jpg') center/cover no-repeat; */
+    background-color: var(--candidate);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1rem;
+    text-align: center;
+    box-shadow: 0 0 60px var(--candidate);
+}
+.hero h1 {
+    font-family: 'Gmarket';
+    font-size: 2.4rem;
+    color: #fff;
+    text-shadow: 0 2px 6px rgba(0,0,0,.35);
+    margin-bottom: .5rem;
+}
+.hero p {
+    font-family: 'Danjo';
+    font-size: 1.5rem;
+    color: #fff;
+    opacity: .9;
+}
+
+/* ================= Layout ================= */
+.container {
+    width: 90%;
+    margin: 0 auto;
+    padding: 1.5rem 0 4rem;
+    display: grid;
+}
+
+/* 듀오(회장·부회장) 레이아웃 */
+.ticket { margin-top: 1.5rem; grid-row: 1; grid-column: 1;}
+.member {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+.avatar {
+    width: 175px;
+    height: 225px;
+    border-radius: 8%;
+    object-fit: inherit;
+    z-index: 1;
+}
+.avatar-blur {
+    position: absolute;
+    width: 175px;
+    height: 225px;
+    border-radius: 8%;
+    object-fit: inherit;
+    filter: blur(8px) brightness(1.5);
+    z-index: 0;
+}
+.info h2 {
+    font-size: 1.5rem;
+    text-shadow: 0 0 10px currentColor;
+    margin-bottom: .5rem;
+    color: var(--candidate);
+}
+.info ul {
+    color: var(--bright-text);
+    list-style: none;
+    display: grid;
+    gap: .4rem;
+    font-size: 1rem;
+    text-shadow: 0 0 20px currentColor;
+}
+.info ul li { display: flex; align-items: center; gap: .5rem; }
+.info ul li .icon { font-size: 1.1rem; }
+
+/* Manifesto */
+.manifesto h2 { color: var(--bright-text); font-size: 1.6rem; margin-bottom: 1rem; text-shadow: 0 0 20px currentColor; }
+.pledges { display: grid; gap: 1rem; }
+.pledge, .big-item {
+    background: rgba(var(--card-bg), 0.7);
+    outline: var();
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    box-shadow: 0 0 8px var(--candidate);
+}
+.pledge h3, .big-item h3 { font-size: 1.2rem; margin-bottom: .4rem; color: var(--candidate); text-shadow: 0 0 7px currentColor; }
+.pledge p, .big-item p { color: var(--bright-text); text-shadow: 0 0 10px currentColor; }
+
+.bottom-nav {
+    margin-top: 4rem;
+    text-align: center;
+}
+.bottom-nav a {
+    color: var(--candidate);
+    text-shadow: 0 0 10px currentColor;
+}
