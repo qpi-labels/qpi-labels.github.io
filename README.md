@@ -4,7 +4,7 @@
 + **UI/UX**
   + 배경에 사용된 색상은 다음과 같습니다.
     + ${\textsf{\color{rgb(250, 250, 250)}Light (250, 250, 250)}}$
-    + ${\textsf{\color{rgb(18, 18, 18)}Dark (18, 18, 18)}}$
+    + ${\textsf{\color{rgb(35, 35, 35)}Dark (35, 35, 35)}}$
   + 오브젝트에 사용된 색상은 다음과 같습니다.
     + ${\textsf{\color{rgb(0, 0, 0)}BLACK (0, 0, 0)}}$
     + ${\textsf{\color{rgb(142, 142, 147)}GRAY (142, 142, 147)}}$
@@ -45,7 +45,7 @@
   ```
     @media (prefers-color-scheme: dark) {
       body {
-            background-color: #121212;
+            background-color: #232323;
             color: white;
       }
       .access-button {
