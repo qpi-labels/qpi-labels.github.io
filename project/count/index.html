@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QPI - 작업 관리</title>
+    <title>QPI</title>
     <style>
         @import url('https://fonts.cdnfonts.com/css/br-cobane');
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
@@ -331,13 +331,13 @@
         </div>
         <div class="header-links">
             <a href="/project/" class="header-link">Project</a>
-            <a href="https://github.com/qpi-labels/qpi-labels.github.io/discussions" class="header-link">Community</a>
-            <a href="mailto:cnsh31_1410@cnsh.hs.kr" class="header-link">Contact</a>
+                <a href="https://github.com/qpi-labels/qpi-labels.github.io/discussions" class="header-link">Community</a>
+                <a href="mailto:cnsh31_1410@cnsh.hs.kr" class="header-link">Contact</a>
         </div>
     </header>
 
     <div class="page-title-section">
-        <h1 class="page-title">Count</h1>
+        <h1 class="page-title">count</h1>
         <p class="page-subtitle">카운트다운</p>
     </div>
 
@@ -359,8 +359,19 @@
                 description: "SpaceX Starship 10차 발사",
                 dueDate: new Date('2025-08-25T8:30:00'),
                 link: "https://x.com/i/broadcasts/1yoKMPRjeYYxQ",
-                linkText: "보러 가기"
-            };
+                linkText: "live"
+            },
+            {
+                id: 2,
+                title: "TBD",
+                description: "TBD",
+            },
+            {
+                id: 3,
+                title: "TBD",
+                description: "TBD",
+            }
+        ];
 
         let tasks = [...defaultTasks];
 
@@ -447,4 +458,4 @@
         renderTasks();
     </script>
 </body>
-  </html>
+    </html>
