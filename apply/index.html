@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>쿼터파이</title>
-    <link rel="shortcut icon" type="image/x-icon" href="logo.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/logo.ico">
     <meta property="og:url" content="https://qpi.kro.kr/main/">
     <meta property="og:title" content="쿼터파이">
     <meta property="og:type" content="website">
@@ -72,7 +72,7 @@
         }
         @media (prefers-color-scheme: dark) {
             body {
-                background-color: #121212;
+                background-color: #232323;
                 color: white;
             }
             .access-button {
@@ -84,8 +84,8 @@
                 box-shadow: none;
             }
             header {
-            background-color: rgba(18, 18, 18, 0.8);
-            border-bottom: 1.5px solid rgba(60, 60, 60);
+                background-color: rgba(18, 18, 18, 0.8);
+                border-bottom: 1.5px solid rgba(60, 60, 60);
             }
         }
     </style>
@@ -114,7 +114,7 @@
             const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
             logoImg.style.opacity = 0;
             setTimeout(() => {
-                logoImg.src = isDarkMode ? 'logo_dark.png' : 'logo.png';
+                logoImg.src = isDarkMode ? '/logo_dark.png' : '/logo.png';
                 logoImg.style.opacity = 1;
             }, 200);
         }

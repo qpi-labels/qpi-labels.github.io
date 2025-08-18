@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+    }
+
+    .projects-section {
+      padding: 80px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .projects-title {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 50px;
+    }
+
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 18px;
+      background: #111;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+
+    .card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-content {
+      padding: 25px;
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 1.6rem;
+      font-weight: bold;
+    }
+
+    .card p {
+      margin: 0 0 20px;
+      font-size: 1rem;
+      opacity: 0.85;
+      line-height: 1.5;
+    }
+
+    .card a {
+      display: inline-block;
+      padding: 10px 18px;
+      background: #fff;
+      color: #000;
+      border-radius: 10px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.3s ease;
+    }
+
+    /* 버튼 hover 시 오른쪽으로 이동 */
+    .card a:hover {
+      transform: translateX(8px);
+    }
+  </style>
+</head>
+<body>
+  <section class="projects-section">
+    <h2 class="projects-title">Projects</h2>
+    <div class="projects">
+      
+      <!-- QISS -->
+      <div class="card">
+        <img src="https://picsum.photos/800/600?random=21" alt="QISS">
+        <div class="card-content">
+          <h3>QISS</h3>
+          <p>학술 검색 도우미</p>
+          <a href="#">이동하기 →</a>
+        </div>
+      </div>
+
+      <!-- QETS -->
+      <div class="card">
+        <img src="https://picsum.photos/800/600?random=22" alt="QETS">
+        <div class="card-content">
+          <h3>QETS</h3>
+          <p>쿼터파이가 개발한 인터랙티브 주기율표 서비스로, 원소 정보를 직관적으로 탐색할 수 있도록 구현했습니다.</p>
+          <a href="#">이동하기 →</a>
+        </div>
+      </div>
+
+      <!-- HEART Q -->
+      <div class="card">
+        <img src="https://picsum.photos/800/600?random=23" alt="HEART Q">
+        <div class="card-content">
+          <h3>HEART Q</h3>
+          <p>심박수와 운동 데이터를 실시간 분석해 사용자의 건강을 모니터링할 수 있는 헬스케어 플랫폼입니다.</p>
+          <a href="#">이동하기 →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</body>
+</html>
