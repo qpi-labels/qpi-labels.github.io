@@ -302,11 +302,24 @@
             transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
                         box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        .grid-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .grid-item:hover {
-            transform: translateY(-8px);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .grid-item.visible:hover {
+            transform: translateY(-8px);
         }
 
         .grid-item.large {
@@ -524,7 +537,7 @@
     <section class="product-grid">
         <div class="grid-container">
             <div class="grid">
-                <div class="grid-item large fade-up">
+                <div class="grid-item large">
                     <div class="item-eyebrow typography-caption2 en">About QPI</div>
                     <h2 class="item-headline typography-headline">혁신적인 웹 개발 동아리</h2>
                     <p class="item-description typography-caption1">
@@ -538,7 +551,7 @@
             </div>
 
             <div class="grid">
-                <div class="grid-item accent-1 fade-up delay-1">
+                <div class="grid-item accent-1">
                     <div class="item-eyebrow typography-caption2 en">Projects</div>
                     <h2 class="item-headline typography-headline">다양한 프로젝트</h2>
                     <p class="item-description typography-caption1">
@@ -550,7 +563,7 @@
                     </div>
                 </div>
 
-                <div class="grid-item accent-2 fade-up delay-2">
+                <div class="grid-item accent-2">
                     <div class="item-eyebrow typography-caption2 en">Design System</div>
                     <h2 class="item-headline typography-headline">디자인 시스템</h2>
                     <p class="item-description typography-caption1">
@@ -603,8 +616,8 @@
             });
         }, observerOptions);
 
-        // Observe all elements with fade-up class
-        document.querySelectorAll('.fade-up').forEach(el => {
+        // Observe all elements with fade-up class and grid-item class
+        document.querySelectorAll('.fade-up, .grid-item').forEach(el => {
             observer.observe(el);
         });
 
