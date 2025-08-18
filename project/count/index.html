@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QPI - 작업 관리</title>
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/br-cobane');
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+        @import url('https://cdn.jsdelivr.net/gh/toss/tossface/dist/tossface.css');
+
+        :root {
+            --header-link-color: black;
+            --header-link-hover-color: rgb(0, 122, 255);
+            --header-link-visited-color: black;
+            --background-color: #fafafa;
+            --text-color: #232323;
+            --header-bg-color: rgba(250, 250, 250, 0.5);
+            --header-border-color: rgba(229, 229, 234);
+            --button-shadow: 5px 5px 10px rgba(209, 217, 230, 0.7), -5px -5px 10px #ffffff;
+            --button-access-bg: rgb(0, 122, 255);
+            --button-access-hover-bg: rgb(0, 150, 255);
+            --button-not-available-bg: rgb(180, 180, 180);
+            --button-main-bg: rgb(142, 142, 147);
+            --button-main-hover-bg: rgb(174, 174, 178);
+            --secondary-text-color: #666;
+            --footer-text-color: #888;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --header-link-color: white;
+                --header-link-hover-color: rgb(10, 160, 255);
+                --header-link-visited-color: white;
+                --background-color: #232323;
+                --text-color: #FAFAFA;
+                --header-bg-color: rgba(18, 18, 18, 0.5);
+                --header-border-color: rgba(60, 60, 60);
+                --button-shadow: none;
+                --button-access-bg: rgb(10, 132, 255);
+                --button-access-hover-bg: rgb(10, 160, 255);
+                --button-main-bg: rgb(44, 44, 46);
+                --button-main-hover-bg: rgb(58, 58, 60);
+                --secondary-text-color: #aaa;
+                --footer-text-color: #aaa;
+            }
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: "BR Cobane", 'Pretendard Variable', 'TossFace', sans-serif;
+            text-align: center;
+            user-select: none;
+            -webkit-user-select: none;
+            margin: 0;
+            padding-top: 70px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--header-bg-color);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            padding: 10px 5px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1.5px solid var(--header-border-color);
+            box-sizing: border-box;
+            min-height: 60px;
+        }
+
+        .header-title-link {
+            text-decoration: none;
+            color: inherit;
+            margin-left: 15px;
+        }
+
+        .header-title-link h1 {
+            font-size: x-large;
+            margin: 0;
+            font-weight: 550;
+            display: inline;
+        }
+
+        .header-links {
+            display: flex;
+            gap: 25px;
+            margin-right: 15px;
+        }
+
+        .header-link {
+            color: var(--header-link-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .header-link:hover {
+            color: var(--header-link-hover-color);
+            text-decoration: underline;
+        }
+
+        .header-link:visited {
+            color: var(--header-link-visited-color);
+        }
+
+        .button {
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--button-shadow);
+            transition: transform 0.2s ease-out, background-color 0.3s ease, box-shadow 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            -webkit-appearance: none;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            -webkit-perspective: 1000;
+            perspective: 1000;
+            -webkit-transform: translate3d(0,0,0);
+            transform: translate3d(0,0,0);
+        }
+
+        .button:hover {
+            transform: scale(1.05);
+        }
+
+        .button-large {
+            padding: 14px 35px;
+            border-radius: 28px;
+            font-size: large;
+            font-weight: 700;
+            border-radius: 28px 28px 28px 28px / 28px 28px 28px 28px;
+        }
+
+        .button-medium {
+            padding: 9px 20px;
+            border-radius: 20px;
+            font-size: medium;
+            font-weight: 600;
+            border-radius: 20px 20px 20px 20px / 20px 20px 20px 20px;
+        }
+
+        .button-access {
+            background-color: var(--button-access-bg);
+        }
+
+        .button-access:hover {
+            background-color: var(--button-access-hover-bg);
+        }
+
+        .button-main {
+            background-color: var(--button-main-bg);
+        }
+
+        .button-main:hover {
+            background-color: var(--button-main-hover-bg);
+        }
+
+        .page-title-section {
+            margin-top: 10vh;
+            margin-bottom: 8vh;
+        }
+
+        .page-title {
+            font-size: xxx-large;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .page-subtitle {
+            font-size: large;
+            margin: 1em 0;
+            font-weight: 400;
+            color: var(--secondary-text-color);
+        }
+
+        .task-list {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .task-item {
+            background-color: var(--background-color);
+            border: 1px solid var(--header-border-color);
+            border-radius: 40px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--button-shadow);
+            transition: transform 0.3s ease;
+            position: relative;
+            -webkit-appearance: none;
+            -webkit-border-radius: 40px;
+            -webkit-background-clip: padding-box;
+            background-clip: padding-box;
+            border-radius: 40px 40px 40px 40px / 40px 40px 40px 40px;
+        }
+
+        .task-item::after {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            background: var(--header-border-color);
+            border-radius: 41px;
+            z-index: -1;
+        }
+
+        .task-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .task-title {
+            font-size: x-large;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .task-description {
+            font-size: medium;
+            color: var(--secondary-text-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .countdown-display {
+            font-size: large;
+            font-weight: 600;
+            color: var(--button-access-bg);
+            margin: 1.5rem 0;
+            font-family: 'Pretendard Variable', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .countdown-expired {
+            color: var(--button-not-available-bg);
+        }
+
+        .button-container {
+            margin-top: 1.5rem;
+        }
+
+        .add-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background-color: var(--button-access-bg);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            box-shadow: var(--button-shadow);
+            transition: all 0.3s ease;
+            font-weight: 300;
+        }
+
+        .add-button:hover {
+            background-color: var(--button-access-hover-bg);
+            transform: scale(1.1);
+        }
+
+        footer {
+            margin-top: 10vh;
+            padding: 2rem;
+            font-size: small;
+            color: var(--footer-text-color);
+            border-top: 1px solid var(--header-border-color);
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 60px;
+            }
+
+            .header-title-link h1 {
+                font-size: large;
+            }
+
+            .header-links {
+                gap: 15px;
+            }
+
+            .header-link {
+                font-size: small;
+            }
+
+            .page-title {
+                font-size: xx-large;
+            }
+
+            .task-list {
+                padding: 0 15px;
+            }
+
+            .task-item {
+                padding: 1.5rem;
+            }
+
+            .task-title {
+                font-size: large;
+            }
+
+            .countdown-display {
+                font-size: medium;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-title-link">
+            <h1>QPI</h1>
+        </div>
+        <div class="header-links">
+            <a href="#" class="header-link">Tasks</a>
+            <a href="#" class="header-link">About</a>
+        </div>
+    </header>
+
+    <div class="page-title-section">
+        <h1 class="page-title">Count</h1>
+        <p class="page-subtitle">카운트다운</p>
+    </div>
+
+    <div class="task-list" id="taskList">
+        <!-- 작업 항목들이 여기에 동적으로 생성됩니다 -->
+    </div>
+
+    <footer>
+        <p>Function over Form</p>
+        <p>Less is more</p>
+        <p>© 2025 QPI. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const defaultTasks = [
+            {
+                id: 1,
+                title: "Starship Flight 10",
+                description: "SpaceX Starship 10차 발사",
+                dueDate: new Date('2025-08-25T8:30:00'),
+                link: "https://x.com/i/broadcasts/1yoKMPRjeYYxQ",
+                linkText: "보러 가기"
+            };
+
+        let tasks = [...defaultTasks];
+
+        function formatTimeRemaining(dueDate) {
+            const now = new Date();
+            const timeDiff = dueDate - now;
+
+            if (timeDiff <= 0) {
+                return { text: "만료됨", expired: true };
+            }
+
+            const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+
+            if (days > 0) {
+                return { text: `${days}일 ${hours}시간 ${minutes}분`, expired: false };
+            } else if (hours > 0) {
+                return { text: `${hours}시간 ${minutes}분`, expired: false };
+            } else {
+                return { text: `${minutes}분`, expired: false };
+            }
+        }
+
+        function renderTasks() {
+            const taskList = document.getElementById('taskList');
+            taskList.innerHTML = '';
+
+            tasks.forEach(task => {
+                const timeRemaining = formatTimeRemaining(task.dueDate);
+                
+                const taskElement = document.createElement('div');
+                taskElement.className = 'task-item';
+                taskElement.innerHTML = `
+                    <div class="task-title">${task.title}</div>
+                    <div class="task-description">${task.description}</div>
+                    <div class="countdown-display ${timeRemaining.expired ? 'countdown-expired' : ''}">
+                        ${timeRemaining.text}
+                    </div>
+                    <div class="button-container">
+                        <a href="${task.link}" target="_blank" class="button button-access button-large">
+                            ${task.linkText}
+                        </a>
+                    </div>
+                `;
+                taskList.appendChild(taskElement);
+            });
+        }
+
+        function addTask() {
+            const title = prompt('작업 제목:');
+            if (!title) return;
+
+            const description = prompt('작업 설명:') || '';
+            const dueDateStr = prompt('마감일 (YYYY-MM-DD HH:MM):');
+            if (!dueDateStr) return;
+
+            const link = prompt('링크 URL:') || '#';
+            const linkText = prompt('버튼 텍스트:') || '링크 이동';
+
+            const dueDate = new Date(dueDateStr);
+            if (isNaN(dueDate.getTime())) {
+                alert('올바른 날짜 형식을 입력하세요.');
+                return;
+            }
+
+            const newTask = {
+                id: Date.now(),
+                title,
+                description,
+                dueDate,
+                link,
+                linkText
+            };
+
+            tasks.push(newTask);
+            renderTasks();
+        }
+
+        // 1분마다 카운트다운 업데이트
+        setInterval(renderTasks, 60000);
+
+        // 초기 렌더링
+        renderTasks();
+    </script>
+</body>
+  </html>
