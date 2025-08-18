@@ -306,8 +306,8 @@
         </div>
         <div class="header-links">
             <a href="/project/" class="header-link">Project</a>
-                <a href="https://github.com/qpi-labels/qpi-labels.github.io/discussions" class="header-link">Community</a>
-                <a href="mailto:cnsh31_1410@cnsh.hs.kr" class="header-link">Contact</a>
+            <a href="https://github.com/qpi-labels/qpi-labels.github.io/discussions" class="header-link">Community</a>
+            <a href="mailto:cnsh31_1410@cnsh.hs.kr" class="header-link">Contact</a>
         </div>
     </header>
 
@@ -332,7 +332,7 @@
                 id: 1,
                 title: "Starship Flight 10",
                 description: "SpaceX Starship 10차 발사",
-                dueDate: new Date('2025-08-25T8:30:00'),
+                dueDate: new Date('2025-08-25T08:30:00'),
                 link: "https://x.com/i/broadcasts/1yoKMPRjeYYxQ",
                 linkText: "live"
             },
@@ -340,19 +340,26 @@
                 id: 2,
                 title: "TBD",
                 description: "TBD",
+                // dueDate가 없으므로 카운트다운이 표시되지 않습니다.
             },
             {
                 id: 3,
                 title: "TBD",
                 description: "TBD",
+                // dueDate가 없으므로 카운트다운이 표시되지 않습니다.
             }
         ];
 
         let tasks = [...defaultTasks];
 
         function formatTimeRemaining(dueDate) {
+            // dueDate가 유효하지 않으면 "날짜 미정"을 반환
+            if (!dueDate || isNaN(new Date(dueDate).getTime())) {
+                return { text: "날짜 미정", expired: true };
+            }
+
             const now = new Date();
-            const timeDiff = dueDate - now;
+            const timeDiff = new Date(dueDate) - now;
 
             if (timeDiff <= 0) {
                 return { text: "만료됨", expired: true };
@@ -361,14 +368,20 @@
             const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
 
+            let resultText = '';
             if (days > 0) {
-                return { text: `${days}일 ${hours}시간 ${minutes}분`, expired: false };
+                resultText += `${days}일 ${hours}시간 ${minutes}분 ${seconds}초`;
             } else if (hours > 0) {
-                return { text: `${hours}시간 ${minutes}분`, expired: false };
+                resultText += `${hours}시간 ${minutes}분 ${seconds}초`;
+            } else if (minutes > 0) {
+                resultText += `${minutes}분 ${seconds}초`;
             } else {
-                return { text: `${minutes}분`, expired: false };
+                resultText += `${seconds}초`;
             }
+
+            return { text: resultText, expired: false };
         }
 
         function renderTasks() {
@@ -380,32 +393,39 @@
                 
                 const taskElement = document.createElement('div');
                 taskElement.className = 'task-item';
+
+                // 링크와 버튼 텍스트가 있을 때만 버튼을 생성
+                const buttonHtml = task.link && task.linkText ? `
+                    <div class="button-container">
+                        <a href="${task.link}" target="_blank" class="button button-access button-large">
+                            ${task.linkText}
+                        </a>
+                    </div>
+                ` : '';
+
                 taskElement.innerHTML = `
                     <div class="task-title">${task.title}</div>
                     <div class="task-description">${task.description}</div>
                     <div class="countdown-display ${timeRemaining.expired ? 'countdown-expired' : ''}">
                         ${timeRemaining.text}
                     </div>
-                    <div class="button-container">
-                        <a href="${task.link}" target="_blank" class="button button-access button-large">
-                            ${task.linkText}
-                        </a>
-                    </div>
+                    ${buttonHtml}
                 `;
                 taskList.appendChild(taskElement);
             });
         }
 
+        // addTask 함수는 요청하지 않으셨지만, 필요시 사용할 수 있도록 남겨둡니다.
         function addTask() {
             const title = prompt('작업 제목:');
             if (!title) return;
 
             const description = prompt('작업 설명:') || '';
-            const dueDateStr = prompt('마감일 (YYYY-MM-DD HH:MM):');
+            const dueDateStr = prompt('마감일 (YYYY-MM-DD HH:MM:SS):');
             if (!dueDateStr) return;
 
-            const link = prompt('링크 URL:') || '#';
-            const linkText = prompt('버튼 텍스트:') || '링크 이동';
+            const link = prompt('링크 URL:') || '';
+            const linkText = prompt('버튼 텍스트:') || '';
 
             const dueDate = new Date(dueDateStr);
             if (isNaN(dueDate.getTime())) {
@@ -426,11 +446,11 @@
             renderTasks();
         }
 
-        // 1분마다 카운트다운 업데이트
-        setInterval(renderTasks, 60000);
+        // 1초(1000ms)마다 카운트다운 업데이트
+        setInterval(renderTasks, 1000);
 
-        // 초기 렌더링
+        // 페이지 로드 시 초기 렌더링
         renderTasks();
     </script>
 </body>
-    </html>
+</html>```
