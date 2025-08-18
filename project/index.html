@@ -1,167 +1,422 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>쿼터파이 프로젝트</title>
-  <link rel="shortcut icon" type="image/x-icon" href="/logo.ico">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta property="og:url" content="https://qpi.kro.kr/project/">
-  <meta property="og:title" content="쿼터파이 프로젝트">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="og.png">
-  <meta property="og:description" content="쿼터파이가 진행한 프로젝트들을 확인해보세요.">
+    <meta charset="UTF-8">
+    <title>쿼터파이 프로젝트</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/logo.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:url" content="https://qpi.kro.kr/project/">
+    <meta property="og:title" content="쿼터파이 프로젝트">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="og.png">
+    <meta property="og:description" content="쿼터파이가 진행한 프로젝트들을 확인해보세요.">
 
-  <style>
-    @import url('https://fonts.cdnfonts.com/css/br-cobane');
-    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/br-cobane');
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+        @import url('https://cdn.jsdelivr.net/gh/toss/tossface/dist/tossface.css');
 
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      font-family: "Pretendard Variable", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background:#fff;
-      color:#1d1d1f;
-      line-height:1.47;
-      font-weight:400;
-      letter-spacing:-.022em;
-      overflow-x:hidden;
-    }
+        :root {
+          --header-link-color: black;
+          --header-link-hover-color: rgb(0, 122, 255);
+          --header-link-visited-color: black;
+          --background-color: #fafafa;
+          --text-color: #232323;
+          --header-bg-color: rgba(250, 250, 250, 0.5);
+          --header-border-color: rgba(229, 229, 234);
+          --button-shadow: 5px 5px 10px rgba(209, 217, 230, 0.7), -5px -5px 10px #ffffff;
+          --button-access-bg: rgb(0, 122, 255);
+          --button-access-hover-bg: rgb(0, 150, 255);
+          --button-not-available-bg: rgb(180, 180, 180);
+          --button-main-bg: rgb(142, 142, 147);
+          --button-main-hover-bg: rgb(174, 174, 178);
+          --secondary-text-color: #666;
+          --footer-text-color: #888;
+        }
 
-    .en { font-family:"BR Cobane",sans-serif; letter-spacing:-.025em; }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --header-link-color: white;
+                --header-link-hover-color: rgb(10, 160, 255);
+                --header-link-visited-color: white;
+                --background-color: #232323;
+                --text-color: #FAFAFA;
+                --header-bg-color: rgba(18, 18, 18, 0.5);
+                --header-border-color: rgba(60, 60, 60);
+                --button-shadow: none;
+                --button-access-bg: rgb(10, 132, 255);
+                --button-access-hover-bg: rgb(10, 160, 255);
+                --button-main-bg: rgb(44, 44, 46);
+                --button-main-hover-bg: rgb(58, 58, 60);
+                --secondary-text-color: #aaa;
+                --footer-text-color: #aaa;
+            }
+        }
 
-    /* Typography */
-    .typography-title1 { font-size:64px; font-weight:600; line-height:1.05; }
-    .typography-headline { font-size:40px; font-weight:600; line-height:1.1; }
-    .typography-subheadline { font-size:24px; font-weight:400; line-height:1.14; }
-    .typography-body { font-size:19px; font-weight:400; line-height:1.38; }
-    .typography-caption1 { font-size:17px; font-weight:400; line-height:1.47; }
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: "BR Cobane", 'Pretendard Variable', TossFace, sans-serif;
+            text-align: center;
+            user-select: none;
+            -webkit-user-select: none;
+            margin: 0;
+            padding-top: 70px;
+        }
 
-    /* Navigation */
-    .nav-wrapper {
-      background:rgba(255,255,255,0.8);
-      backdrop-filter:saturate(180%) blur(20px);
-      -webkit-backdrop-filter:saturate(180%) blur(20px);
-      position:fixed; top:0; left:0; right:0;
-      z-index:1000;
-      border-bottom:0.5px solid rgba(0,0,0,0.1);
-    }
-    .nav {
-      max-width:1024px; margin:0 auto; padding:0 22px;
-      height:44px; display:flex; align-items:center; justify-content:space-between;
-    }
-    .nav-logo { font-size:21px; font-weight:600; color:#1d1d1f; text-decoration:none; }
-    .nav-links { display:flex; gap:40px; align-items:center; }
-    .nav-link { font-size:12px; opacity:0.8; color:#1d1d1f; text-decoration:none; transition:opacity 0.3s; }
-    .nav-link:hover { opacity:1; }
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--header-bg-color);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            padding: 10px 5px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1.5px solid var(--header-border-color);
+            box-sizing: border-box;
+            min-height: 60px;
+        }
 
-    /* Hero */
-    .hero {
-      padding-top:44px;
-      background:linear-gradient(135deg,#000000 0%,#616faa 100%);
-      min-height:70vh; display:flex; align-items:center; justify-content:center;
-      text-align:center; color:#fff;
-    }
-    .hero-content { max-width:980px; padding:0 40px; }
-    .hero-headline { margin-bottom:12px; }
-    .hero-subheadline { color:rgba(255,255,255,0.9); margin-bottom:30px; }
+        .header-title-link {
+            text-decoration: none;
+            color: inherit;
+            margin-left: 15px;
+        }
 
-    /* Product Grid */
-    .product-grid { background:#f5f5f7; padding:100px 0; }
-    .grid-container { max-width:1024px; margin:0 auto; padding:0 22px; }
-    .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+        .header-title-link h1 {
+            font-size: x-large;
+            margin: 0;
+            font-weight: 550;
+            display: inline;
+        }
 
-    .grid-item {
-      background:#fff; border-radius:18px; overflow:hidden;
-      min-height:450px; padding:60px 40px;
-      display:flex; flex-direction:column; justify-content:center; align-items:center;
-      text-align:center; box-shadow:0 4px 20px rgba(0,0,0,0.08);
-      transition:all 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
-    }
-    .grid-item:hover { transform:translateY(-8px); box-shadow:0 20px 40px rgba(0,0,0,0.15); }
+        .header-links {
+            display: flex;
+            gap: 25px;
+            margin-right: 15px;
+        }
 
-    .grid-item img {
-      max-width:300px; height:auto; margin-bottom:24px;
-      border-radius:12px;
-    }
-    .item-headline { margin-bottom:12px; }
-    .item-description { opacity:0.8; margin-bottom:32px; }
+        .header-link {
+            color: var(--header-link-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            white-space: nowrap;
+        }
 
-    .cta-link {
-      color:#2997ff; text-decoration:none; font-size:17px;
-      transition:all 0.3s;
-    }
-    .cta-link:hover { text-decoration:underline; }
+        .header-link:hover {
+            color: var(--header-link-hover-color);
+            text-decoration: underline;
+        }
 
-    /* Footer */
-    .footer {
-      background:#f5f5f7; color:#6e6e73; padding:40px 0; border-top:0.5px solid #d2d2d7;
-    }
-    .footer-content { max-width:1024px; margin:0 auto; text-align:center; }
-    .footer-text { margin-bottom:8px; font-size:12px; }
-  </style>
+        .header-link:visited {
+          color: var(--header-link-visited-color);
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .button-container {
+            margin-top: 25px;
+        }
+
+        .button {
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--button-shadow);
+            transition: transform 0.2s ease-out, background-color 0.3s ease, box-shadow 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .button:hover {
+            transform: scale(1.05);
+        }
+
+        .button-large {
+            padding: 14px 35px;
+            border-radius: 28px;
+            font-size: large;
+            font-weight: 700;
+        }
+        .button-medium {
+            padding: 9px 20px;
+            border-radius: 20px;
+            font-size: medium;
+            font-weight: 600;
+        }
+
+        .button-access {
+            background-color: var(--button-access-bg);
+        }
+        .button-access:hover {
+            background-color: var(--button-access-hover-bg);
+        }
+
+        .button-not-available {
+            background-color: var(--button-not-available-bg);
+        }
+        .button-not-available:hover {
+             transform: none;
+        }
+
+        .button-main {
+            background-color: var(--button-main-bg);
+        }
+        .button-main:hover {
+            background-color: var(--button-main-hover-bg);
+        }
+
+        .page-title-section {
+            margin-top: 10vh;
+            margin-bottom: 40vh;
+        }
+        .page-title {
+             font-size: xxx-large; margin-top: 0em; margin-bottom: 0em; font-weight: 700; TossFace; /* <- ??? */
+        }
+        .page-subtitle {
+            font-size: xx-large; margin-top: 0em; margin-bottom: 0; font-weight: 400;
+        }
+        .page-upper {
+            font-size: x-large; margin-top: 0em; margin-bottom: 0; font-weight: 400;
+        }
+
+        /* 프로젝트 아이템 좌우 레이아웃 */
+        .project-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15vh;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 40px;
+            box-sizing: border-box;
+            gap: 2rem;
+        }
+
+        .project-image-container {
+            flex: 1;
+            max-width: 500px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .project-details {
+            flex: 1;
+            text-align: center;
+        }
+
+        .project-item .project-title {
+            font-size: xx-large; 
+            margin-bottom: 0.2em; 
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .project-item .project-subtitle {
+            font-size: x-large;
+            margin-top: 0.2em;
+            margin-bottom: 0.2em;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .project-item .project-description {
+            font-size: large;
+            margin-top: 0.5em;
+            margin-bottom: 1.5em;
+            color: var(--secondary-text-color);
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        /* 플레이스홀더 이미지 스타일 */
+        .placeholder-image {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, var(--button-access-bg), var(--button-access-hover-bg));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: x-large;
+            font-weight: 600;
+            box-shadow: var(--button-shadow);
+        }
+
+        footer {
+            margin-top: 15vh;
+            padding-bottom: 40px;
+            font-size: small;
+            color: var(--footer-text-color);
+        }
+
+        footer p {
+             margin-bottom: 0.5em;
+        }
+        footer .button-container {
+             margin-top: 15px;
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 60px;
+            }
+            header {
+                min-height: 60px;
+            }
+            .header-title-link h1 {
+                font-size: large;
+            }
+            .header-links {
+                gap: 15px;
+            }
+            .header-link {
+                font-size: small;
+            }
+
+            .page-title-section {
+                margin-top: 8vh;
+                margin-bottom: 12vh;
+            }
+            .page-title {
+                font-size: xx-large;
+            }
+            .page-subtitle {
+                font-size: large;
+            }
+
+            .project-item {
+                flex-direction: column;
+                gap: 2rem;
+                margin-bottom: 10vh;
+                padding: 0 15px;
+            }
+
+            .project-image-container {
+                width: 100%;
+                max-width: none;
+            }
+
+            .project-details {
+                text-align: center;
+            }
+
+            .project-item .project-title,
+            .project-item .project-subtitle,
+            .project-item .project-description {
+                text-align: center;
+            }
+
+            .placeholder-image {
+                aspect-ratio: 16/9;
+                font-size: large;
+                width: 100%;
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+        });
+    </script>
+
 </head>
 
 <body>
-  <!-- Navigation -->
-  <div class="nav-wrapper">
-    <nav class="nav">
-      <a href="/" class="nav-logo en">QPI</a>
-      <div class="nav-links">
-        <a href="/project/" class="nav-link en">Project</a>
-        <a href="https://github.com/qpi-labels/qpi-labels.github.io/discussions" class="nav-link en">Community</a>
-        <a href="mailto:cnsh31_1410@cnsh.hs.kr" class="nav-link en">Contact</a>
-      </div>
-    </nav>
-  </div>
+    <header>
+            <a href="/" class="header-title-link">
+                <h1>QPI</h1>
+            </a>
+            <div class="header-links">
+                <a href="/project/" class="header-link">Project</a>
+                <a href="https://github.com/qpi-labels/qpi-labels.github.io/discussions" class="header-link">Community</a>
+                <a href="mailto:cnsh31_1410@cnsh.hs.kr" class="header-link">Contact</a>
+            </div>
+    </header>
 
-  <!-- Hero -->
-  <section class="hero">
-    <div class="hero-content">
-      <h1 class="hero-headline typography-title1">혁신적인<br>프로젝트들</h1>
-      <p class="hero-subheadline typography-subheadline">QPI가 만들어온 다양한 프로젝트를 만나보세요.</p>
+    
+    <main>
+    
+    <div class="page-title-section" style="margin-top: 34vh; margin-bottom: 50vh">
+        <p class="page-upper">QPI Project</p>
+        <p class="page-title">혁신적인</p>
+        <p class="page-subtitle">프로젝트들</p>
     </div>
-  </section>
 
-  <!-- Product Grid -->
-  <section class="product-grid">
-    <div class="grid-container">
-      <div class="grid">
-        <!-- QISS -->
-        <div class="grid-item">
-          <img src="L_QISS.png" alt="QISS">
-          <h2 class="item-headline typography-headline">QISS</h2>
-          <p class="item-description typography-body">QISS 학술검색 도우미</p>
-          <a href="/project/qiss/" class="cta-link typography-caption1">이동하기 →</a>
+        <div class="project-item layout-horizontal">
+            <div class="project-image-container">
+                <picture>
+                    <source media="(prefers-color-scheme: dark)" srcset="D_QISS.png">
+                    <img src="L_QISS.png" alt="QISS with iPad Pro 11-inch">
+                </picture>
+            </div>
+            <div class="project-details">
+                <p class="project-title">QISS</p>
+                <p class="project-description">QISS 학술검색 도우미</p>
+                <div class="button-container">
+                    <button class="button button-large button-access" onclick="window.location.href='/project/qiss/'">이동하기</button>
+                </div>
+            </div>
         </div>
 
-        <!-- QETS -->
-        <div class="grid-item">
-          <img src="L_QETS.png" alt="QETS">
-          <h2 class="item-headline typography-headline">QETS</h2>
-          <p class="item-description typography-body">쿼터파이 주기율표</p>
-          <a href="https://qpi-ipret.github.io/qets/koreanindex.html" class="cta-link typography-caption1">이동하기 →</a>
+        <div class="project-item layout-horizontal">
+            <div class="project-image-container">
+                <picture>
+                    <source media="(prefers-color-scheme: dark)" srcset="D_QETS.png">
+                    <img src="L_QETS.png" alt="QETS 주기율표 프로젝트">
+                </picture>
+            </div>
+            <div class="project-details">
+                <p class="project-title">QETS</p>
+                <p class="project-description">쿼터파이 주기율표</p>
+                <div class="button-container">
+                     <button class="button button-large button-access" onclick="window.location.href='https://qpi-ipret.github.io/qets/koreanindex.html'">이동하기</button>
+                </div>
+            </div>
         </div>
-      </div>
-
-      <div class="grid">
-        <!-- HEART Q -->
-        <div class="grid-item">
-          <img src="L_HEARTQ.png" alt="HEART Q">
-          <h2 class="item-headline typography-headline">HEART Q</h2>
-          <p class="item-description typography-body">실시간 헬스케어 프로젝트</p>
-          <a href="/ecg/koreanindex.html" class="cta-link typography-caption1">이동하기 →</a>
+        
+        <div class="project-item layout-horizontal">
+            <div class="project-image-container">
+                <picture>
+                    <source media="(prefers-color-scheme: dark)" srcset="D_HEARTQ.png">
+                    <img src="L_HEARTQ.png" alt="HEART Q 헬스케어 프로젝트">
+                </picture>
+            </div>
+            <div class="project-details">
+                <p class="project-title">HEART Q</p>
+                <p class="project-description">실시간 헬스케어</p>
+                <div class="button-container">
+                     <button class="button button-large button-access" onclick="window.location.href='/ecg/koreanindex.html'">이동하기</button>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </section>
+    </main>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="footer-content">
-      <p class="footer-text">2025 QPI, All rights reserved.</p>
-      <p class="footer-text">문의사항 : 2308 이재원 | 
-        <a href="mailto:cnsh31_1410@cnsh.hs.kr" class="cta-link">cnsh31_1410@cnsh.hs.kr</a>
-      </p>
-    </div>
-  </footer>
+    <footer>
+        <p>2025 QPI, 모든 권리 보유</p>
+        <div class="button-container">
+            <button class="button button-medium button-main" onclick="window.location.href='/'">메인으로</button>
+        </div>
+    </footer>
+
 </body>
 </html>

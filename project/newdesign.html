@@ -2,120 +2,166 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
+  <title>쿼터파이 프로젝트</title>
+  <link rel="shortcut icon" type="image/x-icon" href="/logo.ico">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Projects</title>
+  <meta property="og:url" content="https://qpi.kro.kr/project/">
+  <meta property="og:title" content="쿼터파이 프로젝트">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="og.png">
+  <meta property="og:description" content="쿼터파이가 진행한 프로젝트들을 확인해보세요.">
+
   <style>
+    @import url('https://fonts.cdnfonts.com/css/br-cobane');
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+
+    * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      background-color: #000;
-      color: #fff;
+      font-family: "Pretendard Variable", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background:#fff;
+      color:#1d1d1f;
+      line-height:1.47;
+      font-weight:400;
+      letter-spacing:-.022em;
+      overflow-x:hidden;
     }
 
-    .projects-section {
-      padding: 80px 40px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+    .en { font-family:"BR Cobane",sans-serif; letter-spacing:-.025em; }
 
-    .projects-title {
-      text-align: center;
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 50px;
-    }
+    /* Typography */
+    .typography-title1 { font-size:64px; font-weight:600; line-height:1.05; }
+    .typography-headline { font-size:40px; font-weight:600; line-height:1.1; }
+    .typography-subheadline { font-size:24px; font-weight:400; line-height:1.14; }
+    .typography-body { font-size:19px; font-weight:400; line-height:1.38; }
+    .typography-caption1 { font-size:17px; font-weight:400; line-height:1.47; }
 
-    .projects {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 30px;
+    /* Navigation */
+    .nav-wrapper {
+      background:rgba(255,255,255,0.8);
+      backdrop-filter:saturate(180%) blur(20px);
+      -webkit-backdrop-filter:saturate(180%) blur(20px);
+      position:fixed; top:0; left:0; right:0;
+      z-index:1000;
+      border-bottom:0.5px solid rgba(0,0,0,0.1);
     }
+    .nav {
+      max-width:1024px; margin:0 auto; padding:0 22px;
+      height:44px; display:flex; align-items:center; justify-content:space-between;
+    }
+    .nav-logo { font-size:21px; font-weight:600; color:#1d1d1f; text-decoration:none; }
+    .nav-links { display:flex; gap:40px; align-items:center; }
+    .nav-link { font-size:12px; opacity:0.8; color:#1d1d1f; text-decoration:none; transition:opacity 0.3s; }
+    .nav-link:hover { opacity:1; }
 
-    .card {
-      position: relative;
-      overflow: hidden;
-      border-radius: 18px;
-      background: #111;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    /* Hero */
+    .hero {
+      padding-top:44px;
+      background:linear-gradient(135deg,#000000 0%,#616faa 100%);
+      min-height:70vh; display:flex; align-items:center; justify-content:center;
+      text-align:center; color:#fff;
     }
+    .hero-content { max-width:980px; padding:0 40px; }
+    .hero-headline { margin-bottom:12px; }
+    .hero-subheadline { color:rgba(255,255,255,0.9); margin-bottom:30px; }
 
-    .card img {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      display: block;
-    }
+    /* Product Grid */
+    .product-grid { background:#f5f5f7; padding:100px 0; }
+    .grid-container { max-width:1024px; margin:0 auto; padding:0 22px; }
+    .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
 
-    .card-content {
-      padding: 25px;
+    .grid-item {
+      background:#fff; border-radius:18px; overflow:hidden;
+      min-height:450px; padding:60px 40px;
+      display:flex; flex-direction:column; justify-content:center; align-items:center;
+      text-align:center; box-shadow:0 4px 20px rgba(0,0,0,0.08);
+      transition:all 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
     }
+    .grid-item:hover { transform:translateY(-8px); box-shadow:0 20px 40px rgba(0,0,0,0.15); }
 
-    .card h3 {
-      margin: 0 0 10px;
-      font-size: 1.6rem;
-      font-weight: bold;
+    .grid-item img {
+      max-width:300px; height:auto; margin-bottom:24px;
+      border-radius:12px;
     }
+    .item-headline { margin-bottom:12px; }
+    .item-description { opacity:0.8; margin-bottom:32px; }
 
-    .card p {
-      margin: 0 0 20px;
-      font-size: 1rem;
-      opacity: 0.85;
-      line-height: 1.5;
+    .cta-link {
+      color:#2997ff; text-decoration:none; font-size:17px;
+      transition:all 0.3s;
     }
+    .cta-link:hover { text-decoration:underline; }
 
-    .card a {
-      display: inline-block;
-      padding: 10px 18px;
-      background: #fff;
-      color: #000;
-      border-radius: 10px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: transform 0.3s ease;
+    /* Footer */
+    .footer {
+      background:#f5f5f7; color:#6e6e73; padding:40px 0; border-top:0.5px solid #d2d2d7;
     }
-
-    /* 버튼 hover 시 오른쪽으로 이동 */
-    .card a:hover {
-      transform: translateX(8px);
-    }
+    .footer-content { max-width:1024px; margin:0 auto; text-align:center; }
+    .footer-text { margin-bottom:8px; font-size:12px; }
   </style>
 </head>
+
 <body>
-  <section class="projects-section">
-    <h2 class="projects-title">Projects</h2>
-    <div class="projects">
-      
-      <!-- QISS -->
-      <div class="card">
-        <img src="https://picsum.photos/800/600?random=21" alt="QISS">
-        <div class="card-content">
-          <h3>QISS</h3>
-          <p>학술 검색 도우미</p>
-          <a href="#">이동하기 →</a>
-        </div>
+  <!-- Navigation -->
+  <div class="nav-wrapper">
+    <nav class="nav">
+      <a href="/" class="nav-logo en">QPI</a>
+      <div class="nav-links">
+        <a href="/project/" class="nav-link en">Project</a>
+        <a href="https://github.com/qpi-labels/qpi-labels.github.io/discussions" class="nav-link en">Community</a>
+        <a href="mailto:cnsh31_1410@cnsh.hs.kr" class="nav-link en">Contact</a>
       </div>
+    </nav>
+  </div>
 
-      <!-- QETS -->
-      <div class="card">
-        <img src="https://picsum.photos/800/600?random=22" alt="QETS">
-        <div class="card-content">
-          <h3>QETS</h3>
-          <p>쿼터파이가 개발한 인터랙티브 주기율표 서비스로, 원소 정보를 직관적으로 탐색할 수 있도록 구현했습니다.</p>
-          <a href="#">이동하기 →</a>
-        </div>
-      </div>
-
-      <!-- HEART Q -->
-      <div class="card">
-        <img src="https://picsum.photos/800/600?random=23" alt="HEART Q">
-        <div class="card-content">
-          <h3>HEART Q</h3>
-          <p>심박수와 운동 데이터를 실시간 분석해 사용자의 건강을 모니터링할 수 있는 헬스케어 플랫폼입니다.</p>
-          <a href="#">이동하기 →</a>
-        </div>
-      </div>
-
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="hero-headline typography-title1">혁신적인<br>프로젝트들</h1>
+      <p class="hero-subheadline typography-subheadline">QPI가 만들어온 다양한 프로젝트를 만나보세요.</p>
     </div>
   </section>
+
+  <!-- Product Grid -->
+  <section class="product-grid">
+    <div class="grid-container">
+      <div class="grid">
+        <!-- QISS -->
+        <div class="grid-item">
+          <img src="L_QISS.png" alt="QISS">
+          <h2 class="item-headline typography-headline">QISS</h2>
+          <p class="item-description typography-body">QISS 학술검색 도우미</p>
+          <a href="/project/qiss/" class="cta-link typography-caption1">이동하기 →</a>
+        </div>
+
+        <!-- QETS -->
+        <div class="grid-item">
+          <img src="L_QETS.png" alt="QETS">
+          <h2 class="item-headline typography-headline">QETS</h2>
+          <p class="item-description typography-body">쿼터파이 주기율표</p>
+          <a href="https://qpi-ipret.github.io/qets/koreanindex.html" class="cta-link typography-caption1">이동하기 →</a>
+        </div>
+      </div>
+
+      <div class="grid">
+        <!-- HEART Q -->
+        <div class="grid-item">
+          <img src="L_HEARTQ.png" alt="HEART Q">
+          <h2 class="item-headline typography-headline">HEART Q</h2>
+          <p class="item-description typography-body">실시간 헬스케어 프로젝트</p>
+          <a href="/ecg/koreanindex.html" class="cta-link typography-caption1">이동하기 →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p class="footer-text">2025 QPI, All rights reserved.</p>
+      <p class="footer-text">문의사항 : 2308 이재원 | 
+        <a href="mailto:cnsh31_1410@cnsh.hs.kr" class="cta-link">cnsh31_1410@cnsh.hs.kr</a>
+      </p>
+    </div>
+  </footer>
 </body>
 </html>
