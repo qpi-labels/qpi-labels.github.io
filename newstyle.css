@@ -316,22 +316,6 @@
             color: #fff;
         }
 
-        .grid-item.accent-1 {
-            background-image: url('project.png'); 
-            background-size: cover;                        
-            background-position: center;                   
-            background-repeat: no-repeat;
-            color: #fff;
-        }
-
-        .grid-item.accent-2 {
-            background-image: url('design.png'); 
-            background-size: cover;                        
-            background-position: center;                   
-            background-repeat: no-repeat;
-            color: #fff;
-        }
-
         .item-eyebrow {
             opacity: 0.8;
             margin-bottom: 8px;
