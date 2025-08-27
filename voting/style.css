@@ -1,11 +1,11 @@
 @import url('https://fonts.cdnfonts.com/css/br-cobane');
-        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
 
 :root {
     --bg: #232323;
     --card-bg: 6,6,6;
-    --bright-text: #fafafa;
-    --text: #222;
+    --bright-text: white;
+    --text: black;
     --shadow: 0 4px 10px rgba(0,0,0,.08);
 }
 
@@ -31,7 +31,6 @@ body {
 /* ================= Hero Banner ================= */
 /* 원하는 배경 이미지를 img/hero.jpg 위치에 넣고, 아래 url 경로를 맞춰 주세요 */
 .hero {
-    /* background: url('img/background.jpg') center/cover no-repeat; */
     background-color: var(--candidate);
     display: flex;
     align-items: center;
@@ -43,14 +42,14 @@ body {
 .hero h1 {
     font-family: 'BR Cobane', 'Pretendard Variable', sans-serif;
     font-size: 2.4rem;
-    color: #fafafa;
+    color: white;
     text-shadow: 0 2px 6px rgba(0,0,0,.35);
     margin-bottom: .5rem;
 }
 .hero p {
     font-family: 'BR Cobane', 'Pretendard Variable', sans-serif;
     font-size: 1.5rem;
-    color: #fafafa;
+    color: white;
     opacity: .9;
 }
 
