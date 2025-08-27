@@ -4,16 +4,16 @@
 
 + **UI/UX**
   + 배경에 사용된 색상은 다음과 같습니다.
-    + ${\textsf{\colorbox{#232323}{\color{#FAFAFA}Light (250, 250, 250)}}}$
-    + ${\textsf{\colorbox{#FAFAFA}{\color{#232323}Dark (35, 35, 35)}}}$
+    + Light $\textsf{\color{#bbbbbb}{rgb(250, 250, 250)}}$
+    + Dark $\textsf{\color{#232323}{rgb(35, 35, 35)}}$
   + 오브젝트에 사용된 색상은 다음과 같습니다.
-    + ${\textsf{\colorbox{#FFFFFF}{\color{#000000}Black (0, 0, 0)}}}$
-    + ${\textsf{\colorbox{#000000}{\color{#FFFFFF}White (255, 255, 255)}}}$
-    + ${\textsf{\color{#8D8D93}Gray (142, 142, 147)}}$
-    + ${\textsf{\color{#007AFF}Blue (0, 122, 255)}}$
-      + ${\textsf{\color{#0A84FF}Blue(dark) (10, 132, 255)}}$
-      + ${\textsf{\color{#0096FF}Blue(hover) (0, 150, 255)}}$
-      + ${\textsf{\color{#0AA0FF}Blue(dark hover) (10, 160, 255)}}$
+    + Black $\textsf{rgb(0, 0, 0)}$
+    + White $\textsf{\color{#bbbbbb}{rgb(255, 255, 255)}}$
+    + Gray $\textsf{\color{rgb(142,142,147)}{rgb(142, 142, 147)}}$
+    + Blue $\textsf{\color{rgb(0,122,255)}{rgb(0, 122, 255)}}$
+      + Blue(dark) $\textsf{\color{rgb(10,132,255)}{rgb(10, 132, 255)}}$
+      + Blue(hover) $\textsf{\color{rgb(0,150,255)}{rgb(0, 150, 255)}}$
+      + Blue(dark hover) $\textsf{\color{rgb(10,160,255)}{rgb(10, 160, 255)}}$
 
 ## Source Code
 
