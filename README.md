@@ -42,7 +42,7 @@
     | grayd1 | `rgb(99,99,102)` $\textsf{\color{rgb(99,99,102)}{■}}$ |
     | grayd2 | `rgb(72,72,74)` $\textsf{\color{rgb(72,72,74)}{■}}$ |
     | grayd3 | `rgb(58,58,60)` $\textsf{\color{rgb(58,58,60)}{■}}$ |
-    | black | `rgb(0,0,0)` $\textsf{\color{rgb(0,0,0)}{■}} |
+    | black | `rgb(0,0,0)` $\textsf{\color{rgb(0,0,0)}{■}}$ |
 
     $\textsf{\color{rgb(250,250,250)}{■}}$ $\textsf{\color{rgb(35,35,35)}{■}}$ $\textsf{\color{rgb(250,250,250)}{■}}$ $\textsf{\color{rgb(28,28,30)}{■}}$ $\textsf{\color{rgb(229,229,234)}{■}}$ $\textsf{\color{rgb(199,199,204)}{■}}$ $\textsf{\color{rgb(174,174,178)}{■}}$ $\textsf{\color{rgb(142,142,147)}{■}}$ $\textsf{\color{rgb(99,99,102)}{■}}$ $\textsf{\color{rgb(72,72,74)}{■}}$ $\textsf{\color{rgb(58,58,60)}{■}}$ $\textsf{\color{rgb(0,0,0)}{■}}$
 
