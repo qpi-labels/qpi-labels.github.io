@@ -2,11 +2,11 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
 
 :root {
-    --bg: #232323;
+    --bg: var(--c-bg);
     --card-bg: 6,6,6;
-    --bright-text: white;
-    --text: black;
-    --shadow: 0 4px 10px rgba(0,0,0,.08);
+    --bright-text: var(--c-ltext);
+    --text: var(--c-dtext);
+    --shadow: 0 4px 10px rgb(var(--rc-dtext) / 8%);
 }
 
 * {
@@ -42,14 +42,14 @@ body {
 .hero h1 {
     font-family: 'BR Cobane', 'Pretendard Variable', sans-serif;
     font-size: 2.4rem;
-    color: white;
-    text-shadow: 0 2px 6px rgba(0,0,0,.35);
+    color: var(--c-ltext);
+    text-shadow: 0 2px 6px rgb(var(--rc-dtext) / 35%);
     margin-bottom: .5rem;
 }
 .hero p {
     font-family: 'BR Cobane', 'Pretendard Variable', sans-serif;
     font-size: 1.5rem;
-    color: white;
+    color: var(--c-ltext);
     opacity: .9;
 }
 

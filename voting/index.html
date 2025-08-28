@@ -8,6 +8,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="/logo.ico">
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/br-cobane" rel="stylesheet">
+    <link rel="stylesheet" href="/colors.css">
     <style>
         @import url('https://fonts.cdnfonts.com/css/br-cobane');
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
@@ -15,8 +16,8 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #232323;
-            color: white;
+            background-color: var(--c-dbg);
+            color: var(--c-ltext);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -38,15 +39,15 @@
             font-size: 80px;
             letter-spacing: 4px;
             /* margin-bottom: 5px; */
-            color: white;
-            text-shadow: 0 0 20px white;
+            color: var(--c-ltext);
+            text-shadow: 0 0 20px var(--c-ltext);
         }
         .header-left .title {
             font-family: 'Pretendard Variable', sans-serif;
             font-size: 60px;
             font-weight: 600;
             line-height: 1.3;
-            text-shadow: 0 0 20px white;
+            text-shadow: 0 0 20px var(--c-ltext);
         }
         .header-right img { height: 120px; width: auto; object-fit: contain; }
 
@@ -54,7 +55,7 @@
         .dev-info {
             font-family: 'Pretendard Variable', sans-serif;
             font-size: 14px;
-            color: rgba(250,250,250,0.7);
+            color: rgb(var(--rc-ltext) / 70%);
             text-align: center;
             margin-bottom: 20px;
         }
@@ -63,7 +64,7 @@
         .subtitle {
             font-family: 'Pretendard Variable', sans-serif;
             font-size: 18px;
-            color: #fafafa;
+            color: var(--c-text);
             margin: 10px 0 40px;
             text-align: center;
         }
@@ -79,7 +80,7 @@
         .card {
             display: block;
             position: relative;
-            background-color: #000000;
+            background-color: var(--c-black);
             border-radius: 20px;
             width: 180px;
             height: 240px;

@@ -3,45 +3,18 @@
 @import url('https://cdn.jsdelivr.net/gh/toss/tossface/dist/tossface.css');
 
 :root {
-    --header-link-color: black;
-    --header-link-hover-color: rgb(0, 122, 255);
-    --header-link-visited-color: black;
-    --background-color: #fafafa;
-    --text-color: black;
-    --header-bg-color: rgba(250, 250, 250, 0.5);
-    --header-border-color: rgba(229, 229, 234);
-    --button-shadow: 5px 5px 10px rgba(209, 217, 230, 0.7), -5px -5px 10px #ffffff;
-    --button-access-bg: rgb(0, 122, 255);
-    --button-access-hover-bg: rgb(0, 150, 255);
-    --button-not-available-bg: rgb(180, 180, 180);
-    --button-main-bg: rgb(142, 142, 147);
-    --button-main-hover-bg: rgb(174, 174, 178);
-    --secondary-text-color: #666;
-    --footer-text-color: #888;
+    --button-shadow: 5px 5px 10px rgba(209, 217, 230, 0.7), -5px -5px 10px var(--c-ltext);
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --header-link-color: white;
-        --header-link-hover-color: rgb(10, 160, 255);
-        --header-link-visited-color: white;
-        --background-color: #232323;
-        --text-color: white;
-        --header-bg-color: rgba(18, 18, 18, 0.5);
-        --header-border-color: rgba(60, 60, 60);
         --button-shadow: none;
-        --button-access-bg: rgb(10, 132, 255);
-        --button-access-hover-bg: rgb(10, 160, 255);
-        --button-main-bg: rgb(44, 44, 46);
-        --button-main-hover-bg: rgb(58, 58, 60);
-        --secondary-text-color: #aaa;
-        --footer-text-color: #aaa;
     }
 }
 
 body {
-    background-color: var(--background-color);
-    color: var(--text-color);
+    background-color: var(--c-bg);
+    color: var(--c-text);
     font-family: "BR Cobane", 'Pretendard Variable', 'TossFace', sans-serif;
     text-align: center;
     user-select: none;
@@ -55,7 +28,7 @@ header {
     top: 0;
     left: 0;
     width: 100%;
-    background-color: var(--header-bg-color);
+    background-color: rgb(var(--rc-bg) / 50%);
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
     padding: 10px 5px;
@@ -63,7 +36,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1.5px solid var(--header-border-color);
+    border-bottom: 1.5px solid var(--c-gray1);
     box-sizing: border-box;
     min-height: 60px;
 }
@@ -88,7 +61,7 @@ header {
 }
 
 .header-link {
-    color: var(--header-link-color);
+    color: var(--c-text);
     text-decoration: none;
     font-weight: 500;
     transition: color 0.2s ease;
@@ -96,12 +69,12 @@ header {
 }
 
 .header-link:hover {
-    color: var(--header-link-hover-color);
+    color: var(--c-blue-active);
     text-decoration: underline;
 }
 
 .header-link:visited {
-    color: var(--header-link-visited-color);
+    color: var(--c-text);
 }
 
 img {
@@ -117,7 +90,7 @@ img {
 }
 
 .button {
-    color: #fff;
+    color: var(--c-ltext);
     border: none;
     cursor: pointer;
     box-shadow: var(--button-shadow);
@@ -145,15 +118,15 @@ img {
 }
 
 .button-access {
-    background-color: var(--button-access-bg);
+    background-color: var(--c-blue);
 }
 
 .button-access:hover {
-    background-color: var(--button-access-hover-bg);
+    background-color: var(--c-blue-active);
 }
 
 .button-not-available {
-    background-color: var(--button-not-available-bg);
+    background-color: var(--c-gray3);
 }
 
 .button-not-available:hover {
@@ -161,11 +134,11 @@ img {
 }
 
 .button-main {
-    background-color: var(--button-main-bg);
+    background-color: var(--c-gray);
 }
 
 .button-main:hover {
-    background-color: var(--button-main-hover-bg);
+    background-color: var(--c-grayl1);
 }
 
 .page-title-section {
@@ -224,7 +197,7 @@ img {
     font-size: large;
     margin-top: 0.5em;
     margin-bottom: 1.5em;
-    color: var(--secondary-text-color);
+    color: var(--c-gray5);
     line-height: 1.5;
     text-align: center;
 }
@@ -270,7 +243,7 @@ img {
     font-size: large;
     margin-top: 0.5em;
     margin-bottom: 1.5em;
-    color: var(--secondary-text-color);
+    color: var(--c-gray5);
     line-height: 1.5;
     text-align: center;
 }
@@ -279,12 +252,12 @@ img {
 .placeholder-image {
     width: 100%;
     aspect-ratio: 16/9;
-    background: linear-gradient(135deg, var(--button-access-bg), var(--button-access-hover-bg));
+    background: linear-gradient(135deg, var(--c-blue), var(--c-blue-active));
     border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: var(--c-ltext);
     font-size: x-large;
     font-weight: 600;
     box-shadow: var(--button-shadow);
@@ -294,7 +267,7 @@ footer {
     margin-top: 15vh;
     padding-bottom: 40px;
     font-size: small;
-    color: var(--footer-text-color);
+    color: var(--c-gray4);
 }
 
 footer p {
@@ -319,7 +292,7 @@ footer .button-container {
     font-size: xx-large;
     margin-bottom: 1em;
     font-weight: 700;
-    color: var(--text-color);
+    color: var(--c-text);
 }
 
 .philosophy-card {
@@ -332,11 +305,11 @@ footer .button-container {
     font-size: x-large;
     font-weight: 600;
     margin-bottom: 1rem;
-    color: var(--text-color);
+    color: var(--c-text);
 }
 
 .philosophy-author {
-    color: var(--secondary-text-color);
+    color: var(--c-gray5);
     font-size: large;
     margin-bottom: 2rem;
 }
@@ -349,7 +322,7 @@ footer .button-container {
 }
 
 .principle-item {
-    border: 1px solid var(--header-border-color);
+    border: 1px solid var(--c-gray1);
     border-radius: 40px;
     padding: 2rem;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -363,11 +336,11 @@ footer .button-container {
     font-size: large;
     font-weight: 600;
     margin-bottom: 1rem;
-    color: var(--text-color);
+    color: var(--c-text);
 }
 
 .principle-item p {
-    color: var(--secondary-text-color);
+    color: var(--c-gray5);
     font-size: medium;
 }
 
@@ -379,8 +352,8 @@ footer .button-container {
 }
 
 .color-theme-card {
-    background-color: var(--background-color);
-    border: 1px solid var(--header-border-color);
+    background-color: var(--c-bg);
+    border: 1px solid var(--c-gray1);
     border-radius: 40px;
     padding: 2rem;
 }
@@ -389,7 +362,7 @@ footer .button-container {
     font-size: large;
     font-weight: 600;
     margin-bottom: 1.5rem;
-    color: var(--text-color);
+    color: var(--c-text);
 }
 
 .color-item {
@@ -413,13 +386,13 @@ footer .button-container {
     width: 40px;
     height: 40px;
     border-radius: 4px;
-    border: 1px solid var(--header-border-color);
+    border: 1px solid var(--c-gray1);
 }
 
 .color-code {
     font-family: 'Courier New', monospace;
     font-size: small;
-    color: var(--secondary-text-color);
+    color: var(--c-gray5);
 }
 
 .typography-grid {
@@ -430,7 +403,7 @@ footer .button-container {
 }
 
 .font-card {
-    border: 1px solid var(--header-border-color);
+    border: 1px solid var(--c-gray1);
     border-radius: 40px;
     padding: 2rem;
 }
@@ -439,11 +412,11 @@ footer .button-container {
     font-size: large;
     font-weight: 700;
     margin-bottom: 0.5rem;
-    color: var(--text-color);
+    color: var(--c-text);
 }
 
 .font-type {
-    color: var(--secondary-text-color);
+    color: var(--c-gray5);
     font-size: medium;
     margin-bottom: 1.5rem;
 }
@@ -469,8 +442,8 @@ footer .button-container {
 
 .year-badge {
     display: inline-block;
-    background-color: var(--button-access-bg);
-    color: white;
+    background-color: var(--c-blue);
+    color: var(--c-ltext);
     padding: 0.5rem 1rem;
     border-radius: 20px;
     font-size: medium;
@@ -487,8 +460,8 @@ footer .button-container {
 }
 
 .project-card {
-    background-color: var(--background-color);
-    border: 1px solid var(--header-border-color);
+    background-color: var(--c-bg);
+    border: 1px solid var(--c-gray1);
     border-radius: 10px;
     padding: 2rem;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -503,24 +476,24 @@ footer .button-container {
     font-size: large;
     font-weight: 700;
     margin-bottom: 1rem;
-    color: var(--text-color);
+    color: var(--c-text);
 }
 
 .project-card p {
-    color: var(--secondary-text-color);
+    color: var(--c-gray5);
     margin-bottom: 1.5rem;
     font-size: medium;
 }
 
 .project-link {
-    color: var(--button-access-bg);
+    color: var(--c-blue);
     text-decoration: none;
     font-weight: 600;
     transition: color 0.3s ease;
 }
 
 .project-link:hover {
-    color: var(--button-access-hover-bg);
+    color: var(--c-blue-active);
     text-decoration: underline;
 }
 
@@ -701,4 +674,4 @@ footer .button-container {
         display: inline-block;
         text-align: left;
     }
-  }
+}

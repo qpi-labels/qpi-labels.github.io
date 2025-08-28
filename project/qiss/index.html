@@ -10,47 +10,15 @@
     <meta property="og:image" content="og.png">
     <meta property="og:description" content="만족도 2년연속 1위! 쿼터파이">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/colors.css">
     <style>
         @import url('https://fonts.cdnfonts.com/css/br-cobane');
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
         @import url('https://cdn.jsdelivr.net/gh/toss/tossface/dist/tossface.css');
-        :root {
-            --bg-color: #fafafa;
-            --text-color: black;
-            --header-bg-color: rgba(250, 250, 250, 0.8);
-            --header-border-color: rgba(229, 229, 234);
-            --header-link-color: #333; /* Default link color */
-            --header-link-hover-color: #555; /* Hover link color */
-            --header-link-visited-color: #333; /* Visited link color - same as default */
-            --search-button-bg: rgb(0, 122, 255);
-            --search-button-hover-bg: rgb(0, 150, 255);
-            --search-button-text: #fff;
-            --search-bar-bg-color: #fff; /* Light mode search bar background */
-            --search-bar-border-color: #ccc;
-            --search-bar-text-color: black;
-        }
-
-
-        @media (prefers-color-scheme: dark) {
-          :root {
-            --bg-color: #232323;
-            --text-color: white;
-            --header-bg-color: rgba(18, 18, 18, 0.8);
-            --header-border-color: rgba(60, 60, 60);
-            --header-link-color: #eee;
-            --header-link-hover-color: #ccc;
-            --header-link-visited-color: #eee;
-            --search-button-bg: rgb(10, 132, 255);
-            --search-button-hover-bg: rgb(10, 160, 255);
-            --search-bar-bg-color: #333;
-            --search-bar-border-color: #555;
-            --search-bar-text-color: #eee;
-          }
-        }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: var(--c-bg);
+            color: var(--c-text);
             font-family: "BR Cobane", 'Pretendard Variable';
             text-align: center;
             user-select: none;
@@ -63,65 +31,65 @@
         }
 
         header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: var(--header-bg-color);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    padding: 10px 5px;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1.5px solid var(--header-border-color);
-    box-sizing: border-box;
-    min-height: 60px;
-    font-family: "BR Cobane";
-}
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgb(var(--rc-bg) / 80%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 10px 5px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1.5px solid var(--c-gray1);
+            box-sizing: border-box;
+            min-height: 60px;
+            font-family: "BR Cobane";
+        }
 
-.header-title-link {
-    text-decoration: none;
-    color: inherit;
-    margin-left: 15px;
-}
+        .header-title-link {
+            text-decoration: none;
+            color: inherit;
+            margin-left: 15px;
+        }
 
-.header-title-link h1 {
-    font-size: x-large;
-    margin: 0;
-    font-weight: 550;
-    display: inline;
-}
+        .header-title-link h1 {
+            font-size: x-large;
+            margin: 0;
+            font-weight: 550;
+            display: inline;
+        }
 
-.header-links {
-    display: flex;
-    gap: 25px;
-    margin-right: 15px;
-}
+        .header-links {
+            display: flex;
+            gap: 20px;
+            margin-right: 50px;
+        }
 
-.header-link {
-    color: var(--header-link-color);
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.2s ease;
-    white-space: nowrap;
-}
+        .header-link {
+            color: var(--c-gray7);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            white-space: nowrap;
+        }
 
-.header-link:hover {
-    color: var(--header-link-hover-color);
-    text-decoration: underline;
-}
+        .header-link:hover {
+            color: var(--c-gray6);
+            text-decoration: underline;
+        }
 
-.header-link:visited {
-  color: var(--header-link-visited-color);
-}
+        .header-link:visited {
+            color: var(--c-gray7);
+        }
 
         .logo-link {
             text-decoration: none;
             color: inherit;
         }
-        .page-title{
+        .page-title {
             font-family: "BR Cobane";
             font-size: xxx-large;
             margin-bottom: 0;
@@ -133,7 +101,7 @@
             margin: 0 auto;
             width: 800px;
             height: auto;
-            border: 1px solid #ffffff00;
+            border: 1px solid rgba(var(--c-ltext) / 0%);
             border-radius: 5px;
         }
 
@@ -141,19 +109,18 @@
             width: 80%;
             padding: 10px;
             border-radius: 30px;
-            border: 1px solid var(--search-bar-border-color);
+            border: 1px solid var(--c-gray1);
             font-size: 16px;
             outline: none;
-            background-color: var(--search-bar-bg-color);
-            color: var(--search-bar-text-color); /* Use the specific variable */
+            background-color: var(--c-bg);
+            color: var(--c-text);
             transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; /* Add color to transition */
         }
 
 
-
         .search-button {
-            background-color: var(--search-button-bg);
-            color: var(--search-button-text);
+            background-color: var(--c-blue);
+            color: var(--c-ltext);
             border: none;
             padding: 8px 20px;
             border-radius: 16px;
@@ -163,7 +130,7 @@
             transition: transform 0.2s ease-out, background-color 0.3s ease, box-shadow 0.3s ease;
         }
         .search-button:hover {
-            background-color: var(--search-button-hover-bg);
+            background-color: var(--c-blue-active);
         }
 
         #current-time {
@@ -176,28 +143,6 @@
             text-align: center;
             font-size: 14px;
             margin-top: 5px;
-        }
-
-        .header-links {
-            display: flex;
-            gap: 20px;
-            margin-right: 50px;
-        }
-
-        .header-link {
-            color: var(--header-link-color);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s ease;
-        }
-
-        .header-link:hover {
-            color: var(--header-link-hover-color);
-            text-decoration: underline;
-        }
-
-        .header-link:visited {
-          color: var(--header-link-visited-color);
         }
     </style>
 </head>

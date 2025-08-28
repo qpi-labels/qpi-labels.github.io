@@ -9,12 +9,13 @@
     <meta property="og:type" content="website">
     <meta property="og:image" content="og.png">
     <meta property="og:description" content="만족도 2년연속 1위! 쿼터파이">
+    <link rel="stylesheet" href="/colors.css">
     <style>
         @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
 
         body {
-            background-color: #fafafa;
-            color: black;
+            background-color: var(--c-bg);
+            color: var(--c-text);
             font-family: 'Pretendard Variable';
             text-align: center;
             user-select: none;
@@ -28,30 +29,19 @@
             top: 0;
             left: 0;
             width: 100%;
-            background-color: rgba(250, 250, 250, 0.8);
+            background-color: rgb(var(--rc-bg) / 80%);
             backdrop-filter: blur(10px);
             padding: 13px;
             z-index: 100;
             display: flex;
             align-items: center;
-            border-bottom: 1.5px solid rgba(229, 229, 234);
+            border-bottom: 1.5px solid var(--c-gray1);
         }
         header h1 {
             font-size: x-large;
             margin: 0;
             font-weight: 700;
             margin-left: 20px;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: #232323;
-                color: white;
-            }
-            header {
-                background-color: rgba(35, 35, 35, 0.8);
-                border-bottom: 1.5px solid rgba(56, 56, 61);
-            }
         }
     </style>
 
