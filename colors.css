@@ -21,6 +21,14 @@
     --c-gray6: rgb(72 72 74);
     --rc-gray7: 58 58 60;
     --c-gray7: rgb(58 58 60);
+    --rc-blue: 0 122 255;
+    --c-blue: rgb(0 122 255);
+    --rc-blue-active: 0 150 255;
+    --c-blue-active: rgb(0 150 255);
+    --rc-antiblue: 10 132 255;
+    --c-antiblue: rgb(10 132 255);
+    --rc-antiblue-active: 10 160 255;
+    --c-antiblue-active: rgb(10 160 255);
 
     --rc-lbg: 250 250 250;
     --c-lbg: rgb(250 250 250);
@@ -44,11 +52,15 @@
     --c-grayd2: rgb(72 72 74);
     --rc-grayd3: 58 58 60;
     --c-grayd3: rgb(58 58 60);
+    --rc-lblue: 0 122 255;
+    --c-lblue: rgb(0 122 255);
+    --rc-lblue-active: 0 150 255;
+    --c-lblue-active: rgb(0 150 255);
+    --rc-dblue: 10 132 255;
+    --c-dblue: rgb(10 132 255);
+    --rc-dblue-active: 10 160 255;
+    --c-dblue-active: rgb(10 160 255);
 
-    --rc-blue: 0 122 255;
-    --c-blue: rgb(0 122 255);
-    --rc-blue-active: 0 150 255;
-    --c-blue-active: rgb(0 150 255);
     --rc-black: 0 0 0;
     --c-black: rgb(0 0 0);
 }
@@ -77,10 +89,13 @@
         --c-gray6: rgb(199 199 204);;
         --rc-gray7: 229 229 234;
         --c-gray7: rgb(229 229 234);
-
         --rc-blue: 10 132 255;
         --c-blue: rgb(10 132 255);
         --rc-blue-active: 10 160 255;
         --c-blue-active: rgb(10 160 255);
+        --rc-antiblue: 0 122 255;
+        --c-antiblue: rgb(0 122 255);
+        --rc-antiblue-active: 0 150 255;
+        --c-antiblue-active: rgb(0 150 255);
     }
 }
