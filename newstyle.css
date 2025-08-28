@@ -18,6 +18,14 @@ body {
     overflow-x: hidden;
 }
 
+main {
+    perspective: 7px;
+    transform-style: preserve-3d;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
 /* English text */
 .en {
     font-family: "BR Cobane", -apple-system, BlinkMacSystemFont, sans-serif;
@@ -176,6 +184,8 @@ body {
 
 /* Hero Section */
 .hero {
+    transform: translateZ(-3px) scale(1.429); /* parallax */
+
     padding-top: 44px;
     background: linear-gradient(150deg, #10004C 0%, #5F6584 100%);
     min-height: 100vh;
@@ -329,7 +339,7 @@ body {
 
 .item-description {
     opacity: 0.8;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
     max-width: 500px;
 }
 
@@ -454,11 +464,11 @@ body {
 
     .grid-item {
         padding: 40px 30px;
-        min-height: 450px;
+        min-height: 200px;
     }
 
     .grid-item.large {
-        min-height: 500px;
+        min-height: 300px;
     }
 }
 
@@ -480,7 +490,7 @@ body {
     }
 
     .grid-item.large {
-        min-height: 450px;
+        min-height: 150px;
     }
 
     .hero-link {

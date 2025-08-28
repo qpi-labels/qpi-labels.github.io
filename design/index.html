@@ -49,52 +49,54 @@
         </nav>
     </div>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <div class="hero-eyebrow typography-caption2 en">by QPI Design team</div>
-            <h1 class="hero-headline typography-title1">디자인 가이드</h1>
-            <p class="hero-subheadline typography-subheadline">"The Styles are a lie" - 르 코르뷔지에의 말처럼,<br>우리는 형식보다 기능을, 복잡함보다 단순함을 추구합니다.</p>
-        </div>
-    </section>
-    <section class="product-grid">
-        <div class="grid-container">
-            <div class="grid">
-                <div class="grid-item accent-1">
-                    <div class="item-eyebrow typography-caption2 en">Global Typo</div>
-                    <h2 class="item-headline typography-headline">프리텐다드</h2>
-                    <p class="item-description typography-caption1">
-                        프리텐다드는 한국어를 포함한 다국어를 지원하는<br>네오 그로테스크 산세리프입니다.
-                    </p>
-                    <div class="item-cta">
-                        <a href="https://github.com/orioncactus/pretendard" class="cta-link typography-caption1" target='_blank'>이동하기 →</a>
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-eyebrow typography-caption2 en">by QPI Design team</div>
+                <h1 class="hero-headline typography-title1">디자인 가이드</h1>
+                <p class="hero-subheadline typography-subheadline">"The Styles are a lie" - 르 코르뷔지에의 말처럼,<br>우리는 형식보다 기능을, 복잡함보다 단순함을 추구합니다.</p>
+            </div>
+        </section>
+        <section class="product-grid">
+            <div class="grid-container">
+                <div class="grid">
+                    <div class="grid-item accent-1">
+                        <div class="item-eyebrow typography-caption2 en">Global Typo</div>
+                        <h2 class="item-headline typography-headline">프리텐다드</h2>
+                        <p class="item-description typography-caption1">
+                            프리텐다드는 한국어를 포함한 다국어를 지원하는<br>네오 그로테스크 산세리프입니다.
+                        </p>
+                        <div class="item-cta">
+                            <a href="https://github.com/orioncactus/pretendard" class="cta-link typography-caption1" target='_blank'>이동하기 →</a>
+                        </div>
                     </div>
-                </div>
 
-                <div class="grid-item accent-2">
-                    <div class="item-eyebrow typography-caption2 en">Branding Typo</div>
-                    <h2 class="item-headline typography-headline">BR Cobane</h2>
-                    <p class="item-description typography-caption1">
-                        QPI의 브랜딩 폰트 겸 영문 폰트입니다.
-                    </p>
-                    <div class="item-cta">
-                        <a href="https://www.cdnfonts.com/br-cobane.font" class="cta-link typography-caption1" target='_blank'>이동하기 →</a>
+                    <div class="grid-item accent-2">
+                        <div class="item-eyebrow typography-caption2 en">Branding Typo</div>
+                        <h2 class="item-headline typography-headline">BR Cobane</h2>
+                        <p class="item-description typography-caption1">
+                            QPI의 브랜딩 폰트 겸 영문 폰트입니다.
+                        </p>
+                        <div class="item-cta">
+                            <a href="https://www.cdnfonts.com/br-cobane.font" class="cta-link typography-caption1" target='_blank'>이동하기 →</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <p class="footer-text typography-footnote">2025 QPI, All rights reserved.</p>
-            <p class="footer-text typography-footnote">
-                문의사항 : 2308 이재원 | 
-                <a href="mailto:cnsh31_1410@cnsh.hs.kr" class="footer-link">cnsh31_1410@cnsh.hs.kr</a>
-            </p>
-        </div>
-    </footer>
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p class="footer-text typography-footnote">2025 QPI, All rights reserved.</p>
+                <p class="footer-text typography-footnote">
+                    문의사항 : 2308 이재원 | 
+                    <a href="mailto:cnsh31_1410@cnsh.hs.kr" class="footer-link">cnsh31_1410@cnsh.hs.kr</a>
+                </p>
+            </div>
+        </footer>
+    </main>
 
     <script>
         // Intersection Observer for scroll animations
@@ -128,17 +130,6 @@
                     });
                 }
             });
-        });
-
-        // Add subtle parallax effect to hero
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const hero = document.querySelector('.hero');
-            const heroHeight = hero.offsetHeight;
-            
-            if (scrolled < heroHeight) {
-                hero.style.transform = `translateY(${scrolled * 0.3}px)`;
-            }
         });
     </script>
 </body>
