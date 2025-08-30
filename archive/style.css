@@ -28,7 +28,7 @@ header {
     top: 0;
     left: 0;
     width: 100%;
-    background-color: rgb(var(--rc-bg) / 50%);
+    background-color: rgb(from var(--c-bg) r g b / 50%);
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
     padding: 10px 5px;
