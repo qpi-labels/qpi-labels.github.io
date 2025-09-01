@@ -371,7 +371,7 @@ main {
 /* About Section */
 .about-section {
     background: var(--c-antibg);
-    color: var(--c-antitext);
+    color: #fafafa;
     padding: 120px 0;
 }
 
@@ -423,7 +423,7 @@ main {
 
 @media screen and (prefers-color-scheme: dark) {
     .about-section {
-        background-color: var(--c-gray4);
+        background-color: #232323;
     }
 }
 
@@ -514,7 +514,7 @@ main {
 
 /* Color Section */
 .color-section {
-    background: var(--c-gray4);
+    background: #232323;
     color: var(--c-text);
     padding: 60px 0;
     text-align: center;
