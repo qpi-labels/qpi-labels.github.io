@@ -514,7 +514,7 @@ main {
 
 /* Color Section */
 .color-section {
-    background: #232323;
+    background: var(--c-bg);
     color: var(--c-text);
     padding: 60px 0;
     text-align: center;
@@ -522,7 +522,7 @@ main {
 
 .color-container {
     max-width: 980px;
-    margin: 0 auto;
+    margin: 0 auto; 
     padding: 0 40px;
     text-align: center;
 }
