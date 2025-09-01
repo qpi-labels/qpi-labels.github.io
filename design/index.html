@@ -97,44 +97,105 @@
         </section>
 
         <!-- About Section -->
-        <section class="color-section">
-            <div class="color-container">
-                <h2 class="color-headline typography-title3 fade-up">색상</h2>
-                <p class="color-description typography-body fade-up delay-1">
-                    QPI는 순백색과 순흑색의 사용을 최소화해, 오브젝트의 날카로움을 줄이고<br>눈의 피로를 완화합니다.
-                </p>
+        <!-- HTML -->
+<section class="color-section">
+    <div class="color-container">
+        <h2 class="color-headline typography-title3 fade-up">색상</h2>
+        <p class="color-description typography-body fade-up delay-1">
+            QPI는 순백색과 순흑색의 사용을 최소화해, 오브젝트의 날카로움을 줄이고<br>눈의 피로를 완화합니다.
+        </p>
+        
+        <div class="color-table fade-up delay-2">
+            <div class="color-row">
+                <div class="color-name">Background</div>
+                <div class="color-preview" style="background-color: #FAFAFA;"></div>
+                <div class="color-value">#FAFAFA</div>
+                <div class="color-preview" style="background-color: #232323;"></div>
+                <div class="color-value">#232323</div>
             </div>
-            <div class="color-bg1">
-                <h3 class="color-headline typography-headline fade-up">라이트 모드</h2>
-                <!-- color-box에 텍스트를 추가할 때마다 약간씩 밑으로 내려가는 문제가 있었는데
-                왜 그런지 모르겠는데 비어 있는 <span>을 넣으면 고쳐짐 -->
-                <span class="color-box" style="--color: var(--c-lbg)"><span></span>bg<br>#FAFAFA</span>
-                <span class="color-box antitext" style="--color: var(--c-dtext)"><span></span>text<br>#1C1C1E</span>
-                <span class="color-box" style="--color: var(--c-grayl3)"><span></span>gray1<br>#E5E5EA</span>
-                <span class="color-box" style="--color: var(--c-grayl2)"><span></span>gray2<br>#C7C7CC</span>
-                <span class="color-box" style="--color: var(--c-grayl1)"><span></span>gray3<br>#AEAEB2</span>
-                <span class="color-box" style="--color: var(--c-gray)"><span></span>gray4<br>#8E8E93</span>
-                <span class="color-box antitext" style="--color: var(--c-grayd1)"><span></span>gray5<br>#636366</span>
-                <span class="color-box antitext" style="--color: var(--c-grayd2)"><span></span>gray6<br>#48484A</span>
-                <span class="color-box antitext" style="--color: var(--c-grayd3)"><span></span>gray7<br>#3A3A3C</span>
-                <span class="color-box" style="--color: var(--c-lblue)"><span></span>blue<br>#007AFF</span>
-                <span class="color-box" style="--color: var(--c-lblue-active)"><span></span>blue-active<br>#0096FF</span>
+            
+            <div class="color-row">
+                <div class="color-name">Text</div>
+                <div class="color-preview" style="background-color: #1C1C1E;"></div>
+                <div class="color-value">#1C1C1E</div>
+                <div class="color-preview" style="background-color: #FAFAFA;"></div>
+                <div class="color-value">#FAFAFA</div>
             </div>
-            <div class="color-bg3">
-                <h3 class="color-headline typography-headline fade-up">다크 모드</h2>
-                <span class="color-box antitext" style="--color: var(--c-dbg)"><span></span>bg<br>#232323</span>
-                <span class="color-box" style="--color: var(--c-ltext)"><span></span>text<br>#FAFAFA</span>
-                <span class="color-box antitext" style="--color: var(--c-grayd3)"><span></span>gray1<br>#3A3A3C</span>
-                <span class="color-box antitext" style="--color: var(--c-grayd2)"><span></span>gray2<br>#48484A</span>
-                <span class="color-box antitext" style="--color: var(--c-grayd1)"><span></span>gray3<br>#636366</span>
-                <span class="color-box antitext" style="--color: var(--c-gray)"><span></span>gray4<br>#8E8E93</span>
-                <span class="color-box" style="--color: var(--c-grayl1)"><span></span>gray5<br>#AEAEB2</span>
-                <span class="color-box" style="--color: var(--c-grayl2)"><span></span>gray6<br>#C7C7CC</span>
-                <span class="color-box" style="--color: var(--c-grayl3)"><span></span>gray7<br>#E5E5EA</span>
-                <span class="color-box antitext" style="--color: var(--c-dblue)"><span></span>blue<br>#0A84FF</span>
-                <span class="color-box antitext" style="--color: var(--c-dblue-active)"><span></span>blue-active<br>#0AA0FF</span>
+            
+            <div class="color-row">
+                <div class="color-name">Gray 1</div>
+                <div class="color-preview" style="background-color: #E5E5EA;"></div>
+                <div class="color-value">#E5E5EA</div>
+                <div class="color-preview" style="background-color: #3A3A3C;"></div>
+                <div class="color-value">#3A3A3C</div>
             </div>
-        </section>
+            
+            <div class="color-row">
+                <div class="color-name">Gray 2</div>
+                <div class="color-preview" style="background-color: #C7C7CC;"></div>
+                <div class="color-value">#C7C7CC</div>
+                <div class="color-preview" style="background-color: #48484A;"></div>
+                <div class="color-value">#48484A</div>
+            </div>
+            
+            <div class="color-row">
+                <div class="color-name">Gray 3</div>
+                <div class="color-preview" style="background-color: #AEAEB2;"></div>
+                <div class="color-value">#AEAEB2</div>
+                <div class="color-preview" style="background-color: #636366;"></div>
+                <div class="color-value">#636366</div>
+            </div>
+            
+            <div class="color-row">
+                <div class="color-name">Gray 4</div>
+                <div class="color-preview" style="background-color: #8E8E93;"></div>
+                <div class="color-value">#8E8E93</div>
+                <div class="color-preview" style="background-color: #8E8E93;"></div>
+                <div class="color-value">#8E8E93</div>
+            </div>
+            
+            <div class="color-row">
+                <div class="color-name">Gray 5</div>
+                <div class="color-preview" style="background-color: #636366;"></div>
+                <div class="color-value">#636366</div>
+                <div class="color-preview" style="background-color: #AEAEB2;"></div>
+                <div class="color-value">#AEAEB2</div>
+            </div>
+            
+            <div class="color-row">
+                <div class="color-name">Gray 6</div>
+                <div class="color-preview" style="background-color: #48484A;"></div>
+                <div class="color-value">#48484A</div>
+                <div class="color-preview" style="background-color: #C7C7CC;"></div>
+                <div class="color-value">#C7C7CC</div>
+            </div>
+            
+            <div class="color-row">
+                <div class="color-name">Gray 7</div>
+                <div class="color-preview" style="background-color: #3A3A3C;"></div>
+                <div class="color-value">#3A3A3C</div>
+                <div class="color-preview" style="background-color: #E5E5EA;"></div>
+                <div class="color-value">#E5E5EA</div>
+            </div>
+            
+            <div class="color-row">
+                <div class="color-name">Blue</div>
+                <div class="color-preview" style="background-color: #007AFF;"></div>
+                <div class="color-value">#007AFF</div>
+                <div class="color-preview" style="background-color: #0A84FF;"></div>
+                <div class="color-value">#0A84FF</div>
+            </div>
+            
+            <div class="color-row">
+                <div class="color-name">Blue Active</div>
+                <div class="color-preview" style="background-color: #0096FF;"></div>
+                <div class="color-value">#0096FF</div>
+                <div class="color-preview" style="background-color: #0AA0FF;"></div>
+                <div class="color-value">#0AA0FF</div>
+            </div>
+        </div>
+    </div>
+</section>
 
         <!-- Footer -->
         <footer class="footer">
