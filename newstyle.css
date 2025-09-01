@@ -187,7 +187,7 @@ main {
     transform: translateZ(-3px) scale(1.429); /* parallax */
 
     padding-top: 44px;
-    background: linear-gradient(150deg, #10004C 0%, #5F6584 100%);
+    
     min-height: 100vh;
     display: flex;
     align-items: center;
