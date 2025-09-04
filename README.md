@@ -82,7 +82,7 @@
     }
   }
   ```
-  
+
 ## Credit
 
 + **color** : [Apple human-interface](https://developer.apple.com/design/human-interface-guidelines/color) (* 모든 색상을 참고한것은 아님)
