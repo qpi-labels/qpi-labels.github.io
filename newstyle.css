@@ -21,7 +21,7 @@ body {
 main {
     perspective: 7px;
     transform-style: preserve-3d;
-    height: 100vh;
+    height: 100dvh;
     overflow-x: hidden;
     overflow-y: auto;
 }
@@ -188,7 +188,7 @@ main {
 
     padding-top: 44px;
     
-    min-height: 100vh;
+    min-height: 100svh;
     display: flex;
     align-items: center;
     justify-content: center;
