@@ -287,6 +287,10 @@ function onYouTubeIframeAPIReady() {
   });
 }
 
+function onPlayerReady(event) {
+  requestAnimationFrame(updateTimeAndProgress);
+}
+
 playButton.addEventListener("click", () => {
   if (!player) return;
   const state = player.getPlayerState();
