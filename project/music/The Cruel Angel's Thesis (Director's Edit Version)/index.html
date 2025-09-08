@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>잔혹한 천사의 테제</title>
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(180deg, #09001f 0%, #0a1c6a 100%);
+  color: #aaa;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.player {
+  width: 100%;
+  max-width: 500px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.song-info {
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+.song-info img {
+  width: 200px;
+  height: 200px;
+  border-radius: 12px;
+  display: block;
+  margin: 0 auto 12px auto;
+}
+
+.song-info .title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.song-info .artist {
+  font-size: 16px;
+  opacity: 0.7;
+  margin-top: 4px;
+}
+
+.lyrics-wrapper {
+  flex: 1;
+  width: 100%;
+  overflow: hidden;
+  text-align: center;
+  position: relative;
+  scroll-behavior: smooth;
+  box-sizing: border-box;
+  mask-image: linear-gradient(to top, transparent 0%, black 20%, black 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, transparent 0%, black 20%, black 80%, transparent 100%);
+}
+
+.lyric-line {
+  font-size: 20px;
+  line-height: 1.6;
+  opacity: 0.4;
+  margin: 16px 0;
+  transition: all 0.3s ease;
+}
+
+.lyric-translation {
+  font-size: 14px;
+  margin-top: 4px;
+  opacity: 0.6;
+}
+
+.lyric-line.active {
+  font-size: 22px;
+  font-weight: 600;
+  color: #fff;
+  opacity: 1;
+  text-shadow: 0 0 12px rgba(255,255,255,0.6);
+}
+
+.controls-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 500px;
+  background: rgba(20,20,20,0.9);
+  padding: 10px 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 10;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  opacity: 80%;
+}
+
+.progress-container {
+  width: 100%;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  background: #333;
+  border-radius: 2px;
+  cursor: pointer;
+  position: relative;
+}
+
+.progress-fill {
+  width: 0%;
+  height: 100%;
+  background: #fff;
+  border-radius: 2px;
+  transition: width 0.1s linear;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.play-button {
+  font-size: 26px;
+  cursor: pointer;
+  color: #fff;
+  user-select: none;
+}
+
+.time {
+  font-size: 14px;
+  color: #aaa;
+}
+</style>
+</head>
+<body>
+
+<div class="player">
+  <div class="song-info">
+    <img src="cover.jpg" alt="앨범 커버">
+    <div class="title">잔혹한 천사의 테제</div>
+    <div class="artist">타카하시 요코</div>
+  </div>
+
+  <div class="lyrics-wrapper" id="lyricsWrapper"></div>
+</div>
+
+<div class="controls-wrapper">
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+  <div class="controls">
+    <div class="play-button" id="playButton">▶</div>
+    <div class="time" id="timeDisplay">0:00</div>
+  </div>
+</div>
+
+<audio id="audio" src="source.aac"></audio>
+
+<script>
+const lyricsData = [
+    { time: 1.06, text: "残酷な天使のように", translation: "잔혹한 천사의 테제처럼" },
+    { time: 6.98, text: "少年よ 神話になれ", translation: "소년이여, 신화가 되어라" },
+    { time: 22.76, text: "蒼い風がいま", translation: "푸른 바람이 지금" },
+    { time: 25.99, text: "胸のドアを叩いても", translation: "가슴의 문을 두드려도" },
+    { time: 29.77, text: "私だけをただ見つめて", translation: "나만을 그저 바라보며" },
+    { time: 33.35, text: "微笑んでるあなた", translation: "미소짓는 당신" },
+    { time: 37.78, text: "そっとふれるもの", translation: "살며시 닿은 것을" },
+    { time: 40.75, text: "もとめることに夢中で", translation: "추구하는 것에 열중하여" },
+    { time: 44.62, text: "運命さえまだ知らない", translation: "운명조차 아직 모르는" },
+    { time: 48.32, text: "いたいけな瞳", translation: "가련한 눈동자" },
+    { time: 52.38, text: "だけどいつか気付くでしょう", translation: "하지만 언젠가 깨닫겠지" },
+    { time: 56.07, text: "その背中には", translation: "그대의 등 뒤에는" },
+    { time: 59.94, text: "遥か未来 めざすための", translation: "머나먼 미래로 향하기 위한" },
+    { time: 63.76, text: "羽根があること", translation: "날개가 있다는 것을" },
+    { time: 67.36, text: "残酷な天使のテーゼ", translation: "잔혹한 천사의 테제" },
+    { time: 71.04, text: "窓辺からやがて飛び立つ", translation: "창가에서 이윽고 날아올라" },
+    { time: 74.70, text: "ほとばしる熱いパトスで", translation: "솟구치는 뜨거운 열정으로" },
+    { time: 78.56, text: "思い出を裏切るなら", translation: "추억을 배신한다면" },
+    { time: 82.31, text: "この宇宙を抱いて輝く", translation: "이 우주를 품고 빛나는" },
+    { time: 86.07, text: "少年よ 神話になれ", translation: "소년이여, 신화가 되어라" },
+    { time: 135.03, text: "ずっと眠ってる", translation: "계속 잠들어 있는" },
+    { time: 138.28, text: "私の愛の揺りかご", translation: "나의 사랑의 요람" },
+    { time: 142.01, text: "あなただけが 夢の使者に", translation: "그대만이 꿈의 사자에게" },
+    { time: 145.74, text: "呼ばれる朝がくる", translation: "부름받는 아침이 오리라" },
+    { time: 149.93, text: "細い首筋を", translation: "가느다란 목덜미를" },
+    { time: 153.11, text: "月あかりが映してる", translation: "달빛이 비추고 있어" },
+    { time: 156.96, text: "世界中の時を止めて", translation: "온 세상의 시간을 멈춰서" },
+    { time: 160.77, text: "閉じこめたいけど", translation: "가두고 싶지만" },
+    { time: 164.65, text: "もしもふたり逢えたことに", translation: "만약 둘이 만난 것이" },
+    { time: 168.51, text: "意味があるなら", translation: "의미가 있다면" },
+    { time: 172.17, text: "私はそう 自由を知る", translation: "나는 그렇듯 자유를 아는" },
+    { time: 175.92, text: "ためのバイブル", translation: "성경이 되리라" },
+    { time: 179.59, text: "残酷な天使のテーゼ", translation: "잔혹한 천사의 테제" },
+    { time: 183.53, text: "悲しみがそしてはじまる", translation: "슬픔이 그렇게 시작되리" },
+    { time: 187.12, text: "抱きしめた命のかたち", translation: "끌어안은 생명의 형태" },
+    { time: 190.97, text: "その夢に目覚めたとき", translation: "그 꿈에서 깨어날 때" },
+    { time: 194.79, text: "誰よりも光を放つ", translation: "누구보다 빛을 발하리" },
+    { time: 198.40, text: "少年よ 神話になれ", translation: "소년이여, 신화가 되어라" },
+    { time: 202.11, text: "人は愛をつむぎながら", translation: "인간은 사랑을 엮어가며" },
+    { time: 205.92, text: "歴史をつくる", translation: "역사를 만들지" },
+    { time: 209.62, text: "女神なんてなれないまま", translation: "여신 따윈 되지 못한 채" },
+    { time: 213.30, text: "私は生きる", translation: "나는 살아가리" },
+    { time: 217.09, text: "残酷な天使のテーゼ", translation: "잔혹한 천사의 테제" },
+    { time: 220.86, text: "窓辺からやがて飛び立つ", translation: "창가에서 이윽고 날아오르리" },
+    { time: 224.76, text: "ほとばしる熱いパトスで", translation: "솟구치는 뜨거운 정념으로" },
+    { time: 228.34, text: "思い出を裏切るなら", translation: "추억을 배신한다면" },
+    { time: 232.11, text: "この宇宙を抱いて輝く", translation: "이 우주를 안고 빛나리" },
+    { time: 235.87, text: "少年よ 神話になれ", translation: "소년이여, 신화가 되어라" }
+];
+
+const lyricsWrapper = document.getElementById("lyricsWrapper");
+const playButton = document.getElementById("playButton");
+const timeDisplay = document.getElementById("timeDisplay");
+const progressBar = document.getElementById("progressBar");
+const progressFill = document.getElementById("progressFill");
+const audio = document.getElementById("audio");
+
+let autoScroll = true;
+let scrollTimeout;
+
+function createLyricElements() {
+  lyricsData.forEach((lyric, index) => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "lyric-line";
+    wrapper.dataset.index = index;
+
+    const mainText = document.createElement("div");
+    mainText.textContent = lyric.text;
+
+    const translation = document.createElement("div");
+    translation.className = "lyric-translation";
+    translation.textContent = lyric.translation || "";
+
+    wrapper.appendChild(mainText);
+    wrapper.appendChild(translation);
+    lyricsWrapper.appendChild(wrapper);
+  });
+}
+
+function getCurrentLyricIndex(time) {
+  let currentIndex = -1;
+  for (let i = 0; i < lyricsData.length; i++) {
+    if (time >= lyricsData[i].time) currentIndex = i;
+    else break;
+  }
+  return currentIndex;
+}
+
+function updateLyrics(time) {
+  const currentIndex = getCurrentLyricIndex(time);
+  const lyricElements = lyricsWrapper.querySelectorAll(".lyric-line");
+
+  lyricElements.forEach((el, i) => {
+    el.classList.remove("active");
+    if (i === currentIndex) el.classList.add("active");
+  });
+
+  if (autoScroll && currentIndex >= 0 && lyricElements[currentIndex]) {
+    const songInfoHeight = document.querySelector(".song-info").offsetHeight;
+    const activeEl = lyricElements[currentIndex];
+    const offset = activeEl.offsetTop - lyricsWrapper.clientHeight / 2 + activeEl.clientHeight / 2 + songInfoHeight/2;
+    lyricsWrapper.scrollTo({ top: offset, behavior: "smooth" });
+  }
+}
+
+function centerFirstLyric() {
+  const firstEl = lyricsWrapper.querySelector(".lyric-line");
+  const songInfoHeight = document.querySelector(".song-info").offsetHeight;
+  if (firstEl) {
+    const offset = firstEl.offsetTop - lyricsWrapper.clientHeight / 2 + firstEl.clientHeight / 2 + songInfoHeight/2;
+    lyricsWrapper.scrollTo({ top: offset, behavior: "auto" });
+  }
+}
+
+function formatTime(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${minutes}:${secs.toString().padStart(2,"0")}`;
+}
+
+playButton.addEventListener("click", () => {
+  if (audio.paused) {
+    audio.play();
+    playButton.textContent = "⏸";
+  } else {
+    audio.pause();
+    playButton.textContent = "▶";
+  }
+});
+
+progressBar.addEventListener("click", (e) => {
+  const rect = progressBar.getBoundingClientRect();
+  const percent = (e.clientX - rect.left) / rect.width;
+  audio.currentTime = percent * audio.duration;
+});
+
+lyricsWrapper.addEventListener("scroll", () => {
+  autoScroll = false;
+  clearTimeout(scrollTimeout);
+  scrollTimeout = setTimeout(() => autoScroll = true, 2000);
+});
+
+audio.addEventListener("timeupdate", () => {
+  const currentTime = audio.currentTime;
+  timeDisplay.textContent = formatTime(currentTime);
+
+  const progress = (currentTime / audio.duration) * 100;
+  progressFill.style.width = progress + "%";
+
+  updateLyrics(currentTime);
+});
+
+audio.addEventListener("ended", () => {
+  playButton.textContent = "▶";
+});
+
+createLyricElements();
+centerFirstLyric();
+</script>
+</body>
+</html>
