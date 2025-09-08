@@ -62,27 +62,43 @@
     --c-black: rgb(0 0 0);
   }
 
-  @media screen and (prefers-color-scheme: dark) {
-    :root {
-      --c-bg: rgb(35 35 35);
-      --c-antibg: rgb(250 250 250);
-      --c-text: rgb(250 250 250);
-      --c-antitext: rgb(28 28 30);
-      --c-gray1: rgb(58 58 60);
-      --c-gray2: rgb(72 72 74);
-      --c-gray3: rgb(99 99 102);
-      --c-gray4: rgb(142 142 147);
-      --c-gray5: rgb(174 174 178);
-      --c-gray6: rgb(199 199 204);;
-      --c-gray7: rgb(229 229 234);
-      --c-blue: rgb(10 132 255);
-      --c-blue-active: rgb(10 160 255);
-      --c-antiblue: rgb(0 122 255);
-      --c-antiblue-active: rgb(0 150 255);
-    }
+  @media print {
+      :root {
+          --c-bg: white;
+          --c-antitext: white;
+          --c-lbg: white;
+          --c-ltext: white;
+      }
+  }
+
+  @media (prefers-color-scheme: dark) {
+      :root {
+          --c-bg: rgb(35 35 35);
+          --c-antibg: rgb(250 250 250);
+          --c-text: rgb(250 250 250);
+          --c-antitext: rgb(28 28 30);
+          --c-gray1: rgb(58 58 60);
+          --c-gray2: rgb(72 72 74);
+          --c-gray3: rgb(99 99 102);
+          --c-gray4: rgb(142 142 147);
+          --c-gray5: rgb(174 174 178);
+          --c-gray6: rgb(199 199 204);;
+          --c-gray7: rgb(229 229 234);
+          --c-blue: rgb(10 132 255);
+          --c-blue-active: rgb(10 160 255);
+          --c-antiblue: rgb(0 122 255);
+          --c-antiblue-active: rgb(0 150 255);
+      }
+  }
+
+  @media print and (prefers-color-scheme: dark) { /* ??? */
+      :root {
+          --c-antibg: white;
+          --c-text: white;
+      }
   }
   ```
-  
+
 ## Credit
 
 + **color** : [Apple human-interface](https://developer.apple.com/design/human-interface-guidelines/color) (* 모든 색상을 참고한것은 아님)

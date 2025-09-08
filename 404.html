@@ -9,7 +9,7 @@
     <meta property="og:url" content="https://qpi.kro.kr/">
     <meta property="og:title" content="쿼터파이">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="og.png">
+    <meta property="og:image" content="/logo.png">
     <meta property="og:description" content="쿼터파이 - 웹개발 동아리">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/colors.css">
@@ -39,7 +39,7 @@ body {
 main {
     perspective: 7px;
     transform-style: preserve-3d;
-    height: 100vh;
+    height: 100svh;
     overflow-x: hidden;
     overflow-y: auto;
 }
@@ -132,7 +132,7 @@ main {
 .fade-up {
     opacity: 0;
     transform: translateY(30px);
-    transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+    transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
                 transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
@@ -206,7 +206,7 @@ main {
 
     padding-top: 44px;
     
-    min-height: 100vh;
+    min-height: 100svh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -671,7 +671,9 @@ main {
             <div class="hero-content">
                 <div class="hero-eyebrow typography-caption2 en">Error</div>
                 <h1 class="hero-headline typography-title1">404 Not Found</h1>
-                <p class="hero-subheadline typography-subheadline">저는 아스카 신지 커플링을 지지합니다.<br>그냥 그렇다고요.</be></p>
+                <p class="hero-subheadline typography-subheadline">
+                    <a href="mailto:cnsh31_1410@cnsh.hs.kr" style="color: var(--c-ltext);">저</a>는 아스카 신지 커플링을 지지합니다.<br>그냥 그렇다고요.
+                </p>
                 <div class="hero-cta">
                     <a href="/" class="hero-link typography-body">메인으로</a>
                     <a href="/project/" class="hero-link typography-body">프로젝트 보기</a>

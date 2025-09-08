@@ -16,6 +16,7 @@ body {
     font-weight: 400;
     letter-spacing: -.022em;
     overflow-x: hidden;
+    height: 100vh;
 }
 
 main {
@@ -114,7 +115,7 @@ main {
 .fade-up {
     opacity: 0;
     transform: translateY(30px);
-    transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+    transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
                 transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
@@ -188,7 +189,7 @@ main {
 
     padding-top: 44px;
     
-    min-height: 100vh;
+    min-height: 100svh;
     display: flex;
     align-items: center;
     justify-content: center;
