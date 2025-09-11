@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark:bg-[#232323]">
+  <head>
+    <meta charset="UTF-8">
+    <title>쿼터파이</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/logo.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/logo_dark.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" type="image/x-icon" href="/logo.ico" media="(prefers-color-scheme: light)">
+    <meta property="og:url" content="https://qpi.kro.kr/">
+    <meta property="og:title" content="쿼터파이">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="/logo.png">
+    <meta property="og:description" content="쿼터파이 - 웹개발 동아리">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <!-- 배포 시 이 부분은 지울 것-->
+        <!-- Tailwind CSS CDN -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        <!-- React 18 UMD -->
+        <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+        <!-- Babel for in-browser JSX transform -->
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <!-- Colors -->
+        <style>
+          :root {
+            --color-red-50: oklch(97.1% 0.013 17.38);
+            --color-red-200: oklch(88.5% 0.062 18.334);
+            --color-red-400: oklch(70.4% 0.191 22.216);
+            --color-red-500: oklch(63.7% 0.237 25.331);
+            --color-red-600: oklch(57.7% 0.245 27.325);
+            --color-red-700: oklch(50.5% 0.213 27.518);
+            --color-red-950: oklch(25.8% 0.092 26.042);
+            --color-orange-50: oklch(98% 0.016 73.684);
+            --color-orange-200: oklch(90.1% 0.076 70.697);
+            --color-orange-400: oklch(75% 0.183 55.934);
+            --color-orange-500: oklch(70.5% 0.213 47.604);
+            --color-orange-600: oklch(64.6% 0.222 41.116);
+            --color-orange-700: oklch(55.3% 0.195 38.402);
+            --color-orange-800: oklch(47% 0.157 37.304);
+            --color-orange-950: oklch(26.6% 0.079 36.259);
+            --color-green-50: oklch(98.2% 0.018 155.826);
+            --color-green-200: oklch(92.5% 0.084 155.995);
+            --color-green-400: oklch(79.2% 0.209 151.711);
+            --color-green-500: oklch(72.3% 0.219 149.579);
+            --color-green-600: oklch(62.7% 0.194 149.214);
+            --color-green-700: oklch(52.7% 0.154 150.069);
+            --color-green-800: oklch(44.8% 0.119 151.328);
+            --color-green-950: oklch(26.6% 0.065 152.934);
+            --color-emerald-50: oklch(97.9% 0.021 166.113);
+            --color-emerald-200: oklch(90.5% 0.093 164.15);
+            --color-emerald-400: oklch(76.5% 0.177 163.223);
+            --color-emerald-700: oklch(50.8% 0.118 165.612);
+            --color-emerald-950: oklch(26.2% 0.051 172.552);
+            --color-neutral-50: oklch(98.5% 0 0);
+            --color-neutral-100: oklch(97% 0 0);
+            --color-neutral-200: oklch(92.2% 0 0);
+            --color-neutral-300: oklch(87% 0 0);
+            --color-neutral-400: oklch(70.8% 0 0);
+            --color-neutral-500: oklch(55.6% 0 0);
+            --color-neutral-600: oklch(43.9% 0 0);
+            --color-neutral-700: oklch(37.1% 0 0);
+            --color-neutral-800: oklch(26.9% 0 0);
+            --color-neutral-900: oklch(20.5% 0 0);
+            --color-neutral-950: oklch(14.5% 0 0);
+          }
+        </style>
+    <!-- 여기까지만 지울 것 -->
+
+    <!-- JQuery + Google login -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+  </head>
+  <body>
+    <main class="min-h-screen bg-white dark:bg-[#232323] text-neutral-900 dark:text-neutral-100" style="font-family: -apple-system, BlinkMacSystemFont, 'Pretendard Variable', 'SF Pro Text', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+      <header class="fixed w-full top-0 z-30 border-b border-neutral-200/60 dark:border-neutral-700/60 bg-white/70 dark:bg-[#232323]/70 backdrop-blur supports-[backdrop-filter]:bg-white/50">
+        <div class="max-w-3xl mx-auto px-6 flex items-center justify-between h-16">
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-6 rounded-full circle qpilogo" style="background: conic-gradient(var(--qpi-color) 0deg 138.46deg, #234C93 138.46deg 360deg)"></div>
+            <span class="text-sm tracking-tight text-neutral-700 dark:text-neutral-200">충곽 스터디 카페 예약</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="inline-block text-xs text-neutral-500 dark:text-neutral-300">Asia/Seoul · 매일 13:20~18:20 오픈</div>
+            <div class="inline-block" id="login">
+              <div id="g_id_onload"
+                data-client_id="1079132266010-4r209j6rtmohatvtf74cksqcq7cn4uv0.apps.googleusercontent.com"
+                data-context="use"
+                data-ux_mode="popup"
+                data-callback="handleCredentialResponse"
+                data-auto_prompt="false">
+              </div>
+              <div id="login-button" class="g_id_signin"
+                  data-type="icon"
+                  data-shape="circle"
+                  data-theme="outline"
+                  data-text="continue_with"
+                  data-size="medium"
+                  data-width="200">
+              </div>
+              <div id="login-mockup">
+                <img class="pfp" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVQIHWM4AwAAzgDNUwEBJAAAAABJRU5ErkJggg=="/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div id="root"></div>
+    </main>
+    
+    <script>
+      const AUTH_URL = "https://script.google.com/macros/s/AKfycbwJkCkPJTg2AKKVNncedK7r--Txh9iexICytoDg6ajIpA2vYej7fv7AadCCuhRb9Qs9/exec"
+      var storage = {}
+
+      async function handleCredentialResponse(response) {
+        const idToken = response.credential;
+        $(".g_id_signin").css("visibility", "hidden");
+        $("#login-mockup").css("display", "flex");
+        const res = await fetch(AUTH_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ idToken })
+        });
+
+        const data = await res.json();
+        if (!data.success) {
+          console.error(`fail: ${JSON.stringify(data)}`);
+          return;
+        }
+        try {
+          $(".pfp").css("visibility", "visible");
+          $(".pfp").attr("src",data.pfp);
+        } finally {
+          storage.sub = data.sub;
+          storage.name = data.name;
+          storage.authdate = data.date;
+          storage.auth = data.auth;
+        }
+      }
+    </script>
+
+    <script type="text/babel" src="index.js"></script>
+  </body>
+</html>
