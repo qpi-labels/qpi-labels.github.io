@@ -265,11 +265,11 @@ function StudyCafeReservation() {
         <section className={container + " mt-16 pt-14 pb-10"}>
         <div className="flex flex-col items-start gap-6">
             <h1 className="text-4xl md:text-6xl leading-tight tracking-tight font-semibold">
-            충곽 <span className="inline-block bg-black text-white dark:bg-neutral-50 dark:text-neutral-950 px-2 rounded-xl">스터디 카페</span>
-            <br/> 1층 언어실습실에서 만나요.
+            레드불 <span className="inline-block bg-black text-white dark:bg-neutral-50 dark:text-neutral-950 px-2 rounded-xl">계시판</span>
+            <br/> 신의 게시
             </h1>
             <p className="text-neutral-600 dark:text-neutral-300 text-lg md:text-xl font-semibold">
-            매일 13:20~18:20 선착순 <strong>{0}명</strong> 예약 · 당일 야간 자율학습시간 이용
+            죄송<strong>합</strong>니다
             </p>
         </div>
         </section>
@@ -383,8 +383,8 @@ function StudyCafeReservation() {
 
         <footer className="border-t border-neutral-200/60 dark:border-neutral-700/60">
         <div className={container + " py-10 text-sm text-neutral-500 flex flex-col md:flex-row gap-4 md:items-center md:justify-between"}>
-            <div>© {now.getFullYear()} 충곽 스터디 카페 예약 <span className="font-br-cobane">BY QPI</span></div>
-            <div className="opacity-80">매일 13:20~18:20 오픈 · 당일 야간 자율학습 시간 이용 가능</div>
+            <div>© {now.getFullYear()} QPI <span className="font-br-cobane">BY QPI</span></div>
+            <div className="opacity-80">QPIQPIQPI  QPI QPI QPI  QPIQPIQPI</div>
         </div>
         </footer>
     </div>
