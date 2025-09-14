@@ -526,7 +526,7 @@
                             <div className="group relative">
                               <div className={`${message.sub === storage.sub ? 'chat-bubble-right' : 'chat-bubble-left'}`}>
                                 {message.sub === -1 ? (
-                                  <span className="italic text-gray-400 text-sm">삭제된 메시지</span>
+                                  <span className="text-xs text-gray-500">메시지가 삭제되었습니다</span>
                                 ) : (
                                   <span className="text-sm leading-relaxed">{message.content}</span>
                                 )}
