@@ -524,13 +524,15 @@
                             )}
                             
                             <div className="group relative">
-                              <div className={`${message.sub === storage.sub ? 'chat-bubble-right' : 'chat-bubble-left'}`}>
-                                {message.sub === -1 ? (
-                                  <span className="text-xs text-gray-500">메시지가 삭제되었습니다</span>
-                                ) : (
+                              {message.sub === -1 ? (
+                                <div className="text-xs text-gray-400 italic px-3 py-2">
+                                  메시지가 삭제되었습니다
+                                </div>
+                              ) : (
+                                <div className={`${message.sub === storage.sub ? 'chat-bubble-right' : 'chat-bubble-left'}`}>
                                   <span className="text-sm leading-relaxed">{message.content}</span>
-                                )}
-                              </div>
+                                </div>
+                              )}
                               
                               {/* 삭제 버튼 */}
                               {message.sub === storage.sub && message.sub !== -1 && (
