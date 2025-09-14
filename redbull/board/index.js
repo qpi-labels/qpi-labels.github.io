@@ -298,7 +298,7 @@ function StudyCafeReservation() {
 
             <div className="mt-4 w-full">
             <div className="flex items-center justify-between text-sm text-neutral-500 dark:text-neutral-300 mb-1">
-                <span>글 수</span>
+                <span>채팅 수</span>
                 <span className="font-semibold">{len}</span>
             </div>
             <div className="relative h-3 w-full overflow-hidden rounded-full bg-neutral-100 dark:bg-neutral-700">
@@ -322,7 +322,7 @@ function StudyCafeReservation() {
                 className={btnPrimary}
                 type="submit"
             >
-                글 쓰기
+                전송
             </button>
             </form>
 
@@ -338,8 +338,8 @@ function StudyCafeReservation() {
             
             <div className="mt-10">
             <div className="flex items-end justify-between">
-                <h2 className="text-xl font-semibold tracking-tight">글 목록</h2>
-                <div className="text-xs text-neutral-500 dark:text-neutral-300">최신순 정렬</div>
+                <h2 className="text-xl font-semibold tracking-tight">채팅 내역</h2>
+                <div className="text-xs text-neutral-500 dark:text-neutral-300">최신순</div>
             </div>
                 <ol className="mt-4 divide-y divide-neutral-200 dark:divide-neutral-700 border border-neutral-200 dark:border-neutral-700 rounded-2xl overflow-hidden">
                     {listLoading ? (
