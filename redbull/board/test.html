@@ -646,7 +646,7 @@
                                 </div>
                               ) : (
                                 <div className={`${message.sub === storage.sub ? 'chat-bubble-right' : 'chat-bubble-left'}`}>
-                                  <span className="text-sm leading-relaxed">{message.content}</span>
+                                  <span className="text-sm leading-relaxed">{message.content.replace(/\n/g, '')}</span>
                                 </div>
                               )}
                               
