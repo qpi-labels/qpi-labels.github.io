@@ -23,9 +23,16 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <link rel="stylesheet" href="style.css">
+
+    <script type="text/babel" src="index.js"></script>
   </head>
   
 <body>
+    <script>
+      function callback(response) {
+        return handleCredentialResponse(response);
+      }
+    </script>
     <div class="nav-wrapper">
         <nav class="nav">
           <a href="/" class="nav-logo en">QPI Chat</a>
@@ -34,7 +41,7 @@
                 data-client_id="1079132266010-4r209j6rtmohatvtf74cksqcq7cn4uv0.apps.googleusercontent.com"
                 data-context="use"
                 data-ux_mode="popup"
-                data-callback="handleCredentialResponse"
+                data-callback="callback"
                 data-auto_prompt="false">
               </div>
               <div id="login-button" class="g_id_signin"
@@ -56,7 +63,5 @@
     <div class="max-w-2xl mx-auto h-screen flex flex-col pt-[44px]"> <!-- 헤더 높이만큼 패딩 추가 -->
       <div id="root" class="flex-1 flex flex-col"></div>
     </div>
-    
-    <script type="text/babel" src="index.js"></script>
 </body>
 </html>
