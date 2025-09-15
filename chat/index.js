@@ -281,7 +281,7 @@ function ChatApp() {
   const [error, setError] = useState("");
   const [lastReload, setLastReload] = useState(new Date(0));
   const [isLoggedIn, setIsLoggedIn] = useState(hasStoredLogin);
-  const [replyingToMessage, setReplyingToMessage] = useState(null); // 답장 상태 추가
+  const [replyingToMessage, setReplyingToMessage] = useState(null);
   
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
@@ -360,7 +360,7 @@ function ChatApp() {
     fetchMessages();
   }, []);
 
-  // 메시지 가져오기 (e[4]를 replyToId로 파싱)
+  // 메시지 가져오기
   const fetchMessages = async () => {
     if (aborts.size !== 0) return;
     
@@ -382,7 +382,7 @@ function ChatApp() {
         name: e[2],
         content: e[3],
         timestamp: e[0],
-        replyToId: e[4] || null, // replyToId 필드 추가
+        replyToId: e[5] || null,
       }));
 
       setMessages(parsedMessages);
@@ -397,7 +397,7 @@ function ChatApp() {
     }
   };
 
-  // 메시지 전송 (replyToId 포함)
+  // 메시지 전송
   const sendMessage = async (e) => {
     e.preventDefault();
     
@@ -417,10 +417,9 @@ function ChatApp() {
       name: storage.name,
       authdate: storage.authdate,
       auth: storage.auth,
-      replyToId: replyingToMessage ? replyingToMessage.id : null, // replyToId 추가
+      replyToId: replyingToMessage ? replyingToMessage.id : null,
     };
 
-    // 낙관적 업데이트
     const tempMessage = {
       id: Date.now(),
       sub: storage.sub,
@@ -433,9 +432,8 @@ function ChatApp() {
 
     setMessages(prev => [...prev, tempMessage]);
     setNewMessage("");
-    setReplyingToMessage(null); // 답장 상태 초기화
+    setReplyingToMessage(null);
 
-    // 메시지 전송 중단
     for (const controller of aborts) {
       controller.abort();
     }
@@ -454,7 +452,7 @@ function ChatApp() {
       
       const updateMessagesFromServer = (serverData) => {
         const serverMessages = JSON.parse(serverData).map((e) => ({
-          id: e[0], sub: e[1], name: e[2], content: e[3], timestamp: e[0], replyToId: e[4] || null,
+          id: e[0], sub: e[1], name: e[2], content: e[3], timestamp: e[0], replyToId: e[5] || null,
         }));
         setMessages(serverMessages);
       };
@@ -480,7 +478,6 @@ function ChatApp() {
 
   // 메시지 삭제
   const deleteMessage = async (messageId) => {
-    // (기존 코드와 동일, 변경 없음)
     if (!storage.sub) return;
     const data = {
       studentId: "DELETE", key: messageId, sub: storage.sub, name: storage.name,
@@ -494,7 +491,7 @@ function ChatApp() {
       const result = await response.text();
       const updateMessagesFromServer = (serverData) => {
         const serverMessages = JSON.parse(serverData).map((e) => ({
-          id: e[0], sub: e[1], name: e[2], content: e[3], timestamp: e[0], replyToId: e[4] || null,
+          id: e[0], sub: e[1], name: e[2], content: e[3], timestamp: e[0], replyToId: e[5] || null,
         }));
         setMessages(serverMessages);
       };
@@ -530,7 +527,6 @@ function ChatApp() {
     const element = document.getElementById(`message-${messageId}`);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      // 하이라이트 효과
       element.classList.add('highlight');
       setTimeout(() => {
         element.classList.remove('highlight');
@@ -602,7 +598,6 @@ function ChatApp() {
                       
                       <div className="group relative">
                         <div className={message.sub === storage.sub ? 'chat-bubble-right' : 'chat-bubble-left'}>
-                          {/* 답장 UI */}
                           {originalMessage && (
                             <div
                               className="reply-preview"
@@ -620,8 +615,10 @@ function ChatApp() {
                           />
                         </div>
 
-                        {message.sub === storage.sub && message.sub !== -1 && (
-                          <div className="absolute top-1 right-1">
+                        {/* ▼▼▼ 여기가 수정된 부분입니다 ▼▼▼ */}
+                        {/* 모든 메시지(삭제 제외)에 점 세 개 메뉴 표시 */}
+                        {message.sub !== -1 && (
+                          <div className={`absolute top-1 ${message.sub === storage.sub ? 'right-1' : 'left-1'}`}>
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -635,14 +632,21 @@ function ChatApp() {
                             >⋮</button>
 
                             {message.showMenu && (
-                              <div className="popup-menu absolute right-0 mt-1 w-28 rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 z-50">
-                                <button onClick={() => deleteMessage(message.id)} className="popup-menu-item text-red-500">삭제</button>
-                                <button onClick={() => alert("수정 기능 준비 중")} className="popup-menu-item">수정</button>
+                              <div className={`popup-menu absolute mt-1 w-28 rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 z-50 ${message.sub === storage.sub ? 'right-0' : 'left-0'}`}>
+                                {/* 내가 보낸 메시지일 경우에만 삭제, 수정 표시 */}
+                                {message.sub === storage.sub && (
+                                  <>
+                                    <button onClick={() => deleteMessage(message.id)} className="popup-menu-item text-red-500">삭제</button>
+                                    <button onClick={() => alert("수정 기능 준비 중")} className="popup-menu-item">수정</button>
+                                  </>
+                                )}
+                                {/* 모든 메시지에 답장 표시 */}
                                 <button onClick={() => handleSetReply(message)} className="popup-menu-item">답장</button>
                               </div>
                             )}
                           </div>
                         )}
+                        {/* ▲▲▲ 여기까지 수정 ▲▲▲ */}
                       </div>
                       
                       {showTime && (
@@ -669,7 +673,6 @@ function ChatApp() {
       
       {/* 메시지 입력 영역 */}
       <div className="sticky bottom-0 mt-auto w-full border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-black">
-        {/* 답장 미리보기 UI */}
         {replyingToMessage && (
           <div className="reply-input-preview">
             <div className="flex-1 min-w-0">
