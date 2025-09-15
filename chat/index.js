@@ -568,61 +568,62 @@ function ChatApp() {
                         </div>
                       )}
                       
+                      {/* ▼▼▼ 여기가 수정된 부분입니다 ▼▼▼ */}
                       <div className="group relative">
-  {message.sub === storage.sub && message.sub !== -1 && (
-  <div className="absolute top-1 right-1">
-    <button
-      onClick={(e) => {
-        e.stopPropagation();
-        setMessages(prev =>
-          prev.map(m =>
-            m.id === message.id ? { ...m, showMenu: !m.showMenu } : { ...m, showMenu: false }
-          )
-        );
-      }}
-      className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-    >
-      ⋮
-    </button>
+                        {message.sub === storage.sub && message.sub !== -1 && (
+                          <div className="absolute top-1 right-1">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setMessages(prev =>
+                                  prev.map(m =>
+                                    m.id === message.id ? { ...m, showMenu: !m.showMenu } : { ...m, showMenu: false }
+                                  )
+                                );
+                              }}
+                              className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                            >
+                              ⋮
+                            </button>
 
-    {message.showMenu && (
-      <div className="popup-menu absolute right-0 mt-1 w-28 rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 z-50">
-        <button
-          onClick={() => deleteMessage(message.id)}
-          className="block w-full text-left px-3 py-1.5 text-sm text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700"
-        >
-          삭제
-        </button>
-        <button
-          onClick={() => alert("수정 기능 준비 중")}
-          className="block w-full text-left px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-        >
-          수정
-        </button>
-        <button
-          onClick={() => alert("답장 기능 준비 중")}
-          className="block w-full text-left px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-        >
-          답장
-        </button>
-      </div>
-    )}
-  </div>
-)}
-
+                            {message.showMenu && (
+                              <div className="popup-menu absolute right-0 mt-1 w-28 rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 z-50">
+                                <button
+                                  onClick={() => deleteMessage(message.id)}
+                                  className="block w-full text-left px-3 py-1.5 text-sm text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                >
+                                  삭제
+                                </button>
+                                <button
+                                  onClick={() => alert("수정 기능 준비 중")}
+                                  className="block w-full text-left px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                >
+                                  수정
+                                </button>
+                                <button
+                                  onClick={() => alert("답장 기능 준비 중")}
+                                  className="block w-full text-left px-3 py-1.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                >
+                                  답장
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        <div
+                          className="markdown-body"
+                          dangerouslySetInnerHTML={{
+                            __html: DOMPurify.sanitize(marked.parse(message.content))
+                          }}
+                        />
+                      </div>
                       
                       {showTime && (
                         <div className={`text-xs text-gray-400 mt-1 ${message.sub === storage.sub ? 'mr-1' : 'ml-1'}`}>
                           {formatTime(message.timestamp)}
-                          <div
-  className="markdown-body"
-  dangerouslySetInnerHTML={{
-    __html: DOMPurify.sanitize(marked.parse(message.content))
-  }}
-/>
-
                         </div>
                       )}
+                      {/* ▲▲▲ 여기까지가 수정된 부분입니다 ▲▲▲ */}
                     </div>
                   </div>
                 </div>
