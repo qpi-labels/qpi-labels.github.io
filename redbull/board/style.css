@@ -1,3 +1,29 @@
+@media (max-width: 480px) {
+    .typography-largetitle { font-size: 48px; }
+    .typography-title1 { font-size: 40px; }
+    .typography-title2 { font-size: 36px; }
+    .typography-title3 { font-size: 28px; }
+    .typography-headline { font-size: 24px; }
+    .typography-subheadline { font-size: 21px; }
+    
+    /* Mobile navigation links hidden using Tailwind responsive classes */
+
+    .grid-item {
+        padding: 30px 20px;
+        min-height: 400px;
+    }
+
+    .grid-item.large {
+        min-height: 150px;
+    }
+
+    .hero-link {
+        margin: 0 14px;
+        display: block;
+        margin-bottom: 12px;
+    }
+}
+
 /* 채팅 컨테이너 */
 .chat-container {
   height: calc(100vh - 60px);
