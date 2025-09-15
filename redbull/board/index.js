@@ -158,7 +158,7 @@ window.addEventListener('load', () => {
 });
 
 // React 컴포넌트
-const { useEffect, useState, useRef } = React;
+const { useEffect, useState, useRef, useMemo } = React;
 
 // --- ✨ 마크다운 라이브러리 설정 ✨ ---
 // 링크를 새 탭에서 열도록 marked.js 렌더러 커스터마이징
@@ -235,7 +235,7 @@ function ChatApp() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages.length]);
 
   // 1초마다 새로고침
   useEffect(() => {
@@ -433,7 +433,7 @@ function ChatApp() {
 
   // 렌더링
   return (
-    <div className="chat-container flex flex-col">
+    <div className="chat-container flex flex-col min-h-full">
       {/* 로그인 안내 */}
       {!isLoggedIn && (
         <div className="mx-3 sm:mx-4 mt-3 sm:mt-4 mb-2 px-3 sm:px-4 py-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg text-blue-600 dark:text-blue-400 text-xs sm:text-sm text-center">
@@ -534,7 +534,7 @@ function ChatApp() {
       )}
 
       {/* 메시지 입력 영역 */}
-      <div className="px-3 sm:px-4 py-3 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-black">
+      <div className="sticky bottom-0 mt-auto w-full px-3 sm:px-4 py-3 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-black">
         <form onSubmit={sendMessage} className="flex items-center gap-2 sm:gap-3">
           <input
             type="text"
