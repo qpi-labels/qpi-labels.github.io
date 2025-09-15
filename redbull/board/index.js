@@ -313,10 +313,10 @@ function StudyCafeReservation() {
             <input
                 className={inputBase + " col-span-1 md:col-span-3"}
                 type="text"
-                placeholder="이름"
+                placeholder="내용"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                aria-label="이름"
+                aria-label="내용"
             />
             <button
                 className={btnPrimary}
