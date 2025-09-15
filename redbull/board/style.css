@@ -112,11 +112,10 @@
   }
 }
 
-/* 채팅 말풍선 */
 .chat-bubble-left {
   background: #f3f4f6;
   color: #111827;
-  padding: 8px 12px;
+  padding: 4px 12px;
   border-radius: 16px 16px 16px 4px;
   max-width: calc(100vw - 120px);
   word-wrap: break-word;
@@ -126,14 +125,14 @@
 @media (min-width: 640px) {
   .chat-bubble-left {
     max-width: 320px;
-    padding: 10px 14px;
+    padding: 6px 14px;
   }
 }
 
 .chat-bubble-right {
   background: #3b82f6;
   color: white;
-  padding: 8px 12px;
+  padding: 4px 12px;
   border-radius: 16px 16px 4px 16px;
   max-width: calc(100vw - 120px);
   word-wrap: break-word;
@@ -143,11 +142,10 @@
 @media (min-width: 640px) {
   .chat-bubble-right {
     max-width: 320px;
-    padding: 10px 14px;
+    padding: 6px 14px;
   }
 }
 
-/* 다크모드 말풍선 */
 .dark .chat-bubble-left {
   background: #374151;
   color: #f9fafb;
