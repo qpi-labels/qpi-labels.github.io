@@ -257,11 +257,11 @@ renderer.link = function(href, title, text) {
 // marked.js 옵션 설정
 marked.setOptions({
   renderer: renderer,
-  gfm: true, // GitHub Flavored Markdown 사용
-  breaks: true, // 엔터(개행)를 <br> 태그로 변환
-  sanitize: false // DOMPurify를 사용할 것이므로 자체 sanitize 기능은 끔
+  gfm: true,
+  breaks: true,
+  headerIds: false,      // h1~h6에 자동 id 생성 방지 (UI 깨짐 방지)
+  mangle: false,         // 이메일 주소 등 안전하게 표시
 });
-// --- ✨ 설정 끝 ✨ ---
 
 function ChatApp() {
   // 유틸리티 함수
@@ -614,6 +614,13 @@ function ChatApp() {
                       {showTime && (
                         <div className={`text-xs text-gray-400 mt-1 ${message.sub === storage.sub ? 'mr-1' : 'ml-1'}`}>
                           {formatTime(message.timestamp)}
+                          <div
+  className="markdown-body"
+  dangerouslySetInnerHTML={{
+    __html: DOMPurify.sanitize(marked.parse(message.content))
+  }}
+/>
+
                         </div>
                       )}
                     </div>
