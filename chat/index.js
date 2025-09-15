@@ -283,7 +283,7 @@ function ChatApp() {
   const [isLoggedIn, setIsLoggedIn] = useState(hasStoredLogin); // 초기값을 저장된 로그인 상태로 설정
   
   const messagesEndRef = useRef(null);
-  const textareaRef = useRef(null); // 입력창 참조 추가
+  const textareaRef = useRef(null);
 
   // 전역 함수로 로그인 상태 업데이트
   useEffect(() => {
@@ -324,20 +324,20 @@ function ChatApp() {
     scrollToBottom();
   }, [messages.length]);
   
-  // ▼▼▼ [추가] 입력창 높이 자동 조절 ▼▼▼
+  // 입력창 높이 자동 조절
   useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
-      textarea.style.height = 'auto'; // 높이 초기화
+      textarea.style.height = 'auto';
       const scrollHeight = textarea.scrollHeight;
-      const maxHeight = 150; // 최대 높이 (px)
+      const maxHeight = 150;
       
       if (scrollHeight > maxHeight) {
         textarea.style.height = `${maxHeight}px`;
-        textarea.style.overflowY = 'auto'; // 최대 높이 초과 시 스크롤바 표시
+        textarea.style.overflowY = 'auto';
       } else {
         textarea.style.height = `${scrollHeight}px`;
-        textarea.style.overflowY = 'hidden'; // 최대 높이 미만 시 스크롤바 숨김
+        textarea.style.overflowY = 'hidden';
       }
     }
   }, [newMessage]);
@@ -537,13 +537,12 @@ function ChatApp() {
     }
   };
   
-  // ▼▼▼ [추가] 키보드 입력 핸들러 ▼▼▼
+  // 키보드 입력 핸들러
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault(); // Enter 키 기본 동작(줄 바꿈) 방지
-      sendMessage(e); // 메시지 전송
+      e.preventDefault();
+      sendMessage(e);
     }
-    // Shift + Enter는 기본 동작(줄 바꿈)을 그대로 수행
   };
 
 
@@ -573,6 +572,19 @@ function ChatApp() {
         ) : (
           <div className="space-y-3">
             {messages.map((message, index) => {
+              
+              // ▼▼▼ [수정] 삭제된 메시지 UI 처리 ▼▼▼
+              if (message.sub === "-1") {
+                return (
+                  <div key={message.id} className="text-center my-2">
+                    <span className="inline-block bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-xs rounded-full px-3 py-1">
+                      삭제됨
+                    </span>
+                  </div>
+                );
+              }
+              // ▲▲▲ 여기까지 수정 ▲▲▲
+
               const showAvatar = index === 0 || messages[index - 1]?.sub !== message.sub;
               const showTime = index === messages.length - 1 || 
                 messages[index + 1]?.sub !== message.sub ||
@@ -584,7 +596,7 @@ function ChatApp() {
                     {/* 아바타 */}
                     <div className={`flex-shrink-0 ${showAvatar ? '' : 'invisible'}`}>
                       {message.sub !== storage.sub && (
-                        <div className={`user-avatar ${message.sub=="-1" ? 'deleted' : ''}`} style={{ "--hue": hues[SHA256(message.sub+"salt1")[0]]}}>
+                        <div className={`user-avatar`} style={{ "--hue": hues[SHA256(message.sub+"salt1")[0]]}}>
                           {message.name?.charAt(0)?.toUpperCase() || '?'}
                         </div>
                       )}
@@ -675,7 +687,6 @@ function ChatApp() {
       {/* 메시지 입력 영역 */}
       <div className="sticky bottom-0 mt-auto w-full px-3 sm:px-4 py-3 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-black">
         <form onSubmit={sendMessage} className="flex items-center gap-2 sm:gap-3">
-          {/* ▼▼▼ [수정] input을 textarea로 변경하고 관련 핸들러 추가 ▼▼▼ */}
           <textarea
             ref={textareaRef}
             value={newMessage}
@@ -688,7 +699,6 @@ function ChatApp() {
             rows="1"
             style={{ resize: 'none' }}
           />
-          {/* ▲▲▲ 여기까지 수정 ▲▲▲ */}
           <button
             type="submit"
             className="send-button"
