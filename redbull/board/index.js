@@ -381,11 +381,11 @@ function ChatApp() {
   // 메시지 삭제
   const deleteMessage = async (messageId) => {
     if (!storage.sub) return;
-
     const data = {
       studentId: "DELETE",
       key: messageId,
       sub: storage.sub,
+      name: storage.name,
       authdate: storage.authdate,
       auth: storage.auth
     };
