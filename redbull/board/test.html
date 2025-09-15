@@ -426,8 +426,16 @@
             const response = await fetch(URL, {
               signal,
               method: "GET",
-              redirect: "follow"
+              redirect: "follow",
+              cache: "no-cache", // 캐시 방지로 최신 데이터 보장
+              headers: {
+                "Cache-Control": "no-cache"
+              }
             });
+            
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
             
             const data = await response.text();
             const parsedMessages = JSON.parse(data).map((e) => ({
@@ -438,12 +446,23 @@
               timestamp: e[0]
             }));
 
-            setMessages(parsedMessages);
-            setIsLoading(false);
+            // 메시지가 실제로 변경되었을 때만 상태 업데이트
+            setMessages(prevMessages => {
+              if (JSON.stringify(prevMessages) !== JSON.stringify(parsedMessages)) {
+                return parsedMessages;
+              }
+              return prevMessages;
+            });
+            
+            if (isLoading) setIsLoading(false);
             setLastReload(getSeoulNow());
           } catch (error) {
             if (!signal.aborted) {
-              console.error('Error:', error);
+              console.error('Error fetching messages:', error);
+              if (isLoading) {
+                setError("메시지를 불러오는데 실패했습니다.");
+                setIsLoading(false);
+              }
             }
           } finally {
             aborts.delete(ctrl);
@@ -714,4 +733,4 @@
       root.render(<ChatApp />);
     </script>
   </body>
-  </html>
+</html>
