@@ -382,7 +382,7 @@ function ChatApp() {
         name: e[2],
         content: e[3],
         timestamp: e[0],
-        replyToId: e[5] || null,
+        replyToId: e[4] || null,
       }));
 
       setMessages(parsedMessages);
@@ -452,7 +452,7 @@ function ChatApp() {
       
       const updateMessagesFromServer = (serverData) => {
         const serverMessages = JSON.parse(serverData).map((e) => ({
-          id: e[0], sub: e[1], name: e[2], content: e[3], timestamp: e[0], replyToId: e[5] || null,
+          id: e[0], sub: e[1], name: e[2], content: e[3], timestamp: e[0], replyToId: e[4] || null,
         }));
         setMessages(serverMessages);
       };
@@ -491,7 +491,7 @@ function ChatApp() {
       const result = await response.text();
       const updateMessagesFromServer = (serverData) => {
         const serverMessages = JSON.parse(serverData).map((e) => ({
-          id: e[0], sub: e[1], name: e[2], content: e[3], timestamp: e[0], replyToId: e[5] || null,
+          id: e[0], sub: e[1], name: e[2], content: e[3], timestamp: e[0], replyToId: e[4] || null,
         }));
         setMessages(serverMessages);
       };
