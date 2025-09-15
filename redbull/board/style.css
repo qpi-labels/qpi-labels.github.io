@@ -112,6 +112,7 @@
   }
 }
 
+/* 기본 말풍선 스타일 (단일 메시지) */
 .chat-bubble-left {
   background: #f3f4f6;
   color: #111827;
@@ -120,13 +121,7 @@
   max-width: calc(100vw - 120px);
   word-wrap: break-word;
   position: relative;
-}
-
-@media (min-width: 640px) {
-  .chat-bubble-left {
-    max-width: 320px;
-    padding: 10px 14px;
-  }
+  margin-bottom: 2px;
 }
 
 .chat-bubble-right {
@@ -137,9 +132,65 @@
   max-width: calc(100vw - 120px);
   word-wrap: break-word;
   position: relative;
+  margin-bottom: 2px;
+}
+
+/* 연속 메시지 - 첫 번째 (위쪽) */
+.chat-bubble-left.first {
+  border-radius: 16px 16px 16px 4px;
+  margin-bottom: 1px;
+}
+
+.chat-bubble-right.first {
+  border-radius: 16px 16px 4px 16px;
+  margin-bottom: 1px;
+}
+
+/* 연속 메시지 - 중간 */
+.chat-bubble-left.middle {
+  border-radius: 16px 4px 4px 4px;
+  margin-bottom: 1px;
+}
+
+.chat-bubble-right.middle {
+  border-radius: 4px 16px 4px 4px;
+  margin-bottom: 1px;
+}
+
+/* 연속 메시지 - 마지막 (아래쪽) */
+.chat-bubble-left.last {
+  border-radius: 4px 16px 16px 4px;
+  margin-bottom: 2px;
+}
+
+.chat-bubble-right.last {
+  border-radius: 4px 16px 4px 16px;
+  margin-bottom: 2px;
+}
+
+/* 연속 메시지가 2개일 때 */
+.chat-bubble-left.first-of-two {
+  border-radius: 16px 16px 4px 4px;
+  margin-bottom: 1px;
+}
+
+.chat-bubble-right.first-of-two {
+  border-radius: 16px 16px 4px 4px;
+  margin-bottom: 1px;
+}
+
+.chat-bubble-left.last-of-two {
+  border-radius: 4px 16px 16px 4px;
+  margin-bottom: 2px;
+}
+
+.chat-bubble-right.last-of-two {
+  border-radius: 4px 16px 4px 16px;
+  margin-bottom: 2px;
 }
 
 @media (min-width: 640px) {
+  .chat-bubble-left,
   .chat-bubble-right {
     max-width: 320px;
     padding: 10px 14px;
@@ -154,6 +205,15 @@
 .dark .chat-bubble-right {
   background: #2563eb;
   color: white;
+}
+
+/* 메시지 간격 조정 */
+.message-group {
+  margin-bottom: 8px; /* 다른 사용자 메시지와의 간격 */
+}
+
+.message-group.same-user {
+  margin-bottom: 2px; /* 같은 사용자의 연속 메시지 간격 */
 }
 
 /* 메시지 입력 */
