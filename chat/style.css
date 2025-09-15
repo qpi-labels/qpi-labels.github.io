@@ -226,7 +226,7 @@
   flex: 1;
   padding: 10px 12px;
   border: 1px solid #d1d5db;
-  border-radius: 50rem;
+  border-radius: 24px;
   background: #ffffff;
   color: #111827;
   font-size: 14px;
@@ -423,4 +423,71 @@
 .markdown-body ol {
   list-style: decimal;
   margin-left: 1.2em;
+}
+
+/* style.css 파일 맨 아래에 추가 */
+
+/* 답장 미리보기 (말풍선 안) */
+.reply-preview {
+  padding: 6px 8px;
+  margin: -2px -4px 6px -4px;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-left: 3px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.reply-preview:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+.dark .reply-preview {
+  background-color: rgba(255, 255, 255, 0.07);
+  border-left-color: rgba(255, 255, 255, 0.3);
+}
+.dark .reply-preview:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 답장 미리보기 (입력창 위) */
+.reply-input-preview {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+}
+.dark .reply-input-preview {
+  border-bottom-color: #374151;
+  background-color: #1f2937;
+}
+
+/* 팝업 메뉴 아이템 (클래스 추가) */
+.popup-menu-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 6px 12px;
+  font-size: 14px;
+}
+.popup-menu-item:hover {
+  background-color: #f3f4f6;
+}
+.dark .popup-menu-item {
+  color: #d1d5db;
+}
+.dark .popup-menu-item:hover {
+  background-color: #374151;
+}
+.dark .popup-menu-item.text-red-500 {
+  color: #ef4444;
+}
+
+/* 메시지 하이라이트 효과 */
+@keyframes highlight-fade {
+  from { background-color: rgba(59, 130, 246, 0.2); }
+  to { background-color: transparent; }
+}
+.highlight {
+  animation: highlight-fade 1.5s ease-out;
 }
