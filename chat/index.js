@@ -386,7 +386,6 @@ function ChatApp() {
       }));
 
       setMessages(parsedMessages);
-      console.log(parsedMessages);
       setIsLoading(false);
       setLastReload(getSeoulNow());
     } catch (error) {
