@@ -386,6 +386,7 @@ function ChatApp() {
       }));
 
       setMessages(parsedMessages);
+      console.log(parsedMessages);
       setIsLoading(false);
       setLastReload(getSeoulNow());
     } catch (error) {
@@ -571,7 +572,7 @@ function ChatApp() {
                 );
               }
               
-              const originalMessage = message.replyToId ? messages.find(m => m.id === message.replyToId) : null;
+              const originalMessage = message.replyToId ? messages.find(m => m.id == message.replyToId) : null;
 
               const showAvatar = index === 0 || messages[index - 1]?.sub !== message.sub;
               const showTime = index === messages.length - 1 || 
