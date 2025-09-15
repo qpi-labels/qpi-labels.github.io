@@ -569,33 +569,66 @@ function ChatApp() {
                       )}
                       
                       <div className="group relative">
-                        {message.sub === -1 ? (
-                          <div className="text-xs text-gray-400 italic px-3 py-2">
-                            메시지가 삭제되었어요.
-                          </div>
-                        ) : (
-                          <div className={`${message.sub === storage.sub ? 'chat-bubble-right' : 'chat-bubble-left'}`}>
-                            {/* --- ✨ 마크다운 렌더링으로 변경된 부분 ✨ --- */}
-                            <div
-                              className="text-sm leading-relaxed break-words"
-                              dangerouslySetInnerHTML={{
-                                __html: DOMPurify.sanitize(marked.parse(message.content || ''))
-                              }}
-                            />
-                            {/* --- ✨ 변경 끝 ✨ --- */}
-                          </div>
-                        )}
-                        
-                        {/* 삭제 버튼 */}
-                        {message.sub === storage.sub && message.sub !== -1 && (
-                          <button
-                            onClick={() => deleteMessage(message.id)}
-                            className="absolute -top-6 right-0 opacity-0 group-hover:opacity-100 transition-opacity text-xs text-red-500 hover:text-red-600 px-2 py-1 rounded bg-white dark:bg-gray-800 shadow-sm"
-                          >
-                            삭제
-                          </button>
-                        )}
-                      </div>
+  {message.sub === -1 ? (
+    <div className="text-xs text-gray-400 italic px-3 py-2">
+      메시지가 삭제되었어요.
+    </div>
+  ) : (
+    <div className={`${message.sub === storage.sub ? 'chat-bubble-right' : 'chat-bubble-left'} relative`}>
+      {/* 말풍선 내용 */}
+      <div
+        className="text-sm leading-relaxed break-words"
+        dangerouslySetInnerHTML={{
+          __html: DOMPurify.sanitize(marked.parse(message.content || ''))
+        }}
+      />
+
+      {/* --- 점 3개 버튼 --- */}
+      {message.sub === storage.sub && message.sub !== -1 && (
+        <div className="absolute top-1 right-1">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setMessages(prev =>
+                prev.map(m =>
+                  m.id === message.id ? { ...m, showMenu: !m.showMenu } : { ...m, showMenu: false }
+                )
+              );
+            }}
+            className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+          >
+            ⋮
+          </button>
+
+          {/* 팝업 메뉴 */}
+          {message.showMenu && (
+            <div className="popup-menu absolute right-0 mt-1 w-24 bg-white dark:bg-gray-800 shadow-lg rounded-md z-50">
+              <button
+                onClick={() => deleteMessage(message.id)}
+                className="block w-full text-left px-3 py-1 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 text-red-500"
+              >
+                삭제
+              </button>
+              <button
+                onClick={() => alert("수정 기능 준비 중")}
+                className="block w-full text-left px-3 py-1 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                수정
+              </button>
+              <button
+                onClick={() => alert("답장 기능 준비 중")}
+                className="block w-full text-left px-3 py-1 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                답장
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )}
+</div>
+
                       
                       {showTime && (
                         <div className={`text-xs text-gray-400 mt-1 ${message.sub === storage.sub ? 'mr-1' : 'ml-1'}`}>

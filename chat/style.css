@@ -393,3 +393,13 @@
     padding: 0.5rem;
   }
 }
+
+.popup-menu {
+  min-width: 80px;
+  font-size: 13px;
+}
+.popup-menu button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
