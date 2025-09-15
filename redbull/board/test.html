@@ -284,7 +284,7 @@
           if (!newMessage.trim()) return;
           
           if (!storage.sub) {
-            setError("먼저 구글 계정으로 로그인해주세요.");
+            setError("구글 계정으로 로그인해주세요.");
             return;
           }
 
@@ -358,7 +358,7 @@
             }
           } catch (error) {
             console.error('Error:', error);
-            setError("메시지 전송에 실패했습니다.");
+            setError("메시지 전송에 실패했어요.");
             // 임시 메시지 제거
             setMessages(prev => prev.filter(m => !m.isTemp));
           } finally {
@@ -414,7 +414,7 @@
             }
           } catch (error) {
             console.error('Error:', error);
-            setError("메시지 삭제에 실패했습니다.");
+            setError("메시지 삭제에 실패했어요.");
           }
         };
 
@@ -423,7 +423,7 @@
             {/* 로그인 안내 */}
             {!isLoggedIn && (
               <div className="mx-4 mt-4 mb-2 px-4 py-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg text-blue-600 dark:text-blue-400 text-sm text-center">
-                우상단의 구글 로그인을 통해 채팅에 참여하세요
+                구글로 로그인해 채팅을 시작하세요.
               </div>
             )}
 
@@ -471,7 +471,7 @@
                             <div className="group relative">
                               {message.sub === -1 ? (
                                 <div className="text-xs text-gray-400 italic px-3 py-2">
-                                  메시지가 삭제되었습니다
+                                  메시지가 삭제되었어요.
                                 </div>
                               ) : (
                                 <div className={`${message.sub === storage.sub ? 'chat-bubble-right' : 'chat-bubble-left'}`}>
@@ -519,7 +519,7 @@
                   type="text"
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
-                  placeholder={isLoggedIn ? "메시지를 입력하세요..." : "로그인 후 메시지를 보낼 수 있습니다"}
+                  placeholder={isLoggedIn ? "메시지를 입력하세요..." : "로그인 후 메시지를 보낼 수 있어요."}
                   className="message-input"
                   disabled={isSending || !isLoggedIn}
                 />
