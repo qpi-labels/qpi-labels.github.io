@@ -5,9 +5,14 @@ const hues = {'0':270,'1':292.5,'2':315,'3':337.5,'4':0,'5':22.5,'6':45,'7':67.5
 var storage = {};
 var aborts = new Set();
 
-// JS에는 해시를 구할 수 있는 crypto.subtle.digest라는 내장 함수가 있으나, async이다. JS에서는 async를 다시 sync로 돌리는 방법이 없다.
-// ㅁㅈ도래ㅗ먀지ㅏ루ㅗㅕㅑㅁㄹㄷ지ㅜㅗㅕ탸로ㅕㅁㄴ
-// 아 혹시 있으면 나한테 말해주기 바란다.
+// 캐싱 및 최적화 변수
+let messageCache = [];
+let lastMessageId = null;
+let pollInterval = null;
+let isPolling = false;
+let pendingRequest = null;
+
+// SHA256 함수 (기존 코드 유지)
 function SHA256(data) {
     let h0 = 0x6a09e667, h1 = 0xbb67ae85, h2 = 0x3c6ef372, h3 = 0xa54ff53a,
         h4 = 0x510e527f, h5 = 0x9b05688c, h6 = 0x1f83d9ab, h7 = 0x5be0cd19,
@@ -61,7 +66,6 @@ function SHA256(data) {
                 process();
             }
             while (bp < 58) buf[bp++] = 0x00;
-            // Max number of bytes is 35,184,372,088,831
             let L = tsz * 8;
             buf[bp++] = (L / 1099511627776.) & 255;
             buf[bp++] = (L / 4294967296.) & 255;
@@ -90,15 +94,14 @@ function SHA256(data) {
     return digest().hex();
 }
 
-// 초기화 시 즉시 로그인 정보 로드
+// 로그인 관련 함수들 (기존 코드 유지)
 function initializeUserData() {
   try {
     const savedData = localStorage.getItem('chatApp_userData');
     if (savedData) {
       const userData = JSON.parse(savedData);
-      // 저장된 데이터가 24시간 이내인 경우에만 복원
       if (userData.timestamp && (Date.now() - userData.timestamp) < 24 * 60 * 60 * 1000) {
-        storage = { ...userData }; // 객체 복사
+        storage = { ...userData };
         console.log('로그인 정보 복원됨:', storage.name);
         return true;
       } else {
@@ -113,15 +116,12 @@ function initializeUserData() {
   return false;
 }
 
-// 페이지 로드 즉시 실행
 const hasStoredLogin = initializeUserData();
 
-// 로컬 스토리지에서 로그인 정보 로드 (기존 함수 유지)
 function loadUserData() {
   return initializeUserData();
 }
 
-// 로컬 스토리지에 로그인 정보 저장
 function saveUserData() {
   try {
     const dataToSave = {
@@ -135,7 +135,6 @@ function saveUserData() {
   }
 }
 
-// 로그인 UI 업데이트
 function updateLoginUI() {
   const loginButton = document.querySelector(".g_id_signin");
   const loginMockup = document.querySelector("#login-mockup");
@@ -159,26 +158,21 @@ function updateLoginUI() {
   }
 }
 
-// DOM이 완전히 로드된 후 UI 업데이트
 function initializeUI() {
   updateLoginUI();
-  // React 컴포넌트에 로그인 상태 변경 알림
   if (window.updateLoginStatus) {
     window.updateLoginStatus(!!storage.sub);
   }
 }
 
-// 로그아웃 함수
 function logout() {
   console.log('로그아웃 실행');
   storage = {};
   localStorage.removeItem('chatApp_userData');
   updateLoginUI();
-  // 페이지 새로고침으로 상태 초기화
   location.reload();
 }
 
-// Google 로그인 콜백
 async function handleCredentialResponse(response) {
   const idToken = response.credential;
   console.log('Google 로그인 시도');
@@ -199,43 +193,36 @@ async function handleCredentialResponse(response) {
     const data = await res.json();
     if (!data.success) {
       console.error(`로그인 실패: ${JSON.stringify(data)}`);
-      updateLoginUI(); // 실패 시 UI 복원
+      updateLoginUI();
       return;
     }
     
     console.log('로그인 성공:', data);
     
-    // 로그인 정보 저장
     storage.sub = data.sub;
     storage.name = data.name;
     storage.authdate = data.date;
     storage.auth = data.auth;
     storage.pfp = data.pfp;
     
-    // 로컬 스토리지에 저장
     saveUserData();
-    
-    // UI 업데이트
     updateLoginUI();
     
-    // React 컴포넌트에 상태 변경 알림
     if (window.updateLoginStatus) {
       window.updateLoginStatus(true);
     }
     
   } catch (error) {
     console.error('로그인 오류:', error);
-    updateLoginUI(); // 실패 시 UI 복원
+    updateLoginUI();
   }
 }
 
-// DOM 로드 완료 시 초기화
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM 로드 완료, UI 초기화');
   initializeUI();
 });
 
-// 페이지가 완전히 로드된 후에도 한번 더 확인
 window.addEventListener('load', () => {
   setTimeout(() => {
     console.log('페이지 로드 완료, UI 재확인');
@@ -244,34 +231,43 @@ window.addEventListener('load', () => {
 });
 
 // React 컴포넌트
-const { useEffect, useState, useRef, useMemo } = React;
+const { useEffect, useState, useRef, useMemo, useCallback } = React;
 
-// --- ✨ 마크다운 라이브러리 설정 ✨ ---
-// 링크를 새 탭에서 열도록 marked.js 렌더러 커스터마이징
+// 마크다운 렌더러 설정 (캐싱)
 const renderer = new marked.Renderer();
 renderer.link = function(href, title, text) {
   const link = marked.Renderer.prototype.link.call(this, href, title, text);
   return link.replace('<a', '<a target="_blank" rel="noopener noreferrer" ');
 };
 
-// marked.js 옵션 설정
 marked.setOptions({
   renderer: renderer,
   gfm: true,
   breaks: true,
-  headerIds: false,      // h1~h6에 자동 id 생성 방지 (UI 깨짐 방지)
-  mangle: false,         // 이메일 주소 등 안전하게 표시
+  headerIds: false,
+  mangle: false,
 });
 
+// 마크다운 렌더링 캐시
+const markdownCache = new Map();
+const renderMarkdown = (content) => {
+  if (markdownCache.has(content)) {
+    return markdownCache.get(content);
+  }
+  const rendered = DOMPurify.sanitize(marked.parse(content));
+  markdownCache.set(content, rendered);
+  return rendered;
+};
+
 function ChatApp() {
-  // 유틸리티 함수
-  const getSeoulNow = () => new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
-  const formatTime = (date) => {
+  // 유틸리티 함수들 (메모이제이션)
+  const getSeoulNow = useCallback(() => new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" })), []);
+  const formatTime = useCallback((date) => {
     const d = new Date(date);
     const hours = d.getHours().toString().padStart(2, "0");
     const minutes = d.getMinutes().toString().padStart(2, "0");
     return `${hours}:${minutes}`;
-  };
+  }, []);
 
   // 상태 관리
   const [messages, setMessages] = useState([]);
@@ -279,14 +275,13 @@ function ChatApp() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState("");
-  const [lastReload, setLastReload] = useState(new Date(0));
   const [isLoggedIn, setIsLoggedIn] = useState(hasStoredLogin);
   const [replyingToMessage, setReplyingToMessage] = useState(null);
   
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
 
-  // 전역 함수로 로그인 상태 업데이트
+  // 전역 함수 등록
   useEffect(() => {
     window.updateLoginStatus = (status) => {
       console.log('React 컴포넌트 로그인 상태 업데이트:', status);
@@ -298,7 +293,7 @@ function ChatApp() {
     };
   }, []);
 
-  // 로그인 상태 체크 (더 자주 확인)
+  // 로그인 상태 체크 (최적화: 3초마다)
   useEffect(() => {
     const checkLoginStatus = () => {
       const currentLoginState = !!storage.sub;
@@ -308,73 +303,101 @@ function ChatApp() {
       }
     };
 
-    // 초기 체크
     checkLoginStatus();
-    
-    // 주기적 체크
-    const interval = setInterval(checkLoginStatus, 1000);
+    const interval = setInterval(checkLoginStatus, 3000); // 3초로 늘림
     return () => clearInterval(interval);
   }, [isLoggedIn]);
 
-  // 자동 스크롤
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  // 자동 스크롤 (최적화)
+  const scrollToBottom = useCallback(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, []);
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages.length]);
+  }, [messages.length, scrollToBottom]);
   
-  // 입력창 높이 자동 조절
+  // 입력창 높이 자동 조절 (디바운싱)
   useEffect(() => {
-    const textarea = textareaRef.current;
-    if (textarea) {
-      textarea.style.height = 'auto';
-      const scrollHeight = textarea.scrollHeight;
-      const maxHeight = 150;
-      
-      if (scrollHeight > maxHeight) {
-        textarea.style.height = `${maxHeight}px`;
-        textarea.style.overflowY = 'auto';
-      } else {
-        textarea.style.height = `${scrollHeight}px`;
-        textarea.style.overflowY = 'hidden';
+    const timeout = setTimeout(() => {
+      const textarea = textareaRef.current;
+      if (textarea) {
+        textarea.style.height = 'auto';
+        const scrollHeight = textarea.scrollHeight;
+        const maxHeight = 150;
+        
+        if (scrollHeight > maxHeight) {
+          textarea.style.height = `${maxHeight}px`;
+          textarea.style.overflowY = 'auto';
+        } else {
+          textarea.style.height = `${scrollHeight}px`;
+          textarea.style.overflowY = 'hidden';
+        }
       }
-    }
+    }, 10);
+
+    return () => clearTimeout(timeout);
   }, [newMessage]);
 
-
-  // 1초마다 새로고침
+  // 스마트 폴링 (활성 상태에 따라 주기 조절)
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (!isSending && getSeoulNow() - lastReload > 1000) {
-        fetchMessages();
-      }
-    }, 1000);
+    let pollTimeout;
+    let isActive = true;
 
-    return () => clearInterval(interval);
-  }, [lastReload, isSending]);
+    const startPolling = () => {
+      if (!isActive) return;
+      
+      const interval = document.hidden ? 10000 : 5000; // 백그라운드일 때 더 느리게
+      
+      pollTimeout = setTimeout(async () => {
+        if (!isSending && isActive) {
+          await fetchMessages();
+        }
+        startPolling();
+      }, interval);
+    };
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden && isActive) {
+        fetchMessages(); // 포그라운드로 돌아올 때 즉시 새로고침
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    startPolling();
+
+    return () => {
+      isActive = false;
+      if (pollTimeout) clearTimeout(pollTimeout);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [isSending]);
 
   // 초기 메시지 로드
   useEffect(() => {
     fetchMessages();
   }, []);
 
-  // 메시지 가져오기
-  const fetchMessages = async () => {
-    if (aborts.size !== 0) return;
+  // 메시지 가져오기 (최적화)
+  const fetchMessages = useCallback(async () => {
+    // 중복 요청 방지
+    if (pendingRequest) {
+      return pendingRequest;
+    }
+
+    if (aborts.size > 0) return;
     
     const ctrl = new AbortController();
     const signal = ctrl.signal;
     aborts.add(ctrl);
 
-    try {
-      const response = await fetch(CHAT_URL, {
-        signal,
-        method: "GET",
-        redirect: "follow"
-      });
-      
+    pendingRequest = fetch(CHAT_URL, {
+      signal,
+      method: "GET",
+      redirect: "follow"
+    }).then(async (response) => {
       const data = await response.text();
       const parsedMessages = JSON.parse(data).map((e) => ({
         id: e[0],
@@ -385,20 +408,30 @@ function ChatApp() {
         replyToId: e[4] || null,
       }));
 
-      setMessages(parsedMessages);
+      // 메시지가 실제로 변경되었을 때만 업데이트
+      const newLastMessageId = parsedMessages.length > 0 ? parsedMessages[parsedMessages.length - 1].id : null;
+      if (newLastMessageId !== lastMessageId || parsedMessages.length !== messageCache.length) {
+        setMessages(parsedMessages);
+        messageCache.length = 0;
+        messageCache.push(...parsedMessages);
+        lastMessageId = newLastMessageId;
+      }
+
       setIsLoading(false);
-      setLastReload(getSeoulNow());
-    } catch (error) {
+    }).catch((error) => {
       if (!signal.aborted) {
         console.error('메시지 로드 오류:', error);
       }
-    } finally {
+    }).finally(() => {
       aborts.delete(ctrl);
-    }
-  };
+      pendingRequest = null;
+    });
 
-  // 메시지 전송
-  const sendMessage = async (e) => {
+    return pendingRequest;
+  }, []);
+
+  // 메시지 전송 (최적화)
+  const sendMessage = useCallback(async (e) => {
     e.preventDefault();
     
     if (!newMessage.trim() || isSending) return;
@@ -430,10 +463,12 @@ function ChatApp() {
       replyToId: replyingToMessage ? replyingToMessage.id : null,
     };
 
+    // 낙관적 업데이트
     setMessages(prev => [...prev, tempMessage]);
     setNewMessage("");
     setReplyingToMessage(null);
 
+    // 기존 요청들 중단
     for (const controller of aborts) {
       controller.abort();
     }
@@ -450,14 +485,15 @@ function ChatApp() {
 
       const result = await response.text();
       
-      // ▼▼▼ 수정된 부분 1 ▼▼▼
-      // 서버 응답을 처리하는 공통 함수
       const updateMessagesFromServer = (serverData) => {
         const serverMessages = JSON.parse(serverData).map((e) => ({
           id: e[0], sub: e[1], name: e[2], content: e[3], timestamp: e[0], 
-          replyToId: e[4] || null, // replyToId 추가
+          replyToId: e[4] || null,
         }));
         setMessages(serverMessages);
+        messageCache.length = 0;
+        messageCache.push(...serverMessages);
+        lastMessageId = serverMessages.length > 0 ? serverMessages[serverMessages.length - 1].id : null;
       };
 
       if (result.startsWith("fail")) {
@@ -470,7 +506,6 @@ function ChatApp() {
       } else {
         updateMessagesFromServer(result);
       }
-      // ▲▲▲ 여기까지 수정 ▲▲▲
 
     } catch (error) {
       console.error('메시지 전송 오류:', error);
@@ -479,10 +514,10 @@ function ChatApp() {
     } finally {
       setIsSending(false);
     }
-  };
+  }, [newMessage, isSending, replyingToMessage]);
 
-  // 메시지 삭제
-  const deleteMessage = async (messageId) => {
+  // 메시지 삭제 (최적화)
+  const deleteMessage = useCallback(async (messageId) => {
     if (!storage.sub) return;
     const data = {
       studentId: "DELETE", key: messageId, sub: storage.sub, name: storage.name,
@@ -495,14 +530,15 @@ function ChatApp() {
       });
       const result = await response.text();
 
-      // ▼▼▼ 수정된 부분 2 ▼▼▼
-      // 서버 응답을 처리하는 공통 함수
       const updateMessagesFromServer = (serverData) => {
         const serverMessages = JSON.parse(serverData).map((e) => ({
           id: e[0], sub: e[1], name: e[2], content: e[3], timestamp: e[0], 
-          replyToId: e[4] || null, // replyToId 추가
+          replyToId: e[4] || null,
         }));
         setMessages(serverMessages);
+        messageCache.length = 0;
+        messageCache.push(...serverMessages);
+        lastMessageId = serverMessages.length > 0 ? serverMessages[serverMessages.length - 1].id : null;
       };
 
       if (result.startsWith("fail")) {
@@ -512,30 +548,29 @@ function ChatApp() {
       } else {
         updateMessagesFromServer(result);
       }
-      // ▲▲▲ 여기까지 수정 ▲▲▲
 
     } catch (error) {
       console.error('메시지 삭제 오류:', error);
       setError("메시지 삭제에 실패했어요.");
     }
-  };
+  }, []);
   
   // 키보드 입력 핸들러
-  const handleKeyDown = (e) => {
+  const handleKeyDown = useCallback((e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendMessage(e);
     }
-  };
+  }, [sendMessage]);
 
   // 답장할 메시지 설정
-  const handleSetReply = (message) => {
+  const handleSetReply = useCallback((message) => {
     setReplyingToMessage(message);
     textareaRef.current?.focus();
-  };
+  }, []);
 
   // 원본 메시지로 스크롤
-  const scrollToMessage = (messageId) => {
+  const scrollToMessage = useCallback((messageId) => {
     const element = document.getElementById(`message-${messageId}`);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -544,8 +579,107 @@ function ChatApp() {
         element.classList.remove('highlight');
       }, 1500);
     }
-  };
+  }, []);
 
+  // 메시지 렌더링 최적화
+  const renderMessage = useCallback((message, index) => {
+    if (message.sub === "-1") {
+      return (
+        <div key={message.id} className="text-center my-2">
+          <span className="inline-block bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-xs rounded-full px-3 py-1">
+            삭제된 메시지입니다.
+          </span>
+        </div>
+      );
+    }
+    
+    const originalMessage = message.replyToId ? messages.find(m => m.id == message.replyToId) : null;
+    const showAvatar = index === 0 || messages[index - 1]?.sub !== message.sub;
+    const showTime = index === messages.length - 1 || 
+      messages[index + 1]?.sub !== message.sub ||
+      (formatTime(messages[index + 1]?.timestamp) != formatTime(message.timestamp))
+    
+    return (
+      <div key={message.id} id={`message-${message.id}`}>
+        <div className={`flex gap-2 ${message.sub === storage.sub ? 'flex-row-reverse' : 'flex-row'} ${message.isTemp ? 'opacity-60' : ''}`}>
+          <div className={`flex-shrink-0 ${showAvatar ? '' : 'invisible'}`}>
+            {message.sub !== storage.sub && (
+              <div className={`user-avatar`} style={{ "--hue": hues[SHA256(message.sub+"salt1")[0]]}}>
+                {message.name?.charAt(0)?.toUpperCase() || '?'}
+              </div>
+            )}
+          </div>
+          
+          <div className={`flex flex-col flex-message ${message.sub === storage.sub ? 'items-end' : 'items-start'}`}>
+            {showAvatar && message.sub !== storage.sub && (
+              <div className="text-xs text-gray-500 dark:text-gray-400 mb-1 ml-1">
+                {message.name}
+              </div>
+            )}
+            
+            <div className="group relative">
+              <div className={message.sub === storage.sub ? 'chat-bubble-right' : 'chat-bubble-left'}>
+                {originalMessage && (
+                  <div
+                    className="reply-preview"
+                    onClick={() => scrollToMessage(originalMessage.id)}
+                  >
+                    <div className="font-semibold text-xs">{originalMessage.name}</div>
+                    <div className="text-xs opacity-80 truncate">{originalMessage.content}</div>
+                  </div>
+                )}
+                <div
+                  className="markdown-body"
+                  dangerouslySetInnerHTML={{
+                    __html: renderMarkdown(message.content)
+                  }}
+                />
+              </div>
+
+              {message.sub !== -1 && (
+                <div className={`absolute top-1 ${message.sub === storage.sub ? 'right-1' : 'left-1'}`}>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setMessages(prev =>
+                        prev.map(m =>
+                          m.id === message.id ? { ...m, showMenu: !m.showMenu } : { ...m, showMenu: false }
+                        )
+                      );
+                    }}
+                    className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                  >⋮</button>
+
+                  {message.showMenu && (
+                    <div className={`popup-menu absolute mt-1 w-28 rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 z-50 ${message.sub === storage.sub ? 'right-0' : 'left-0'}`}>
+                      {message.sub === storage.sub && (
+                        <>
+                          <button onClick={() => deleteMessage(message.id)} className="popup-menu-item text-red-500">삭제</button>
+                          <button onClick={() => alert("수정 기능 준비 중")} className="popup-menu-item">수정</button>
+                        </>
+                      )}
+                      <button onClick={() => handleSetReply(message)} className="popup-menu-item">답장</button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+            
+            {showTime && (
+              <div className={`text-xs text-gray-400 mt-1 ${message.sub === storage.sub ? 'mr-1' : 'ml-1'}`}>
+                {formatTime(message.timestamp)}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }, [messages, formatTime, scrollToMessage, deleteMessage, handleSetReply]);
+
+  // 메모이제이션된 메시지 리스트
+  const memoizedMessages = useMemo(() => {
+    return messages.map(renderMessage);
+  }, [messages, renderMessage]);
 
   // 렌더링
   return (
@@ -572,100 +706,7 @@ function ChatApp() {
           </div>
         ) : (
           <div className="space-y-3">
-            {messages.map((message, index) => {
-              if (message.sub === "-1") {
-                return (
-                  <div key={message.id} className="text-center my-2">
-                    <span className="inline-block bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-xs rounded-full px-3 py-1">
-                      삭제된 메시지입니다.
-                    </span>
-                  </div>
-                );
-              }
-              
-              const originalMessage = message.replyToId ? messages.find(m => m.id == message.replyToId) : null;
-
-              const showAvatar = index === 0 || messages[index - 1]?.sub !== message.sub;
-              const showTime = index === messages.length - 1 || 
-                messages[index + 1]?.sub !== message.sub ||
-                (formatTime(messages[index + 1]?.timestamp) != formatTime(message.timestamp))
-              
-              return (
-                <div key={message.id} id={`message-${message.id}`}>
-                  <div className={`flex gap-2 ${message.sub === storage.sub ? 'flex-row-reverse' : 'flex-row'} ${message.isTemp ? 'opacity-60' : ''}`}>
-                    <div className={`flex-shrink-0 ${showAvatar ? '' : 'invisible'}`}>
-                      {message.sub !== storage.sub && (
-                        <div className={`user-avatar`} style={{ "--hue": hues[SHA256(message.sub+"salt1")[0]]}}>
-                          {message.name?.charAt(0)?.toUpperCase() || '?'}
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div className={`flex flex-col flex-message ${message.sub === storage.sub ? 'items-end' : 'items-start'}`}>
-                      {showAvatar && message.sub !== storage.sub && (
-                        <div className="text-xs text-gray-500 dark:text-gray-400 mb-1 ml-1">
-                          {message.name}
-                        </div>
-                      )}
-                      
-                      <div className="group relative">
-                        <div className={message.sub === storage.sub ? 'chat-bubble-right' : 'chat-bubble-left'}>
-                          {originalMessage && (
-                            <div
-                              className="reply-preview"
-                              onClick={() => scrollToMessage(originalMessage.id)}
-                            >
-                              <div className="font-semibold text-xs">{originalMessage.name}</div>
-                              <div className="text-xs opacity-80 truncate">{originalMessage.content}</div>
-                            </div>
-                          )}
-                          <div
-                            className="markdown-body"
-                            dangerouslySetInnerHTML={{
-                              __html: DOMPurify.sanitize(marked.parse(message.content))
-                            }}
-                          />
-                        </div>
-
-                        {message.sub !== -1 && (
-                          <div className={`absolute top-1 ${message.sub === storage.sub ? 'right-1' : 'left-1'}`}>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setMessages(prev =>
-                                  prev.map(m =>
-                                    m.id === message.id ? { ...m, showMenu: !m.showMenu } : { ...m, showMenu: false }
-                                  )
-                                );
-                              }}
-                              className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                            >⋮</button>
-
-                            {message.showMenu && (
-                              <div className={`popup-menu absolute mt-1 w-28 rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 z-50 ${message.sub === storage.sub ? 'right-0' : 'left-0'}`}>
-                                {message.sub === storage.sub && (
-                                  <>
-                                    <button onClick={() => deleteMessage(message.id)} className="popup-menu-item text-red-500">삭제</button>
-                                    <button onClick={() => alert("수정 기능 준비 중")} className="popup-menu-item">수정</button>
-                                  </>
-                                )}
-                                <button onClick={() => handleSetReply(message)} className="popup-menu-item">답장</button>
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                      
-                      {showTime && (
-                        <div className={`text-xs text-gray-400 mt-1 ${message.sub === storage.sub ? 'mr-1' : 'ml-1'}`}>
-                          {formatTime(message.timestamp)}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+            {memoizedMessages}
           </div>
         )}
         <div ref={messagesEndRef} />
@@ -692,12 +733,21 @@ function ChatApp() {
         <div className="px-3 sm:px-4 py-3">
           <form onSubmit={sendMessage} className="flex items-center gap-2 sm:gap-3">
             <textarea
-              ref={textareaRef} value={newMessage} onChange={(e) => setNewMessage(e.target.value)}
-              onKeyDown={handleKeyDown} placeholder={isLoggedIn ? "메시지를 입력하세요..." : "로그인 후 메시지를 보낼 수 있어요."}
-              className="message-input" disabled={!isLoggedIn} maxLength="500" rows="1" style={{ resize: 'none' }}
+              ref={textareaRef} 
+              value={newMessage} 
+              onChange={(e) => setNewMessage(e.target.value)}
+              onKeyDown={handleKeyDown} 
+              placeholder={isLoggedIn ? "메시지를 입력하세요..." : "로그인 후 메시지를 보낼 수 있어요."}
+              className="message-input" 
+              disabled={!isLoggedIn} 
+              maxLength="500" 
+              rows="1" 
+              style={{ resize: 'none' }}
             />
             <button type="submit" className="send-button" disabled={isSending || !newMessage.trim() || !isLoggedIn}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2,21L23,12L2,3V10L17,12L2,14V21Z" /></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
+              </svg>
             </button>
           </form>
         </div>
