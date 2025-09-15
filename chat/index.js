@@ -570,6 +570,17 @@ function ChatApp() {
                       
                       {/* ▼▼▼ 여기가 수정된 부분입니다 ▼▼▼ */}
                       <div className="group relative">
+                        {/* 말풍선 스타일 적용 */}
+                        <div className={message.sub === storage.sub ? 'chat-bubble-right' : 'chat-bubble-left'}>
+                          <div
+                            className="markdown-body"
+                            dangerouslySetInnerHTML={{
+                              __html: DOMPurify.sanitize(marked.parse(message.content))
+                            }}
+                          />
+                        </div>
+
+                        {/* 수정/삭제 메뉴 버튼 */}
                         {message.sub === storage.sub && message.sub !== -1 && (
                           <div className="absolute top-1 right-1">
                             <button
@@ -610,14 +621,9 @@ function ChatApp() {
                             )}
                           </div>
                         )}
-                        <div
-                          className="markdown-body"
-                          dangerouslySetInnerHTML={{
-                            __html: DOMPurify.sanitize(marked.parse(message.content))
-                          }}
-                        />
                       </div>
                       
+                      {/* 시간 표시 */}
                       {showTime && (
                         <div className={`text-xs text-gray-400 mt-1 ${message.sub === storage.sub ? 'mr-1' : 'ml-1'}`}>
                           {formatTime(message.timestamp)}
