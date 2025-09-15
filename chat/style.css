@@ -394,9 +394,10 @@
   }
 }
 
+
 .popup-menu {
-  min-width: 80px;
-  font-size: 13px;
+  min-width: 7rem;
+  font-size: 14px;
 }
 .popup-menu button {
   background: transparent;
