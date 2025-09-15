@@ -469,25 +469,6 @@ function ChatApp() {
   );
 }
 
-function updateLoginUI() {
-  if (storage.sub) {
-    // 로그인 된 상태
-    $(".g_id_signin").css("visibility", "hidden");
-    $("#login-mockup").css("display", "flex");
-    $(".logout-button").css("display", "inline-block"); // 로그아웃 버튼 표시
-    $(".pfp").css("visibility", "visible");
-    if (storage.pfp) {
-      $(".pfp").attr("src", storage.pfp);
-    }
-  } else {
-    // 로그아웃 된 상태
-    $(".g_id_signin").css("visibility", "visible");
-    $("#login-mockup").css("display", "none");
-    $(".logout-button").css("display", "none"); // 로그아웃 버튼 숨김
-    $(".pfp").css("visibility", "hidden");
-  }
-}
-
 // React 앱 렌더링
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<ChatApp />);
