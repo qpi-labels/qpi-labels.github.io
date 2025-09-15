@@ -4,27 +4,35 @@ const CHAT_URL = "https://script.google.com/macros/s/AKfycbxxXzzaUsogJ1ZwgQwbfs6
 var storage = {};
 var aborts = new Set();
 
-// 로컬 스토리지에서 로그인 정보 로드
-function loadUserData() {
+// 초기화 시 즉시 로그인 정보 로드
+function initializeUserData() {
   try {
     const savedData = localStorage.getItem('chatApp_userData');
     if (savedData) {
       const userData = JSON.parse(savedData);
       // 저장된 데이터가 24시간 이내인 경우에만 복원
       if (userData.timestamp && (Date.now() - userData.timestamp) < 24 * 60 * 60 * 1000) {
-        storage = userData;
-        updateLoginUI();
+        storage = { ...userData }; // 객체 복사
+        console.log('로그인 정보 복원됨:', storage.name);
         return true;
       } else {
-        // 24시간이 지난 데이터는 삭제
+        console.log('저장된 로그인 정보가 만료됨');
         localStorage.removeItem('chatApp_userData');
       }
     }
   } catch (error) {
-    console.error('Failed to load user data:', error);
+    console.error('로그인 정보 로드 실패:', error);
     localStorage.removeItem('chatApp_userData');
   }
   return false;
+}
+
+// 페이지 로드 즉시 실행
+const hasStoredLogin = initializeUserData();
+
+// 로컬 스토리지에서 로그인 정보 로드 (기존 함수 유지)
+function loadUserData() {
+  return initializeUserData();
 }
 
 // 로컬 스토리지에 로그인 정보 저장
@@ -35,29 +43,48 @@ function saveUserData() {
       timestamp: Date.now()
     };
     localStorage.setItem('chatApp_userData', JSON.stringify(dataToSave));
+    console.log('로그인 정보 저장됨:', storage.name);
   } catch (error) {
-    console.error('Failed to save user data:', error);
+    console.error('로그인 정보 저장 실패:', error);
   }
 }
 
 // 로그인 UI 업데이트
 function updateLoginUI() {
+  const loginButton = document.querySelector(".g_id_signin");
+  const loginMockup = document.querySelector("#login-mockup");
+  const pfpImg = document.querySelector(".pfp");
+  
   if (storage.sub) {
-    $(".g_id_signin").css("visibility", "hidden");
-    $("#login-mockup").css("display", "flex");
-    $(".pfp").css("visibility", "visible");
-    if (storage.pfp) {
-      $(".pfp").attr("src", storage.pfp);
+    console.log('로그인 상태로 UI 업데이트');
+    if (loginButton) loginButton.style.visibility = "hidden";
+    if (loginMockup) loginMockup.style.display = "flex";
+    if (pfpImg) {
+      pfpImg.style.visibility = "visible";
+      if (storage.pfp) {
+        pfpImg.src = storage.pfp;
+      }
     }
   } else {
-    $(".g_id_signin").css("visibility", "visible");
-    $("#login-mockup").css("display", "none");
-    $(".pfp").css("visibility", "hidden");
+    console.log('로그아웃 상태로 UI 업데이트');
+    if (loginButton) loginButton.style.visibility = "visible";
+    if (loginMockup) loginMockup.style.display = "none";
+    if (pfpImg) pfpImg.style.visibility = "hidden";
+  }
+}
+
+// DOM이 완전히 로드된 후 UI 업데이트
+function initializeUI() {
+  updateLoginUI();
+  // React 컴포넌트에 로그인 상태 변경 알림
+  if (window.updateLoginStatus) {
+    window.updateLoginStatus(!!storage.sub);
   }
 }
 
 // 로그아웃 함수
 function logout() {
+  console.log('로그아웃 실행');
   storage = {};
   localStorage.removeItem('chatApp_userData');
   updateLoginUI();
@@ -68,8 +95,13 @@ function logout() {
 // Google 로그인 콜백
 async function handleCredentialResponse(response) {
   const idToken = response.credential;
-  $(".g_id_signin").css("visibility", "hidden");
-  $("#login-mockup").css("display", "flex");
+  console.log('Google 로그인 시도');
+  
+  const loginButton = document.querySelector(".g_id_signin");
+  const loginMockup = document.querySelector("#login-mockup");
+  
+  if (loginButton) loginButton.style.visibility = "hidden";
+  if (loginMockup) loginMockup.style.display = "flex";
   
   try {
     const res = await fetch(AUTH_URL, {
@@ -80,10 +112,12 @@ async function handleCredentialResponse(response) {
 
     const data = await res.json();
     if (!data.success) {
-      console.error(`fail: ${JSON.stringify(data)}`);
+      console.error(`로그인 실패: ${JSON.stringify(data)}`);
       updateLoginUI(); // 실패 시 UI 복원
       return;
     }
+    
+    console.log('로그인 성공:', data);
     
     // 로그인 정보 저장
     storage.sub = data.sub;
@@ -98,15 +132,29 @@ async function handleCredentialResponse(response) {
     // UI 업데이트
     updateLoginUI();
     
+    // React 컴포넌트에 상태 변경 알림
+    if (window.updateLoginStatus) {
+      window.updateLoginStatus(true);
+    }
+    
   } catch (error) {
-    console.error('Login failed:', error);
+    console.error('로그인 오류:', error);
     updateLoginUI(); // 실패 시 UI 복원
   }
 }
 
-// 페이지 로드 시 저장된 로그인 정보 복원
+// DOM 로드 완료 시 초기화
 document.addEventListener('DOMContentLoaded', () => {
-  loadUserData();
+  console.log('DOM 로드 완료, UI 초기화');
+  initializeUI();
+});
+
+// 페이지가 완전히 로드된 후에도 한번 더 확인
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    console.log('페이지 로드 완료, UI 재확인');
+    initializeUI();
+  }, 100);
 });
 
 // React 컴포넌트
@@ -146,20 +194,39 @@ function ChatApp() {
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState("");
   const [lastReload, setLastReload] = useState(new Date(0));
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(hasStoredLogin); // 초기값을 저장된 로그인 상태로 설정
   
   const messagesEndRef = useRef(null);
 
-  // 로그인 상태 체크
+  // 전역 함수로 로그인 상태 업데이트
+  useEffect(() => {
+    window.updateLoginStatus = (status) => {
+      console.log('React 컴포넌트 로그인 상태 업데이트:', status);
+      setIsLoggedIn(status);
+    };
+    
+    return () => {
+      window.updateLoginStatus = null;
+    };
+  }, []);
+
+  // 로그인 상태 체크 (더 자주 확인)
   useEffect(() => {
     const checkLoginStatus = () => {
-      setIsLoggedIn(!!storage.sub);
+      const currentLoginState = !!storage.sub;
+      if (currentLoginState !== isLoggedIn) {
+        console.log('로그인 상태 변경 감지:', currentLoginState);
+        setIsLoggedIn(currentLoginState);
+      }
     };
 
+    // 초기 체크
     checkLoginStatus();
-    const interval = setInterval(checkLoginStatus, 500);
+    
+    // 주기적 체크
+    const interval = setInterval(checkLoginStatus, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isLoggedIn]);
 
   // 자동 스크롤
   const scrollToBottom = () => {
@@ -215,7 +282,7 @@ function ChatApp() {
       setLastReload(getSeoulNow());
     } catch (error) {
       if (!signal.aborted) {
-        console.error('Error:', error);
+        console.error('메시지 로드 오류:', error);
       }
     } finally {
       aborts.delete(ctrl);
@@ -302,7 +369,7 @@ function ChatApp() {
         setMessages(serverMessages);
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('메시지 전송 오류:', error);
       setError("메시지 전송에 실패했어요.");
       // 임시 메시지 제거
       setMessages(prev => prev.filter(m => !m.isTemp));
@@ -359,7 +426,7 @@ function ChatApp() {
         setMessages(serverMessages);
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('메시지 삭제 오류:', error);
       setError("메시지 삭제에 실패했어요.");
     }
   };
