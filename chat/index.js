@@ -382,7 +382,7 @@ function ChatApp() {
         name: e[2],
         content: e[3],
         timestamp: e[0],
-        replyToId: e[5] || null,
+        replyToId: e[4] || null,
       }));
 
       setMessages(parsedMessages);
@@ -455,7 +455,7 @@ function ChatApp() {
       const updateMessagesFromServer = (serverData) => {
         const serverMessages = JSON.parse(serverData).map((e) => ({
           id: e[0], sub: e[1], name: e[2], content: e[3], timestamp: e[0], 
-          replyToId: e[5] || null, // replyToId 추가
+          replyToId: e[4] || null, // replyToId 추가
         }));
         setMessages(serverMessages);
       };
@@ -500,7 +500,7 @@ function ChatApp() {
       const updateMessagesFromServer = (serverData) => {
         const serverMessages = JSON.parse(serverData).map((e) => ({
           id: e[0], sub: e[1], name: e[2], content: e[3], timestamp: e[0], 
-          replyToId: e[5] || null, // replyToId 추가
+          replyToId: e[4] || null, // replyToId 추가
         }));
         setMessages(serverMessages);
       };
@@ -583,7 +583,7 @@ function ChatApp() {
                 );
               }
               
-              const originalMessage = message.replyToId ? messages.find(m => m.id === message.replyToId) : null;
+              const originalMessage = message.replyToId ? messages.find(m => m.id == message.replyToId) : null;
 
               const showAvatar = index === 0 || messages[index - 1]?.sub !== message.sub;
               const showTime = index === messages.length - 1 || 
