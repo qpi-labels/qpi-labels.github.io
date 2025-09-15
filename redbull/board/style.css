@@ -115,7 +115,7 @@
 .chat-bubble-left {
   background: #f3f4f6;
   color: #111827;
-  padding: 4px 12px;
+  padding: 4px 8px;
   border-radius: 16px 16px 16px 4px;
   max-width: calc(100vw - 120px);
   word-wrap: break-word;
@@ -125,14 +125,14 @@
 @media (min-width: 640px) {
   .chat-bubble-left {
     max-width: 320px;
-    padding: 6px 14px;
+    padding: 6px 10px;
   }
 }
 
 .chat-bubble-right {
   background: #3b82f6;
   color: white;
-  padding: 4px 12px;
+  padding: 4px 8px;
   border-radius: 16px 16px 4px 16px;
   max-width: calc(100vw - 120px);
   word-wrap: break-word;
@@ -142,7 +142,7 @@
 @media (min-width: 640px) {
   .chat-bubble-right {
     max-width: 320px;
-    padding: 6px 14px;
+    padding: 6px 10px;
   }
 }
 
