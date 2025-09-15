@@ -54,7 +54,6 @@
 
 /* 채팅 컨테이너 */
 .chat-container {
-  height: calc(100vh - 60px);
   min-height: 500px;
 }
 
