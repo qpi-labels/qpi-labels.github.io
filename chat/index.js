@@ -450,9 +450,12 @@ function ChatApp() {
 
       const result = await response.text();
       
+      // ▼▼▼ 수정된 부분 1 ▼▼▼
+      // 서버 응답을 처리하는 공통 함수
       const updateMessagesFromServer = (serverData) => {
         const serverMessages = JSON.parse(serverData).map((e) => ({
-          id: e[0], sub: e[1], name: e[2], content: e[3], timestamp: e[0], replyToId: e[5] || null,
+          id: e[0], sub: e[1], name: e[2], content: e[3], timestamp: e[0], 
+          replyToId: e[5] || null, // replyToId 추가
         }));
         setMessages(serverMessages);
       };
@@ -467,6 +470,8 @@ function ChatApp() {
       } else {
         updateMessagesFromServer(result);
       }
+      // ▲▲▲ 여기까지 수정 ▲▲▲
+
     } catch (error) {
       console.error('메시지 전송 오류:', error);
       setError("메시지 전송에 실패했어요.");
@@ -489,12 +494,17 @@ function ChatApp() {
         body: JSON.stringify(data),
       });
       const result = await response.text();
+
+      // ▼▼▼ 수정된 부분 2 ▼▼▼
+      // 서버 응답을 처리하는 공통 함수
       const updateMessagesFromServer = (serverData) => {
         const serverMessages = JSON.parse(serverData).map((e) => ({
-          id: e[0], sub: e[1], name: e[2], content: e[3], timestamp: e[0], replyToId: e[5] || null,
+          id: e[0], sub: e[1], name: e[2], content: e[3], timestamp: e[0], 
+          replyToId: e[5] || null, // replyToId 추가
         }));
         setMessages(serverMessages);
       };
+
       if (result.startsWith("fail")) {
         const msg = result.substring(6).split("\n");
         setError(msg[0]);
@@ -502,6 +512,8 @@ function ChatApp() {
       } else {
         updateMessagesFromServer(result);
       }
+      // ▲▲▲ 여기까지 수정 ▲▲▲
+
     } catch (error) {
       console.error('메시지 삭제 오류:', error);
       setError("메시지 삭제에 실패했어요.");
@@ -571,7 +583,7 @@ function ChatApp() {
                 );
               }
               
-              const originalMessage = message.replyToId ? messages.find(m => m.id == message.replyToId) : null;
+              const originalMessage = message.replyToId ? messages.find(m => m.id === message.replyToId) : null;
 
               const showAvatar = index === 0 || messages[index - 1]?.sub !== message.sub;
               const showTime = index === messages.length - 1 || 
@@ -615,8 +627,6 @@ function ChatApp() {
                           />
                         </div>
 
-                        {/* ▼▼▼ 여기가 수정된 부분입니다 ▼▼▼ */}
-                        {/* 모든 메시지(삭제 제외)에 점 세 개 메뉴 표시 */}
                         {message.sub !== -1 && (
                           <div className={`absolute top-1 ${message.sub === storage.sub ? 'right-1' : 'left-1'}`}>
                             <button
@@ -633,20 +643,17 @@ function ChatApp() {
 
                             {message.showMenu && (
                               <div className={`popup-menu absolute mt-1 w-28 rounded-md shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 z-50 ${message.sub === storage.sub ? 'right-0' : 'left-0'}`}>
-                                {/* 내가 보낸 메시지일 경우에만 삭제, 수정 표시 */}
                                 {message.sub === storage.sub && (
                                   <>
                                     <button onClick={() => deleteMessage(message.id)} className="popup-menu-item text-red-500">삭제</button>
                                     <button onClick={() => alert("수정 기능 준비 중")} className="popup-menu-item">수정</button>
                                   </>
                                 )}
-                                {/* 모든 메시지에 답장 표시 */}
                                 <button onClick={() => handleSetReply(message)} className="popup-menu-item">답장</button>
                               </div>
                             )}
                           </div>
                         )}
-                        {/* ▲▲▲ 여기까지 수정 ▲▲▲ */}
                       </div>
                       
                       {showTime && (
