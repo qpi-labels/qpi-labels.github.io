@@ -79,8 +79,9 @@
             padding: 10px 14px;
             max-width: 70%;
             word-wrap: break-word;
-            word-break: break-word;
-            hyphens: auto;
+            word-break: normal;
+            overflow-wrap: break-word;
+            white-space: pre-wrap;
         }
         
         .chat-bubble-right {
@@ -91,8 +92,9 @@
             max-width: 70%;
             margin-left: auto;
             word-wrap: break-word;
-            word-break: break-word;
-            hyphens: auto;
+            word-break: normal;
+            overflow-wrap: break-word;
+            white-space: pre-wrap;
         }
         
         @media (prefers-color-scheme: dark) {
@@ -182,6 +184,21 @@
             font-weight: 600;
             flex-shrink: 0;
         }
+
+        .logout-button {
+            background: #ff3b30;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+        
+        .logout-button:hover {
+            background: #d70015;
+        }
     </style>
   </head>
   <body class="bg-white dark:bg-black">
@@ -216,6 +233,7 @@
               </div>
               <div id="login-mockup">
                 <img class="pfp" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVQIHWM4AwAAzgDNUwEBJAAAAABJRU5ErkJggg=="/>
+                <button class="logout-button" onclick="logout()">로그아웃</button>
               </div>
             </div>
           </div>
@@ -232,31 +250,109 @@
       const AUTH_URL = "https://script.google.com/macros/s/AKfycbwJkCkPJTg2AKKVNncedK7r--Txh9iexICytoDg6ajIpA2vYej7fv7AadCCuhRb9Qs9/exec"
       var storage = {}
 
+      // 로컬 스토리지에서 로그인 정보 로드
+      function loadUserData() {
+        try {
+          const savedData = localStorage.getItem('chatApp_userData');
+          if (savedData) {
+            const userData = JSON.parse(savedData);
+            // 저장된 데이터가 24시간 이내인 경우에만 복원
+            if (userData.timestamp && (Date.now() - userData.timestamp) < 24 * 60 * 60 * 1000) {
+              storage = userData;
+              updateLoginUI();
+              return true;
+            } else {
+              // 24시간이 지난 데이터는 삭제
+              localStorage.removeItem('chatApp_userData');
+            }
+          }
+        } catch (error) {
+          console.error('Failed to load user data:', error);
+          localStorage.removeItem('chatApp_userData');
+        }
+        return false;
+      }
+
+      // 로컬 스토리지에 로그인 정보 저장
+      function saveUserData() {
+        try {
+          const dataToSave = {
+            ...storage,
+            timestamp: Date.now()
+          };
+          localStorage.setItem('chatApp_userData', JSON.stringify(dataToSave));
+        } catch (error) {
+          console.error('Failed to save user data:', error);
+        }
+      }
+
+      // 로그인 UI 업데이트
+      function updateLoginUI() {
+        if (storage.sub) {
+          $(".g_id_signin").css("visibility", "hidden");
+          $("#login-mockup").css("display", "flex");
+          $(".pfp").css("visibility", "visible");
+          if (storage.pfp) {
+            $(".pfp").attr("src", storage.pfp);
+          }
+        } else {
+          $(".g_id_signin").css("visibility", "visible");
+          $("#login-mockup").css("display", "none");
+          $(".pfp").css("visibility", "hidden");
+        }
+      }
+
+      // 로그아웃 함수
+      function logout() {
+        storage = {};
+        localStorage.removeItem('chatApp_userData');
+        updateLoginUI();
+        // 페이지 새로고침으로 상태 초기화
+        location.reload();
+      }
+
       async function handleCredentialResponse(response) {
         const idToken = response.credential;
         $(".g_id_signin").css("visibility", "hidden");
         $("#login-mockup").css("display", "flex");
-        const res = await fetch(AUTH_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify({ idToken })
-        });
-
-        const data = await res.json();
-        if (!data.success) {
-          console.error(`fail: ${JSON.stringify(data)}`);
-          return;
-        }
+        
         try {
-          $(".pfp").css("visibility", "visible");
-          $(".pfp").attr("src",data.pfp);
-        } finally {
+          const res = await fetch(AUTH_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ idToken })
+          });
+
+          const data = await res.json();
+          if (!data.success) {
+            console.error(`fail: ${JSON.stringify(data)}`);
+            updateLoginUI(); // 실패 시 UI 복원
+            return;
+          }
+          
+          // 로그인 정보 저장
           storage.sub = data.sub;
           storage.name = data.name;
           storage.authdate = data.date;
           storage.auth = data.auth;
+          storage.pfp = data.pfp;
+          
+          // 로컬 스토리지에 저장
+          saveUserData();
+          
+          // UI 업데이트
+          updateLoginUI();
+          
+        } catch (error) {
+          console.error('Login failed:', error);
+          updateLoginUI(); // 실패 시 UI 복원
         }
       }
+
+      // 페이지 로드 시 저장된 로그인 정보 복원
+      document.addEventListener('DOMContentLoaded', () => {
+        loadUserData();
+      });
     </script>
 
     <script type="text/babel">
@@ -280,8 +376,20 @@
         const [isSending, setIsSending] = useState(false);
         const [error, setError] = useState("");
         const [lastReload, setLastReload] = useState(new Date(0));
+        const [isLoggedIn, setIsLoggedIn] = useState(false);
         
         const messagesEndRef = useRef(null);
+
+        // 로그인 상태 체크
+        useEffect(() => {
+          const checkLoginStatus = () => {
+            setIsLoggedIn(!!storage.sub);
+          };
+
+          checkLoginStatus();
+          const interval = setInterval(checkLoginStatus, 500);
+          return () => clearInterval(interval);
+        }, []);
 
         const scrollToBottom = () => {
           messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -484,6 +592,13 @@
 
         return (
           <div className="chat-container flex flex-col">
+            {/* 로그인 안내 */}
+            {!isLoggedIn && (
+              <div className="mx-4 mt-4 mb-2 px-4 py-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg text-blue-600 dark:text-blue-400 text-sm text-center">
+                💡 우상단의 구글 로그인을 통해 채팅에 참여하세요
+              </div>
+            )}
+
             {/* 채팅 메시지 영역 */}
             <div className="chat-messages flex-1 overflow-y-auto px-4 py-6">
               {isLoading ? (
@@ -493,7 +608,9 @@
               ) : messages.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-64 text-gray-400">
                   <div className="text-4xl mb-3">💬</div>
-                  <div className="text-sm">첫 메시지를 보내보세요</div>
+                  <div className="text-sm">
+                    {isLoggedIn ? "첫 메시지를 보내보세요" : "로그인 후 채팅을 시작할 수 있습니다"}
+                  </div>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -574,14 +691,14 @@
                   type="text"
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
-                  placeholder="메시지를 입력하세요..."
+                  placeholder={isLoggedIn ? "메시지를 입력하세요..." : "로그인 후 메시지를 보낼 수 있습니다"}
                   className="message-input"
-                  disabled={isSending}
+                  disabled={isSending || !isLoggedIn}
                 />
                 <button
                   type="submit"
                   className="send-button"
-                  disabled={isSending || !newMessage.trim()}
+                  disabled={isSending || !newMessage.trim() || !isLoggedIn}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
@@ -597,4 +714,4 @@
       root.render(<ChatApp />);
     </script>
   </body>
-</html>
+  </html>
