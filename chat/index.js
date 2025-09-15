@@ -283,6 +283,7 @@ function ChatApp() {
   const [isLoggedIn, setIsLoggedIn] = useState(hasStoredLogin); // 초기값을 저장된 로그인 상태로 설정
   
   const messagesEndRef = useRef(null);
+  const textareaRef = useRef(null); // 입력창 참조 추가
 
   // 전역 함수로 로그인 상태 업데이트
   useEffect(() => {
@@ -322,6 +323,25 @@ function ChatApp() {
   useEffect(() => {
     scrollToBottom();
   }, [messages.length]);
+  
+  // ▼▼▼ [추가] 입력창 높이 자동 조절 ▼▼▼
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto'; // 높이 초기화
+      const scrollHeight = textarea.scrollHeight;
+      const maxHeight = 150; // 최대 높이 (px)
+      
+      if (scrollHeight > maxHeight) {
+        textarea.style.height = `${maxHeight}px`;
+        textarea.style.overflowY = 'auto'; // 최대 높이 초과 시 스크롤바 표시
+      } else {
+        textarea.style.height = `${scrollHeight}px`;
+        textarea.style.overflowY = 'hidden'; // 최대 높이 미만 시 스크롤바 숨김
+      }
+    }
+  }, [newMessage]);
+
 
   // 1초마다 새로고침
   useEffect(() => {
@@ -379,7 +399,7 @@ function ChatApp() {
   const sendMessage = async (e) => {
     e.preventDefault();
     
-    if (!newMessage.trim()) return;
+    if (!newMessage.trim() || isSending) return;
     
     if (!storage.sub) {
       setError("구글 계정으로 로그인해주세요.");
@@ -516,6 +536,16 @@ function ChatApp() {
       setError("메시지 삭제에 실패했어요.");
     }
   };
+  
+  // ▼▼▼ [추가] 키보드 입력 핸들러 ▼▼▼
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault(); // Enter 키 기본 동작(줄 바꿈) 방지
+      sendMessage(e); // 메시지 전송
+    }
+    // Shift + Enter는 기본 동작(줄 바꿈)을 그대로 수행
+  };
+
 
   // 렌더링
   return (
@@ -568,9 +598,7 @@ function ChatApp() {
                         </div>
                       )}
                       
-                      {/* ▼▼▼ 여기가 수정된 부분입니다 ▼▼▼ */}
                       <div className="group relative">
-                        {/* 말풍선 스타일 적용 */}
                         <div className={message.sub === storage.sub ? 'chat-bubble-right' : 'chat-bubble-left'}>
                           <div
                             className="markdown-body"
@@ -580,7 +608,6 @@ function ChatApp() {
                           />
                         </div>
 
-                        {/* 수정/삭제 메뉴 버튼 */}
                         {message.sub === storage.sub && message.sub !== -1 && (
                           <div className="absolute top-1 right-1">
                             <button
@@ -623,13 +650,11 @@ function ChatApp() {
                         )}
                       </div>
                       
-                      {/* 시간 표시 */}
                       {showTime && (
                         <div className={`text-xs text-gray-400 mt-1 ${message.sub === storage.sub ? 'mr-1' : 'ml-1'}`}>
                           {formatTime(message.timestamp)}
                         </div>
                       )}
-                      {/* ▲▲▲ 여기까지가 수정된 부분입니다 ▲▲▲ */}
                     </div>
                   </div>
                 </div>
@@ -650,15 +675,20 @@ function ChatApp() {
       {/* 메시지 입력 영역 */}
       <div className="sticky bottom-0 mt-auto w-full px-3 sm:px-4 py-3 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-black">
         <form onSubmit={sendMessage} className="flex items-center gap-2 sm:gap-3">
-          <input
-            type="text"
+          {/* ▼▼▼ [수정] input을 textarea로 변경하고 관련 핸들러 추가 ▼▼▼ */}
+          <textarea
+            ref={textareaRef}
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
             placeholder={isLoggedIn ? "메시지를 입력하세요..." : "로그인 후 메시지를 보낼 수 있어요."}
             className="message-input"
             disabled={!isLoggedIn}
             maxLength="500"
+            rows="1"
+            style={{ resize: 'none' }}
           />
+          {/* ▲▲▲ 여기까지 수정 ▲▲▲ */}
           <button
             type="submit"
             className="send-button"
