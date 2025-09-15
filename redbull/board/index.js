@@ -542,7 +542,7 @@ function ChatApp() {
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder={isLoggedIn ? "메시지를 입력하세요..." : "로그인 후 메시지를 보낼 수 있어요."}
             className="message-input"
-            disabled={isSending || !isLoggedIn}
+            disabled={!isLoggedIn}
             maxLength="500"
           />
           <button
