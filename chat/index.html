@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark:bg-[#232323]">
+  <head>
+    <meta charset="UTF-8">
+    <title>쿼터파이 채팅</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/logo.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/logo_dark.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" type="image/x-icon" href="/logo.ico" media="(prefers-color-scheme: light)">
+    <meta property="og:url" content="https://qpi.kro.kr/">
+    <meta property="og:title" content="쿼터파이">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="/logo.png">
+    <meta property="og:description" content="쿼터파이 - 웹개발 동아리">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React 18 UMD -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel for in-browser JSX transform -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- JQuery + Google login -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+
+    <script type="text/babel" src="index.js"></script>
+  </head>
+  
+<body>
+    <script>
+      function callback(response) {
+        return handleCredentialResponse(response);
+      }
+    </script>
+    <div class="nav-wrapper">
+        <nav class="nav">
+          <a href="/" class="nav-logo en">QPI Chat</a>
+            <div class="nav-links">
+              <div id="g_id_onload"
+                data-client_id="1079132266010-4r209j6rtmohatvtf74cksqcq7cn4uv0.apps.googleusercontent.com"
+                data-context="use"
+                data-ux_mode="popup"
+                data-callback="callback"
+                data-auto_prompt="false">
+              </div>
+              <div id="login-button" class="g_id_signin"
+                  data-type="icon"
+                  data-shape="circle"
+                  data-theme="outline"
+                  data-text="continue_with"
+                  data-size="medium"
+                  data-width="200">
+              </div>
+              <div id="login-mockup">
+                <img class="pfp" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVQIHWM4AwAAzgDNUwEBJAAAAABJRU5ErkJggg=="/>
+              </div>
+              <button class="logout-button text-xs sm:text-sm" onclick="logout()">로그아웃</button>
+            </div>
+        </nav>
+    </div>
+    
+    <div class="max-w-2xl mx-auto h-screen flex flex-col pt-[44px]"> <!-- 헤더 높이만큼 패딩 추가 -->
+      <div id="root" class="flex-1 flex flex-col"></div>
+    </div>
+</body>
+</html>
