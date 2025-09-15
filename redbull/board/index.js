@@ -112,6 +112,23 @@ document.addEventListener('DOMContentLoaded', () => {
 // React 컴포넌트
 const { useEffect, useState, useRef } = React;
 
+// --- ✨ 마크다운 라이브러리 설정 ✨ ---
+// 링크를 새 탭에서 열도록 marked.js 렌더러 커스터마이징
+const renderer = new marked.Renderer();
+renderer.link = function(href, title, text) {
+  const link = marked.Renderer.prototype.link.call(this, href, title, text);
+  return link.replace('<a', '<a target="_blank" rel="noopener noreferrer" ');
+};
+
+// marked.js 옵션 설정
+marked.setOptions({
+  renderer: renderer,
+  gfm: true, // GitHub Flavored Markdown 사용
+  breaks: true, // 엔터(개행)를 <br> 태그로 변환
+  sanitize: false // DOMPurify를 사용할 것이므로 자체 sanitize 기능은 끔
+});
+// --- ✨ 설정 끝 ✨ ---
+
 function ChatApp() {
   // 유틸리티 함수
   const getSeoulNow = () => new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
@@ -405,7 +422,14 @@ function ChatApp() {
                           </div>
                         ) : (
                           <div className={`${message.sub === storage.sub ? 'chat-bubble-right' : 'chat-bubble-left'}`}>
-                            <span className="text-sm leading-relaxed break-words">{message.content.replace(/\n/g, '')}</span>
+                            {/* --- ✨ 마크다운 렌더링으로 변경된 부분 ✨ --- */}
+                            <div
+                              className="text-sm leading-relaxed break-words"
+                              dangerouslySetInnerHTML={{
+                                __html: DOMPurify.sanitize(marked.parse(message.content || ''))
+                              }}
+                            />
+                            {/* --- ✨ 변경 끝 ✨ --- */}
                           </div>
                         )}
                         
