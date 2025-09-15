@@ -554,7 +554,7 @@ function ChatApp() {
                     {/* 아바타 */}
                     <div className={`flex-shrink-0 ${showAvatar ? '' : 'invisible'}`}>
                       {message.sub !== storage.sub && (
-                        <div className="user-avatar" style={{ "--hue": hues[SHA256(message.name)[0]]}}>
+                        <div className={`user-avatar ${message.sub=="-1" ? 'deleted' : ''}`} style={{ "--hue": hues[SHA256(message.sub+"salt1")[0]]}}>
                           {message.name?.charAt(0)?.toUpperCase() || '?'}
                         </div>
                       )}
