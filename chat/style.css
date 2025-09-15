@@ -93,7 +93,8 @@
 .user-avatar {
   width: 28px;
   height: 28px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --hue: 270;
+  background: linear-gradient(135deg, oklch(62.707% 0.16392 var(--hue)) 0%, oklch(50.118% 0.1385 calc(var(--hue) + 30)) 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -102,6 +103,10 @@
   font-size: 12px;
   font-weight: 600;
   flex-shrink: 0;
+}
+
+.user-avatar.deleted {
+  background: linear-gradient(135deg, oklch(62.707% 0 0) 0%, oklch(50.118% 0 0) 100%);
 }
 
 @media (min-width: 640px) {
