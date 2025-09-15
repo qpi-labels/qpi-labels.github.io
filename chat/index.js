@@ -360,7 +360,7 @@ function ChatApp() {
     fetchMessages();
   }, []);
 
-  // 메시지 가져오기 (e[5]를 replyToId로 파싱)
+  // 메시지 가져오기 (e[4]를 replyToId로 파싱)
   const fetchMessages = async () => {
     if (aborts.size !== 0) return;
     
@@ -382,7 +382,7 @@ function ChatApp() {
         name: e[2],
         content: e[3],
         timestamp: e[0],
-        replyToId: e[5] || null, // replyToId 필드 추가
+        replyToId: e[4] || null, // replyToId 필드 추가
       }));
 
       setMessages(parsedMessages);
@@ -454,7 +454,7 @@ function ChatApp() {
       
       const updateMessagesFromServer = (serverData) => {
         const serverMessages = JSON.parse(serverData).map((e) => ({
-          id: e[0], sub: e[1], name: e[2], content: e[3], timestamp: e[0], replyToId: e[5] || null,
+          id: e[0], sub: e[1], name: e[2], content: e[3], timestamp: e[0], replyToId: e[4] || null,
         }));
         setMessages(serverMessages);
       };
@@ -494,7 +494,7 @@ function ChatApp() {
       const result = await response.text();
       const updateMessagesFromServer = (serverData) => {
         const serverMessages = JSON.parse(serverData).map((e) => ({
-          id: e[0], sub: e[1], name: e[2], content: e[3], timestamp: e[0], replyToId: e[5] || null,
+          id: e[0], sub: e[1], name: e[2], content: e[3], timestamp: e[0], replyToId: e[4] || null,
         }));
         setMessages(serverMessages);
       };
