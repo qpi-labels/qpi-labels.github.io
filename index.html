@@ -37,7 +37,7 @@
 </head>
 
 <body>
-    <!-- Navigation -->
+    <!-- 항해 -->
     <div class="nav-wrapper">
         <nav class="nav">
             <a href="/" class="nav-logo en">QPI</a>
@@ -50,7 +50,7 @@
     </div>
 
     <main>
-        <!-- Hero Section -->
+        <!-- 영웅 부분 -->
         <section class="hero">
             <div class="hero-content">
                 <div class="hero-eyebrow typography-caption2 en">QPI</div>
@@ -63,7 +63,7 @@
             </div>
         </section>
 
-        <!-- Product Grid -->
+        <!-- 생성물 칸칸 -->
         <section class="product-grid">
             <div class="grid-container">
                 <div class="grid">
@@ -106,7 +106,7 @@
             </div>
         </section>
 
-        <!-- About Section -->
+        <!-- 부분에 관하여 -->
         <section class="about-section">
             <div class="about-container">
                 <h2 class="about-headline typography-title3 fade-up">함께 만들어가는 미래</h2>
@@ -117,7 +117,7 @@
             </div>
         </section>
 
-        <!-- Footer -->
+        <!-- 발 꼬랑지 -->
         <footer class="footer">
             <div class="footer-content">
                 <p class="footer-text typography-footnote">2025 ㅅㅂㅈㅇ, 모든 권리 보유</p>
@@ -130,7 +130,7 @@
     </main>
 
     <script>
-        // Intersection Observer for scroll animations
+        // 위아래 왔다갔다 움직임 교차 관찰자
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -144,12 +144,12 @@
             });
         }, observerOptions);
 
-        // Observe all elements with fade-up class and grid-item class
+        // 나타나고, 칸 객체인 모든 원소 관찰
         document.querySelectorAll('.fade-up, .grid-item').forEach(el => {
             observer.observe(el);
         });
 
-        // Smooth scrolling for anchor links
+        // 고정 연결을 위한 부드러운 위아래 왔다갔다 움직임
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
