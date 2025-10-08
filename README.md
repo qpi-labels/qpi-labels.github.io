@@ -6,100 +6,100 @@
 
 + 사용된 색상은 다음과 같습니다.
 
-  |  | 라이트 모드  | 다크 모드 |
+  |  | 빛 상태  | 어둠 상테 |
   | --- | --- | --- |
-  | bg | `rgb(250,250,250)` $\textsf{\color{rgb(250,250,250)}{■}}$ | `rgb(35,35,35)` $\textsf{\color{rgb(35,35,35)}{■}}$ |
-  | text | `rgb(28,28,30)` $\textsf{\color{rgb(28,28,30)}{■}}$ | `rgb(250,250,250)` $\textsf{\color{rgb(250,250,250)}{■}}$ |
-  | gray1 | `rgb(229,229,234)` $\textsf{\color{rgb(229,229,234)}{■}}$ | `rgb(58,58,60)` $\textsf{\color{rgb(58,58,60)}{■}}$ |
-  | gray2 | `rgb(199,199,204)` $\textsf{\color{rgb(199,199,204)}{■}}$ | `rgb(72,72,74)` $\textsf{\color{rgb(72,72,74)}{■}}$ |
-  | gray3 | `rgb(174,174,178)` $\textsf{\color{rgb(174,174,178)}{■}}$ | `rgb(99,99,102)` $\textsf{\color{rgb(99,99,102)}{■}}$ |
-  | gray4 | `rgb(142,142,147)` $\textsf{\color{rgb(142,142,147)}{■}}$ | `rgb(142,142,147)` $\textsf{\color{rgb(142,142,147)}{■}}$ |
-  | gray5 | `rgb(99,99,102)` $\textsf{\color{rgb(99,99,102)}{■}}$ | `rgb(174,174,178)` $\textsf{\color{rgb(174,174,178)}{■}}$ |
-  | gray6 | `rgb(72,72,74)` $\textsf{\color{rgb(72,72,74)}{■}}$ | `rgb(199,199,204)` $\textsf{\color{rgb(199,199,204)}{■}}$ |
-  | gray7 | `rgb(58,58,60)` $\textsf{\color{rgb(58,58,60)}{■}}$ | `rgb(229,229,234)` $\textsf{\color{rgb(229,229,234)}{■}}$ |
-  | blue | `rgb(0,122,255)` $\textsf{\color{rgb(0,122,255)}{■}}$ | `rgb(10,132,255)` $\textsf{\color{rgb(10,132,255)}{■}}$ |
-  | blue-active | `rgb(0,150,255)` $\textsf{\color{rgb(0,150,255)}{■}}$ | `rgb(10,160,255)` $\textsf{\color{rgb(10,160,255)}{■}}$ |
+  | 배경 | `빨초파(250,250,250)` $\textsf{\color{rgb(250,250,250)}{■}}$ | `빨초파(35,35,35)` $\textsf{\color{rgb(35,35,35)}{■}}$ |
+  | 문자 | `빨초파(28,28,30)` $\textsf{\color{rgb(28,28,30)}{■}}$ | `빨초파(250,250,250)` $\textsf{\color{rgb(250,250,250)}{■}}$ |
+  | 회색1 | `빨초파(229,229,234)` $\textsf{\color{rgb(229,229,234)}{■}}$ | `빨초파(58,58,60)` $\textsf{\color{rgb(58,58,60)}{■}}$ |
+  | 회색2 | `빨초파(199,199,204)` $\textsf{\color{rgb(199,199,204)}{■}}$ | `빨초파(72,72,74)` $\textsf{\color{rgb(72,72,74)}{■}}$ |
+  | 회색3 | `빨초파(174,174,178)` $\textsf{\color{rgb(174,174,178)}{■}}$ | `빨초파(99,99,102)` $\textsf{\color{rgb(99,99,102)}{■}}$ |
+  | 회색4 | `빨초파(142,142,147)` $\textsf{\color{rgb(142,142,147)}{■}}$ | `빨초파(142,142,147)` $\textsf{\color{rgb(142,142,147)}{■}}$ |
+  | 회색5 | `빨초파(99,99,102)` $\textsf{\color{rgb(99,99,102)}{■}}$ | `빨초파(174,174,178)` $\textsf{\color{rgb(174,174,178)}{■}}$ |
+  | 회색6 | `빨초파(72,72,74)` $\textsf{\color{rgb(72,72,74)}{■}}$ | `빨초파(199,199,204)` $\textsf{\color{rgb(199,199,204)}{■}}$ |
+  | 회색7 | `빨초파(58,58,60)` $\textsf{\color{rgb(58,58,60)}{■}}$ | `빨초파(229,229,234)` $\textsf{\color{rgb(229,229,234)}{■}}$ |
+  | 파랑 | `빨초파(0,122,255)` $\textsf{\color{rgb(0,122,255)}{■}}$ | `빨초파(10,132,255)` $\textsf{\color{rgb(10,132,255)}{■}}$ |
+  | 파랑-활성 | `빨초파(0,150,255)` $\textsf{\color{rgb(0,150,255)}{■}}$ | `빨초파(10,160,255)` $\textsf{\color{rgb(10,160,255)}{■}}$ |
 
   $\textsf{\color{rgb(250,250,250)}{■}}$ $\textsf{\color{rgb(28,28,30)}{■}}$ $\textsf{\color{rgb(229,229,234)}{■}}$ $\textsf{\color{rgb(199,199,204)}{■}}$ $\textsf{\color{rgb(174,174,178)}{■}}$ $\textsf{\color{rgb(142,142,147)}{■}}$ $\textsf{\color{rgb(99,99,102)}{■}}$ $\textsf{\color{rgb(72,72,74)}{■}}$ $\textsf{\color{rgb(58,58,60)}{■}}$ $\textsf{\color{rgb(0,122,255)}{■}}$ $\textsf{\color{rgb(0,150,255)}{■}}$
 
   $\textsf{\color{rgb(35,35,35)}{■}}$ $\textsf{\color{rgb(250,250,250)}{■}}$ $\textsf{\color{rgb(58,58,60)}{■}}$ $\textsf{\color{rgb(72,72,74)}{■}}$ $\textsf{\color{rgb(99,99,102)}{■}}$ $\textsf{\color{rgb(142,142,147)}{■}}$ $\textsf{\color{rgb(174,174,178)}{■}}$ $\textsf{\color{rgb(199,199,204)}{■}}$ $\textsf{\color{rgb(229,229,234)}{■}}$ $\textsf{\color{rgb(10,132,255)}{■}}$ $\textsf{\color{rgb(10,160,255)}{■}}$
 
-+ Light/Dark transistion
++ 빛/어둠 전환
 
   ```css
-  :root {
-    --c-bg: rgb(250 250 250);
-    --c-antibg: rgb(35 35 35);
-    --c-text: rgb(28 28 30);
-    --c-antitext: rgb(250 250 250);
-    --c-gray1: rgb(229 229 234);
-    --c-gray2: rgb(199 199 204);
-    --c-gray3: rgb(174 174 178);
-    --c-gray4: rgb(142 142 147);
-    --c-gray5: rgb(99 99 102);
-    --c-gray6: rgb(72 72 74);
-    --c-gray7: rgb(58 58 60);
-    --c-blue: rgb(0 122 255);
-    --c-blue-active: rgb(0 150 255);
-    --c-antiblue: rgb(10 132 255);
-    --c-antiblue-active: rgb(10 160 255);
+  :뿌리 {
+    --색-배경: 빨초파(250 250 250);
+    --색-반배경: 빨초파(35 35 35);
+    --색-문자: 빨초파(28 28 30);
+    --색-반문자: 빨초파(250 250 250);
+    --색-회색1: 빨초파(229 229 234);
+    --색-회색2: 빨초파(199 199 204);
+    --색-회색3: 빨초파(174 174 178);
+    --색-회색4: 빨초파(142 142 147);
+    --색-회색5: 빨초파(99 99 102);
+    --색-회색6: 빨초파(72 72 74);
+    --색-회색7: 빨초파(58 58 60);
+    --색-파랑: 빨초파(0 122 255);
+    --색-파랑-활성: 빨초파(0 150 255);
+    --색-반파랑: 빨초파(10 132 255);
+    --색-반파랑-활성: 빨초파(10 160 255);
 
-    --c-lbg: rgb(250 250 250);
-    --c-dbg: rgb(35 35 35);
-    --c-ltext: rgb(250 250 250);
-    --c-dtext: rgb(28 28 30);
-    --c-grayl3: rgb(229 229 234);
-    --c-grayl2: rgb(199 199 204);
-    --c-grayl1: rgb(174 174 178);
-    --c-gray: rgb(142 142 147);
-    --c-grayd1: rgb(99 99 102);
-    --c-grayd2: rgb(72 72 74);
-    --c-grayd3: rgb(58 58 60);
-    --c-lblue: rgb(0 122 255);
-    --c-lblue-active: rgb(0 150 255);
-    --c-dblue: rgb(10 132 255);
-    --c-dblue-active: rgb(10 160 255);
-    --c-black: rgb(0 0 0);
+    --색-명배경: 빨초파(250 250 250);
+    --색-암배경: 빨초파(35 35 35);
+    --색-명문자: 빨초파(250 250 250);
+    --색-암문자: 빨초파(28 28 30);
+    --색-회색명3: 빨초파(229 229 234);
+    --색-회색명2: 빨초파(199 199 204);
+    --색-회색명1: 빨초파(174 174 178);
+    --색-회색: 빨초파(142 142 147);
+    --색-회색암1: 빨초파(99 99 102);
+    --색-회색암2: 빨초파(72 72 74);
+    --색-회색암3: 빨초파(58 58 60);
+    --색-명파랑: 빨초파(0 122 255);
+    --색-명파랑-활성: 빨초파(0 150 255);
+    --색-암파랑: 빨초파(10 132 255);
+    --색-암파랑-활성: 빨초파(10 160 255);
+    --색-검정: 빨초파(0 0 0);
   }
 
-  @media print {
-      :root {
-          --c-bg: white;
-          --c-antitext: white;
-          --c-lbg: white;
-          --c-ltext: white;
+  @매체 인쇄 {
+      :뿌리 {
+          --색-bg: white;
+          --색-antitext: white;
+          --색-lbg: white;
+          --색-ltext: white;
       }
   }
 
-  @media (prefers-color-scheme: dark) {
+  @매체 (선호-색상-상태: 어둠) {
       :root {
-          --c-bg: rgb(35 35 35);
-          --c-antibg: rgb(250 250 250);
-          --c-text: rgb(250 250 250);
-          --c-antitext: rgb(28 28 30);
-          --c-gray1: rgb(58 58 60);
-          --c-gray2: rgb(72 72 74);
-          --c-gray3: rgb(99 99 102);
-          --c-gray4: rgb(142 142 147);
-          --c-gray5: rgb(174 174 178);
-          --c-gray6: rgb(199 199 204);;
-          --c-gray7: rgb(229 229 234);
-          --c-blue: rgb(10 132 255);
-          --c-blue-active: rgb(10 160 255);
-          --c-antiblue: rgb(0 122 255);
-          --c-antiblue-active: rgb(0 150 255);
+          --색-bg: 빨초파(35 35 35);
+          --색-antibg: 빨초파(250 250 250);
+          --색-text: 빨초파(250 250 250);
+          --색-antitext: 빨초파(28 28 30);
+          --색-gray1: 빨초파(58 58 60);
+          --색-gray2: 빨초파(72 72 74);
+          --색-gray3: 빨초파(99 99 102);
+          --색-gray4: 빨초파(142 142 147);
+          --색-gray5: 빨초파(174 174 178);
+          --색-gray6: 빨초파(199 199 204);;
+          --색-gray7: 빨초파(229 229 234);
+          --색-blue: 빨초파(10 132 255);
+          --색-blue-active: 빨초파(10 160 255);
+          --색-antiblue: 빨초파(0 122 255);
+          --색-antiblue-active: 빨초파(0 150 255);
       }
   }
 
-  @media print and (prefers-color-scheme: dark) { /* ??? */
-      :root {
-          --c-antibg: white;
-          --c-text: white;
+  @매체 인쇄 그리고 (선호-색상-상태: 어둠) { /* ??? */
+      :뿌리 {
+          --색-antibg: white;
+          --색-text: white;
       }
   }
   ```
 
 ## Credit
 
-+ **color** : [Apple human-interface](https://developer.apple.com/design/human-interface-guidelines/color) (* 모든 색상을 참고한것은 아님)
-+ **font** : [**Pretendard**](https://github.com/orioncactus/pretendard) [BR Cobane](https://www.cdnfonts.com/br-cobane.font)
++ **색상** : [사과 인간-접점](https://developer.apple.com/design/human-interface-guidelines/color) (* 모든 색상을 참고한것은 아님)
++ **글꼴** : [**ㅖㄱㄷㅅ뭉ㅁㄱㅇ**](https://github.com/orioncactus/pretendard) [ㅠㄲ 채ㅠ묻](https://www.cdnfonts.com/br-cobane.font)
