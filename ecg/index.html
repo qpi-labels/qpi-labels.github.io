@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>ECG Live | QPI</title>
+  <title>심전도 실시간 | ㅅㅂㅈㅇ</title>
   <link rel="stylesheet" href="/colors.css">
   <link rel="stylesheet" href="/archive/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -10,16 +10,16 @@
 
 <body>
   <div id="toolbar">
-    <button id="pauseBtn">⏸ Pause</button>
-    <button id="dlBtn"   disabled>⬇ Download CSV</button>
-    <button id="clearBtn" disabled>🗑 Clear</button>
-    <small id="timer">(0 s)</small>
+    <button id="pauseBtn">⏸ 멈춤</button>
+    <button id="dlBtn"   disabled>⬇ 쉼표 글보따리로 내려받기</button>
+    <button id="clearBtn" disabled>🗑 지우기</button>
+    <small id="timer">(0 초)</small>
   </div>
 
-  <h1>Real-time ECG</h1>
-  <button id="connectBtn">Connect ECG_R4</button>
-  <p id="status">Not connected</p>
-  <p id="bpm">-- BPM</p>
+  <h1>실시간 심전도</h1>
+  <button id="connectBtn">심전도_알4 연결</button>
+  <p id="status">연결되지 않음</p>
+  <p id="bpm">-- 분 당 박자</p>
   <canvas id="chart" width="800" height="300"></canvas>
 <!--CSS 어디있음-->
   <script src="ecg.js"></script>
