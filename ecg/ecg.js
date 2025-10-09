@@ -51,7 +51,7 @@ function resetSession(hard = false) {
   x = baseline = calCnt = lastPeak = 0;
   t0 = 0;
 
-  elBpm.textContent   = '-- BPM';
+  elBpm.textContent   = '-- 박/분';
   elTimer.textContent = '(0 s)';
   btnDL.disabled = btnClear.disabled = true;
 
@@ -139,7 +139,7 @@ function pushData(v){
     const a = D[n-3], b = D[n-2], c = D[n-1];
     if (b > a && b > c && b > thr) {
       const now = Date.now();
-      if (lastPeak) elBpm.textContent = (60000/(now-lastPeak)).toFixed(0) + ' BPM';
+      if (lastPeak) elBpm.textContent = (60000/(now-lastPeak)).toFixed(0) + ' 박/분';
       lastPeak = now;
     }
   }
