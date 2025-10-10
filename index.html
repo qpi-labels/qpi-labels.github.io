@@ -34,6 +34,7 @@
             color: var(--c-ltext);
         }
     </style>
+    <script src="/nav.js" defer></script>
 </head>
 
 <body>
@@ -120,14 +121,7 @@
         </footer>
     </main>
 
-    <script>
-        fetch('/header.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('header').innerHTML = data;
-            })
-            .catch(error => console.error('머릿말 로드 실패:', error));
-            
+    <script>            
         // 위아래 왔다갔다 움직임 교차 관찰자
         const observerOptions = {
             threshold: 0.1,

@@ -200,6 +200,7 @@
         }
 
     </style>
+    <script src="/nav.js" defer></script>
 </head>
 
 <body style="overflow: hidden">
@@ -485,15 +486,7 @@
         </footer>
     </main>
 
-    <script>
-        fetch('/header.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('header').innerHTML = data;
-            })
-            .catch(error => console.error('머릿말 로드 실패:', error));
-
-        // Intersection Observer for scroll animations
+    <script>// Intersection Observer for scroll animations
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'

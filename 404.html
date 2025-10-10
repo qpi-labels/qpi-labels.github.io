@@ -14,6 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/colors.css">
     <link rel="stylesheet" href="/newstyle.css">
+    <script src="/nav.js" defer></script>
 </head>
 <style>
     @import url('https://fonts.cdnfonts.com/css/br-cobane');
@@ -672,12 +673,4 @@ main {
             </div>
         </section>
     </main>
-
-<script>
-    fetch('/header.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('header').innerHTML = data;
-            })
-            .catch(error => console.error('머릿말 로드 실패:', error));
-</script>
+</body>
