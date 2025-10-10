@@ -38,7 +38,7 @@
 
 <body>
     <!-- 항해 -->
-    <div id="header.html"></div>
+    <div id="header"></div>
 
     <main>
         <!-- 영웅 부분 -->
@@ -121,6 +121,13 @@
     </main>
 
     <script>
+        fetch('/header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header').innerHTML = data;
+            })
+            .catch(error => console.error('머릿말 로드 실패:', error));
+            
         // 위아래 왔다갔다 움직임 교차 관찰자
         const observerOptions = {
             threshold: 0.1,

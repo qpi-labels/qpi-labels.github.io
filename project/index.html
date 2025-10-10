@@ -62,16 +62,7 @@
 
 <body>
     <!-- Navigation -->
-    <div class="nav-wrapper">
-        <nav class="nav">
-            <a href="/" class="nav-logo en">ㅅㅂㅈㅇ</a>
-            <div class="nav-links">
-                <a href="/project/" class="nav-link en">작업</a>
-                <a href="/chat/" class="nav-link en">소통</a>
-                <a href="mailto:cnsh31_1410@cnsh.hs.kr" class="nav-link en">지원</a>
-            </div>
-        </nav>
-    </div>
+    <div id="header"></div>
     
     <main>
         <!-- Hero Section -->
@@ -167,6 +158,13 @@
     </main>
 
     <script>
+        fetch('/header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header').innerHTML = data;
+            })
+            .catch(error => console.error('머릿말 로드 실패:', error));
+
         // Intersection Observer for scroll animations
         const observerOptions = {
             threshold: 0.1,
