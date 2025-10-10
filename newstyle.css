@@ -15,7 +15,9 @@ body {
     line-height: 1.4705882353;
     font-weight: 400;
     letter-spacing: -.022em;
+    overflow: hidden;
     overflow-x: hidden;
+    overflow-y: hidden;
     height: 100vh;
 }
 
