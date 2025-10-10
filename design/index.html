@@ -15,11 +15,34 @@
     <link rel="stylesheet" href="/colors.css">
     <link rel="stylesheet" href="../newstyle.css">
     <style>
+        
         .hero {
             background-image: url('design_hero.png');
             background-size: cover;
         }
-        
+
+        .grid-item.large {
+            grid-column: span 2;
+            min-height: 120px;
+            background: linear-gradient(135deg, #313131 0%, #131313 100%);
+            color: var(--c-ltext);
+            padding: 0px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center; /* 수직 중앙 정렬 */
+        }
+
+        .grid-item.large2 {
+            grid-column: span 2;
+            min-height: 120px;
+            background: linear-gradient(135deg, #580000 0%, #2e0000 100%);
+            color: var(--c-ltext);
+            padding: 0px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center; /* 수직 중앙 정렬 */
+        }
+
         .grid-item.accent-1 {
             background-image: url('korean.png');
             background-size: cover;
@@ -35,6 +58,35 @@
             background-repeat: no-repeat;
             color: var(--c-ltext);
         }
+        
+.page-title-section {
+    text-align: center;
+    margin-top: 10vh;
+    margin-bottom: 40vh;
+}
+
+.page-title {
+    text-align: center;
+    font-size: xxx-large;
+    margin-top: 0em;
+    margin-bottom: 0em;
+    font-weight: 700;
+}
+
+.page-subtitle {
+    font-size: x-large;
+    margin-top: 0em;
+    margin-bottom: 0;
+    font-weight: 400;
+}
+
+.page-upper {
+    font-size: large;
+    margin-top: 0em;
+    margin-bottom: 0;
+    font-weight: 400;
+}
+
     </style>
 </head>
 
@@ -46,29 +98,83 @@
         <!-- Hero Section -->
         <section class="hero">
             <div class="hero-content">
-                <div class="hero-eyebrow typography-caption2 en">ㅅㅂㅈㅇ 설계</div>
+                <div class="hero-eyebrow typography-caption2 en">쿼터파이 설계</div>
                 <h1 class="hero-headline typography-title1">설계 안내</h1>
-                <p class="hero-subheadline typography-subheadline">ㅅㅂㅈㅇ은 아름답고 편안한 사용자 경험을 위해<br>설계 기준을 세웁니다.</p>
+                <p class="hero-subheadline typography-subheadline">쿼터파이는 아름답고 편안한 사용자 경험을 위해<br>설계 기준을 세웁니다.</p>
             </div>
         </section>
+
+        <div style="height: 50vh;"></div>
+
+
+        <!-- 모더니즘 -->
+        <div class="page-title-section" style="margin-top: 34vh; margin-bottom: 50vh">
+        <p class="page-upper">20세기 가장 성공한 건축 사조</p>
+        <p class="page-title">모더니즘</p>
+        </div>
+
         <section class="product-grid">
             <div class="grid-container">
                 <div class="grid">
                     <div class="grid-item large">
-                        <div class="item-eyebrow typography-caption2 en">르 코르뷔지에</div>
-                        <h2 class="item-headline typography-headline">"르 코르뷔지에는 죽었다."</h2>
-                        <p class="item-description typography-caption1" style="margin-bottom: 12px;">
-                            르 코르뷔지에 <- 희대의 힙찔이 -이재원-
-                        </p>
+                        <div class="item-eyebrow typography-caption2 en">아돌프 로스</div>
+                        <h2 class="item-headline typography-headline" style="margin-bottom: 0px;">"장식은 죄악이다"</h2>
                     </div>
                 </div>
+                <div class="grid">
+                    <div class="grid-item large">
+                        <div class="item-eyebrow typography-caption2 en">르 코르뷔지에</div>
+                        <h2 class="item-headline typography-headline" style="margin-bottom: 0px;">"형태는 기능을 따른다"</h2>
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="grid-item large">
+                        <div class="item-eyebrow typography-caption2 en">미스 반 데어 로에</div>
+                        <h2 class="item-headline typography-headline" style="margin-bottom: 0px;">"적을수록 많다"</h2>
+                    </div>
+                </div>
+                <br>
+                <!--비판-->
+                <div class="grid">
+                    <div class="grid-item large2">
+                        <div class="item-eyebrow typography-caption2 en">로버트 벤투리</div>
+                        <h2 class="item-headline typography-headline" style="margin-bottom: 0px;">"적을수록 지루하다"</h2>
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="grid-item large2">
+                        <div class="item-eyebrow typography-caption2 en">토마스 헤더윅</div>
+                        <h2 class="item-headline typography-headline" style="margin-bottom: 0px;">"미학의 시체"</h2>
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="grid-item large2">
+                        <div class="item-eyebrow typography-caption2 en">찰스 3세 영국 국왕</div>
+                        <h2 class="item-headline typography-headline" style="margin-bottom: 0px;">"우아한 친구의 얼굴에 난 흉측한 종기"</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="page-title-section" style="text-align: center;">
+            <p class="page-subtitle">20세기 가장 성공한 건축 사조인 <strong>모더니즘</strong>은<br>비인간적이고 감성이 결여되었다는 점에서 많은 비판을 받았고,<br>주류는 새로운 건축 사조로 변화하고 있습니다.</p>
+            </div>
+
+        <!-- 미니멀리즘 -->
+        <div class="page-title-section" style="margin-top: 50vh; margin-bottom: 50vh">
+        <p class="page-upper">21세기 가장 성공한 디자인 사조</p>
+        <p class="page-title">미니멀리즘</p>
+        </div>
+
+        <div class="page-title-section" style="text-align: center;">
+            <p class="page-subtitle">그러나 <strong>모더니즘</strong>에서 비롯된 디자인 사조 <strong>미니멀리즘</strong>은<br>현재까지도 가장 성공한 웹 디자인 사조로써 활발히 사용되고 있습니다.</p>
+            </div>
+
 
                 <div class="grid">
                     <div class="grid-item accent-1">
                         <div class="item-eyebrow typography-caption2 en">다국어 글꼴</div>
-                        <h2 class="item-headline typography-headline">ㅔㄱㄷㅅ둥ㅁㄱㅇ</h2>
+                        <h2 class="item-headline typography-headline">프리텐다드</h2>
                         <p class="item-description typography-caption1">
-                            ㅔㄱㄷㅅ둥ㅁㄱㅇ는 한국어를 포함한 다국어를 지원하는 신 괴이 반듯글씨입니다.
+                            프리텐다드는 한국어를 포함한 다국어를 지원하는 네오-그로테스크 산세리프입니다.
                         </p>
                         <div class="item-cta">
                             <a href="https://github.com/orioncactus/pretendard" class="cta-link typography-caption1" target='_blank'>이동하기 →</a>
@@ -77,9 +183,9 @@
 
                     <div class="grid-item accent-2">
                         <div class="item-eyebrow typography-caption2 en">사업화 글꼴</div>
-                        <h2 class="item-headline typography-headline">비알 눈뜨고 "코베인"다</h2>
+                        <h2 class="item-headline typography-headline">BR Cobane</h2>
                         <p class="item-description typography-caption1">
-                            비알 눈뜨고 "코베인"다는 사분주율의 사업화 글꼴 겸 영문 글꼴입니다.
+                            BR Cobane은 쿼터파이의 사업화 글꼴 겸 영문 글꼴로써, 쿼터파이의 정신을 담고 있습니다.
                         </p>
                         <div class="item-cta">
                             <a href="https://www.cdnfonts.com/br-cobane.font" class="cta-link typography-caption1" target='_blank'>이동하기 →</a>
@@ -95,7 +201,7 @@
     <div class="color-container">
         <h2 class="color-headline typography-title3 fade-up">색상</h2>
         <p class="color-description typography-body fade-up delay-1">
-            ㅅㅂㅈㅇ 순백색과 순흑색의 사용을 최소화해, 물건의 날카로움을 줄이고<br>눈의 피로를 완화합니다.
+            ㅅㅂㅈㅇ 순백색과 순흑색의 사용을 최소화해, 객체의 날카로움을 줄이고<br>눈의 피로를 완화합니다.
         </p>
         
         <div class="color-table fade-up delay-2">
