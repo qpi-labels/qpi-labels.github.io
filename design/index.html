@@ -15,7 +15,10 @@
     <link rel="stylesheet" href="/colors.css">
     <link rel="stylesheet" href="../newstyle.css">
     <style>
-        
+        body {
+            overflow: hidden;
+        }
+
         .hero {
             background-image: url('design_hero.png');
             background-size: cover;
@@ -118,6 +121,37 @@
             font-weight: 400;
         }
 
+        /* 모더니즘 이미지 */
+        .modernism-image {
+            display: block;
+            max-width: 250px;
+            width: 100%;
+            height: auto;
+            margin: 10px auto;
+        }
+
+        /* 비판 섹션 - 도시 배경 */
+        .criticism-wrapper {
+            position: relative;
+            pointer-events: none;
+            backdrop-filter: blur(10px);            
+            background: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,0));
+            background-image: url('city.png');
+            background-size: cover;
+            background-position: top; /* 수정: center → top */
+            background-repeat: no-repeat;
+    
+            padding: 0;
+        }
+
+
+        .criticism-wrapper .grid-container {
+            background-position: top;
+            position: relative;
+            z-index: 1;
+        }
+        
+
         /* 모바일 반응형 스타일 */
         @media (max-width: 834px) {
             .page-title {
@@ -135,6 +169,10 @@
             .page-title-section {
                 margin-top: 8vh;
                 margin-bottom: 30vh;
+            }
+
+            .modernism-image {
+                max-width: 500px;
             }
         }
 
@@ -163,6 +201,11 @@
             .grid-item.large2 {
                 grid-column: span 1;
                 min-height: 140px;
+            }
+
+            .modernism-image {
+                max-width: 400px;
+                margin: 30px auto;
             }
         }
 
@@ -197,12 +240,19 @@
             .color-description br {
                 display: none;
             }
+
+            .modernism-image {
+                max-width: 50%;
+                margin: 20px auto;
+                padding: 0 20px;
+                box-sizing: border-box;
+            }
         }
 
     </style>
+    <script src="/nav.js" defer></script>
 </head>
-
-<body style="overflow: hidden">
+<body>
     <!-- Navigation -->
     <div id="header"></div>
 
@@ -221,11 +271,16 @@
 
         <!-- 모더니즘 -->
         <div class="page-title-section" style="margin-top: 34vh; margin-bottom: 50vh">
+        <img src="modernism.png" alt="모더니즘 건축" class="modernism-image">
         <p class="page-upper">20세기 가장 성공한 건축 사조</p>
         <p class="page-title">모더니즘</p>
         </div>
 
-        <section class="product-grid">
+        <br>
+
+        <!--비판 섹션 - 도시 배경 위에 카드들 -->
+        <section class="product-grid criticism-wrapper">
+            <div style="height: 3vh;"></div>
             <div class="grid-container">
                 <div class="grid">
                     <div class="grid-item large">
@@ -245,8 +300,8 @@
                         <h2 class="item-headline typography-headline" style="margin-bottom: 0px;">"적을수록 많다"</h2>
                     </div>
                 </div>
-                <br>
-                <!--비판-->
+            </div>
+            <div class="grid-container">
                 <div class="grid">
                     <div class="grid-item large2">
                         <div class="item-eyebrow typography-caption2 en">로버트 벤투리</div>
@@ -266,9 +321,14 @@
                     </div>
                 </div>
             </div>
+            <div style="height: 3vh;"></div>
+        </section>
+
+        <section class="product-grid">
             <div class="page-title-section" style="text-align: center;">
             <p class="page-subtitle">20세기 가장 성공한 건축 사조인 <strong>모더니즘</strong>은<br>비인간적이고 감성이 결여되었다는 점에서 많은 비판을 받았고,<br>주류는 새로운 건축 사조로 변화하고 있습니다.</p>
             </div>
+        </section>
 
         <!-- 미니멀리즘 -->
         <div class="page-title-section" style="margin-top: 50vh; margin-bottom: 50vh">
@@ -485,15 +545,7 @@
         </footer>
     </main>
 
-    <script>
-        fetch('/header.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('header').innerHTML = data;
-            })
-            .catch(error => console.error('머릿말 로드 실패:', error));
-
-        // Intersection Observer for scroll animations
+    <script>// Intersection Observer for scroll animations
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
