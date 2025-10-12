@@ -58,8 +58,8 @@
             color: var(--c-ltext);
         }
     </style>
+    <script src="/nav.js" defer></script>
 </head>
-
 <body>
     <!-- Navigation -->
     <div id="header"></div>
@@ -158,13 +158,6 @@
     </main>
 
     <script>
-        fetch('/header.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('header').innerHTML = data;
-            })
-            .catch(error => console.error('머릿말 로드 실패:', error));
-
         // Intersection Observer for scroll animations
         const observerOptions = {
             threshold: 0.1,
