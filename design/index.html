@@ -94,7 +94,7 @@
         .page-title-section {
             text-align: center;
             margin-top: 10vh;
-            margin-bottom: 40vh;
+            margin-bottom: 0;
             padding: 0 20px;
         }
 
@@ -121,6 +121,14 @@
             font-weight: 400;
         }
 
+        .page-middle {
+            font-size: 48px;
+            margin-top: 0em;
+            margin-bottom: 0;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
         /* 모더니즘 이미지 */
         .modernism-image {
             display: block;
@@ -138,7 +146,7 @@
             background: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,0));
             background-image: url('city.png');
             background-size: cover;
-            background-position: top; /* 수정: center → top */
+            background-position: bottom; /* 수정: center → top */
             background-repeat: no-repeat;
     
             padding: 0;
@@ -166,9 +174,13 @@
                 font-size: 18px;
             }
             
+            .page-middle {
+                font-size: 44px;
+            } 
+
             .page-title-section {
                 margin-top: 8vh;
-                margin-bottom: 30vh;
+                margin-bottom: 0;
             }
 
             .modernism-image {
@@ -184,6 +196,10 @@
             .page-subtitle {
                 font-size: 22px;
             }
+
+            .page-middle {
+                font-size: 42px;
+            } 
             
             .page-upper {
                 font-size: 16px;
@@ -217,6 +233,10 @@
             .page-subtitle {
                 font-size: 18px;
             }
+
+            .page-middle {
+                font-size: 38px;
+            } 
             
             .page-upper {
                 font-size: 14px;
@@ -266,22 +286,19 @@
             </div>
         </section>
 
-        <div style="height: 50vh;"></div>
-
 
         <!-- 모더니즘 -->
-        <div class="page-title-section" style="margin-top: 34vh; margin-bottom: 50vh">
-        <img src="modernism.png" alt="모더니즘 건축" class="modernism-image">
+        <div class="page-title-section criticism-wrapper" style="margin-top: 34vh; margin-bottom: 3vh">
+        <div style="height: 40vh;"></div>
         <p class="page-upper">20세기 가장 성공한 건축 사조</p>
         <p class="page-title">모더니즘</p>
+        <div style="height: 50vh; margin-bottom: 0"></div>
         </div>
 
-        <br>
 
         <!--비판 섹션 - 도시 배경 위에 카드들 -->
-        <section class="product-grid criticism-wrapper">
-            <div style="height: 6vh;"></div>
-            <div class="grid-container">
+        <section class="product-grid" style="margin-top: 0; margin-bottom: 0;">
+            <div class="grid-container" style="margin-top: 0; margin-bottom: 0;">
                 <div class="grid">
                     <div class="grid-item large">
                         <div class="item-eyebrow typography-caption2 en">아돌프 로스</div>
@@ -302,7 +319,7 @@
                 </div>
             </div>
 
-            <div class="page-title-section" style="text-align: center; margin-top: 3vh; margin-bottom: 3vh;" >
+            <div class="page-title-section" style="text-align: center; margin-top: 12vh; margin-bottom: 12vh;" >
             <p class="page-subtitle"><strong>모더니즘</strong>은 기능 우선주의에 따라 장식을 배제하였습니다.</p>
             </div>
 
@@ -331,7 +348,7 @@
 
         <section class="product-grid">
             <div class="page-title-section" style="text-align: center;">
-            <p class="page-subtitle">20세기 가장 성공한 건축 사조인 <strong>모더니즘</strong>은<br>비인간적이고 감성이 결여되었다는 점에서 많은 비판을 받았고,<br>주류는 새로운 건축 사조로 변화하고 있습니다.</p>
+            <p class="page-subtitle">그러나 21세기, <strong>모더니즘</strong>은 비인간적이고<br> 감성이 결여되었다는 점에서 많은 비판을 받아<br> 주류는 새로운 건축 사조로 변화하고 있습니다.</p>
             </div>
         </section>
 
@@ -341,24 +358,16 @@
         <p class="page-title">미니멀리즘</p>
         </div>
 
-        <div class="page-title-section" style="text-align: center;">
-            <p class="page-subtitle">그러나 <strong>모더니즘</strong>에서 비롯된 디자인 사조 <strong>미니멀리즘</strong>은<br> 현재까지도 가장 성공한 웹 디자인 사조로써 활발히 사용되고 있습니다.</p>
+        <div class="page-title-section" style="text-align: center; margin-bottom: 50vh;">
+            <p class="page-subtitle"><strong>모더니즘</strong>에서 비롯된 디자인 사조 <strong>미니멀리즘</strong>은<br> 현재까지도 가장 성공한 웹 디자인 사조로써 활발히 사용되고 있습니다.<br> 미니멀리즘은 <strong>사용자 경험</strong>을 향상하고 웹사이트를 <strong>최적화</strong>하는데 탁월하지만, <br>디자인의 획일화로 인해 <strong>따분함</strong>을 유발할 수 있다는 단점이 있습니다.</p>
         </div>
-        <div class="page-title-section" style="text-align: center;">
-            <p class="page-subtitle"><strong>쿼터파이</strong>는 미니멀리즘 또한 모더니즘과 같이 <strong>변화해야 할 때</strong> 라고 생각했습니다.</p>
-        </div>
-
+    
         <!-- 쿼터파이 설계 기준 -->
         <section class="product-grid">
             <div class="grid-container">
-                <div class="grid">
-                    <div class="grid-item large3">
-                        <div class="item-eyebrow typography-caption2 en">쿼터파이 설계 기준</div>
-                        <h2 class="item-headline typography-headline">쉽게, 또 아름답게</h2>
-                        <p class="item-description typography-caption1" style="margin-bottom: 0;">
-                            쿼터파이는 미니멀리즘의 기능적 측면에 유기적 성질을 더해 기능적이면서도 아름다운 사용자 경험을 구축합니다.
-                        </p>
-                    </div>
+                <div class="page-title-section" style="margin-top: 0; margin-bottom: 5vh">
+                <p class="page-middle">쿼터파이가 만들 웹페이지</p>
+                <p class="page-subtitle">쿼터파이의 프로젝트 만큼 따분하지 않은 웹페이지를 만들겠습니다</p>
                 </div>
                 <!--쿼터파이의 특징-->
                 <div class="grid">
