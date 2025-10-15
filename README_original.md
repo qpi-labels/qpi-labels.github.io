@@ -28,21 +28,7 @@
 
   ```css
   :root {
-    --c-bg: rgb(250 250 250);
-    --c-antibg: rgb(35 35 35);
-    --c-text: rgb(28 28 30);
-    --c-antitext: rgb(250 250 250);
-    --c-gray1: rgb(229 229 234);
-    --c-gray2: rgb(199 199 204);
-    --c-gray3: rgb(174 174 178);
-    --c-gray4: rgb(142 142 147);
-    --c-gray5: rgb(99 99 102);
-    --c-gray6: rgb(72 72 74);
-    --c-gray7: rgb(58 58 60);
-    --c-blue: rgb(0 122 255);
-    --c-blue-active: rgb(0 150 255);
-    --c-antiblue: rgb(10 132 255);
-    --c-antiblue-active: rgb(10 160 255);
+    color-scheme: light dark;
 
     --c-lbg: rgb(250 250 250);
     --c-dbg: rgb(35 35 35);
@@ -60,42 +46,33 @@
     --c-dblue: rgb(10 132 255);
     --c-dblue-active: rgb(10 160 255);
     --c-black: rgb(0 0 0);
+
+    --c-bg: light-dark(rgb(250 250 250),rgb(35 35 35));
+    --c-antibg: light-dark(rgb(35 35 35),rgb(250 250 250));
+    --c-text: light-dark(rgb(28 28 30),rgb(250 250 250));
+    --c-antitext: light-dark(rgb(250 250 250),rgb(28 28 30));
+    --c-gray1: light-dark(rgb(229 229 234),rgb(58 58 60));
+    --c-gray2: light-dark(rgb(199 199 204),rgb(72 72 74));
+    --c-gray3: light-dark(rgb(174 174 178),rgb(99 99 102));
+    --c-gray4: light-dark(rgb(142 142 147),rgb(142 142 147));
+    --c-gray5: light-dark(rgb(99 99 102),rgb(174 174 178));
+    --c-gray6: light-dark(rgb(72 72 74),rgb(199 199 204));
+    --c-gray7: light-dark(rgb(58 58 60),rgb(229 229 234));
+    --c-blue: light-dark(rgb(0 122 255),rgb(10 132 255));
+    --c-blue-active: light-dark(rgb(0 150 255),rgb(10 160 255));
+    --c-antiblue: light-dark(rgb(10 132 255),rgb(0 122 255));
+    --c-antiblue-active: light-dark(rgb(10 160 255),rgb(0 150 255));
   }
 
   @media print {
-      :root {
-          --c-bg: white;
-          --c-antitext: white;
-          --c-lbg: white;
-          --c-ltext: white;
-      }
-  }
-
-  @media (prefers-color-scheme: dark) {
-      :root {
-          --c-bg: rgb(35 35 35);
-          --c-antibg: rgb(250 250 250);
-          --c-text: rgb(250 250 250);
-          --c-antitext: rgb(28 28 30);
-          --c-gray1: rgb(58 58 60);
-          --c-gray2: rgb(72 72 74);
-          --c-gray3: rgb(99 99 102);
-          --c-gray4: rgb(142 142 147);
-          --c-gray5: rgb(174 174 178);
-          --c-gray6: rgb(199 199 204);;
-          --c-gray7: rgb(229 229 234);
-          --c-blue: rgb(10 132 255);
-          --c-blue-active: rgb(10 160 255);
-          --c-antiblue: rgb(0 122 255);
-          --c-antiblue-active: rgb(0 150 255);
-      }
-  }
-
-  @media print and (prefers-color-scheme: dark) { /* ??? */
-      :root {
-          --c-antibg: white;
-          --c-text: white;
-      }
+    :root {
+      --c-lbg: white;
+      --c-ltext: white;
+      --c-bg: light-dark(white,rgb(35 35 35));
+      --c-antibg: light-dark(rgb(35 35 35),white);
+      --c-text: light-dark(rgb(28 28 30),white);
+      --c-antitext: light-dark(white,rgb(28 28 30));
+    }
   }
   ```
 
