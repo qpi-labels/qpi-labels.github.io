@@ -5,6 +5,12 @@
     <title>QISS</title>
     <link rel="shortcut icon" type="image/x-icon" href="/logo.ico">
     <link rel="shortcut icon" type="image/x-icon" href="/logo_dark.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" type="image/x-icon" href="/logo.ico" media="(prefers-color-scheme: light)">
+    <meta property="og:url" content="https://qpi.kro.kr">
+    <meta property="og:title" content="쿼터파이">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="/logo.png">
+    <meta property="og:description" content="만족도 2년연속 1위! 쿼터파이">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/colors.css">
     <script async src="https://cse.google.com/cse.js?cx=c31ed7ed73e974099"></script>
@@ -20,14 +26,19 @@
             font-family: "BR Cobane", 'Pretendard Variable';
             text-align: center;
             user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
             margin: 0;
             padding-top: 60px;
-            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         header {
             position: fixed;
-            top: 0; left: 0; width: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
             background-color: rgb(from var(--c-bg) r g b / 80%);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
@@ -52,6 +63,7 @@
             font-size: x-large;
             margin: 0;
             font-weight: 550;
+            display: inline;
         }
 
         .header-links {
@@ -65,6 +77,7 @@
             text-decoration: none;
             font-weight: 500;
             transition: color 0.2s ease;
+            white-space: nowrap;
         }
 
         .header-link:hover {
@@ -72,26 +85,28 @@
             text-decoration: underline;
         }
 
+        .header-link:visited {
+            color: var(--c-gray7);
+        }
+
         .page-title {
             font-family: "BR Cobane";
             font-size: xxx-large;
+            margin-bottom: 0;
             font-weight: 700;
-            margin-top: 80px;
-            margin-bottom: 20px;
         }
 
         /* ✅ 공통 검색바 디자인 */
         .search-bar {
             width: 80%;
-            max-width: 600px;
-            padding: 10px 20px;
-            border-radius: 35px;
-            border: 1.5px solid var(--c-gray2);
-            font-size: 17px;
+            padding: 10px;
+            border-radius: 30px;
+            border: 1px solid var(--c-gray1);
+            font-size: 16px;
             outline: none;
             background-color: var(--c-bg);
             color: var(--c-text);
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
         }
 
         .search-bar:focus {
@@ -99,26 +114,57 @@
             box-shadow: 0 0 10px rgba(0, 102, 255, 0.2);
         }
 
-        /* ✅ CSE 검색창도 같은 스타일 적용 */
+        /* ✅ CSE 검색창 스타일 개선 */
+        /* ✅ CSE 검색창 스타일 개선 */
         .gcse-search {
-            margin: 20px auto;
-            max-width: 80%;
+            margin: 0 auto;
+            width: 80%; /* max-width를 width로 변경하여 너비 고정 */
         }
 
         .gsc-control-cse {
             background: none !important;
             border: none !important;
+            padding: 0 !important;
+            width: 80%;
         }
 
+        /* 검색창 wrapper 숨김 - 이중 테두리 제거 */
+        .gsc-search-box {
+            margin: 0 auto !important;
+            width: 80%;
+        }
+
+        table.gsc-search-box {
+            margin: 0 auto !important;
+            border: none !important;
+            background: none !important;
+            width: 80%;
+        }
+
+        td.gsc-input {
+            padding: 0 !important;
+        }
+
+        /* 실제 검색창 스타일 */
         input.gsc-input, .gsc-input-box, .gsc-input-box input {
-            border-radius: 35px !important;
-            border: 1.5px solid var(--c-gray2) !important;
+            border-radius: 30px !important;
+            border: 1px solid var(--c-gray1) !important;
             background-color: var(--c-bg) !important;
             color: var(--c-text) !important;
-            font-size: 17px !important;
-            padding: 10px 20px !important;
-            height: auto !important;
+            font-size: 16px !important;
+            padding: 10px !important;
+            height: 40px !important;
+            line-height: 20px !important;
             box-shadow: none !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        .gsc-input-box {
+            border: none !important;
+            background: none !important;
+            box-shadow: none !important;
+            height: 40px !important;
         }
 
         input.gsc-input:focus {
@@ -126,22 +172,171 @@
             box-shadow: 0 0 10px rgba(0, 102, 255, 0.2) !important;
         }
 
-        .gsc-search-button-v2 {
-            border-radius: 50% !important;
-            background-color: var(--c-blue) !important;
+        /* 검색 버튼 숨김 */
+        .gsc-search-button-v2, button.gsc-search-button, td.gsc-search-button {
+            display: none !important;
+        }
+
+        /* Google 브랜딩 숨김 */
+        .gsc-branding {
+            display: none !important;
+        }
+
+        .gsc-above-wrapper-area {
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .gsc-adBlock {
+            display: none !important;
+        }
+
+        /* 검색창 clear 버튼 위치 조정 */
+        .gsc-clear-button {
+            right: 15px !important;
+        }
+
+        /* 자동완성 드롭다운 스타일 */
+        .gsc-completion-container {
+            background-color: var(--c-bg) !important;
+            border: 1.5px solid var(--c-gray2) !important;
+            border-radius: 20px !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+            margin-top: 5px !important;
+        }
+
+        .gsc-completion-container table {
+            background: none !important;
+        }
+
+        .gsc-completion-item {
+            color: var(--c-text) !important;
+            padding: 8px 16px !important;
+            font-size: 15px !important;
+            transition: background-color 0.2s ease;
+        }
+
+        .gsc-completion-item:hover, .gsc-completion-selected {
+            background-color: var(--c-gray1) !important;
+        }
+
+        /* 검색 결과 컨테이너 - 좌측 정렬 */
+        .gsc-results-wrapper-overlay, .gsc-results-wrapper-visible {
+            background-color: var(--c-bg) !important;
             border: none !important;
-            width: 40px !important;
-            height: 40px !important;
-            transition: transform 0.2s ease-out, background-color 0.3s ease;
+            box-shadow: none !important;
+            max-width: 80% !important;
+            margin: 30px auto 0 auto !important;
+            text-align: left !important;
         }
 
-        .gsc-search-button-v2:hover {
-            background-color: var(--c-blue-active) !important;
-            transform: translateY(-2px);
+        .gsc-resultsbox-visible {
+            background: none !important;
+            border: none !important;
         }
 
-        .gsc-search-button-v2 svg, .gsc-search-button-v2 img {
-            filter: brightness(200%) !important;
+        .gsc-webResult.gsc-result {
+            background: none !important;
+            border: none !important;
+            padding: 20px 0 !important;
+            border-bottom: 1px solid var(--c-gray1) !important;
+            width: 100% !important;
+        }
+
+        /* 검색 결과 썸네일 숨김 */
+        .gs-image-box {
+            display: none !important;
+        }
+
+        /* 검색 결과 제목 */
+        .gs-title {
+            font-size: 20px !important;
+            line-height: 1.3 !important;
+            margin-bottom: 3px !important;
+            text-align: left !important;
+        }
+
+        .gs-title b {
+            font-weight: 600 !important;
+        }
+
+        /* 검색 결과 URL */
+        .gs-bidi-start-align.gs-visibleUrl {
+            color: var(--c-gray6) !important;
+            font-size: 14px !important;
+            line-height: 1.5 !important;
+            text-align: left !important;
+        }
+
+        /* 검색 결과 설명 */
+        .gs-snippet {
+            color: var(--c-gray7) !important;
+            font-size: 14px !important;
+            line-height: 1.6 !important;
+            margin-top: 5px !important;
+            text-align: left !important;
+        }
+
+        /* 검색 정보 (결과 수) */
+        .gsc-result-info {
+            text-align: left !important;
+            color: var(--c-gray6) !important;
+            font-size: 14px !important;
+            padding: 15px 0 !important;
+        }
+
+        /* 페이지네이션 - 좌측 정렬 */
+        .gsc-cursor-box {
+            text-align: left !important;
+            margin-top: 30px !important;
+            padding-bottom: 40px !important;
+        }
+
+        .gsc-cursor-page {
+            background-color: var(--c-bg) !important;
+            color: var(--c-blue) !important;
+            border: 1px solid var(--c-gray2) !important;
+            padding: 8px 12px !important;
+            border-radius: 8px !important;
+            margin: 0 4px !important;
+            transition: background-color 0.2s ease;
+            font-size: 14px !important;
+        }
+
+        .gsc-cursor-page:hover {
+            background-color: var(--c-gray1) !important;
+        }
+
+        .gsc-cursor-current-page {
+            background-color: var(--c-blue) !important;
+            color: var(--c-ltext) !important;
+            border: 1px solid var(--c-blue) !important;
+        }
+
+        /* 검색 결과 없음 메시지 */
+        .gs-no-results-result {
+            color: var(--c-text) !important;
+            background: none !important;
+            text-align: left !important;
+        }
+
+        /* 탭 메뉴 (웹, 이미지 등) */
+        .gsc-tabsArea {
+            max-width: 80% !important;
+            margin: 20px auto 0 auto !important;
+            text-align: left !important;
+        }
+
+        .gsc-tabHeader {
+            color: var(--c-gray7) !important;
+            border-bottom: 2px solid transparent !important;
+            padding: 8px 16px !important;
+            font-size: 14px !important;
+        }
+
+        .gsc-tabHeader.gsc-tabhActive {
+            color: var(--c-blue) !important;
+            border-bottom: 2px solid var(--c-blue) !important;
         }
 
         /* ✅ 다중검색 */
@@ -150,11 +345,7 @@
         }
 
         #search-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 20px;
+            margin-top: 0;
         }
 
         .search-button {
@@ -169,13 +360,17 @@
             transition: transform 0.2s ease-out, background-color 0.3s ease;
         }
 
+        .gsc-input-box .gsc-watermark {
+            display: none !important;
+        }
+
         .search-button:hover {
             background-color: var(--c-blue-active);
             transform: translateY(-2px);
         }
 
         #mode-toggle {
-            margin-top: 30px;
+            margin-top: 20px;
             background-color: var(--c-gray2);
             color: var(--c-text);
             border: none;
@@ -191,7 +386,8 @@
         }
 
         #current-time {
-            margin-top: 25px;
+            text-align: center;
+            margin-top: 20px;
             font-size: 16px;
         }
 
@@ -199,27 +395,96 @@
             text-align: center;
             font-size: 14px;
             margin-top: 5px;
-            color: var(--c-gray6);
         }
 
         @media (prefers-color-scheme: dark) {
-            .gs-title, .gs-title * {
+            .gs-title, .gs-title *, .gs-title b {
                 color: #7cbcff !important;
             }
+            
+            .gsc-completion-container {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+            }
         }
+
+        /* 다크모드 검색결과 링크 방문 효과 */
+        @media (prefers-color-scheme: dark) {
+            .gs-title:visited, .gs-title *:visited {
+                color: #c58af9 !important;
+            }
+        }
+
+        .nav-wrapper {
+            background: rgb(from var(--c-bg) r g b / 80%);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 0.5px solid rgb(from var(--c-gray7) r g b / 10%);
+        }
+
+.nav {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 0 22px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-logo {
+    font-size: 21px;
+    font-weight: 600;
+    color: var(--c-text);
+    text-decoration: none;
+    letter-spacing: -.05em;
+}
+
+.nav-logo.en {
+    font-family: "BR Cobane", sans-serif;
+}
+
+.nav-links {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+}
+
+.nav-link {
+    color: var(--c-text);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 400;
+    opacity: 0.8;
+    transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.nav-link:hover {
+    opacity: 1;
+}
     </style>
 </head>
 <body>
+
 <header>
-    <a href="/" class="header-title-link"><h1>QPI</h1></a>
-    <div class="header-links">
-        <a href="https://mail.google.com/" class="header-link" target="_blank">Gmail</a>
-        <a href="https://drive.google.com/" class="header-link" target="_blank">Drive</a>
-        <a href="https://classroom.google.com/" class="header-link" target="_blank">Classroom</a>
+    <div class="nav-wrapper">
+        <nav class="nav">
+            <a href="/" class="nav-logo en">쿼터파이</a>
+            <div class="nav-links">
+                <a href="https://mail.google.com/" class="nav-link en">메일</a>
+                <a href="https://drive.google.com/" class="nav-link en">드라이브</a>
+                <a href="https://classroom.google.com/" class="nav-link en">클래스룸</a>
+            </div>
+        </nav>
     </div>
 </header>
 
 <main>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br>
     <h1 class="page-title">QISS</h1>
     <button id="mode-toggle" onclick="toggleMode()">🔘 현재: CSE 모드</button>
 
@@ -228,7 +493,9 @@
 
     <!-- ✅ 다중 검색 -->
     <div id="custom-search">
+        <br>
         <input type="text" id="search-bar" class="search-bar" placeholder="무엇이 궁금하신가요?" onkeydown="handleEnter(event)">
+        <br><br>
         <div id="search-buttons">
             <button class="search-button" onclick="searchInGoogle()">Google</button>
             <button class="search-button" onclick="searchInNaver()">Naver</button>
@@ -238,9 +505,14 @@
         </div>
     </div>
 
+    <br>
+
     <div id="current-time">현재 시간 : <span id="time-display"></span></div>
+
     <div id="credit">2025 Q-PI, All Rights Reserved.</div>
 </main>
+
+<br><br><br><br><br><br><br>
 
 <script>
     let isCSE = true;
@@ -254,11 +526,11 @@
         if (isCSE) {
             cse.style.display = 'block';
             custom.style.display = 'none';
-            toggleBtn.textContent = '🔘 현재: CSE 모드';
+            toggleBtn.textContent = 'QISS Search';
         } else {
             cse.style.display = 'none';
             custom.style.display = 'block';
-            toggleBtn.textContent = '🔘 현재: 다중 검색 모드';
+            toggleBtn.textContent = 'QISS';
             document.getElementById('search-bar').focus();
         }
     }
@@ -278,7 +550,7 @@
 
     function searchInNaver() {
         const q = getQuery();
-        if (q) window.open('https://search.naver.com/search.naver?query=' + encodeURIComponent(q), '_blank');
+        if (q) window.open('https://search.naver.com/search.naver?where=nexearch&sm=tab_hty&query=' + encodeURIComponent(q), '_blank');
     }
 
     function searchInDBpia() {
@@ -288,25 +560,26 @@
 
     function searchInGs() {
         const q = getQuery();
-        if (q) window.open('https://scholar.google.com/scholar?q=' + encodeURIComponent(q), '_blank');
+        if (q) window.open('https://scholar.google.com/scholar?hl=ko&as_sdt=0%2C5&q=' + encodeURIComponent(q), '_blank');
     }
 
     function searchInRISS() {
         const q = getQuery();
-        if (q) window.open('https://www.riss.kr/search/Search.do?query=' + encodeURIComponent(q), '_blank');
+        if (q) window.open('https://www.riss.kr/search/Search.do?colName=all&isDetailSearch=N&searchGubun=true&oldQuery=&sflag=1&fsearchMethod=search&isFDetailSearch=N&searchQuery=1&kbid=&pageNumber=1&query=' + encodeURIComponent(q), '_blank');
     }
 
     // 실시간 시계
     const timeDisplay = document.getElementById('time-display');
     setInterval(() => {
         const now = new Date();
-        const y = now.getFullYear();
-        const m = now.getMonth() + 1;
-        const d = now.getDate();
-        const h = now.getHours();
-        const min = now.getMinutes().toString().padStart(2, '0');
-        const s = now.getSeconds().toString().padStart(2, '0');
-        timeDisplay.textContent = `${y}년 ${m}월 ${d}일 ${h}:${min}:${s}`;
+        const year = now.getFullYear();
+        const month = now.getMonth() + 1;
+        const day = now.getDate();
+        const hours = now.getHours();
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const seconds = now.getSeconds().toString().padStart(2, '0');
+
+        timeDisplay.textContent = `${year}년 ${month}월 ${day}일 ${hours}:${minutes}:${seconds}`;
     }, 1000);
 </script>
 </body>
