@@ -340,7 +340,7 @@
         }
 
         /* ✅ 다중검색 */
-        #custom-search {
+        #cse-search {
             display: none;
         }
 
@@ -486,10 +486,7 @@
 <main>
     <br><br><br><br><br><br><br><br><br><br><br><br><br>
     <h1 class="page-title">QISS</h1>
-    <button id="mode-toggle" onclick="toggleMode()">QISS Search</button>
-
-    <!-- ✅ CSE 검색 -->
-    <div id="cse-search" class="gcse-search"></div>
+    <button id="mode-toggle" onclick="toggleMode()">QISS</button>
 
     <!-- ✅ 다중 검색 -->
     <div id="custom-search">
@@ -505,6 +502,10 @@
         </div>
     </div>
 
+    <div id="cse-search" class="gcse-search"></div>
+
+    
+
     <br>
 
     <div id="current-time">현재 시간 : <span id="time-display"></span></div>
@@ -515,7 +516,7 @@
 <br><br><br><br><br><br><br>
 
 <script>
-    let isCSE = true;
+    let isCSE = false;
 
     function toggleMode() {
         isCSE = !isCSE;
