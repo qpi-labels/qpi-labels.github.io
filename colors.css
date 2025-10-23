@@ -39,13 +39,24 @@
     --c-blue-active: #0AA0FF;
 }
 
-@media print {
-    :root {
-        --c-lbg: white;
-        --c-ltext: white;
-        --c-bg: light-dark(white,rgb(35 35 35));
-        --c-antibg: light-dark(rgb(35 35 35),white);
-        --c-text: light-dark(rgb(28 28 30),white);
-        --c-antitext: light-dark(white,rgb(28 28 30));
+/* 시스템 설정에 따른 자동 전환 (data-theme이 없을 때만) */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+        --c-bg: #232323;
+        --c-text: #FAFAFA;
+        --c-ltext: #FAFAFA;
+        --c-dtext: #1C1C1E;
+        --c-dbg: #2C2C2E;
+        
+        --c-gray1: #3A3A3C;
+        --c-gray2: #48484A;
+        --c-gray3: #636366;
+        --c-gray4: #8E8E93;
+        --c-gray5: #AEAEB2;
+        --c-gray6: #C7C7CC;
+        --c-gray7: #E5E5EA;
+        
+        --c-blue: #0A84FF;
+        --c-blue-active: #0AA0FF;
     }
 }
