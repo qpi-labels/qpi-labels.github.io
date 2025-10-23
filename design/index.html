@@ -15,9 +15,9 @@
     <link rel="stylesheet" href="/colors.css">
     <link rel="stylesheet" href="../newstyle.css">
     <style>
-        
         body {
             overflow: hidden;
+            transition: background-color 0.5s ease, color 0.5s ease;
         }
 
         .hero {
@@ -140,122 +140,94 @@
         }
 
         /* 비판 섹션 - 도시 배경 */
-        /* ===== 새로운 코드로 교체 시작 ===== */
+        .criticism-wrapper {
+            position: relative;
+            pointer-events: none;
+            backdrop-filter: blur(10px);            
+            background: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,0));
+            background-image: url('city.png');
+            background-size: cover;
+            background-position: bottom;
+            background-repeat: no-repeat;
+            padding: 0;
+            filter: brightness(100%); 
+            transition: background-image 0.3s ease, filter 0.3s ease, background 0.3s ease;
+        }
 
-.criticism-wrapper {
-    position: relative;
-    pointer-events: none;
-    backdrop-filter: blur(10px);
-    padding: 0;
-    
-    /* 배경 이미지 관련 속성을 깔끔하게 정리합니다. */
-    background-image: url('city.png');
-    background-size: cover;
-    background-position: bottom;
-    background-repeat: no-repeat;
-    
-    filter: brightness(100%);
-    
-    /* 테마 변경 시 이미지가 부드럽게 전환되도록 transition을 추가합니다. */
-    transition: background-image 0.4s ease-in-out, filter 5s ease-in-out;
-}
-
-/* 자바스크립트 버튼으로 테마를 전환할 때 이미지를 변경하는 규칙입니다. */
-[data-theme="dark"] .criticism-wrapper {
-    background-image: url('city2.png');
-}
-
-/* ===== 새로운 코드로 교체 끝 ===== */
-
+        /* data-theme이 dark일 때만 다크 이미지 사용 */
+        [data-theme="dark"] .criticism-wrapper {
+            background: linear-gradient(to bottom, rgba(35,35,35,0.8), rgba(35,35,35,0));
+            background-image: url('city2.png');
+            background-size: cover;
+            background-position: bottom;
+            background-repeat: no-repeat;
+            filter: brightness(100%);
+        }
 
         .criticism-wrapper .grid-container {
             background-position: top;
             position: relative;
             z-index: 1;
         }
-
-        .theme-toggle {
-    position: fixed;
-    bottom: 32px;
-    right: 32px;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: var(--c-dbg);
-    border: 0.5px solid var(--c-gray1);
-    box-shadow: 0 4px 20px rgb(from var(--c-text) r g b / 15%);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-}
-
-.theme-toggle:hover {
-    transform: translateY(-4px) scale(1.05);
-    box-shadow: 0 8px 30px rgb(from var(--c-text) r g b / 20%);
-}
-
-.theme-toggle:active {
-    transform: translateY(-2px) scale(1.02);
-}
-
-.theme-toggle svg {
-    width: 24px;
-    height: 24px;
-    color: var(--c-text);
-    position: absolute;
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.theme-toggle .sun-icon {
-    opacity: 0;
-    transform: rotate(-90deg) scale(0.5);
-}
-
-.theme-toggle .moon-icon {
-    opacity: 1;
-    transform: rotate(0deg) scale(1);
-}
-
-/* 다크모드일 때 */
-[data-theme="dark"] .theme-toggle .sun-icon {
-    opacity: 1;
-    transform: rotate(0deg) scale(1);
-}
-
-[data-theme="dark"] .theme-toggle .moon-icon {
-    opacity: 0;
-    transform: rotate(90deg) scale(0.5);
-}
-
-/* 모바일 반응형 */
-@media (max-width: 768px) {
-    .theme-toggle {
-        bottom: 24px;
-        right: 24px;
-        width: 52px;
-        height: 52px;
-    }
-}
-
-@media (max-width: 480px) {
-    .theme-toggle {
-        bottom: 20px;
-        right: 20px;
-        width: 48px;
-        height: 48px;
-    }
-    
-    .theme-toggle svg {
-        width: 20px;
-        height: 20px;
-    }
-}
         
+        /* 플로팅 테마 토글 버튼 */
+        .theme-toggle {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--c-dbg);
+            border: 0.5px solid var(--c-gray1);
+            box-shadow: 0 4px 20px rgb(from var(--c-text) r g b / 15%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 8px 30px rgb(from var(--c-text) r g b / 20%);
+        }
+
+        .theme-toggle:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .theme-toggle svg {
+            width: 24px;
+            height: 24px;
+            color: var(--c-text);
+            position: absolute;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .theme-toggle .sun-icon {
+            opacity: 0;
+            transform: rotate(-90deg) scale(0.5);
+        }
+
+        .theme-toggle .moon-icon {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+        }
+
+        /* 다크모드일 때 */
+        [data-theme="dark"] .theme-toggle .sun-icon {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+        }
+
+        [data-theme="dark"] .theme-toggle .moon-icon {
+            opacity: 0;
+            transform: rotate(90deg) scale(0.5);
+        }
 
         /* 모바일 반응형 스타일 */
         @media (max-width: 834px) {
@@ -320,6 +292,13 @@
                 max-width: 400px;
                 margin: 30px auto;
             }
+            
+            .theme-toggle {
+                bottom: 24px;
+                right: 24px;
+                width: 52px;
+                height: 52px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -364,41 +343,24 @@
                 padding: 0 20px;
                 box-sizing: border-box;
             }
+            
+            .theme-toggle {
+                bottom: 20px;
+                right: 20px;
+                width: 48px;
+                height: 48px;
+            }
+            
+            .theme-toggle svg {
+                width: 20px;
+                height: 20px;
+            }
         }
-        @media (prefers-color-scheme: dark) {
-            .criticism-wrapper {
-            background-image: url('city2.png'); 
-            filter: brightness(100%); 
-        }
-        
-        @media (prefers-color-scheme: dark) {
-    .criticism-wrapper {
-        background-image: url('city2.png'); 
-        filter: brightness(100%); 
-    }
-}
-}
 
     </style>
     <script src="/nav.js" defer></script>
 </head>
 <body>
-    <button id="theme-toggle" class="theme-toggle" aria-label="테마 전환">
-    <svg class="sun-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="5"/>
-        <line x1="12" y1="1" x2="12" y2="3"/>
-        <line x1="12" y1="21" x2="12" y2="23"/>
-        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-        <line x1="1" y1="12" x2="3" y2="12"/>
-        <line x1="21" y1="12" x2="23" y2="12"/>
-        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-    </svg>
-    <svg class="moon-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-    </svg>
-</button>
     <!-- Navigation -->
     <div id="header"></div>
 
@@ -485,7 +447,7 @@
         </div>
 
         <div class="page-title-section" style="text-align: center; margin-bottom: 50vh;">
-            <p class="page-subtitle"><strong>모더니즘</strong>에서 비롯된 디자인 사조 <strong>미니멀리즘</strong>은<br> 현재까지도 가장 성공한 웹 디자인 사조로써 활발히 사용되고 있습니다.<br> 미니멀리즘은 <strong>사용자 경험</strong>을 향상하고 웹사이트를 <strong>최적화</strong>하는데 탁월하지만, <br>디자인의 획일화로 독창성이 떨어질 수 있다는 단점이 있습니다.</p>
+            <p class="page-subtitle"><strong>모더니즘</strong>에서 비롯된 디자인 사조 <strong>미니멀리즘</strong>은<br> 현재까지도 가장 성공한 웹 디자인 사조로써 활발히 사용되고 있습니다.<br> 미니멀리즘은 <strong>사용자 경험</strong>을 향상하고 웹사이트를 <strong>최적화</strong>하는데 탁월하지만, <br>디자인의 획일화로 인해 <strong>따분함</strong>을 유발할 수 있다는 단점이 있습니다.</p>
         </div>
 
         <div class="page-title-section" style="text-align: center; margin-bottom: 50vh;">
@@ -677,42 +639,26 @@
         </footer>
     </main>
 
-    <script>// Intersection Observer for scroll animations
+    <!-- 플로팅 다크모드 토글 버튼 -->
+    <button id="theme-toggle" class="theme-toggle" aria-label="테마 전환">
+        <svg class="sun-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <svg class="moon-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+    </button>
 
-        // 테마 토글 기능
-const themeToggle = document.getElementById('theme-toggle');
-const html = document.documentElement;
-
-// 저장된 테마 불러오기 또는 시스템 설정 감지
-const savedTheme = localStorage.getItem('theme');
-const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-const currentTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
-
-// 초기 테마 설정
-html.setAttribute('data-theme', currentTheme);
-
-// 토글 버튼 클릭 이벤트
-themeToggle.addEventListener('click', () => {
-    const currentTheme = html.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    
-    html.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-    
-    // 버튼 애니메이션
-    themeToggle.style.transform = 'rotate(360deg) scale(0.9)';
-    setTimeout(() => {
-        themeToggle.style.transform = '';
-    }, 300);
-});
-
-// 시스템 테마 변경 감지
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    if (!localStorage.getItem('theme')) {
-        html.setAttribute('data-theme', e.matches ? 'dark' : 'light');
-    }
-});
-
+    <script>
+        // Intersection Observer for scroll animations
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -743,6 +689,45 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e)
                     });
                 }
             });
+        });
+
+        // 테마 토글 기능
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+
+        // 저장된 테마 불러오기 (localStorage 우선)
+        const savedTheme = localStorage.getItem('theme');
+        
+        // 초기 테마 설정 - localStorage가 있으면 그것을 사용, 없으면 light 기본값
+        if (savedTheme) {
+            html.setAttribute('data-theme', savedTheme);
+        } else {
+            // localStorage가 없을 때만 시스템 설정 확인
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const initialTheme = systemPrefersDark ? 'dark' : 'light';
+            html.setAttribute('data-theme', initialTheme);
+        }
+
+        // 토글 버튼 클릭 이벤트
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // 버튼 애니메이션
+            themeToggle.style.transform = 'rotate(360deg) scale(0.9)';
+            setTimeout(() => {
+                themeToggle.style.transform = '';
+            }, 300);
+        });
+
+        // 시스템 테마 변경 감지 (localStorage에 저장된 값이 없을 때만)
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (!localStorage.getItem('theme')) {
+                html.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+            }
         });
     </script>
 </body>
