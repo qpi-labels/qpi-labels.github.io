@@ -140,20 +140,32 @@
         }
 
         /* 비판 섹션 - 도시 배경 */
-        .criticism-wrapper {
-            position: relative;
-            pointer-events: none;
-            backdrop-filter: blur(10px);            
-            background: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,0));
-            background-image: url('city.png');
-            background-size: cover;
-            background-position: bottom; /* 수정: center → top */
-            background-repeat: no-repeat;
+        /* ===== 새로운 코드로 교체 시작 ===== */
+
+.criticism-wrapper {
+    position: relative;
+    pointer-events: none;
+    backdrop-filter: blur(10px);
+    padding: 0;
     
-            padding: 0;
-            filter: brightness(100%); 
-            transition: filter 5s ease-in-out;
-        }
+    /* 배경 이미지 관련 속성을 깔끔하게 정리합니다. */
+    background-image: url('city.png');
+    background-size: cover;
+    background-position: bottom;
+    background-repeat: no-repeat;
+    
+    filter: brightness(100%);
+    
+    /* 테마 변경 시 이미지가 부드럽게 전환되도록 transition을 추가합니다. */
+    transition: background-image 0.4s ease-in-out, filter 5s ease-in-out;
+}
+
+/* 자바스크립트 버튼으로 테마를 전환할 때 이미지를 변경하는 규칙입니다. */
+[data-theme="dark"] .criticism-wrapper {
+    background-image: url('city2.png');
+}
+
+/* ===== 새로운 코드로 교체 끝 ===== */
 
 
         .criticism-wrapper .grid-container {
@@ -358,6 +370,13 @@
             background-image: url('city2.png'); 
             filter: brightness(100%); 
         }
+        
+        @media (prefers-color-scheme: dark) {
+    .criticism-wrapper {
+        background-image: url('city2.png'); 
+        filter: brightness(100%); 
+    }
+}
 }
 
     </style>

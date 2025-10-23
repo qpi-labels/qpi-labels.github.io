@@ -1,42 +1,39 @@
-:root,
-:root[data-theme="light"] {
-    --c-bg: #FAFAFA;
-    --c-text: #1C1C1E;
-    --c-ltext: #FAFAFA;
-    --c-dtext: #1C1C1E;
-    --c-dbg: #FFFFFF;
-    
-    --c-gray1: #E5E5EA;
-    --c-gray2: #C7C7CC;
-    --c-gray3: #AEAEB2;
-    --c-gray4: #8E8E93;
-    --c-gray5: #636366;
-    --c-gray6: #48484A;
-    --c-gray7: #3A3A3C;
-    
-    --c-blue: #007AFF;
-    --c-blue-active: #0096FF;
-}
+:root {
+    color-scheme: light dark;
 
-/* 다크 테마 */
-:root[data-theme="dark"] {
-    --c-bg: #232323;
-    --c-text: #FAFAFA;
-    --c-ltext: #FAFAFA;
-    --c-dtext: #1C1C1E;
-    --c-dbg: #2C2C2E;
-    
-    --c-gray1: #3A3A3C;
-    --c-gray2: #48484A;
-    --c-gray3: #636366;
-    --c-gray4: #8E8E93;
-    --c-gray5: #AEAEB2;
-    --c-gray6: #C7C7CC;
-    --c-gray7: #E5E5EA;
-    
-    --c-blue: #0A84FF;
-    --c-blue-active: #0AA0FF;
-}
+    --c-lbg: rgb(250 250 250);
+    --c-dbg: rgb(35 35 35);
+    --c-ltext: rgb(250 250 250);
+    --c-dtext: rgb(28 28 30);
+    --c-grayl3: rgb(229 229 234);
+    --c-grayl2: rgb(199 199 204);
+    --c-grayl1: rgb(174 174 178);
+    --c-gray: rgb(142 142 147);
+    --c-grayd1: rgb(99 99 102);
+    --c-grayd2: rgb(72 72 74);
+    --c-grayd3: rgb(58 58 60);
+    --c-lblue: rgb(0 122 255);
+    --c-lblue-active: rgb(0 150 255);
+    --c-dblue: rgb(10 132 255);
+    --c-dblue-active: rgb(10 160 255);
+    --c-black: rgb(0 0 0);
+
+    --c-bg: light-dark(rgb(250 250 250),rgb(35 35 35));
+    --c-antibg: light-dark(rgb(35 35 35),rgb(250 250 250));
+    --c-text: light-dark(rgb(28 28 30),rgb(250 250 250));
+    --c-antitext: light-dark(rgb(250 250 250),rgb(28 28 30));
+    --c-gray1: light-dark(rgb(229 229 234),rgb(58 58 60));
+    --c-gray2: light-dark(rgb(199 199 204),rgb(72 72 74));
+    --c-gray3: light-dark(rgb(174 174 178),rgb(99 99 102));
+    --c-gray4: light-dark(rgb(142 142 147),rgb(142 142 147));
+    --c-gray5: light-dark(rgb(99 99 102),rgb(174 174 178));
+    --c-gray6: light-dark(rgb(72 72 74),rgb(199 199 204));
+    --c-gray7: light-dark(rgb(58 58 60),rgb(229 229 234));
+    --c-blue: light-dark(rgb(0 122 255),rgb(10 132 255));
+    --c-blue-active: light-dark(rgb(0 150 255),rgb(10 160 255));
+    --c-antiblue: light-dark(rgb(10 132 255),rgb(0 122 255));
+    --c-antiblue-active: light-dark(rgb(10 160 255),rgb(0 150 255));
+
 
 @media print {
     :root {
