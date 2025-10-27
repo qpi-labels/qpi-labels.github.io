@@ -429,21 +429,38 @@
             transform: translateY(-2px);
         }
 
-        #mode-toggle {
-            margin-top: 20px;
-            background-color: var(--c-gray2);
-            color: var(--c-text);
-            border: none;
-            border-radius: 20px;
-            padding: 7px 18px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.3s ease;
-        }
+/* 모드 토글 버튼 애니메이션 */
+#mode-toggle {
+    margin-top: 20px;
+    background-color: var(--c-gray2);
+    color: var(--c-text);
+    border: none;
+    border-radius: 20px;
+    padding: 7px 18px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    position: relative;
+    min-width: 80px;
+    font-family: "BR Cobane", sans-serif;
+}
 
-        #mode-toggle:hover {
-            background-color: var(--c-gray3);
-        }
+#mode-toggle:hover {
+    background-color: var(--c-gray3);
+}
+
+/* 버튼 텍스트 애니메이션 */
+#mode-toggle span {
+    display: inline-block;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 확장 상태 */
+#mode-toggle.expanded {
+    padding: 7px 24px;
+    min-width: 130px;
+}
 
         #current-time {
             text-align: center;
@@ -769,6 +786,8 @@ faviconObserver.observe(document.body, {
 });
 
 setInterval(addFavicons, 1000);
+
+
 
 </script>
 </body>
