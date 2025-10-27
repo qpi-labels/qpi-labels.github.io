@@ -622,7 +622,6 @@
         <input type="text" id="search-bar" class="search-bar" placeholder="무엇이 궁금하신가요?" onkeydown="handleEnter(event)">
         <br><br>
         <div id="search-buttons">
-            <button class="search-button" onclick="searchInGoogle()">Google</button>
             <button class="search-button" onclick="searchInNaver()">Naver</button>
             <button class="search-button" onclick="searchInDBpia()">DBpia</button>
             <button class="search-button" onclick="searchInGs()">Scholar</button>
@@ -644,23 +643,39 @@
 <script>
     let isCSE = false;
 
-    function toggleMode() {
-        isCSE = !isCSE;
-        const cse = document.getElementById('cse-search');
-        const custom = document.getElementById('custom-search');
-        const toggleBtn = document.getElementById('mode-toggle');
+function toggleMode() {
+    isCSE = !isCSE;
+    const cse = document.getElementById('cse-search');
+    const custom = document.getElementById('custom-search');
+    const toggleBtn = document.getElementById('mode-toggle');
 
-        if (isCSE) {
+    if (isCSE) {
+        // QISS Search로 전환
+        toggleBtn.classList.add('expanded');
+        toggleBtn.innerHTML = '<span class="qiss-text">QISS </span><span class="search-text">&nbsp;Search</span>';
+        
+        setTimeout(() => {
             cse.style.display = 'block';
             custom.style.display = 'none';
-            toggleBtn.textContent = 'QISS Search';
-        } else {
+        }, 300);
+    } else {
+        // QISS로 전환
+        toggleBtn.classList.remove('expanded');
+        
+        setTimeout(() => {
+            toggleBtn.innerHTML = '<span class="qiss-text">QISS</span>';
             cse.style.display = 'none';
             custom.style.display = 'block';
-            toggleBtn.textContent = 'QISS';
             document.getElementById('search-bar').focus();
-        }
+        }, 100);
     }
+}
+
+// 페이지 로드 시 초기 설정
+window.addEventListener('DOMContentLoaded', function() {
+    const toggleBtn = document.getElementById('mode-toggle');
+    toggleBtn.innerHTML = '<span class="qiss-text">QISS</span>';
+});
 
     function handleEnter(event) {
         if (event.key === 'Enter') searchInGoogle();
