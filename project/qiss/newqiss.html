@@ -99,7 +99,7 @@
         /* ✅ 공통 검색바 디자인 */
         .search-bar {
             width: 80%;
-            max-width: 584px;
+            max-width: 520px;
             padding: 10px 20px;
             border-radius: 30px;
             border: 1px solid var(--c-gray1);
@@ -160,7 +160,7 @@
             line-height: 20px !important;
             box-shadow: none !important;
             width: 100% !important;
-            max-width: 584px !important;
+            max-width: 680px !important;
             box-sizing: border-box !important;
         }
 
@@ -199,12 +199,10 @@
             display: none !important;
         }
 
-        /* 검색창 clear 버튼 위치 조정 */
         .gsc-clear-button {
             right: 15px !important;
         }
 
-        /* 자동완성 드롭다운 스타일 */
         .gsc-completion-container {
             background-color: var(--c-bg) !important;
             border: 1.5px solid var(--c-gray2) !important;
@@ -228,7 +226,6 @@
             background-color: var(--c-gray1) !important;
         }
 
-        /* 검색 결과 컨테이너 - 좌측 정렬 */
         .gsc-results-wrapper-overlay, .gsc-results-wrapper-visible {
             background-color: var(--c-bg) !important;
             border: none !important;
@@ -244,7 +241,6 @@
             border: none !important;
         }
 
-        /* 검색 결과를 카드 디자인으로 변경 */
 .gsc-webResult.gsc-result {
     background: var(--c-gray1) !important;
     border: none !important;
@@ -517,11 +513,11 @@
         .nav-link:hover {
             opacity: 1;
         }
+        
     </style>
 </head>
 <body>
 
-<header>
     <div class="nav-wrapper">
         <nav class="nav">
             <a href="/" class="nav-logo en">쿼터파이</a>
@@ -532,9 +528,10 @@
             </div>
         </nav>
     </div>
-</header>
 
 <main>
+
+    
     <br><br><br><br><br><br><br><br><br><br><br><br><br>
     <h1 class="page-title">QISS</h1>
     <button id="mode-toggle" onclick="toggleMode()">QISS</button>
@@ -561,7 +558,7 @@
 
     <div id="current-time">현재 시간 : <span id="time-display"></span></div>
 
-    <div id="credit">2025 Q-PI, All Rights Reserved.</div>
+    <div id="credit">2025 쿼터파이</div>
 </main>
 
 <br><br><br><br><br><br><br>
@@ -633,6 +630,7 @@
 
         timeDisplay.textContent = `${year}년 ${month}월 ${day}일 ${hours}:${minutes}:${seconds}`;
     }, 1000);
+    
 </script>
 </body>
 </html>
