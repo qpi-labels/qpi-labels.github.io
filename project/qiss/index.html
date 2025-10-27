@@ -146,19 +146,72 @@
             font-size: 14px;
             margin-top: 5px;
         }
+        .nav-wrapper {
+            background: rgb(from var(--c-bg) r g b / 80%);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 0.5px solid rgb(from var(--c-gray7) r g b / 10%);
+        }
+
+        .nav {
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: 0 22px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-size: 21px;
+            font-weight: 600;
+            color: var(--c-text);
+            text-decoration: none;
+            letter-spacing: -.05em;
+        }
+
+        .nav-logo.en {
+            font-family: "BR Cobane", sans-serif;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--c-text);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 400;
+            opacity: 0.8;
+            transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
-    <header>
-        <a href="/" class="header-title-link">
-            <h1>QPI</h1>
-        </a>
-        <div class="header-links">
-            <a href="https://mail.google.com/" class="header-link" target="_blank">Gmail</a>
-            <a href="https://drive.google.com/" class="header-link" target="_blank">Drive</a>
-            <a href="https://classroom.google.com/" class="header-link" target="_blank">Classroom</a>
-        </div>
-    </header>
+
+        <div class="nav-wrapper">
+        <nav class="nav">
+            <a href="/" class="nav-logo en">쿼터파이</a>
+            <div class="nav-links">
+                <a href="https://mail.google.com/" class="nav-link en">메일</a>
+                <a href="https://drive.google.com/" class="nav-link en">드라이브</a>
+                <a href="https://classroom.google.com/" class="nav-link en">클래스룸</a>
+            </div>
+        </nav>
+    </div>
 
     <main>
         <div style="margin-bottom: 15vh;"></div>
