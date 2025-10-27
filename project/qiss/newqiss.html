@@ -244,59 +244,56 @@
             border: none !important;
         }
 
-        .gsc-webResult.gsc-result {
-            background: none !important;
-            border: none !important;
-            padding: 24px 0 !important;
-            border-bottom: 1px solid var(--c-gray1) !important;
-            width: 100% !important;
-        }
+        /* 검색 결과를 카드 디자인으로 변경 */
+.gsc-webResult.gsc-result {
+    background: var(--c-gray1) !important;
+    border: none !important;
+    padding: 20px !important;
+    margin-bottom: 16px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+    transition: box-shadow 0.2s ease, transform 0.2s ease !important;
+}
 
-        .gsc-webResult.gsc-result:last-child {
-            border-bottom: none !important;
-        }
+.gsc-webResult.gsc-result:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    transform: translateY(-2px) !important;
+}
 
-        /* 검색 결과 썸네일 숨김 */
-        .gs-image-box {
-            display: none !important;
-        }
+.gsc-webResult.gsc-result:last-child {
+    border-bottom: none !important;
+}
 
-        /* 검색 결과 제목 - 더 강조된 디자인 */
-        .gs-title {
-            font-size: 20px !important;
-            line-height: 1.4 !important;
-            margin-bottom: 4px !important;
-            text-align: left !important;
-            font-weight: 500 !important;
-        }
+/* URL 링크 숨김 */
+.gs-bidi-start-align.gs-visibleUrl {
+    display: none !important;
+}
 
-        .gs-title a {
-            color: #232323 !important;
-            text-decoration: none !important;
-            transition: color 0.2s ease !important;
-        }
+/* 제목 스타일 조정 */
+.gs-title {
+    font-size: 18px !important;
+    line-height: 1.4 !important;
+    margin-bottom: 8px !important;
+}
 
-        .gs-title a:hover {
-            text-decoration: underline !important;
-        }
+/* 설명 스타일 조정 */
+.gs-snippet {
+    margin-top: 0 !important;
+}
 
-        .gs-title a:visited {
-            color: #232323 !important;
-        }
+/* 다크모드 카드 스타일 */
+@media (prefers-color-scheme: dark) {
+    .gsc-webResult.gsc-result {
+        background: rgb(from var(--c-gray1) r g b / 50%) !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+    }
+    
+    .gsc-webResult.gsc-result:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+    }
+}
 
-        .gs-title b {
-            font-weight: 600 !important;
-        }
 
-        /* 검색 결과 URL - 더 명확한 스타일 */
-        .gs-bidi-start-align.gs-visibleUrl {
-            color: #5f6368 !important;
-            font-size: 14px !important;
-            line-height: 1.5 !important;
-            text-align: left !important;
-            margin-bottom: 2px !important;
-            display: block !important;
-        }
 
         /* 검색 결과 설명 - 가독성 향상 */
         .gs-snippet {
