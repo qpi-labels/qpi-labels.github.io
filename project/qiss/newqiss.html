@@ -688,6 +688,29 @@
     opacity: 1;
     transform: translateY(0);
 }
+/* 하단 요소들 애니메이션 */
+#current-time, #credit {
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#current-time.fade-out, #credit.fade-out {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+/* 검색 버튼 애니메이션 */
+#search-buttons {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.2s,
+                transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
+}
+
+#search-buttons.fade-out {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition-delay: 0s;
+}
     </style>
 </head>
 <body>
@@ -741,6 +764,9 @@ function toggleMode() {
     const cse = document.getElementById('cse-search');
     const custom = document.getElementById('custom-search');
     const toggleBtn = document.getElementById('mode-toggle');
+    const currentTime = document.getElementById('current-time');
+    const credit = document.getElementById('credit');
+    const searchButtons = document.getElementById('search-buttons');
 
     if (isCSE) {
         // QISS Search로 전환
@@ -750,6 +776,9 @@ function toggleMode() {
             requestAnimationFrame(() => {
                 toggleBtn.classList.add('expanded');
                 custom.classList.add('fade-out');
+                searchButtons.classList.add('fade-out');
+                currentTime.classList.add('fade-out');
+                credit.classList.add('fade-out');
             });
         });
         
@@ -762,16 +791,23 @@ function toggleMode() {
             });
         }, 400);
     } else {
-        // QISS로 전환
-        toggleBtn.classList.remove('expanded');
-        cse.classList.remove('fade-in');
+    // QISS로 전환
+    toggleBtn.classList.remove('expanded');
+    cse.classList.remove('fade-in');
+    
+    setTimeout(() => {
+        cse.style.display = 'none';
+        custom.style.display = 'block';
+        currentTime.classList.remove('fade-out');
+        credit.classList.remove('fade-out');
         
-        setTimeout(() => {
-            cse.style.display = 'none';
-            custom.style.display = 'block';
+        // 약간의 지연 후 fade-out 제거하여 애니메이션 트리거
+        requestAnimationFrame(() => {
             custom.classList.remove('fade-out');
-        }, 400);
-    }
+            searchButtons.classList.remove('fade-out');
+        });
+    }, 400);
+}
 }
 
 window.addEventListener('DOMContentLoaded', function() {
