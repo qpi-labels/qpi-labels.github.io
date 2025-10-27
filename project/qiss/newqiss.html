@@ -228,7 +228,7 @@
             right: 15px !important;
         }
 
-/* 자동완성 드롭다운 스타일 수정 */
+/* 자동완성 드롭다운 위치 수정 - 검색창 바로 아래 */
 .gsc-completion-container {
     background-color: var(--c-bg) !important;
     border: 1.5px solid var(--c-gray2) !important;
@@ -237,27 +237,36 @@
     margin-top: 5px !important;
     width: 100% !important;
     max-width: 584px !important;
-    position: fixed !important;  /* absolute에서 fixed로 변경 */
-    left: 50% !important;
-    transform: translateX(-50%) !important;
+    position: absolute !important;  /* fixed에서 absolute로 변경 */
+    left: 0 !important;  /* 50%에서 0으로 */
+    transform: none !important;  /* transform 제거 */
     box-sizing: border-box !important;
-    z-index: 1000 !important;  /* 추가 */
+    z-index: 1000 !important;
 }
 
-/* 자동완성이 검색창 바로 아래에 붙도록 */
+/* 검색창 wrapper를 relative로 */
+.gsc-search-box {
+    margin: 0 auto !important;
+    width: 100% !important;
+    max-width: 584px !important;
+    position: relative !important;
+    padding-bottom: 10px !important;
+}
+
+/* 자동완성 wrapper */
 .gsc-completion-wrapper {
     width: 100% !important;
     max-width: 584px !important;
     margin: 0 auto !important;
-    position: relative !important;  /* 추가 */
+    position: relative !important;
 }
 
-/* 자동완성 테이블도 중앙 정렬 */
+/* 자동완성 테이블 */
 .gsc-completion-container table {
     background: none !important;
     width: 100% !important;
     max-width: 584px !important;
-    margin: 0 auto !important;  /* 추가 */
+    margin: 0 !important;
 }
 
 /* 자동완성 아이템 */
@@ -269,8 +278,12 @@
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
-    text-align: left !important;  /* 추가 */
+    text-align: left !important;
     font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
+}
+
+.gsc-completion-item:hover, .gsc-completion-selected {
+    background-color: var(--c-gray1) !important;
 }
 
         .gsc-completion-item:hover, .gsc-completion-selected {
@@ -606,7 +619,7 @@
 
     <div id="current-time">현재 시간 : <span id="time-display"></span></div>
 
-    <div id="credit">2025 Q-PI, All Rights Reserved.</div>
+    <div id="credit">2025 쿼터파이</div>
 </main>
 
 <br><br><br><br><br><br><br>
