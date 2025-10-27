@@ -96,10 +96,10 @@
             font-weight: 700;
         }
 
-        /* ✅ 공통 검색바 디자인 */
+        /* 공통 검색바 디자인 */
         .search-bar {
             width: 80%;
-            max-width: 520px;
+            max-width: 584px;
             padding: 10px 20px;
             border-radius: 30px;
             border: 1px solid var(--c-gray1);
@@ -116,7 +116,7 @@
             box-shadow: 0 0 10px rgba(0, 102, 255, 0.2);
         }
 
-        /* ✅ CSE 검색창 스타일 개선 */
+        /* CSE 검색창 스타일 개선 */
         .gcse-search {
             margin: 0 auto;
             width: 100%;
@@ -134,6 +134,8 @@
             margin: 0 auto !important;
             width: 100% !important;
             max-width: 584px !important;
+            position: relative !important;
+            padding-bottom: 10px !important;
         }
 
         table.gsc-search-box {
@@ -142,6 +144,7 @@
             background: none !important;
             width: 100% !important;
             max-width: 584px !important;
+            padding-bottom: 20px !important;
         }
 
         td.gsc-input {
@@ -160,8 +163,9 @@
             line-height: 20px !important;
             box-shadow: none !important;
             width: 100% !important;
-            max-width: 680px !important;
+            max-width: 584px !important;
             box-sizing: border-box !important;
+            font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
         }
 
         .gsc-input-box {
@@ -181,51 +185,105 @@
             display: none !important;
         }
 
-        /* Google 브랜딩 및 워터마크 숨김 */
-        .gsc-branding, .gsc-watermark, .gcsc-branding, .gcsc-branding-img, .gcsc-branding-text {
+        .gsc-branding, 
+        .gsc-watermark, 
+        .gcsc-branding, 
+        .gcsc-branding-img, 
+        .gcsc-branding-text,
+        .gsc-input-box .gsc-watermark,
+        .gsc-branding-text,
+        .gsc-branding-img,
+        .gsc-branding-img-noclear,
+        .gsc-branding-text-noclear,
+        td.gsc-branding {
             display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            position: absolute !important;
+            left: -9999px !important;
         }
 
-        .gsc-input-box .gsc-watermark {
-            display: none !important;
-        }
-
+        /* 불필요한 요소들 완전 제거 */
+        .gsc-tabsArea,
+        .gsc-orderby-container,
+        .gcsc-find-more-on-google,
+        .gs-image,
+        .gsc-refinementsArea,
         .gsc-above-wrapper-area {
-            padding: 0 !important;
-            margin: 0 !important;
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            width: 0 !important;
+            opacity: 0 !important;
         }
 
         .gsc-adBlock {
             display: none !important;
         }
 
+        /* 검색창 clear 버튼 위치 조정 */
         .gsc-clear-button {
             right: 15px !important;
         }
 
-        .gsc-completion-container {
-            background-color: var(--c-bg) !important;
-            border: 1.5px solid var(--c-gray2) !important;
-            border-radius: 20px !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-            margin-top: 5px !important;
-        }
+/* 자동완성 드롭다운 스타일 수정 */
+.gsc-completion-container {
+    background-color: var(--c-bg) !important;
+    border: 1.5px solid var(--c-gray2) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    margin-top: 5px !important;
+    width: 100% !important;
+    max-width: 584px !important;
+    position: fixed !important;  /* absolute에서 fixed로 변경 */
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    box-sizing: border-box !important;
+    z-index: 1000 !important;  /* 추가 */
+}
 
-        .gsc-completion-container table {
-            background: none !important;
-        }
+/* 자동완성이 검색창 바로 아래에 붙도록 */
+.gsc-completion-wrapper {
+    width: 100% !important;
+    max-width: 584px !important;
+    margin: 0 auto !important;
+    position: relative !important;  /* 추가 */
+}
 
-        .gsc-completion-item {
-            color: var(--c-text) !important;
-            padding: 8px 16px !important;
-            font-size: 15px !important;
-            transition: background-color 0.2s ease;
-        }
+/* 자동완성 테이블도 중앙 정렬 */
+.gsc-completion-container table {
+    background: none !important;
+    width: 100% !important;
+    max-width: 584px !important;
+    margin: 0 auto !important;  /* 추가 */
+}
+
+/* 자동완성 아이템 */
+.gsc-completion-item {
+    color: var(--c-text) !important;
+    padding: 8px 16px !important;
+    font-size: 15px !important;
+    transition: background-color 0.2s ease;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    text-align: left !important;  /* 추가 */
+    font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
+}
 
         .gsc-completion-item:hover, .gsc-completion-selected {
             background-color: var(--c-gray1) !important;
         }
 
+        .gsc-completion-wrapper {
+            width: 100% !important;
+            max-width: 584px !important;
+            margin: 0 auto !important;
+        }
+
+        /* 검색 결과 컨테이너 - 좌측 정렬 */
         .gsc-results-wrapper-overlay, .gsc-results-wrapper-visible {
             background-color: var(--c-bg) !important;
             border: none !important;
@@ -241,66 +299,52 @@
             border: none !important;
         }
 
-.gsc-webResult.gsc-result {
-    background: var(--c-gray1) !important;
-    border: none !important;
-    padding: 20px !important;
-    margin-bottom: 16px !important;
-    border-radius: 12px !important;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
-    transition: box-shadow 0.2s ease, transform 0.2s ease !important;
-}
+        /* 검색 결과를 카드 디자인으로 변경 */
+        .gsc-webResult.gsc-result {
+            background: var(--c-gray1) !important;
+            border: none !important;
+            padding: 20px !important;
+            margin-bottom: 16px !important;
+            border-radius: 20px !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+            transition: box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;  /* 더 느리고 부드럽게 */
+        }
 
-.gsc-webResult.gsc-result:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-    transform: translateY(-2px) !important;
-}
+        .gsc-webResult.gsc-result:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+            transform: translateY(-2px) !important;
+        }
 
-.gsc-webResult.gsc-result:last-child {
-    border-bottom: none !important;
-}
+        .gsc-webResult.gsc-result:last-child {
+            border-bottom: none !important;
+        }
 
-/* URL 링크 숨김 */
-.gs-bidi-start-align.gs-visibleUrl {
-    display: none !important;
-}
+        /* URL 링크 숨김 */
+        .gs-bidi-start-align.gs-visibleUrl {
+            display: none !important;
+        }
 
-/* 제목 스타일 조정 */
+/* 검색 결과 제목 수정 */
 .gs-title {
     font-size: 18px !important;
     line-height: 1.4 !important;
     margin-bottom: 8px !important;
+    font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
+    /* display: flex 제거 */
 }
 
-/* 설명 스타일 조정 */
-.gs-snippet {
-    margin-top: 0 !important;
-}
+/* ::before 제거 (JavaScript로 파비콘 추가하므로 불필요) */
 
-/* 다크모드 카드 스타일 */
-@media (prefers-color-scheme: dark) {
-    .gsc-webResult.gsc-result {
-        background: rgb(from var(--c-gray1) r g b / 50%) !important;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
-    }
-    
-    .gsc-webResult.gsc-result:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
-    }
-}
-
-
-
-        /* 검색 결과 설명 - 가독성 향상 */
         .gs-snippet {
+            margin-top: 0 !important;
             color: #4d5156 !important;
             font-size: 14px !important;
             line-height: 1.6 !important;
             margin-top: 8px !important;
             text-align: left !important;
+            font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
         }
 
-        /* 검색 정보 (결과 수) */
         .gsc-result-info {
             text-align: left !important;
             color: var(--c-gray6) !important;
@@ -309,68 +353,44 @@
             border-bottom: 1px solid var(--c-gray1) !important;
         }
 
-        /* 페이지네이션 - 중앙 정렬 */
-        /* 페이지네이션 - 중앙 정렬, 크기 축소 */
-.gsc-cursor-box {
-    text-align: center !important;
-    margin-top: 30px !important;
-    padding-bottom: 40px !important;
-}
+        .gsc-cursor-box {
+            text-align: center !important;
+            margin-top: 30px !important;
+            padding-bottom: 40px !important;
+        }
 
-.gsc-cursor-page {
-    background-color: var(--c-bg) !important;
-    color: #1a73e8 !important;
-    border: 1px solid var(--c-gray2) !important;
-    padding: 6px 10px !important;
-    border-radius: 6px !important;
-    margin: 0 4px !important;
-    transition: background-color 0.2s ease !important;
-    font-size: 13px !important;
-    min-width: 32px !important;
-    height: 32px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-}
+        .gsc-cursor-page {
+            background-color: var(--c-bg) !important;
+            color: #1a73e8 !important;
+            border: 1px solid var(--c-gray2) !important;
+            padding: 2px 2px !important;
+            border-radius: 12px !important;
+            margin: 0 4px !important;
+            transition: background-color 0.2s ease !important;
+            font-size: 13px !important;
+            min-width: 32px !important;
+            height: 32px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
 
-.gsc-cursor-page:hover {
-    background-color: var(--c-gray1) !important;
-}
+        .gsc-cursor-page:hover {
+            background-color: var(--c-gray1) !important;
+        }
 
-.gsc-cursor-current-page {
-    background-color: #1a73e8 !important;
-    color: white !important;
-    border: 1px solid #1a73e8 !important;
-}
+        .gsc-cursor-current-page {
+            background-color: #1a73e8 !important;
+            color: white !important;
+            border: 1px solid #1a73e8 !important;
+        }
 
-        /* 검색 결과 없음 메시지 */
         .gs-no-results-result {
             color: var(--c-text) !important;
             background: none !important;
             text-align: left !important;
         }
 
-        /* 탭 메뉴 (웹, 이미지 등) */
-        .gsc-tabsArea {
-            max-width: 680px !important;
-            margin: 20px auto 0 auto !important;
-            text-align: left !important;
-            padding: 0 20px !important;
-        }
-
-        .gsc-tabHeader {
-            color: var(--c-gray7) !important;
-            border-bottom: 2px solid transparent !important;
-            padding: 8px 16px !important;
-            font-size: 14px !important;
-        }
-
-        .gsc-tabHeader.gsc-tabhActive {
-            color: #1a73e8 !important;
-            border-bottom: 2px solid #1a73e8 !important;
-        }
-
-        /* ✅ 다중검색 */
         #cse-search {
             display: none;
         }
@@ -424,8 +444,17 @@
             margin-top: 5px;
         }
 
-        /* 다크모드 검색결과 스타일 */
+
         @media (prefers-color-scheme: dark) {
+            .gsc-webResult.gsc-result {
+                background: rgb(from var(--c-gray1) r g b / 50%) !important;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+            }
+            
+            .gsc-webResult.gsc-result:hover {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+            }
+
             .gs-title a {
                 color: #FAFAFA !important;
             }
@@ -453,11 +482,6 @@
             .gsc-cursor-current-page {
                 background-color: #8ab4f8 !important;
                 border: 1px solid #8ab4f8 !important;
-            }
-
-            .gsc-tabHeader.gsc-tabhActive {
-                color: #8ab4f8 !important;
-                border-bottom: 2px solid #8ab4f8 !important;
             }
         }
 
@@ -513,11 +537,38 @@
         .nav-link:hover {
             opacity: 1;
         }
-        
+
+.gs-title b, .gs-snippet b {
+    color: var(--c-text) !important;
+    font-weight: 700 !important;
+}
+
+.gs-title b, .gs-snippet b {
+    color: var(--c-blue) !important;
+    font-weight: 700 !important;
+}
+
+.gs-title b, .gs-snippet b {
+    color: inherit !important;
+    font-weight: inherit !important;
+}
+
+@media (prefers-color-scheme: dark) {
+    .gs-title b, .gs-snippet b {
+        color: #8ab4f8 !important;
+        font-weight: 700 !important;
+    }
+    
+    .gs-title b, .gs-snippet b {
+        color: inherit !important;
+        font-weight: inherit !important;
+    }
+}
     </style>
 </head>
 <body>
 
+<header>
     <div class="nav-wrapper">
         <nav class="nav">
             <a href="/" class="nav-logo en">쿼터파이</a>
@@ -528,15 +579,14 @@
             </div>
         </nav>
     </div>
+</header>
 
 <main>
-
-    
     <br><br><br><br><br><br><br><br><br><br><br><br><br>
     <h1 class="page-title">QISS</h1>
     <button id="mode-toggle" onclick="toggleMode()">QISS</button>
 
-    <!-- ✅ 다중 검색 -->
+    <!-- 다중 검색 -->
     <div id="custom-search">
         <br>
         <input type="text" id="search-bar" class="search-bar" placeholder="무엇이 궁금하신가요?" onkeydown="handleEnter(event)">
@@ -552,13 +602,11 @@
 
     <div id="cse-search" class="gcse-search" data-enableImageSearch="true"></div>
 
-    
-
     <br>
 
     <div id="current-time">현재 시간 : <span id="time-display"></span></div>
 
-    <div id="credit">2025 쿼터파이</div>
+    <div id="credit">2025 Q-PI, All Rights Reserved.</div>
 </main>
 
 <br><br><br><br><br><br><br>
@@ -617,6 +665,39 @@
         if (q) window.open('https://www.riss.kr/search/Search.do?colName=all&isDetailSearch=N&searchGubun=true&oldQuery=&sflag=1&fsearchMethod=search&isFDetailSearch=N&searchQuery=1&kbid=&pageNumber=1&query=' + encodeURIComponent(q), '_blank');
     }
 
+    // 불필요한 요소 제거
+    function removeUnwantedElements() {
+        const selectors = [
+            '.gsc-tabsArea',
+            '.gsc-orderby-container',
+            '.gcsc-find-more-on-google',
+            '.gs-image',
+            '.gsc-refinementsArea',
+            '.gsc-above-wrapper-area',
+            '.gsc-branding',
+            '.gcsc-branding',
+            '.gsc-watermark',
+            'td.gsc-branding'
+        ];
+        
+        selectors.forEach(selector => {
+            document.querySelectorAll(selector).forEach(el => {
+                el.style.cssText = 'display:none!important;visibility:hidden!important;opacity:0!important;height:0!important;width:0!important;';
+                el.remove();
+            });
+        });
+    }
+
+    // DOM 변경 감지 및 제거
+    const observer = new MutationObserver(removeUnwantedElements);
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+    // 주기적으로 제거
+    setInterval(removeUnwantedElements, 500);
+
     // 실시간 시계
     const timeDisplay = document.getElementById('time-display');
     setInterval(() => {
@@ -630,7 +711,52 @@
 
         timeDisplay.textContent = `${year}년 ${month}월 ${day}일 ${hours}:${minutes}:${seconds}`;
     }, 1000);
+// 고해상도 파비콘 버전
+function addFavicons() {
+    const results = document.querySelectorAll('.gsc-webResult.gsc-result');
     
+    results.forEach(result => {
+        const titleLink = result.querySelector('.gs-title a');
+        if (titleLink && !titleLink.querySelector('.favicon')) {
+            try {
+                const url = new URL(titleLink.href);
+                const domain = url.hostname;
+                
+                const favicon = document.createElement('img');
+                favicon.className = 'favicon';
+                // DuckDuckGo 파비콘 서비스 사용 (더 고품질)
+                favicon.src = `https://icons.duckduckgo.com/ip3/${domain}.ico`;
+                favicon.style.cssText = `
+                    width: 20px !important;
+                    height: 20px !important;
+                    margin-right: 10px !important;
+                    border-radius: 4px !important;
+                    vertical-align: middle !important;
+                    display: inline-block !important;
+                    object-fit: contain !important;
+                `;
+                
+                // 로드 실패 시 Google 파비콘으로 대체
+                favicon.onerror = function() {
+                    this.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
+                };
+                
+                titleLink.insertBefore(favicon, titleLink.firstChild);
+            } catch (e) {
+                console.log('파비콘 추가 실패:', e);
+            }
+        }
+    });
+}
+
+const faviconObserver = new MutationObserver(addFavicons);
+faviconObserver.observe(document.body, {
+    childList: true,
+    subtree: true
+});
+
+setInterval(addFavicons, 1000);
+
 </script>
 </body>
 </html>
