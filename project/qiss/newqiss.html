@@ -662,7 +662,6 @@
     }
 }
 
-/* QISS 모드 요소들 페이드 인/아웃 */
 #custom-search {
     opacity: 1;
     transform: translateY(0);
@@ -676,7 +675,7 @@
     pointer-events: none;
 }
 
-/* CSE 검색 요소들 페이드 인/아웃 */
+
 #cse-search {
     opacity: 0;
     transform: translateY(10px);
@@ -688,7 +687,7 @@
     opacity: 1;
     transform: translateY(0);
 }
-/* 하단 요소들 애니메이션 */
+
 #current-time, #credit {
     transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
                 transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -698,7 +697,7 @@
     opacity: 0;
     transform: translateY(-20px);
 }
-/* 검색 버튼 애니메이션 */
+
 #search-buttons {
     opacity: 1;
     transform: translateY(0);
@@ -791,7 +790,6 @@ function toggleMode() {
             });
         }, 400);
     } else {
-    // QISS로 전환
     toggleBtn.classList.remove('expanded');
     cse.classList.remove('fade-in');
     
@@ -801,7 +799,6 @@ function toggleMode() {
         currentTime.classList.remove('fade-out');
         credit.classList.remove('fade-out');
         
-        // 약간의 지연 후 fade-out 제거하여 애니메이션 트리거
         requestAnimationFrame(() => {
             custom.classList.remove('fade-out');
             searchButtons.classList.remove('fade-out');
