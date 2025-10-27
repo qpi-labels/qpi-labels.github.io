@@ -594,6 +594,55 @@
         font-weight: inherit !important;
     }
 }
+/* 검색어 제안 ("이것을 찾으셨나요?") 스타일 */
+.gs-spelling,
+.gs-spelling a {
+    color: var(--c-text) !important;
+    background: none !important;
+    border: none !important;
+    padding: 0px 0 !important;  /* 15px에서 8px로 줄임 */
+    margin: 0px 0 !important;  /* 10px에서 5px로 줄임 */
+    font-size: 14px !important;
+    font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    line-height: 1.4 !important;  /* 줄 간격 추가 */
+}
+
+/* 수정된 검색어 링크 */
+.gs-spelling a {
+    color: var(--c-blue) !important;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+    display: inline !important;  /* 추가 */
+}
+
+.gs-spelling a:hover {
+    text-decoration: underline !important;
+}
+
+/* "이것을 찾으셨나요?" 텍스트 */
+.gs-spelling em {
+    color: var(--c-gray6) !important;
+    font-style: normal !important;
+    display: inline !important;  /* 추가 */
+}
+
+/* 다크모드 대응 */
+@media (prefers-color-scheme: dark) {
+    .gs-spelling,
+    .gs-spelling a {
+        color: var(--c-text) !important;
+    }
+    
+    .gs-spelling a {
+        color: #8ab4f8 !important;
+    }
+    
+    .gs-spelling em {
+        color: var(--c-gray5) !important;
+    }
+}
     </style>
 </head>
 <body>
@@ -801,8 +850,85 @@ faviconObserver.observe(document.body, {
 
 setInterval(addFavicons, 1000);
 
+// 검색 결과 카드 애니메이션 적용
+function applyCardAnimation() {
+    const cards = document.querySelectorAll('.gsc-webResult.gsc-result');
+    
+    cards.forEach((card, index) => {
+        // 이미 애니메이션 적용된 카드는 건너뛰기
+        if (card.classList.contains('animated')) return;
+        
+        // 초기 상태 설정
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.9) translateY(20px)';
+        
+        // 지연 시간 후 애니메이션 실행
+        setTimeout(() => {
+            card.style.transition = 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out';
+            card.style.opacity = '1';
+            card.style.transform = 'scale(1) translateY(0)';
+            card.classList.add('animated');
+        }, index * 100); // 각 카드마다 100ms 지연
+    });
+}
 
+// 검색 결과가 로드될 때마다 실행
+const cardAnimationObserver = new MutationObserver(() => {
+    applyCardAnimation();
+});
 
+cardAnimationObserver.observe(document.body, {
+    childList: true,
+    subtree: true
+});
+
+// 초기 실행
+setTimeout(applyCardAnimation, 500);
+// 검색어 제안 스타일 적용
+function styleSearchSuggestion() {
+    const suggestions = document.querySelectorAll('.gs-spelling');
+    
+    suggestions.forEach(suggestion => {
+        suggestion.style.cssText = `
+            color: var(--c-text) !important;
+            background: none !important;
+            border: none !important;
+            padding: 3px 0 !important;
+            margin: 3px 0 !important;
+            font-size: 14px !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            line-height: 1.4 !important;
+        `;
+        
+        // 링크 스타일
+        const links = suggestion.querySelectorAll('a');
+        links.forEach(link => {
+            link.style.color = 'var(--c-blue)';
+            link.style.fontWeight = '500';
+            link.style.textDecoration = 'none';
+            link.style.display = 'inline';
+        });
+        
+        // em 태그 스타일
+        const ems = suggestion.querySelectorAll('em');
+        ems.forEach(em => {
+            em.style.color = 'var(--c-gray6)';
+            em.style.fontStyle = 'normal';
+            em.style.display = 'inline';
+        });
+    });
+}
+
+// 주기적으로 적용
+setInterval(styleSearchSuggestion, 500);
+
+// MutationObserver로 감지
+const suggestionObserver = new MutationObserver(styleSearchSuggestion);
+suggestionObserver.observe(document.body, {
+    childList: true,
+    subtree: true
+});
 </script>
 </body>
 </html>
