@@ -661,6 +661,33 @@
         color: var(--c-gray5) !important;
     }
 }
+
+/* QISS 모드 요소들 페이드 인/아웃 */
+#custom-search {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#custom-search.fade-out {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+}
+
+/* CSE 검색 요소들 페이드 인/아웃 */
+#cse-search {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#cse-search.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+}
     </style>
 </head>
 <body>
@@ -717,32 +744,37 @@ function toggleMode() {
 
     if (isCSE) {
         // QISS Search로 전환
-        // 먼저 HTML 구조 설정
         toggleBtn.innerHTML = '<span class="qiss-text">QISS</span><span class="search-text">&nbsp;Search</span>';
         
-        // 다음 프레임에서 애니메이션 시작
         requestAnimationFrame(() => {
-            toggleBtn.classList.add('expanded');
+            requestAnimationFrame(() => {
+                toggleBtn.classList.add('expanded');
+                custom.classList.add('fade-out');
+            });
         });
         
         setTimeout(() => {
-            cse.style.display = 'block';
             custom.style.display = 'none';
-        }, 300);
+            cse.style.display = 'block';
+            
+            requestAnimationFrame(() => {
+                cse.classList.add('fade-in');
+            });
+        }, 400);
     } else {
         // QISS로 전환
         toggleBtn.classList.remove('expanded');
+        cse.classList.remove('fade-in');
         
         setTimeout(() => {
-            toggleBtn.innerHTML = '<span class="qiss-text">QISS</span>';
             cse.style.display = 'none';
             custom.style.display = 'block';
+            custom.classList.remove('fade-out');
             document.getElementById('search-bar').focus();
         }, 400);
     }
 }
 
-// 페이지 로드 시 초기 설정
 window.addEventListener('DOMContentLoaded', function() {
     const toggleBtn = document.getElementById('mode-toggle');
     toggleBtn.innerHTML = '<span class="qiss-text">QISS</span>';
@@ -781,7 +813,6 @@ window.addEventListener('DOMContentLoaded', function() {
         if (q) window.open('https://www.riss.kr/search/Search.do?colName=all&isDetailSearch=N&searchGubun=true&oldQuery=&sflag=1&fsearchMethod=search&isFDetailSearch=N&searchQuery=1&kbid=&pageNumber=1&query=' + encodeURIComponent(q), '_blank');
     }
 
-    // 불필요한 요소 제거
     function removeUnwantedElements() {
         const selectors = [
             '.gsc-tabsArea',
@@ -804,14 +835,12 @@ window.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // DOM 변경 감지 및 제거
     const observer = new MutationObserver(removeUnwantedElements);
     observer.observe(document.body, {
         childList: true,
         subtree: true
     });
 
-    // 주기적으로 제거
     setInterval(removeUnwantedElements, 500);
 
     // 실시간 시계
