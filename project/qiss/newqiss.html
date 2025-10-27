@@ -99,7 +99,8 @@
         /* ✅ 공통 검색바 디자인 */
         .search-bar {
             width: 80%;
-            padding: 10px;
+            max-width: 584px;
+            padding: 10px 20px;
             border-radius: 30px;
             border: 1px solid var(--c-gray1);
             font-size: 16px;
@@ -107,6 +108,7 @@
             background-color: var(--c-bg);
             color: var(--c-text);
             transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+            box-sizing: border-box;
         }
 
         .search-bar:focus {
@@ -115,30 +117,31 @@
         }
 
         /* ✅ CSE 검색창 스타일 개선 */
-        /* ✅ CSE 검색창 스타일 개선 */
         .gcse-search {
             margin: 0 auto;
-            width: 80%; /* max-width를 width로 변경하여 너비 고정 */
+            width: 100%;
+            max-width: 584px;
         }
 
         .gsc-control-cse {
             background: none !important;
             border: none !important;
             padding: 0 !important;
-            width: 80%;
         }
 
-        /* 검색창 wrapper 숨김 - 이중 테두리 제거 */
+        /* 검색창 wrapper */
         .gsc-search-box {
             margin: 0 auto !important;
-            width: 80%;
+            width: 100% !important;
+            max-width: 584px !important;
         }
 
         table.gsc-search-box {
             margin: 0 auto !important;
             border: none !important;
             background: none !important;
-            width: 80%;
+            width: 100% !important;
+            max-width: 584px !important;
         }
 
         td.gsc-input {
@@ -152,11 +155,12 @@
             background-color: var(--c-bg) !important;
             color: var(--c-text) !important;
             font-size: 16px !important;
-            padding: 10px !important;
-            height: 40px !important;
+            padding: 10px 20px !important;
+            height: 42px !important;
             line-height: 20px !important;
             box-shadow: none !important;
             width: 100% !important;
+            max-width: 584px !important;
             box-sizing: border-box !important;
         }
 
@@ -164,7 +168,7 @@
             border: none !important;
             background: none !important;
             box-shadow: none !important;
-            height: 40px !important;
+            height: 42px !important;
         }
 
         input.gsc-input:focus {
@@ -177,8 +181,12 @@
             display: none !important;
         }
 
-        /* Google 브랜딩 숨김 */
-        .gsc-branding {
+        /* Google 브랜딩 및 워터마크 숨김 */
+        .gsc-branding, .gsc-watermark, .gcsc-branding, .gcsc-branding-img, .gcsc-branding-text {
+            display: none !important;
+        }
+
+        .gsc-input-box .gsc-watermark {
             display: none !important;
         }
 
@@ -225,9 +233,10 @@
             background-color: var(--c-bg) !important;
             border: none !important;
             box-shadow: none !important;
-            max-width: 80% !important;
+            max-width: 680px !important;
             margin: 30px auto 0 auto !important;
             text-align: left !important;
+            padding: 0 20px !important;
         }
 
         .gsc-resultsbox-visible {
@@ -238,9 +247,13 @@
         .gsc-webResult.gsc-result {
             background: none !important;
             border: none !important;
-            padding: 20px 0 !important;
+            padding: 24px 0 !important;
             border-bottom: 1px solid var(--c-gray1) !important;
             width: 100% !important;
+        }
+
+        .gsc-webResult.gsc-result:last-child {
+            border-bottom: none !important;
         }
 
         /* 검색 결과 썸네일 숨김 */
@@ -248,32 +261,49 @@
             display: none !important;
         }
 
-        /* 검색 결과 제목 */
+        /* 검색 결과 제목 - 더 강조된 디자인 */
         .gs-title {
             font-size: 20px !important;
-            line-height: 1.3 !important;
-            margin-bottom: 3px !important;
+            line-height: 1.4 !important;
+            margin-bottom: 4px !important;
             text-align: left !important;
+            font-weight: 500 !important;
+        }
+
+        .gs-title a {
+            color: #232323 !important;
+            text-decoration: none !important;
+            transition: color 0.2s ease !important;
+        }
+
+        .gs-title a:hover {
+            text-decoration: underline !important;
+        }
+
+        .gs-title a:visited {
+            color: #232323 !important;
         }
 
         .gs-title b {
             font-weight: 600 !important;
         }
 
-        /* 검색 결과 URL */
+        /* 검색 결과 URL - 더 명확한 스타일 */
         .gs-bidi-start-align.gs-visibleUrl {
-            color: var(--c-gray6) !important;
+            color: #5f6368 !important;
             font-size: 14px !important;
             line-height: 1.5 !important;
             text-align: left !important;
+            margin-bottom: 2px !important;
+            display: block !important;
         }
 
-        /* 검색 결과 설명 */
+        /* 검색 결과 설명 - 가독성 향상 */
         .gs-snippet {
-            color: var(--c-gray7) !important;
+            color: #4d5156 !important;
             font-size: 14px !important;
             line-height: 1.6 !important;
-            margin-top: 5px !important;
+            margin-top: 8px !important;
             text-align: left !important;
         }
 
@@ -283,35 +313,42 @@
             color: var(--c-gray6) !important;
             font-size: 14px !important;
             padding: 15px 0 !important;
+            border-bottom: 1px solid var(--c-gray1) !important;
         }
 
-        /* 페이지네이션 - 좌측 정렬 */
-        .gsc-cursor-box {
-            text-align: left !important;
-            margin-top: 30px !important;
-            padding-bottom: 40px !important;
-        }
+        /* 페이지네이션 - 중앙 정렬 */
+        /* 페이지네이션 - 중앙 정렬, 크기 축소 */
+.gsc-cursor-box {
+    text-align: center !important;
+    margin-top: 30px !important;
+    padding-bottom: 40px !important;
+}
 
-        .gsc-cursor-page {
-            background-color: var(--c-bg) !important;
-            color: var(--c-blue) !important;
-            border: 1px solid var(--c-gray2) !important;
-            padding: 8px 12px !important;
-            border-radius: 8px !important;
-            margin: 0 4px !important;
-            transition: background-color 0.2s ease;
-            font-size: 14px !important;
-        }
+.gsc-cursor-page {
+    background-color: var(--c-bg) !important;
+    color: #1a73e8 !important;
+    border: 1px solid var(--c-gray2) !important;
+    padding: 6px 10px !important;
+    border-radius: 6px !important;
+    margin: 0 4px !important;
+    transition: background-color 0.2s ease !important;
+    font-size: 13px !important;
+    min-width: 32px !important;
+    height: 32px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
 
-        .gsc-cursor-page:hover {
-            background-color: var(--c-gray1) !important;
-        }
+.gsc-cursor-page:hover {
+    background-color: var(--c-gray1) !important;
+}
 
-        .gsc-cursor-current-page {
-            background-color: var(--c-blue) !important;
-            color: var(--c-ltext) !important;
-            border: 1px solid var(--c-blue) !important;
-        }
+.gsc-cursor-current-page {
+    background-color: #1a73e8 !important;
+    color: white !important;
+    border: 1px solid #1a73e8 !important;
+}
 
         /* 검색 결과 없음 메시지 */
         .gs-no-results-result {
@@ -322,9 +359,10 @@
 
         /* 탭 메뉴 (웹, 이미지 등) */
         .gsc-tabsArea {
-            max-width: 80% !important;
+            max-width: 680px !important;
             margin: 20px auto 0 auto !important;
             text-align: left !important;
+            padding: 0 20px !important;
         }
 
         .gsc-tabHeader {
@@ -335,8 +373,8 @@
         }
 
         .gsc-tabHeader.gsc-tabhActive {
-            color: var(--c-blue) !important;
-            border-bottom: 2px solid var(--c-blue) !important;
+            color: #1a73e8 !important;
+            border-bottom: 2px solid #1a73e8 !important;
         }
 
         /* ✅ 다중검색 */
@@ -358,10 +396,6 @@
             font-weight: 700;
             cursor: pointer;
             transition: transform 0.2s ease-out, background-color 0.3s ease;
-        }
-
-        .gsc-input-box .gsc-watermark {
-            display: none !important;
         }
 
         .search-button:hover {
@@ -397,20 +431,40 @@
             margin-top: 5px;
         }
 
+        /* 다크모드 검색결과 스타일 */
         @media (prefers-color-scheme: dark) {
-            .gs-title, .gs-title *, .gs-title b {
-                color: #7cbcff !important;
+            .gs-title a {
+                color: #FAFAFA !important;
+            }
+            
+            .gs-title a:visited {
+                color: #FAFAFA !important;
+            }
+
+            .gs-bidi-start-align.gs-visibleUrl {
+                color: #9aa0a6 !important;
+            }
+
+            .gs-snippet {
+                color: #bdc1c6 !important;
             }
             
             .gsc-completion-container {
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
             }
-        }
 
-        /* 다크모드 검색결과 링크 방문 효과 */
-        @media (prefers-color-scheme: dark) {
-            .gs-title:visited, .gs-title *:visited {
-                color: #c58af9 !important;
+            .gsc-cursor-page {
+                color: #8ab4f8 !important;
+            }
+
+            .gsc-cursor-current-page {
+                background-color: #8ab4f8 !important;
+                border: 1px solid #8ab4f8 !important;
+            }
+
+            .gsc-tabHeader.gsc-tabhActive {
+                color: #8ab4f8 !important;
+                border-bottom: 2px solid #8ab4f8 !important;
             }
         }
 
@@ -426,46 +480,46 @@
             border-bottom: 0.5px solid rgb(from var(--c-gray7) r g b / 10%);
         }
 
-.nav {
-    max-width: 1024px;
-    margin: 0 auto;
-    padding: 0 22px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
+        .nav {
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: 0 22px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 
-.nav-logo {
-    font-size: 21px;
-    font-weight: 600;
-    color: var(--c-text);
-    text-decoration: none;
-    letter-spacing: -.05em;
-}
+        .nav-logo {
+            font-size: 21px;
+            font-weight: 600;
+            color: var(--c-text);
+            text-decoration: none;
+            letter-spacing: -.05em;
+        }
 
-.nav-logo.en {
-    font-family: "BR Cobane", sans-serif;
-}
+        .nav-logo.en {
+            font-family: "BR Cobane", sans-serif;
+        }
 
-.nav-links {
-    display: flex;
-    gap: 40px;
-    align-items: center;
-}
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
 
-.nav-link {
-    color: var(--c-text);
-    text-decoration: none;
-    font-size: 12px;
-    font-weight: 400;
-    opacity: 0.8;
-    transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
+        .nav-link {
+            color: var(--c-text);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 400;
+            opacity: 0.8;
+            transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
 
-.nav-link:hover {
-    opacity: 1;
-}
+        .nav-link:hover {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -502,7 +556,7 @@
         </div>
     </div>
 
-    <div id="cse-search" class="gcse-search"></div>
+    <div id="cse-search" class="gcse-search" data-enableImageSearch="true"></div>
 
     
 
