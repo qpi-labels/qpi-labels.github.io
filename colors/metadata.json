@@ -1,0 +1,8 @@
+
+{
+  "name": "Minimalist Color Picker",
+  "description": "A simple, minimalist web app to extract the central color from an image.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
