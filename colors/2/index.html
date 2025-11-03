@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>실시간 중앙 색상 추출기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Babel to transpile JSX in the browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Import Map for React dependencies -->
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client"
+  }
+}
+</script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+        .video-zoom-wrapper {
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            width: 100%;
+            max-width: 448px; /* max-w-sm is 384px, but using a slightly larger value to be safe */
+            position: relative;
+            border-radius: 0.5rem;
+            background-color: #1e293b; /* bg-slate-800 */
+        }
+        .video-zoomed {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%) scale(4); /* 400% zoom */
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-white antialiased">
+    <div id="root"></div>
+    <script type="text/babel" data-type="module">
+        import React, { useState, useRef, useCallback, useEffect } from 'react';
+        import ReactDOM from 'react-dom/client';
+
+        // --- Helper Functions ---
+        const rgbToHex = (r, g, b) => {
+          const toHex = (c) => `0${c.toString(16)}`.slice(-2);
+          return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+        };
+
+        // --- UI Components ---
+        const CameraIcon = () => (
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        );
+
+        const Spinner = () => (
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-t-2 border-slate-300"></div>
+        );
+
+        const ColorDisplay = ({ hexCode }) => {
+          const [copied, setCopied] = useState(false);
+
+          const handleCopy = () => {
+            navigator.clipboard.writeText(hexCode).then(() => {
+              setCopied(true);
+              setTimeout(() => setCopied(false), 2000);
+            });
+          };
+
+          return (
+            <div className="w-full max-w-sm flex flex-col items-center gap-4 transition-all duration-500 ease-in-out">
+              <div 
+                className="w-48 h-48 rounded-full shadow-lg border-4 border-slate-700 transition-colors duration-300" 
+                style={{ backgroundColor: hexCode }}
+              />
+              <button 
+                onClick={handleCopy}
+                className="bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-xl py-2 px-6 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+              >
+                {copied ? '복사됨!' : hexCode}
+              </button>
+            </div>
+          );
+        };
+
+        // --- Main App Component ---
+        const App = () => {
+          const [imageSrc, setImageSrc] = useState(null);
+          const [colorHex, setColorHex] = useState(null);
+          const [isLoading, setIsLoading] = useState(false);
+          const [error, setError] = useState(null);
+          const [isCameraOn, setIsCameraOn] = useState(false);
+          const [stream, setStream] = useState(null);
+          
+          const videoRef = useRef(null);
+          const canvasRef = useRef(null);
+          
+          const stopCamera = useCallback(() => {
+            if (stream) {
+              stream.getTracks().forEach(track => track.stop());
+              setStream(null);
+              setIsCameraOn(false);
+            }
+          }, [stream]);
+
+          const resetState = useCallback(() => {
+            stopCamera();
+            setImageSrc(null);
+            setColorHex(null);
+            setError(null);
+          }, [stopCamera]);
+
+          const startCamera = async () => {
+            resetState();
+            setError(null);
+            try {
+              const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { facingMode: 'environment' } 
+              });
+              videoRef.current.srcObject = stream;
+              setStream(stream);
+              setIsCameraOn(true);
+            } catch (err) {
+              console.error("카메라 에러:", err);
+              setError("카메라에 접근할 수 없습니다. 권한을 확인해주세요.");
+            }
+          };
+          
+          const captureAndAnalyze = useCallback(() => {
+            if (!videoRef.current) return;
+            setIsLoading(true);
+
+            const video = videoRef.current;
+            const canvas = canvasRef.current;
+            
+            // The canvas will capture the zoomed-in portion of the video
+            const zoomFactor = 4;
+            const sourceWidth = video.videoWidth / zoomFactor;
+            const sourceHeight = video.videoHeight / zoomFactor;
+            const sourceX = (video.videoWidth - sourceWidth) / 2;
+            const sourceY = (video.videoHeight - sourceHeight) / 2;
+
+            canvas.width = 300; // A reasonable capture resolution
+            canvas.height = 300;
+            
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+             if (!ctx) {
+                setError("캔버스 컨텍스트를 가져올 수 없습니다.");
+                setIsLoading(false);
+                return;
+              }
+
+            ctx.drawImage(video, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, canvas.width, canvas.height);
+            
+            setImageSrc(canvas.toDataURL('image/jpeg'));
+            stopCamera(); // Stop camera after capture to save resources
+
+            // --- Analyze color from the captured canvas ---
+            const sampleSize = Math.min(10, canvas.width, canvas.height);
+            const startX = Math.floor(canvas.width / 2 - sampleSize / 2);
+            const startY = Math.floor(canvas.height / 2 - sampleSize / 2);
+              
+            try {
+              const imageData = ctx.getImageData(startX, startY, sampleSize, sampleSize).data;
+              let total = { r: 0, g: 0, b: 0 };
+              const pixelCount = sampleSize * sampleSize;
+
+              for (let i = 0; i < imageData.length; i += 4) {
+                total.r += imageData[i];
+                total.g += imageData[i + 1];
+                total.b += imageData[i + 2];
+              }
+              const avg = {
+                r: Math.round(total.r / pixelCount),
+                g: Math.round(total.g / pixelCount),
+                b: Math.round(total.b / pixelCount),
+              };
+
+              setColorHex(rgbToHex(avg.r, avg.g, avg.b));
+            } catch(e) {
+                setError("이미지를 처리할 수 없습니다. 보안 제한 때문일 수 있습니다.");
+            }
+            setIsLoading(false);
+          }, [stopCamera]);
+          
+          // Cleanup on component unmount
+          useEffect(() => {
+            return () => stopCamera();
+          }, [stopCamera]);
+
+          const getButtonConfig = () => {
+            if (imageSrc) {
+              return { text: '다시 찍기', action: startCamera };
+            }
+            if (isCameraOn) {
+              return { text: '사진 찍기', action: captureAndAnalyze };
+            }
+            return { text: '카메라 시작하기', action: startCamera };
+          };
+
+          const buttonConfig = getButtonConfig();
+
+          return (
+            <div className="min-h-screen w-full flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
+              <main className="w-full max-w-md mx-auto flex flex-col items-center text-center space-y-8">
+                <header>
+                  <h1 className="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-500">
+                    실시간 색상 추출기
+                  </h1>
+                  <p className="mt-2 text-slate-400">카메라로 비추어 중앙 색상을 찾아보세요.</p>
+                </header>
+
+                {error && <div className="bg-red-900/50 text-red-300 p-3 rounded-md">{error}</div>}
+
+                <div className="w-full space-y-8 flex flex-col items-center">
+                    {colorHex && !isLoading && (
+                         <div className="animate-fade-in">
+                            <ColorDisplay hexCode={colorHex} />
+                         </div>
+                    )}
+                    
+                    <div className="w-full aspect-square max-w-sm bg-slate-800/50 rounded-lg flex items-center justify-center relative overflow-hidden border-2 border-dashed border-slate-700">
+                        {isLoading && (
+                            <div className="absolute inset-0 bg-slate-900/80 flex items-center justify-center z-30">
+                                <Spinner />
+                            </div>
+                        )}
+                        
+                        {!isCameraOn && !imageSrc && (
+                             <button onClick={startCamera} className="flex flex-col items-center justify-center text-slate-500 hover:text-cyan-400 transition-colors duration-300 w-full h-full">
+                                <CameraIcon />
+                                <span className="mt-2 text-sm font-semibold">카메라 시작하기</span>
+                            </button>
+                        )}
+
+                        {isCameraOn && (
+                            <div className="video-zoom-wrapper absolute inset-0">
+                                <video ref={videoRef} autoPlay playsInline className="video-zoomed"></video>
+                            </div>
+                        )}
+
+                        {imageSrc && !isCameraOn && (
+                             <img src={imageSrc} alt="캡처된 이미지" className="object-contain w-full h-full" />
+                        )}
+
+                        {(isCameraOn || imageSrc) && (
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 z-10 pointer-events-none">
+                                <div className="absolute top-1/2 left-0 w-full h-[1px] bg-white/50 -translate-y-1/2"></div>
+                                <div className="absolute left-1/2 top-0 h-full w-[1px] bg-white/50 -translate-x-1/2"></div>
+                                <div className="w-2 h-2 border border-white/70 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+                            </div>
+                        )}
+                    </div>
+                    <canvas ref={canvasRef} className="hidden"></canvas>
+                </div>
+
+                <div className="flex items-center gap-4">
+                    <button
+                        onClick={buttonConfig.action}
+                        disabled={isLoading}
+                        className="bg-cyan-600 hover:bg-cyan-500 disabled:bg-cyan-800 disabled:cursor-not-allowed text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+                    >
+                        {buttonConfig.text}
+                    </button>
+                    {(imageSrc || isCameraOn) && (
+                        <button
+                            onClick={resetState}
+                            className="bg-slate-700 hover:bg-slate-600 text-slate-300 font-bold py-3 px-6 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+                        >
+                            초기화
+                        </button>
+                    )}
+                </div>
+              </main>
+            </div>
+          );
+        };
+
+        // --- Render the App ---
+        const rootElement = document.getElementById('root');
+        if (!rootElement) {
+          throw new Error("루트 요소를 찾을 수 없습니다.");
+        }
+        const root = ReactDOM.createRoot(rootElement);
+        root.render(<App />);
+    </script>
+</body>
+</html>
