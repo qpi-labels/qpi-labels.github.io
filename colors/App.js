@@ -1,32 +1,27 @@
-import React, { useState, useRef, useCallback, DragEvent } from 'react';
+-import React, { useState, useRef, useCallback } from 'react';
 
-const UploadIcon: React.FC = () => (
+const UploadIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
     </svg>
 );
 
-const Loader: React.FC = () => <div className="loader" />;
+const Loader = () => <div className="loader" />;
 
-interface ExtractedColor {
-    hex: string;
-    rgb: string;
-}
+const App = () => {
+    const [imageSrc, setImageSrc] = useState(null);
+    const [extractedColor, setExtractedColor] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [isCopied, setIsCopied] = useState(false);
+    const [isDragging, setIsDragging] = useState(false);
 
-const App: React.FC = () => {
-    const [imageSrc, setImageSrc] = useState<string | null>(null);
-    const [extractedColor, setExtractedColor] = useState<ExtractedColor | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
-    const [isCopied, setIsCopied] = useState<boolean>(false);
-    const [isDragging, setIsDragging] = useState<boolean>(false);
+    const fileInputRef = useRef(null);
+    const canvasRef = useRef(null);
+    const imageRef = useRef(null);
 
-    const fileInputRef = useRef<HTMLInputElement>(null);
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-    const imageRef = useRef<HTMLImageElement>(null);
-
-    const componentToHex = (c: number): string => c.toString(16).padStart(2, '0');
-    const rgbToHex = (r: number, g: number, b: number): string => `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`;
+    const componentToHex = (c) => c.toString(16).padStart(2, '0');
+    const rgbToHex = (r, g, b) => `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`;
 
     const processImage = useCallback(() => {
         if (!imageRef.current || !canvasRef.current) return;
@@ -80,7 +75,7 @@ const App: React.FC = () => {
         }
     }, []);
 
-    const handleFile = (file: File | null) => {
+    const handleFile = (file) => {
         if (file && file.type.startsWith('image/')) {
             setExtractedColor(null);
             setError(null);
@@ -90,18 +85,18 @@ const App: React.FC = () => {
         }
     };
     
-    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageChange = (event) => {
         handleFile(event.target.files?.[0] || null);
     };
 
-    const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+    const handleDrop = (e) => {
         e.preventDefault();
         e.stopPropagation();
         setIsDragging(false);
         handleFile(e.dataTransfer.files?.[0] || null);
     };
     
-    const handleDragEvents = (e: DragEvent<HTMLDivElement>) => {
+    const handleDragEvents = (e) => {
         e.preventDefault();
         e.stopPropagation();
         if (e.type === 'dragenter' || e.type === 'dragover') {
@@ -121,7 +116,7 @@ const App: React.FC = () => {
         }
     };
 
-    const copyToClipboard = (text: string) => {
+    const copyToClipboard = (text) => {
         navigator.clipboard.writeText(text).then(() => {
             setIsCopied(true);
             setTimeout(() => setIsCopied(false), 2000);
@@ -153,7 +148,7 @@ const App: React.FC = () => {
              <div className="image-preview-container">
                 <img
                     ref={imageRef}
-                    src={imageSrc!}
+                    src={imageSrc}
                     alt="Uploaded preview"
                     onLoad={processImage}
                     className="image-preview"
