@@ -1,7 +1,6 @@
-
 {
-  "name": "Minimalist Color Picker",
-  "description": "A simple, minimalist web app to extract the central color from an image.",
+  "name": "Central Color Picker",
+  "description": "Upload a photo to find the average color of its central area. The app displays the color and its corresponding hex code. Optimized for a minimalist, mobile-first experience.",
   "requestFramePermissions": [
     "camera"
   ]

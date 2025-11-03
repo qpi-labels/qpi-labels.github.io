@@ -1,0 +1,229 @@
+import React, { useState, useRef, useCallback, ChangeEvent } from 'react';
+
+// --- Helper Types ---
+type RgbColor = {
+  r: number;
+  g: number;
+  b: number;
+};
+
+// --- Helper Functions (defined outside component scope) ---
+const rgbToHex = (r: number, g: number, b: number): string => {
+  const toHex = (c: number) => `0${c.toString(16)}`.slice(-2);
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+};
+
+const getTextColorForBackground = (hexColor: string): string => {
+  const r = parseInt(hexColor.slice(1, 3), 16);
+  const g = parseInt(hexColor.slice(3, 5), 16);
+  const b = parseInt(hexColor.slice(5, 7), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.5 ? 'text-black' : 'text-white';
+};
+
+// --- UI Components (defined outside App component to prevent re-creation on re-renders) ---
+
+const UploadIcon: React.FC = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+  </svg>
+);
+
+const Spinner: React.FC = () => (
+  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-t-2 border-slate-300"></div>
+);
+
+interface ColorDisplayProps {
+  hexCode: string;
+}
+const ColorDisplay: React.FC<ColorDisplayProps> = ({ hexCode }) => {
+  const [copied, setCopied] = useState(false);
+  const textColor = getTextColorForBackground(hexCode);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(hexCode).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  return (
+    <div className="w-full max-w-sm flex flex-col items-center gap-4 transition-all duration-500 ease-in-out">
+      <div 
+        className="w-48 h-48 rounded-full shadow-lg border-4 border-slate-700 transition-colors duration-300" 
+        style={{ backgroundColor: hexCode }}
+      />
+      <button 
+        onClick={handleCopy}
+        className="bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-xl py-2 px-6 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+      >
+        {copied ? 'Copied!' : hexCode}
+      </button>
+    </div>
+  );
+};
+
+
+// --- Main App Component ---
+
+const App: React.FC = () => {
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [colorHex, setColorHex] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const resetState = () => {
+    setImageSrc(null);
+    setColorHex(null);
+    setError(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const extractCentralColor = useCallback((file: File) => {
+    setIsLoading(true);
+    resetState();
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setImageSrc(e.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+
+    const image = new Image();
+    image.src = URL.createObjectURL(file);
+    image.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = image.width;
+      canvas.height = image.height;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      if (!ctx) {
+        setError("Could not get canvas context.");
+        setIsLoading(false);
+        return;
+      }
+      ctx.drawImage(image, 0, 0, image.width, image.height);
+
+      const sampleSize = Math.min(10, image.width, image.height);
+      const startX = Math.floor(image.width / 2 - sampleSize / 2);
+      const startY = Math.floor(image.height / 2 - sampleSize / 2);
+      
+      try {
+        const imageData = ctx.getImageData(startX, startY, sampleSize, sampleSize).data;
+        let total: RgbColor = { r: 0, g: 0, b: 0 };
+        const pixelCount = sampleSize * sampleSize;
+
+        for (let i = 0; i < imageData.length; i += 4) {
+          total.r += imageData[i];
+          total.g += imageData[i + 1];
+          total.b += imageData[i + 2];
+        }
+
+        const avg: RgbColor = {
+          r: Math.round(total.r / pixelCount),
+          g: Math.round(total.g / pixelCount),
+          b: Math.round(total.b / pixelCount),
+        };
+
+        setColorHex(rgbToHex(avg.r, avg.g, avg.b));
+      } catch(e) {
+          setError("Could not process the image. It might be a security restriction on cross-origin images.");
+      }
+
+
+      URL.revokeObjectURL(image.src);
+      setIsLoading(false);
+    };
+    image.onerror = () => {
+      setError("Could not load the image file.");
+      setIsLoading(false);
+    };
+  }, []);
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      extractCentralColor(file);
+    }
+  };
+  
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
+
+  return (
+    <div className="min-h-screen w-full flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
+      <main className="w-full max-w-md mx-auto flex flex-col items-center text-center space-y-8">
+        <header>
+          <h1 className="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-500">
+            Central Color Picker
+          </h1>
+          <p className="mt-2 text-slate-400">Tap to upload a photo and find its central color.</p>
+        </header>
+
+        {error && <div className="bg-red-900/50 text-red-300 p-3 rounded-md">{error}</div>}
+
+        <div className="w-full space-y-8 flex flex-col items-center">
+            {colorHex && !isLoading && (
+                 <div className="animate-fade-in">
+                    <ColorDisplay hexCode={colorHex} />
+                 </div>
+            )}
+            
+            <div className="w-full aspect-square max-w-sm bg-slate-800/50 rounded-lg flex items-center justify-center relative overflow-hidden border-2 border-dashed border-slate-700">
+                {isLoading && (
+                    <div className="absolute inset-0 bg-slate-900/80 flex items-center justify-center z-20">
+                        <Spinner />
+                    </div>
+                )}
+                {imageSrc ? (
+                    <>
+                        <img src={imageSrc} alt="Uploaded preview" className="object-contain w-full h-full" />
+                        {/* Central crosshair */}
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 z-10 pointer-events-none">
+                            <div className="absolute top-1/2 left-0 w-full h-[1px] bg-white/50 -translate-y-1/2"></div>
+                            <div className="absolute left-1/2 top-0 h-full w-[1px] bg-white/50 -translate-x-1/2"></div>
+                            <div className="w-2 h-2 border border-white/70 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+                        </div>
+                    </>
+                ) : (
+                    <button onClick={triggerFileInput} className="flex flex-col items-center justify-center text-slate-500 hover:text-cyan-400 transition-colors duration-300 w-full h-full">
+                        <UploadIcon />
+                        <span className="mt-2 text-sm font-semibold">Upload Photo</span>
+                    </button>
+                )}
+            </div>
+             <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              accept="image/*"
+              capture="environment"
+              className="hidden"
+            />
+        </div>
+
+        <div className="flex items-center gap-4">
+            <button
+                onClick={triggerFileInput}
+                className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+            >
+                {imageSrc ? 'Upload Another' : 'Upload Photo'}
+            </button>
+            {imageSrc && (
+                <button
+                    onClick={resetState}
+                    className="bg-slate-700 hover:bg-slate-600 text-slate-300 font-bold py-3 px-6 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+                >
+                    Reset
+                </button>
+            )}
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default App;
