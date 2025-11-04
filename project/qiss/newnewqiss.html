@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>QISS</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/logo.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/logo_dark.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" type="image/x-icon" href="/logo.ico" media="(prefers-color-scheme: light)">
+    <meta property="og:url" content="https://qpi.kro.kr">
+    <meta property="og:title" content="쿼터파이">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="/logo.png">
+    <meta property="og:description" content="만족도 2년연속 1위! 쿼터파이">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/colors.css">
+    <script async src="https://cse.google.com/cse.js?cx=c31ed7ed73e974099"></script>
+
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/br-cobane');
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+        @import url('https://cdn.jsdelivr.net/gh/toss/tossface/dist/tossface.css');
+
+        body {
+    background-color: var(--c-bg);
+    color: var(--c-text);
+    font-family: "BR Cobane", 'Pretendard Variable';
+    text-align: center;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin: 0;
+    padding-top: 60px;
+    overflow-y: scroll;
+}
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgb(from var(--c-bg) r g b / 80%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 10px 5px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1.5px solid var(--c-gray1);
+            box-sizing: border-box;
+            min-height: 60px;
+            font-family: "BR Cobane";
+        }
+
+        .header-title-link {
+            text-decoration: none;
+            color: inherit;
+            margin-left: 15px;
+        }
+
+        .header-title-link h1 {
+            font-size: x-large;
+            margin: 0;
+            font-weight: 550;
+            display: inline;
+        }
+
+        .header-links {
+            display: flex;
+            gap: 20px;
+            margin-right: 50px;
+        }
+
+        .header-link {
+            color: var(--c-gray7);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .header-link:hover {
+            color: var(--c-gray6);
+            text-decoration: underline;
+        }
+
+        .header-link:visited {
+            color: var(--c-gray7);
+        }
+
+        .page-title {
+            font-family: "BR Cobane";
+            font-size: xxx-large;
+            margin-bottom: 0;
+            font-weight: 700;
+        }
+
+        .search-bar {
+            width: 80%;
+            max-width: 584px;
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 1px solid var(--c-gray1);
+            font-size: 16px;
+            outline: none;
+            background-color: var(--c-bg);
+            color: var(--c-text);
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .search-bar:focus {
+            border-color: var(--c-blue);
+            box-shadow: 0 0 10px rgba(0, 102, 255, 0.2);
+        }
+
+        .gcse-search {
+            margin: 0 auto;
+            width: 100%;
+            max-width: 584px;
+        }
+
+        .gsc-control-cse {
+            background: none !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+
+        .gsc-search-box {
+            margin: 0 auto !important;
+            width: 100% !important;
+            max-width: 584px !important;
+            position: relative !important;
+            padding-bottom: 10px !important;
+        }
+
+        table.gsc-search-box {
+            margin: 0 auto !important;
+            border: none !important;
+            background: none !important;
+            width: 100% !important;
+            max-width: 584px !important;
+            padding-bottom: 20px !important;
+        }
+
+        td.gsc-input {
+            padding: 0 !important;
+        }
+
+        input.gsc-input, .gsc-input-box, .gsc-input-box input {
+            border-radius: 30px !important;
+            border: 1px solid var(--c-gray1) !important;
+            background-color: var(--c-bg) !important;
+            color: var(--c-text) !important;
+            font-size: 16px !important;
+            padding: 10px 20px !important;
+            height: 42px !important;
+            line-height: 20px !important;
+            box-shadow: none !important;
+            width: 100% !important;
+            max-width: 584px !important;
+            box-sizing: border-box !important;
+            font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
+        }
+
+        .gsc-input-box {
+            border: none !important;
+            background: none !important;
+            box-shadow: none !important;
+            height: 42px !important;
+        }
+
+        input.gsc-input:focus {
+            border-color: var(--c-blue) !important;
+            box-shadow: 0 0 10px rgba(0, 102, 255, 0.2) !important;
+        }
+
+        .gsc-search-button-v2, button.gsc-search-button, td.gsc-search-button {
+            display: none !important;
+        }
+
+        .gsc-branding, 
+        .gsc-watermark, 
+        .gcsc-branding, 
+        .gcsc-branding-img, 
+        .gcsc-branding-text,
+        .gsc-input-box .gsc-watermark,
+        .gsc-branding-text,
+        .gsc-branding-img,
+        .gsc-branding-img-noclear,
+        .gsc-branding-text-noclear,
+        td.gsc-branding {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            position: absolute !important;
+            left: -9999px !important;
+        }
+
+        .gsc-tabsArea,
+        .gsc-orderby-container,
+        .gcsc-find-more-on-google,
+        .gs-image,
+        .gsc-refinementsArea,
+        .gsc-above-wrapper-area {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            width: 0 !important;
+            opacity: 0 !important;
+        }
+
+        .gsc-adBlock {
+            display: none !important;
+        }
+
+        .gsc-clear-button {
+            right: 15px !important;
+        }
+
+        .gsc-completion-container {
+            background-color: var(--c-bg) !important;
+            border: 1.5px solid var(--c-gray2) !important;
+            border-radius: 20px !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+            margin-top: 5px !important;
+            width: 100% !important;
+            max-width: 584px !important;
+            position: absolute !important;
+            left: 0 !important;
+            transform: none !important;
+            box-sizing: border-box !important;
+            z-index: 1000 !important;
+        }
+
+        .gsc-completion-wrapper {
+            width: 100% !important;
+            max-width: 584px !important;
+            margin: 0 auto !important;
+            position: relative !important;
+        }
+
+        .gsc-completion-container table {
+            background: none !important;
+            width: 100% !important;
+            max-width: 584px !important;
+            margin: 0 !important;
+        }
+
+        .gsc-completion-item {
+            color: var(--c-text) !important;
+            padding: 8px 16px !important;
+            font-size: 15px !important;
+            transition: background-color 0.2s ease;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            text-align: left !important;
+            font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
+        }
+
+        .gsc-completion-item:hover, .gsc-completion-selected {
+            background-color: var(--c-gray1) !important;
+        }
+
+        .gsc-results-wrapper-overlay, .gsc-results-wrapper-visible {
+            background-color: var(--c-bg) !important;
+            border: none !important;
+            box-shadow: none !important;
+            max-width: 680px !important;
+            margin: 30px auto 0 auto !important;
+            text-align: left !important;
+            padding: 0 20px !important;
+        }
+
+        .gsc-resultsbox-visible {
+            background: none !important;
+            border: none !important;
+        }
+
+        .gsc-webResult.gsc-result {
+            background: var(--c-gray1) !important;
+            border: none !important;
+            padding: 20px !important;
+            margin-bottom: 16px !important;
+            border-radius: 20px !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+            transition: box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        .gsc-webResult.gsc-result:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+            transform: translateY(-2px) !important;
+        }
+
+        .gsc-webResult.gsc-result:last-child {
+            border-bottom: none !important;
+        }
+
+        .gs-bidi-start-align.gs-visibleUrl {
+            display: none !important;
+        }
+
+        .gs-title {
+            font-size: 18px !important;
+            line-height: 1.4 !important;
+            margin-bottom: 8px !important;
+            font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
+        }
+
+        .gs-snippet {
+            margin-top: 0 !important;
+            color: #4d5156 !important;
+            font-size: 14px !important;
+            line-height: 1.6 !important;
+            margin-top: 8px !important;
+            text-align: left !important;
+            font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
+        }
+
+        .gsc-result-info {
+            text-align: left !important;
+            color: var(--c-gray6) !important;
+            font-size: 14px !important;
+            padding: 15px 0 !important;
+            border-bottom: 1px solid var(--c-gray1) !important;
+        }
+
+        .gsc-cursor-box {
+            text-align: center !important;
+            margin-top: 30px !important;
+            padding-bottom: 40px !important;
+        }
+
+        .gsc-cursor-page {
+            background-color: var(--c-bg) !important;
+            color: #1a73e8 !important;
+            border: 1px solid var(--c-gray2) !important;
+            padding: 2px 2px !important;
+            border-radius: 12px !important;
+            margin: 0 4px !important;
+            transition: background-color 0.2s ease !important;
+            font-size: 13px !important;
+            min-width: 32px !important;
+            height: 32px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .gsc-cursor-page:hover {
+            background-color: var(--c-gray1) !important;
+        }
+
+        .gsc-cursor-current-page {
+            background-color: #1a73e8 !important;
+            color: white !important;
+            border: 1px solid #1a73e8 !important;
+        }
+
+        .gs-no-results-result {
+            color: var(--c-text) !important;
+            background: none !important;
+            text-align: left !important;
+        }
+
+        #cse-search {
+            display: none;
+        }
+
+        #search-buttons {
+            margin-top: 0;
+        }
+
+        .search-button {
+            background-color: var(--c-blue);
+            color: var(--c-ltext);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 16px;
+            font-size: small;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease-out, background-color 0.3s ease;
+        }
+
+        .search-button:hover {
+            background-color: var(--c-blue-active);
+            transform: translateY(-2px);
+        }
+
+        #mode-toggle {
+            margin-top: 20px;
+            background-color: var(--c-gray2);
+            color: var(--c-text);
+            border: none;
+            border-radius: 20px;
+            padding: 7px 18px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: padding 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                        min-width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                        background-color 0.3s ease;
+            overflow: hidden;
+            position: relative;
+            min-width: 80px;
+            font-family: "BR Cobane", sans-serif;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        #mode-toggle:hover {
+            background-color: var(--c-gray3);
+        }
+
+        #mode-toggle .qiss-text {
+            display: inline-block;
+        }
+
+        #mode-toggle .search-text {
+            display: inline-block;
+            max-width: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                        opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            vertical-align: top;
+        }
+
+        #mode-toggle.expanded {
+            min-width: 130px;
+        }
+
+        #mode-toggle.expanded .search-text {
+            max-width: 60px;
+            opacity: 1;
+        }
+
+        #current-time {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        #credit {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* Gemini Summary 스타일 */
+        #gemini-summary-container {
+            max-width: 680px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: none;
+        }
+
+        #gemini-summary {
+            background: linear-gradient(135deg, var(--c-gray1) 0%, rgb(from var(--c-gray1) r g b / 50%) 100%);
+            border: 1px solid var(--c-gray2);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            text-align: left;
+            user-select: text;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+        }
+
+        #gemini-summary h3 {
+            margin: 0 0 16px 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--c-text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #gemini-summary-text {
+            color: var(--c-text);
+            font-size: 15px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            font-family: 'Pretendard Variable', sans-serif;
+        }
+
+        .gemini-loading {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--c-gray6);
+        }
+
+        .gemini-spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--c-gray2);
+            border-top-color: var(--c-blue);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .gemini-error {
+            color: #d93025;
+            font-size: 14px;
+        }
+
+        #api-settings {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        #api-toggle-btn {
+            background-color: var(--c-blue);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s ease, background-color 0.3s ease;
+        }
+
+        #api-toggle-btn:hover {
+            background-color: var(--c-blue-active);
+            transform: scale(1.1);
+        }
+
+        #api-panel {
+            display: none;
+            position: absolute;
+            bottom: 60px;
+            right: 0;
+            background-color: var(--c-bg);
+            border: 1px solid var(--c-gray2);
+            border-radius: 16px;
+            padding: 20px;
+            width: 300px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        #api-panel.show {
+            display: block;
+        }
+
+        #api-panel h4 {
+            margin: 0 0 12px 0;
+            font-size: 16px;
+            color: var(--c-text);
+        }
+
+        #api-panel input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--c-gray2);
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: var(--c-bg);
+            color: var(--c-text);
+            box-sizing: border-box;
+            margin-bottom: 12px;
+        }
+
+        #api-panel button {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--c-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        #api-panel button:hover {
+            background-color: var(--c-blue-active);
+        }
+
+        .api-status {
+            font-size: 12px;
+            color: var(--c-gray6);
+            margin-top: 8px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .gsc-webResult.gsc-result {
+                background: rgb(from var(--c-gray1) r g b / 50%) !important;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+            }
+            
+            .gsc-webResult.gsc-result:hover {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+            }
+
+            .gs-title a {
+                color: #FAFAFA !important;
+            }
+            
+            .gs-title a:visited {
+                color: #FAFAFA !important;
+            }
+
+            .gs-bidi-start-align.gs-visibleUrl {
+                color: #9aa0a6 !important;
+            }
+
+            .gs-snippet {
+                color: #bdc1c6 !important;
+            }
+            
+            .gsc-completion-container {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+            }
+
+            .gsc-cursor-page {
+                color: #8ab4f8 !important;
+            }
+
+            .gsc-cursor-current-page {
+                background-color: #8ab4f8 !important;
+                border: 1px solid #8ab4f8 !important;
+            }
+
+            #gemini-summary {
+                background: linear-gradient(135deg, rgb(from var(--c-gray1) r g b / 60%) 0%, rgb(from var(--c-gray1) r g b / 30%) 100%);
+            }
+        }
+
+        .nav-wrapper {
+            background: rgb(from var(--c-bg) r g b / 80%);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 0.5px solid rgb(from var(--c-gray7) r g b / 10%);
+        }
+
+        .nav {
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: 0 22px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-size: 21px;
+            font-weight: 600;
+            color: var(--c-text);
+            text-decoration: none;
+            letter-spacing: -.05em;
+        }
+
+        .nav-logo.en {
+            font-family: "BR Cobane", sans-serif;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--c-text);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 400;
+            opacity: 0.8;
+            transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+        }
+
+        .gs-title b, .gs-snippet b {
+            color: inherit !important;
+            font-weight: inherit !important;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .gs-title b, .gs-snippet b {
+                color: inherit !important;
+                font-weight: inherit !important;
+            }
+        }
+
+        .gs-spelling,
+        .gs-spelling a {
+            color: var(--c-text) !important;
+            background: none !important;
+            border: none !important;
+            padding: 0px 0 !important;
+            margin: 0px 0 !important;
+            font-size: 14px !important;
+            font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            line-height: 1.4 !important;
+        }
+
+        .gs-spelling a {
+            color: var(--c-blue) !important;
+            text-decoration: none !important;
+            font-weight: 500 !important;
+            display: inline !important;
+        }
+
+        .gs-spelling a:hover {
+            text-decoration: underline !important;
+        }
+
+        .gs-spelling em {
+            color: var(--c-gray6) !important;
+            font-style: normal !important;
+            display: inline !important;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .gs-spelling,
+            .gs-spelling a {
+                color: var(--c-text) !important;
+            }
+            
+            .gs-spelling a {
+                color: #8ab4f8 !important;
+            }
+            
+            .gs-spelling em {
+                color: var(--c-gray5) !important;
+            }
+        }
+
+        #custom-search {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #custom-search.fade-out {
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+        }
+
+        #cse-search {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #cse-search.fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #current-time, #credit {
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #current-time.fade-out, #credit.fade-out {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        #search-buttons {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.2s,
+                        transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
+        }
+
+        #search-buttons.fade-out {
+            opacity: 0;
+            transform: translateY(-10px);
+            transition-delay: 0s;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="nav-wrapper">
+        <nav class="nav">
+            <a href="/" class="nav-logo en">쿼터파이</a>
+            <div class="nav-links">
+                <a href="https://mail.google.com/" class="nav-link en">메일</a>
+                <a href="https://drive.google.com/" class="nav-link en">드라이브</a>
+                <a href="https://classroom.google.com/" class="nav-link en">클래스룸</a>
+            </div>
+        </nav>
+    </div>
+
+<main>
+    <div style="padding-bottom: 15vh;"></div>
+    <h1 class="page-title">QISS</h1>
+    <button id="mode-toggle" onclick="toggleMode()">QISS</button>
+
+    <div id="custom-search">
+        <br>
+        <input type="text" id="search-bar" class="search-bar" placeholder="무엇이 궁금하신가요?" onkeydown="handleEnter(event)">
+        <br><br>
+        <div id="search-buttons">
+            <button class="search-button" onclick="searchInNaver()">Naver</button>
+            <button class="search-button" onclick="searchInDBpia()">DBpia</button>
+            <button class="search-button" onclick="searchInGs()">Scholar</button>
+            <button class="search-button" onclick="searchInRISS()">RISS</button>
+        </div>
+    </div>
+
+    <div id="cse-search" class="gcse-search" data-enableImageSearch="true"></div>
+
+    <div id="gemini-summary-container">
+        <div id="gemini-summary">
+            <h3>
+                <span>✨</span>
+                <span>AI 요약</span>
+            </h3>
+            <div id="gemini-summary-text"></div>
+        </div>
+    </div>
+
+    <br>
+
+    <div id="current-time">현재 시간 : <span id="time-display"></span></div>
+
+    <div id="credit">2025 쿼터파이</div>
+</main>
+
+<div id="api-settings">
+    <button id="api-toggle-btn" onclick="toggleApiPanel()">⚙️</button>
+    <div id="api-panel">
+        <h4>Gemini API 설정</h4>
+        <input type="password" id="api-key-input" placeholder="API 키를 입력하세요" value="">
+        <button onclick="saveApiKey()">저장</button>
+        <div class="api-status" id="api-status">API 키가 설정되지 않았습니다</div>
+    </div>
+</div>
+
+<br><br><br><br><br><br><br>
+
+<script>
+    let isCSE = false;
+    let geminiApiKey = localStorage.getItem('gemini_api_key') || '';
+    let currentSearchQuery = '';
+
+    // 페이지 로드 시 API 키 상태 확인
+    window.addEventListener('DOMContentLoaded', function() {
+        const toggleBtn = document.getElementById('mode-toggle');
+        toggleBtn.innerHTML = '<span class="qiss-text">QISS</span>';
+        
+        updateApiStatus();
+        if (geminiApiKey) {
+            document.getElementById('api-key-input').value = geminiApiKey;
+        }
+    });
+
+    function updateApiStatus() {
+        const status = document.getElementById('api-status');
+        if (geminiApiKey) {
+            status.textContent = 'API 키가 설정되었습니다 ✓';
+            status.style.color = '#34a853';
+        } else {
+            status.textContent = 'API 키가 설정되지 않았습니다';
+            status.style.color = 'var(--c-gray6)';
+        }
+    }
+
+    function toggleApiPanel() {
+        const panel = document.getElementById('api-panel');
+        panel.classList.toggle('show');
+    }
+
+    function saveApiKey() {
+        const input = document.getElementById('api-key-input');
+        geminiApiKey = input.value.trim();
+        
+        if (geminiApiKey) {
+            localStorage.setItem('gemini_api_key', geminiApiKey);
+            updateApiStatus();
+            alert('API 키가 저장되었습니다!');
+            toggleApiPanel();
+        } else {
+            alert('API 키를 입력해주세요.');
+        }
+    }
+
+    function toggleMode() {
+        isCSE = !isCSE;
+        const cse = document.getElementById('cse-search');
+        const custom = document.getElementById('custom-search');
+        const toggleBtn = document.getElementById('mode-toggle');
+        const currentTime = document.getElementById('current-time');
+        const credit = document.getElementById('credit');
+        const searchButtons = document.getElementById('search-buttons');
+        const summaryContainer = document.getElementById('gemini-summary-container');
+
+        if (isCSE) {
+            toggleBtn.innerHTML = '<span class="qiss-text">QISS</span><span class="search-text">&nbsp;Search</span>';
+            
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    toggleBtn.classList.add('expanded');
+                    custom.classList.add('fade-out');
+                    searchButtons.classList.add('fade-out');
+                    currentTime.classList.add('fade-out');
+                    credit.classList.add('fade-out');
+                });
+            });
+            
+            setTimeout(() => {
+                custom.style.display = 'none';
+                cse.style.display = 'block';
+                
+                requestAnimationFrame(() => {
+                    cse.classList.add('fade-in');
+                });
+            }, 400);
+        } else {
+            toggleBtn.classList.remove('expanded');
+            cse.classList.remove('fade-in');
+            summaryContainer.style.display = 'none';
+            
+            setTimeout(() => {
+                cse.style.display = 'none';
+                custom.style.display = 'block';
+                currentTime.classList.remove('fade-out');
+                credit.classList.remove('fade-out');
+                
+                requestAnimationFrame(() => {
+                    custom.classList.remove('fade-out');
+                    searchButtons.classList.remove('fade-out');
+                });
+            }, 400);
+        }
+    }
+
+    function handleEnter(event) {
+        if (event.key === 'Enter') searchInGoogle();
+    }
+
+    function getQuery() {
+        return document.getElementById('search-bar').value.trim();
+    }
+
+    function searchInGoogle() {
+        const q = getQuery();
+        if (q) window.open('https://www.google.com/search?q=' + encodeURIComponent(q), '_blank');
+    }
+
+    function searchInNaver() {
+        const q = getQuery();
+        if (q) window.open('https://search.naver.com/search.naver?where=nexearch&sm=tab_hty&query=' + encodeURIComponent(q), '_blank');
+    }
+
+    function searchInDBpia() {
+        const q = getQuery();
+        if (q) window.open('https://www.dbpia.co.kr/search/topSearch?searchOption=all&query=' + encodeURIComponent(q), '_blank');
+    }
+
+    function searchInGs() {
+        const q = getQuery();
+        if (q) window.open('https://scholar.google.com/scholar?hl=ko&as_sdt=0%2C5&q=' + encodeURIComponent(q), '_blank');
+    }
+
+    function searchInRISS() {
+        const q = getQuery();
+        if (q) window.open('https://www.riss.kr/search/Search.do?colName=all&isDetailSearch=N&searchGubun=true&oldQuery=&sflag=1&fsearchMethod=search&isFDetailSearch=N&searchQuery=1&kbid=&pageNumber=1&query=' + encodeURIComponent(q), '_blank');
+    }
+
+    // Gemini API로 요약 생성
+    async function generateSummary(query, searchResults) {
+        if (!geminiApiKey) {
+            document.getElementById('gemini-summary-text').innerHTML = '<div class="gemini-error">⚠️ Gemini API 키가 설정되지 않았습니다. 오른쪽 하단의 설정 버튼을 클릭하여 API 키를 입력해주세요.</div>';
+            return;
+        }
+
+        const summaryText = document.getElementById('gemini-summary-text');
+        summaryText.innerHTML = '<div class="gemini-loading"><div class="gemini-spinner"></div><span>AI가 검색 결과를 분석하고 있습니다...</span></div>';
+        
+        try {
+            // 검색 결과에서 제목과 설명 추출
+            let resultsContext = '검색어: ' + query + '\n\n검색 결과:\n\n';
+            searchResults.forEach((result, index) => {
+                resultsContext += `${index + 1}. ${result.title}\n${result.snippet}\n\n`;
+            });
+            
+            // ### 오류 수정된 부분 ###
+            // 모델 이름을 `v1beta` 버전에 맞는 'gemini-pro'로 다시 수정
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiApiKey}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: `다음은 "${query}"에 대한 검색 결과입니다. 이 검색 결과들을 바탕으로 사용자가 알고 싶어하는 정보를 명확하고 간결하게 요약해주세요. 한국어로 답변해주세요.\n\n${resultsContext}\n\n요약 시 다음 사항을 지켜주세요:\n1. 핵심 정보를 3-5개의 문단으로 정리\n2. 검색 결과의 주요 내용을 종합적으로 설명\n3. 객관적이고 중립적인 톤 유지\n4. 불필요한 인사말이나 서론 없이 바로 본론으로 시작`
+                        }]
+                    }],
+                    generationConfig: {
+                        temperature: 0.7,
+                        maxOutputTokens: 1024,
+                    }
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({})); // JSON 파싱 실패 대비
+                const errorMessage = errorData?.error?.message || `HTTP status ${response.status}`;
+                throw new Error(`API 요청 실패: ${errorMessage}`);
+            }
+
+            const data = await response.json();
+            
+            if (data.candidates && data.candidates[0] && data.candidates[0].content) {
+                const summary = data.candidates[0].content.parts[0].text;
+                summaryText.textContent = summary;
+            } else {
+                 // 응답에 content가 없는 경우 (예: 안전 설정에 의해 차단)
+                const blockReason = data.candidates?.[0]?.finishReason || '알 수 없는 이유';
+                const safetyRatings = JSON.stringify(data.candidates?.[0]?.safetyRatings || {});
+                throw new Error(`응답 형식이 올바르지 않거나 콘텐츠가 차단되었습니다. (이유: ${blockReason}, 안전 등급: ${safetyRatings})`);
+            }
+        } catch (error) {
+            console.error('Gemini API 오류:', error);
+            summaryText.innerHTML = `<div class="gemini-error">❌ 요약 생성 중 오류가 발생했습니다: ${error.message}</div>`;
+        }
+    }
+
+    // 검색 결과 모니터링
+    function monitorSearchResults() {
+        const resultsObserver = new MutationObserver(() => {
+            const results = document.querySelectorAll('.gsc-webResult.gsc-result');
+            
+            if (results.length > 0 && isCSE) {
+                const searchInput = document.querySelector('input.gsc-input');
+                const query = searchInput ? searchInput.value.trim() : '';
+                
+                if (query && query !== currentSearchQuery) {
+                    currentSearchQuery = query;
+                    
+                    // 검색 결과 데이터 추출
+                    const searchResults = [];
+                    results.forEach(result => {
+                        const titleElement = result.querySelector('.gs-title');
+                        const snippetElement = result.querySelector('.gs-snippet');
+                        
+                        if (titleElement && snippetElement) {
+                            searchResults.push({
+                                title: titleElement.textContent.trim(),
+                                snippet: snippetElement.textContent.trim()
+                            });
+                        }
+                    });
+
+                    if (searchResults.length > 0) {
+                        const summaryContainer = document.getElementById('gemini-summary-container');
+                        summaryContainer.style.display = 'block';
+                        generateSummary(query, searchResults.slice(0, 5)); // 상위 5개 결과만 사용
+                    }
+                }
+            }
+        });
+
+        resultsObserver.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
+
+    // 검색 결과 모니터링 시작
+    monitorSearchResults();
+
+    function removeUnwantedElements() {
+        const selectors = [
+            '.gsc-tabsArea',
+            '.gsc-orderby-container',
+            '.gcsc-find-more-on-google',
+            '.gs-image',
+            '.gsc-refinementsArea',
+            '.gsc-above-wrapper-area',
+            '.gsc-branding',
+            '.gcsc-branding',
+            '.gsc-watermark',
+            'td.gsc-branding'
+        ];
+        
+        selectors.forEach(selector => {
+            document.querySelectorAll(selector).forEach(el => {
+                el.style.cssText = 'display:none!important;visibility:hidden!important;opacity:0!important;height:0!important;width:0!important;';
+                el.remove();
+            });
+        });
+    }
+
+    const observer = new MutationObserver(removeUnwantedElements);
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+    setInterval(removeUnwantedElements, 500);
+
+    // 실시간 시계
+    const timeDisplay = document.getElementById('time-display');
+    function updateTime() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth() + 1;
+        const day = now.getDate();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const seconds = now.getSeconds().toString().padStart(2, '0');
+
+        timeDisplay.textContent = `${year}년 ${month}월 ${day}일 ${hours}:${minutes}:${seconds}`;
+    }
+    updateTime();
+    setInterval(updateTime, 1000);
+
+    function addFavicons() {
+        const results = document.querySelectorAll('.gsc-webResult.gsc-result');
+        
+        results.forEach(result => {
+            const titleLink = result.querySelector('.gs-title a');
+            if (titleLink && !titleLink.querySelector('.favicon')) {
+                try {
+                    const url = new URL(titleLink.href);
+                    const domain = url.hostname;
+                    
+                    const favicon = document.createElement('img');
+                    favicon.className = 'favicon';
+                    favicon.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
+                    favicon.style.cssText = `
+                        width: 20px !important;
+                        height: 20px !important;
+                        margin-right: 10px !important;
+                        border-radius: 4px !important;
+                        vertical-align: middle !important;
+                        display: inline-block !important;
+                        object-fit: contain !important;
+                    `;
+                    
+                    favicon.onerror = function() {
+                        this.style.display = 'none'; // 아이콘 로드 실패 시 숨김
+                    };
+                    
+                    titleLink.insertBefore(favicon, titleLink.firstChild);
+                } catch (e) {
+                    console.log('파비콘 추가 실패:', e);
+                }
+            }
+        });
+    }
+
+    const faviconObserver = new MutationObserver(addFavicons);
+    faviconObserver.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+    setInterval(addFavicons, 1000);
+
+    function applyCardAnimation() {
+        const cards = document.querySelectorAll('.gsc-webResult.gsc-result');
+        
+        cards.forEach((card, index) => {
+            if (card.classList.contains('animated')) return;
+            
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.9) translateY(20px)';
+            
+            setTimeout(() => {
+                card.style.transition = 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out';
+                card.style.opacity = '1';
+                card.style.transform = 'scale(1) translateY(0)';
+                card.classList.add('animated');
+            }, index * 100);
+        });
+    }
+
+    const cardAnimationObserver = new MutationObserver(applyCardAnimation);
+
+    cardAnimationObserver.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+    setTimeout(applyCardAnimation, 500);
+
+    function styleSearchSuggestion() {
+        const suggestions = document.querySelectorAll('.gs-spelling');
+        
+        suggestions.forEach(suggestion => {
+            suggestion.style.cssText = `
+                color: var(--c-text) !important;
+                background: none !important;
+                border: none !important;
+                padding: 3px 0 !important;
+                margin: 3px 0 !important;
+                font-size: 14px !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                line-height: 1.4 !important;
+            `;
+            
+            const links = suggestion.querySelectorAll('a');
+            links.forEach(link => {
+                link.style.color = 'var(--c-blue)';
+                link.style.fontWeight = '500';
+                link.style.textDecoration = 'none';
+                link.style.display = 'inline';
+            });
+            
+            const ems = suggestion.querySelectorAll('em');
+            ems.forEach(em => {
+                em.style.color = 'var(--c-gray6)';
+                em.style.fontStyle = 'normal';
+                em.style.display = 'inline';
+            });
+        });
+    }
+
+    setInterval(styleSearchSuggestion, 500);
+
+    const suggestionObserver = new MutationObserver(styleSearchSuggestion);
+    suggestionObserver.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+    // 패널 외부 클릭 시 닫기
+    document.addEventListener('click', function(event) {
+        const panel = document.getElementById('api-panel');
+        const toggleBtn = document.getElementById('api-toggle-btn');
+        
+        if (panel.classList.contains('show') && 
+            !panel.contains(event.target) && 
+            !toggleBtn.contains(event.target)) { // 버튼 클릭 시 닫히지 않도록 수정
+            panel.classList.remove('show');
+        }
+    });
+</script>
+</body>
+</html>
