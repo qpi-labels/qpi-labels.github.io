@@ -1,177 +1,171 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>실시간 중앙 색상 추출기</title>
+    <title>pH 농도 측정 - 칼슘</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Babel to transpile JSX in the browser -->
+    
+    <!-- Load React and ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    
+    <!-- Load Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- Import Map for React dependencies -->
-    <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@18.2.0",
-    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client"
-  }
-}
-</script>
+    
     <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-            animation: fadeIn 0.5s ease-in-out forwards;
-        }
-        .video-zoom-wrapper {
-            aspect-ratio: 1 / 1;
-            overflow: hidden;
-            width: 100%;
-            max-width: 448px; /* max-w-sm is 384px, but using a slightly larger value to be safe */
-            position: relative;
-            border-radius: 0.5rem;
-            background-color: #1e293b; /* bg-slate-800 */
-        }
-        .video-zoomed {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            transform: translate(-50%, -50%) scale(4); /* 400% zoom */
-        }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-in {
+        animation: fadeIn 0.5s ease-in-out forwards;
+      }
     </style>
 </head>
 <body class="bg-slate-900 text-white antialiased">
     <div id="root"></div>
-    <script type="text/babel" data-type="module">
-        import React, { useState, useRef, useCallback, useEffect } from 'react';
-        import ReactDOM from 'react-dom/client';
+    <script type="text/babel">
+      const { useState, useRef, useCallback } = React;
 
-        // --- Helper Functions ---
-        const rgbToHex = (r, g, b) => {
-          const toHex = (c) => `0${c.toString(16)}`.slice(-2);
-          return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+      // --- Predefined Color Palette ---
+      const PALETTE = [
+        { number: 1, hex: '#a6778d' },
+        { number: 2, hex: '#734a62' },
+        { number: 3, hex: '#593657' },
+        { number: 4, hex: '#5e4f76' },
+        { number: 5, hex: '#38335b' },
+        { number: 6, hex: '#4d496c' },
+        { number: 7, hex: '#2f2a4f' },
+        { number: 8, hex: '#565e71' },
+        { number: 9, hex: '#374f59' },
+        { number: 10, hex: '#475a61' },
+        { number: 11, hex: '#5d5f8e' },
+        { number: 12, hex: '#4a5960' },
+      ];
+
+      // --- Helper Functions ---
+      const hexToRgb = (hex) => {
+          const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+          return result ? {
+              r: parseInt(result[1], 16),
+              g: parseInt(result[2], 16),
+              b: parseInt(result[3], 16)
+          } : null;
+      };
+
+      // Pre-convert palette to RGB for efficient comparison
+      const PALETTE_RGB = PALETTE.map(color => ({
+          ...color,
+          rgb: hexToRgb(color.hex)
+      }));
+
+      const findClosestPaletteColor = (color) => {
+          let closestColor = PALETTE_RGB[0];
+          let minDistance = Infinity;
+
+          for (const paletteColor of PALETTE_RGB) {
+              // Using squared Euclidean distance for efficiency (no need for sqrt)
+              const distance =
+                  Math.pow(color.r - paletteColor.rgb.r, 2) +
+                  Math.pow(color.g - paletteColor.rgb.g, 2) +
+                  Math.pow(color.b - paletteColor.rgb.b, 2);
+              if (distance < minDistance) {
+                  minDistance = distance;
+                  closestColor = paletteColor;
+              }
+          }
+          return closestColor;
+      };
+
+      // --- UI Components ---
+
+      const UploadIcon = () => (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+        </svg>
+      );
+
+      const Spinner = () => (
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-t-2 border-slate-300"></div>
+      );
+
+      const ColorDisplay = ({ number, hexCode }) => {
+        const [copied, setCopied] = useState(false);
+
+        const handleCopy = () => {
+          navigator.clipboard.writeText(hexCode).then(() => {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+          });
         };
 
-        // --- UI Components ---
-        const CameraIcon = () => (
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-        );
-
-        const Spinner = () => (
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-t-2 border-slate-300"></div>
-        );
-
-        const ColorDisplay = ({ hexCode }) => {
-          const [copied, setCopied] = useState(false);
-
-          const handleCopy = () => {
-            navigator.clipboard.writeText(hexCode).then(() => {
-              setCopied(true);
-              setTimeout(() => setCopied(false), 2000);
-            });
-          };
-
-          return (
-            <div className="w-full max-w-sm flex flex-col items-center gap-4 transition-all duration-500 ease-in-out">
-              <div 
-                className="w-48 h-48 rounded-full shadow-lg border-4 border-slate-700 transition-colors duration-300" 
-                style={{ backgroundColor: hexCode }}
-              />
+        return (
+          <div className="w-full max-w-sm flex flex-col items-center gap-4 transition-all duration-500 ease-in-out">
+            <div 
+              className="w-48 h-48 rounded-full shadow-lg border-4 border-slate-700 transition-colors duration-300" 
+              style={{ backgroundColor: hexCode }}
+            />
+            <div className="text-center">
+              <h2 className="text-3xl font-bold text-slate-200">pH {number}</h2>
               <button 
                 onClick={handleCopy}
-                className="bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-xl py-2 px-6 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+                className="bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-lg mt-2 py-2 px-5 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-slate-900"
               >
-                {copied ? '복사됨!' : hexCode}
+                {copied ? 'Copied!' : hexCode}
               </button>
             </div>
-          );
+          </div>
+        );
+      };
+
+      // --- Main App Component ---
+
+      const App = () => {
+        const [imageSrc, setImageSrc] = useState(null);
+        const [matchedColor, setMatchedColor] = useState(null);
+        const [isLoading, setIsLoading] = useState(false);
+        const [error, setError] = useState(null);
+        const fileInputRef = useRef(null);
+
+        const resetState = () => {
+          setImageSrc(null);
+          setMatchedColor(null);
+          setError(null);
+          if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+          }
         };
 
-        // --- Main App Component ---
-        const App = () => {
-          const [imageSrc, setImageSrc] = useState(null);
-          const [colorHex, setColorHex] = useState(null);
-          const [isLoading, setIsLoading] = useState(false);
-          const [error, setError] = useState(null);
-          const [isCameraOn, setIsCameraOn] = useState(false);
-          const [stream, setStream] = useState(null);
-          
-          const videoRef = useRef(null);
-          const canvasRef = useRef(null);
-          
-          const stopCamera = useCallback(() => {
-            if (stream) {
-              stream.getTracks().forEach(track => track.stop());
-              setStream(null);
-              setIsCameraOn(false);
-            }
-          }, [stream]);
+        const extractCentralColor = useCallback((file) => {
+          setIsLoading(true);
+          setImageSrc(null);
+          setError(null);
 
-          const resetState = useCallback(() => {
-            stopCamera();
-            setImageSrc(null);
-            setColorHex(null);
-            setError(null);
-          }, [stopCamera]);
-
-          const startCamera = async () => {
-            resetState();
-            setError(null);
-            try {
-              const stream = await navigator.mediaDevices.getUserMedia({ 
-                video: { facingMode: 'environment' } 
-              });
-              videoRef.current.srcObject = stream;
-              setStream(stream);
-              setIsCameraOn(true);
-            } catch (err) {
-              console.error("카메라 에러:", err);
-              setError("카메라에 접근할 수 없습니다. 권한을 확인해주세요.");
-            }
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            setImageSrc(e.target?.result);
           };
-          
-          const captureAndAnalyze = useCallback(() => {
-            if (!videoRef.current) return;
-            setIsLoading(true);
+          reader.readAsDataURL(file);
 
-            const video = videoRef.current;
-            const canvas = canvasRef.current;
-            
-            // The canvas will capture the zoomed-in portion of the video
-            const zoomFactor = 4;
-            const sourceWidth = video.videoWidth / zoomFactor;
-            const sourceHeight = video.videoHeight / zoomFactor;
-            const sourceX = (video.videoWidth - sourceWidth) / 2;
-            const sourceY = (video.videoHeight - sourceHeight) / 2;
-
-            canvas.width = 300; // A reasonable capture resolution
-            canvas.height = 300;
-            
+          const image = new Image();
+          image.src = URL.createObjectURL(file);
+          image.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = image.width;
+            canvas.height = image.height;
             const ctx = canvas.getContext('2d', { willReadFrequently: true });
-             if (!ctx) {
-                setError("캔버스 컨텍스트를 가져올 수 없습니다.");
-                setIsLoading(false);
-                return;
-              }
+            if (!ctx) {
+              setError("Could not get canvas context.");
+              setIsLoading(false);
+              return;
+            }
+            ctx.drawImage(image, 0, 0, image.width, image.height);
 
-            ctx.drawImage(video, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, canvas.width, canvas.height);
+            const sampleSize = Math.min(10, image.width, image.height);
+            const startX = Math.floor(image.width / 2 - sampleSize / 2);
+            const startY = Math.floor(image.height / 2 - sampleSize / 2);
             
-            setImageSrc(canvas.toDataURL('image/jpeg'));
-            stopCamera(); // Stop camera after capture to save resources
-
-            // --- Analyze color from the captured canvas ---
-            const sampleSize = Math.min(10, canvas.width, canvas.height);
-            const startX = Math.floor(canvas.width / 2 - sampleSize / 2);
-            const startY = Math.floor(canvas.height / 2 - sampleSize / 2);
-              
             try {
               const imageData = ctx.getImageData(startX, startY, sampleSize, sampleSize).data;
               let total = { r: 0, g: 0, b: 0 };
@@ -182,119 +176,124 @@
                 total.g += imageData[i + 1];
                 total.b += imageData[i + 2];
               }
+
               const avg = {
                 r: Math.round(total.r / pixelCount),
                 g: Math.round(total.g / pixelCount),
                 b: Math.round(total.b / pixelCount),
               };
 
-              setColorHex(rgbToHex(avg.r, avg.g, avg.b));
+              const closestMatch = findClosestPaletteColor(avg);
+              setMatchedColor({ number: closestMatch.number, hex: closestMatch.hex });
+
             } catch(e) {
-                setError("이미지를 처리할 수 없습니다. 보안 제한 때문일 수 있습니다.");
+                setError("Could not process the image. It might be a security restriction on cross-origin images.");
             }
+
+            URL.revokeObjectURL(image.src);
             setIsLoading(false);
-          }, [stopCamera]);
-          
-          // Cleanup on component unmount
-          useEffect(() => {
-            return () => stopCamera();
-          }, [stopCamera]);
-
-          const getButtonConfig = () => {
-            if (imageSrc) {
-              return { text: '다시 찍기', action: startCamera };
-            }
-            if (isCameraOn) {
-              return { text: '사진 찍기', action: captureAndAnalyze };
-            }
-            return { text: '카메라 시작하기', action: startCamera };
           };
+          image.onerror = () => {
+            setError("Could not load the image file.");
+            setIsLoading(false);
+          };
+        }, []);
 
-          const buttonConfig = getButtonConfig();
-
-          return (
-            <div className="min-h-screen w-full flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
-              <main className="w-full max-w-md mx-auto flex flex-col items-center text-center space-y-8">
-                <header>
-                  <h1 className="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-500">
-                    실시간 색상 추출기
-                  </h1>
-                  <p className="mt-2 text-slate-400">카메라로 비추어 중앙 색상을 찾아보세요.</p>
-                </header>
-
-                {error && <div className="bg-red-900/50 text-red-300 p-3 rounded-md">{error}</div>}
-
-                <div className="w-full space-y-8 flex flex-col items-center">
-                    {colorHex && !isLoading && (
-                         <div className="animate-fade-in">
-                            <ColorDisplay hexCode={colorHex} />
-                         </div>
-                    )}
-                    
-                    <div className="w-full aspect-square max-w-sm bg-slate-800/50 rounded-lg flex items-center justify-center relative overflow-hidden border-2 border-dashed border-slate-700">
-                        {isLoading && (
-                            <div className="absolute inset-0 bg-slate-900/80 flex items-center justify-center z-30">
-                                <Spinner />
-                            </div>
-                        )}
-                        
-                        {!isCameraOn && !imageSrc && (
-                             <button onClick={startCamera} className="flex flex-col items-center justify-center text-slate-500 hover:text-cyan-400 transition-colors duration-300 w-full h-full">
-                                <CameraIcon />
-                                <span className="mt-2 text-sm font-semibold">카메라 시작하기</span>
-                            </button>
-                        )}
-
-                        {isCameraOn && (
-                            <div className="video-zoom-wrapper absolute inset-0">
-                                <video ref={videoRef} autoPlay playsInline className="video-zoomed"></video>
-                            </div>
-                        )}
-
-                        {imageSrc && !isCameraOn && (
-                             <img src={imageSrc} alt="캡처된 이미지" className="object-contain w-full h-full" />
-                        )}
-
-                        {(isCameraOn || imageSrc) && (
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 z-10 pointer-events-none">
-                                <div className="absolute top-1/2 left-0 w-full h-[1px] bg-white/50 -translate-y-1/2"></div>
-                                <div className="absolute left-1/2 top-0 h-full w-[1px] bg-white/50 -translate-x-1/2"></div>
-                                <div className="w-2 h-2 border border-white/70 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
-                            </div>
-                        )}
-                    </div>
-                    <canvas ref={canvasRef} className="hidden"></canvas>
-                </div>
-
-                <div className="flex items-center gap-4">
-                    <button
-                        onClick={buttonConfig.action}
-                        disabled={isLoading}
-                        className="bg-cyan-600 hover:bg-cyan-500 disabled:bg-cyan-800 disabled:cursor-not-allowed text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-slate-900"
-                    >
-                        {buttonConfig.text}
-                    </button>
-                    {(imageSrc || isCameraOn) && (
-                        <button
-                            onClick={resetState}
-                            className="bg-slate-700 hover:bg-slate-600 text-slate-300 font-bold py-3 px-6 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-slate-900"
-                        >
-                            초기화
-                        </button>
-                    )}
-                </div>
-              </main>
-            </div>
-          );
+        const handleFileChange = (event) => {
+          const file = event.target.files?.[0];
+          if (file) {
+            extractCentralColor(file);
+          }
+        };
+        
+        const triggerFileInput = () => {
+          fileInputRef.current?.click();
         };
 
-        // --- Render the App ---
-        const rootElement = document.getElementById('root');
-        if (!rootElement) {
-          throw new Error("루트 요소를 찾을 수 없습니다.");
-        }
-        const root = ReactDOM.createRoot(rootElement);
-        root.render(<App />);
+        return (
+          <div className="min-h-screen w-full flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
+            <main className="w-full max-w-md mx-auto flex flex-col items-center text-center space-y-8">
+              <header>
+                <h1 className="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-500">
+                  pH 농도 측정 - 칼슘
+                </h1>
+                <p className="mt-2 text-slate-400">사진 업로드 하슈</p>
+              </header>
+
+              {error && <div className="bg-red-900/50 text-red-300 p-3 rounded-md">{error}</div>}
+
+              <div className="w-full space-y-8 flex flex-col items-center">
+                  {matchedColor && !isLoading && (
+                       <div className="animate-fade-in">
+                          <ColorDisplay number={matchedColor.number} hexCode={matchedColor.hex} />
+                       </div>
+                  )}
+                  
+                  <div className="w-full aspect-square max-w-sm bg-slate-800/50 rounded-lg flex items-center justify-center relative overflow-hidden border-2 border-dashed border-slate-700">
+                      {isLoading && (
+                          <div className="absolute inset-0 bg-slate-900/80 flex items-center justify-center z-20">
+                              <Spinner />
+                          </div>
+                      )}
+                      {imageSrc ? (
+                          <>
+                              <img src={imageSrc} alt="Uploaded preview" className="object-contain w-full h-full" />
+                              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 z-10 pointer-events-none">
+                                  <div className="absolute top-1/2 left-0 w-full h-[1px] bg-white/50 -translate-y-1/2"></div>
+                                  <div className="absolute left-1/2 top-0 h-full w-[1px] bg-white/50 -translate-x-1/2"></div>
+                                  <div className="w-2 h-2 border border-white/70 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+                              </div>
+                          </>
+                      ) : !matchedColor && !isLoading ? (
+                          <button onClick={triggerFileInput} className="flex flex-col items-center justify-center text-slate-500 hover:text-cyan-400 transition-colors duration-300 w-full h-full">
+                              <UploadIcon />
+                              <span className="mt-2 text-sm font-semibold">Upload Photo</span>
+                          </button>
+                      ) : null}
+                  </div>
+                   <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    accept="image/*"
+                    capture="environment"
+                    className="hidden"
+                  />
+              </div>
+
+              <div className="flex items-center gap-4">
+                  <button
+                      onClick={triggerFileInput}
+                      className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+                  >
+                      {imageSrc || matchedColor ? 'Upload Another' : 'Upload Photo'}
+                  </button>
+                  {(imageSrc || matchedColor) && (
+                      <button
+                          onClick={resetState}
+                          className="bg-slate-700 hover:bg-slate-600 text-slate-300 font-bold py-3 px-6 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+                      >
+                          Reset
+                      </button>
+                  )}
+              </div>
+            </main>
+          </div>
+        );
+      };
+
+      // --- React Bootstrap ---
+      const rootElement = document.getElementById('root');
+      if (!rootElement) {
+        throw new Error("Could not find root element to mount to");
+      }
+
+      const root = ReactDOM.createRoot(rootElement);
+      root.render(
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      );
     </script>
 </body>
 </html>
