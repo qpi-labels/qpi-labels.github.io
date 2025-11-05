@@ -835,21 +835,21 @@
         // 여기에 이 한 줄 추가
         setupSearchInputListener();
     }, 400);
-        } else {
+} else {
             toggleBtn.classList.remove('expanded');
             cse.classList.remove('fade-in');
             
             setTimeout(() => {
-                cse.style.display = 'none';
-                custom.style.display = 'block';
-                currentTime.classList.remove('fade-out');
-                credit.classList.remove('fade-out');
-                
-                requestAnimationFrame(() => {
-                    custom.classList.remove('fade-out');
-                    searchButtons.classList.remove('fade-out');
-                });
-            }, 400);
+    custom.style.display = 'none';
+    cse.style.display = 'block';
+    
+    requestAnimationFrame(() => {
+        cse.classList.add('fade-in');
+    });
+    
+    // 이 한 줄만 추가
+    setupSearchInputListener();
+}, 400);
         }
     }
 
@@ -998,6 +998,7 @@ function monitorSearchResults() {
             
             if (query && query !== currentSearchQuery) {
                 currentSearchQuery = query;
+                searchCompleted = false; // 이 줄을 여기로 이동
                 
                 // 검색 결과 데이터 추출
                 const searchResults = [];
