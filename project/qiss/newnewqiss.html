@@ -162,6 +162,7 @@
             max-width: 584px !important;
             box-sizing: border-box !important;
             font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
+            
         }
 
         .gsc-input-box {
@@ -174,6 +175,7 @@
         input.gsc-input:focus {
             border-color: var(--c-blue) !important;
             box-shadow: 0 0 10px rgba(0, 102, 255, 0.2) !important;
+            
         }
 
         .gsc-search-button-v2, button.gsc-search-button, td.gsc-search-button {
@@ -889,8 +891,8 @@
         const summaryText = document.getElementById('gemini-summary-text');
 
         if (!GROQ_API_KEY) {
-            summaryText.innerHTML = '<div class="gemini-error">Groq API 키가 설정되지 않았습니다. <br>AI 요약을 사용하려면 Groq API 키를 설정해야 합니다.<br><br>개발자 도구(F12) 콘솔을 열고 다음 명령어를 입력하여 키를 저장해주세요:<br><code>localStorage.setItem(\'GROQ_API_KEY\', \'여기에_Groq_API_키를_붙여넣으세요\');</code><br>키 저장 후 페이지를 새로고침하거나 다시 검색해주세요.<br>저장한 키는 서버로 전송되지 않습니다.</div>';
-            console.error("Groq API 키가 설정되지 않았습니다. localStorage.setItem('GROQ_API_KEY', 'YOUR_KEY')를 사용하여 키를 설정해주세요.");
+            summaryText.innerHTML = '<div class="gemini-error">QISS의 AI 검색 요약 기능 사용을 위해 API를 설정해야 합니다.<br><a href="https://github.com/qpi-labels/qpi-labels.github.io/discussions/18">API 설정하는 방법 알아보기</a></div>';
+            console.error("API 키가 설정되지 않았습니다. localStorage.setItem('GROQ_API_KEY', 'YOUR_KEY')를 사용하여 키를 설정해주세요.");
             return;
         }
 
