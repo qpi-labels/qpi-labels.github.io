@@ -161,6 +161,7 @@
             width: 100% !important;
             max-width: 584px !important;
             box-sizing: border-box !important;
+            background: none !important;
             font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
         }
 
@@ -959,23 +960,35 @@
                 }
             }
         });
-        
+    
         const resultsObserver = new MutationObserver(() => {
+            if (!isCSE) return;
+            
+            let el = document.querySelector("#cse-search :is(div.gsc-resultsbox-visible, div.gsc-resultsbox-invisible)");
+            if (el && !o2started) {
+                o2started = true;
+                resultsObserver2.disconnect();
+                resultsObserver2.observe(el, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+        });
+
+        let o2started = false;
+        const resultsObserver2 = new MutationObserver(() => {
             if (!isCSE) return;
             
             const results = document.querySelectorAll('.gsc-webResult.gsc-result');
             const searchInput = document.querySelector('input.gsc-input');
             const query = searchInput ? searchInput.value.trim() : '';
-            
-            if (results.length > 0 && query && query !== lastProcessedQuery) {
-                lastProcessedQuery = query;
-                
+
+summary:    if (results.length > 0 && query && query !== lastProcessedQuery) {
                 // 검색 결과 데이터 추출
                 const searchResults = [];
                 results.forEach(result => {
                     const titleElement = result.querySelector('.gs-title');
                     const snippetElement = result.querySelector('.gs-snippet');
-                    
                     if (titleElement && snippetElement) {
                         searchResults.push({
                             title: titleElement.textContent.trim(),
@@ -984,25 +997,29 @@
                     }
                 });
 
-                if (searchResults.length > 0) {
-                    const summaryContainer = document.getElementById('gemini-summary-container');
-                    summaryContainer.style.display = 'block';
-                    
-                    const resultsWrapper = results[0].parentElement;
-                    if (resultsWrapper) {
-                        resultsWrapper.insertBefore(summaryContainer, results[0]);
-                    }
-                    
-                    generateSummary(query, searchResults.slice(0, 5));
+                const summaryContainer = document.getElementById('gemini-summary-container');
+                if (!searchResults.length) {
+                    summaryContainer.style.display = 'none';
+                    break summary;
                 }
+                lastProcessedQuery = query;
+                summaryContainer.style.display = 'block';
+                
+                const resultsWrapper = results[0].parentElement.parentElement.parentElement.parentElement;
+                if (resultsWrapper) {
+                    resultsWrapper.insertAdjacentElement("afterbegin", summaryContainer);
+                }
+                
+                generateSummary(query, searchResults.slice(0, 5));
             }
             
             // AI 요약 위치 유지
             const summaryContainer = document.getElementById('gemini-summary-container');
+            console.log(summaryContainer);
             if (summaryContainer.style.display === 'block' && results.length > 0) {
-                const resultsWrapper = results[0].parentElement;
+                const resultsWrapper = results[0].parentElement.parentElement.parentElement.parentElement;
                 if (summaryContainer.parentElement !== resultsWrapper) {
-                    resultsWrapper.insertBefore(summaryContainer, results[0]);
+                    resultsWrapper.insertAdjacentElement("afterbegin", summaryContainer);
                 }
             }
         });
