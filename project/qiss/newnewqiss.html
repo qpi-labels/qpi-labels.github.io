@@ -987,18 +987,22 @@ function setupSearchInputListener() {
 
 // 검색 결과 모니터링
 function monitorSearchResults() {
+    let isProcessing = false;
+    
     const resultsObserver = new MutationObserver(() => {
-        if (!isCSE) return;
+        if (!isCSE || isProcessing) return;
         
         const results = document.querySelectorAll('.gsc-webResult.gsc-result');
         
-        if (results.length > 0 && searchCompleted) {
+        if (results.length > 0) {
             const searchInput = document.querySelector('input.gsc-input');
             const query = searchInput ? searchInput.value.trim() : '';
             
-            if (query && query !== currentSearchQuery) {
+            // 엔터를 눌렀고, 새로운 검색어일 때만 실행
+            if (query && searchCompleted && query !== currentSearchQuery) {
+                isProcessing = true;
                 currentSearchQuery = query;
-                searchCompleted = false; // 이 줄을 여기로 이동
+                searchCompleted = false;
                 
                 // 검색 결과 데이터 추출
                 const searchResults = [];
@@ -1026,6 +1030,19 @@ function monitorSearchResults() {
                     
                     generateSummary(query, searchResults.slice(0, 5));
                 }
+                
+                setTimeout(() => {
+                    isProcessing = false;
+                }, 1000);
+            }
+            
+            // AI 요약 컨테이너가 원래 위치로 돌아갔는지 확인하고 다시 삽입
+            const summaryContainer = document.getElementById('gemini-summary-container');
+            if (summaryContainer.style.display === 'block' && 
+                results[0] && 
+                summaryContainer.parentElement !== results[0].parentElement) {
+                const resultsWrapper = results[0].parentElement;
+                resultsWrapper.insertBefore(summaryContainer, results[0]);
             }
         }
     });
