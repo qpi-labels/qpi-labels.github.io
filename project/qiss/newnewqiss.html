@@ -790,7 +790,7 @@
 
     let isCSE = false;
     let currentSearchQuery = '';
-    let searchCompleted = false; 
+    let lastProcessedQuery = '';
 
     window.addEventListener('DOMContentLoaded', function() {
         const toggleBtn = document.getElementById('mode-toggle');
@@ -809,6 +809,7 @@
         
         // 모드 전환 시 이전 검색 쿼리 초기화
         currentSearchQuery = ''; 
+        lastProcessedQuery = '';
         summaryContainer.style.display = 'none';
 
         if (isCSE) {
@@ -825,31 +826,28 @@
             });
             
             setTimeout(() => {
-        custom.style.display = 'none';
-        cse.style.display = 'block';
-        
-        requestAnimationFrame(() => {
-            cse.classList.add('fade-in');
-        });
-        
-        // 여기에 이 한 줄 추가
-        setupSearchInputListener();
-    }, 400);
-} else {
+                custom.style.display = 'none';
+                cse.style.display = 'block';
+                
+                requestAnimationFrame(() => {
+                    cse.classList.add('fade-in');
+                });
+            }, 400);
+        } else {
             toggleBtn.classList.remove('expanded');
             cse.classList.remove('fade-in');
             
             setTimeout(() => {
-    custom.style.display = 'none';
-    cse.style.display = 'block';
-    
-    requestAnimationFrame(() => {
-        cse.classList.add('fade-in');
-    });
-    
-    // 이 한 줄만 추가
-    setupSearchInputListener();
-}, 400);
+                cse.style.display = 'none';
+                custom.style.display = 'block';
+                currentTime.classList.remove('fade-out');
+                credit.classList.remove('fade-out');
+                
+                requestAnimationFrame(() => {
+                    custom.classList.remove('fade-out');
+                    searchButtons.classList.remove('fade-out');
+                });
+            }, 400);
         }
     }
 
@@ -887,15 +885,11 @@
     }
 
     async function generateSummary(query, searchResults) {
-        // ⭐ Groq API 키를 로컬 스토리지에서 가져옴 ⭐
         const GROQ_API_KEY = localStorage.getItem('GROQ_API_KEY');
         const summaryText = document.getElementById('gemini-summary-text');
 
         if (!GROQ_API_KEY) {
-            // ⭐ 키가 없을 경우 콘솔 설정 안내 메시지 출력 ⭐
             summaryText.innerHTML = '<div class="gemini-error">Groq API 키가 설정되지 않았습니다. <br>AI 요약을 사용하려면 Groq API 키를 설정해야 합니다.<br><br>개발자 도구(F12) 콘솔을 열고 다음 명령어를 입력하여 키를 저장해주세요:<br><code>localStorage.setItem(\'GROQ_API_KEY\', \'여기에_Groq_API_키를_붙여넣으세요\');</code><br>키 저장 후 페이지를 새로고침하거나 다시 검색해주세요.<br>저장한 키는 서버로 전송되지 않습니다.</div>';
-            
-            // 콘솔에도 안내 메시지 출력
             console.error("Groq API 키가 설정되지 않았습니다. localStorage.setItem('GROQ_API_KEY', 'YOUR_KEY')를 사용하여 키를 설정해주세요.");
             return;
         }
@@ -903,7 +897,6 @@
         summaryText.innerHTML = '<div class="gemini-loading"><div class="gemini-spinner"></div><span>AI가 검색 결과를 분석하고 있습니다...</span></div>';
         
         try {
-            // 검색 결과에서 제목과 설명 추출
             let resultsContext = '검색어: ' + query + '\n\n검색 결과:\n\n';
             searchResults.forEach((result, index) => {
                 resultsContext += `${index + 1}. ${result.title}\n${result.snippet}\n\n`;
@@ -913,12 +906,11 @@
             
             const userPrompt = `다음 검색 결과들을 종합하여 요약해주세요:\n\n${resultsContext}\n\n요약 시 다음 사항을 지켜주세요:\n1. 핵심 정보를 2-3개의 문단으로 정리\n2. 검색 결과의 주요 내용을 종합적으로 설명\n3. 객관적이고 중립적인 톤 유지\n4. 불필요한 인사말이나 서론 없이 바로 본론으로 시작`;
 
-            // Groq API 엔드포인트와 요청 형식
             const response = await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${GROQ_API_KEY}`, // 로컬 스토리지에서 가져온 키 사용
+                    'Authorization': `Bearer ${GROQ_API_KEY}`,
                 },
                 body: JSON.stringify({
                     model: GROQ_MODEL, 
@@ -943,13 +935,11 @@
                 const summary = data.choices[0].message.content;
                 summaryText.textContent = summary;
             } else {
-                 // 응답에 content가 없는 경우 처리
                 const finishReason = data.choices?.[0]?.finish_reason || '알 수 없는 이유';
                 throw new Error(`응답 형식이 올바르지 않거나 응답이 완료되지 않았습니다. (이유: ${finishReason})`);
             }
         } catch (error) {
             console.error('Groq API 오류:', error);
-            // Groq 키 관련 오류 발생 시 키를 다시 확인하라는 메시지 추가
             if (error.message.includes('API 요청 실패')) {
                 summaryText.innerHTML = `<div class="gemini-error"> 요약 생성 중 오류가 발생했습니다: ${error.message}<br>Groq API 키가 유효한지 또는 사용량이 초과되지 않았는지 확인해주세요.</div>`;
             } else {
@@ -958,51 +948,27 @@
         }
     }
 
-    // 검색 입력창에서 엔터 키 감지
-function setupSearchInputListener() {
-    // CSE 모드일 때만 리스너 설정
-    const checkInput = setInterval(() => {
-        if (!isCSE) {
-            clearInterval(checkInput);
-            return;
-        }
-        
-        const searchInput = document.querySelector('input.gsc-input');
-        if (searchInput && !searchInput.hasAttribute('data-listener-added')) {
-            searchInput.setAttribute('data-listener-added', 'true');
-            
-            searchInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    searchCompleted = true;
-                    setTimeout(() => {
-                        searchCompleted = false;
-                    }, 3000); // 3초 후 플래그 초기화
+    // 검색 결과 모니터링
+    function monitorSearchResults() {
+        // 엔터 키 감지용 리스너
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && isCSE) {
+                const searchInput = document.querySelector('input.gsc-input');
+                if (searchInput && document.activeElement === searchInput) {
+                    lastProcessedQuery = ''; // 엔터 누르면 초기화하여 새로 처리하도록
                 }
-            });
+            }
+        });
+        
+        const resultsObserver = new MutationObserver(() => {
+            if (!isCSE) return;
             
-            clearInterval(checkInput);
-        }
-    }, 100);
-}
-
-// 검색 결과 모니터링
-function monitorSearchResults() {
-    let isProcessing = false;
-    
-    const resultsObserver = new MutationObserver(() => {
-        if (!isCSE || isProcessing) return;
-        
-        const results = document.querySelectorAll('.gsc-webResult.gsc-result');
-        
-        if (results.length > 0) {
+            const results = document.querySelectorAll('.gsc-webResult.gsc-result');
             const searchInput = document.querySelector('input.gsc-input');
             const query = searchInput ? searchInput.value.trim() : '';
             
-            // 엔터를 눌렀고, 새로운 검색어일 때만 실행
-            if (query && searchCompleted && query !== currentSearchQuery) {
-                isProcessing = true;
-                currentSearchQuery = query;
-                searchCompleted = false;
+            if (results.length > 0 && query && query !== lastProcessedQuery) {
+                lastProcessedQuery = query;
                 
                 // 검색 결과 데이터 추출
                 const searchResults = [];
@@ -1022,7 +988,6 @@ function monitorSearchResults() {
                     const summaryContainer = document.getElementById('gemini-summary-container');
                     summaryContainer.style.display = 'block';
                     
-                    // 검색 결과의 첫 번째 항목 앞에 요약을 삽입
                     const resultsWrapper = results[0].parentElement;
                     if (resultsWrapper) {
                         resultsWrapper.insertBefore(summaryContainer, results[0]);
@@ -1030,33 +995,26 @@ function monitorSearchResults() {
                     
                     generateSummary(query, searchResults.slice(0, 5));
                 }
-                
-                setTimeout(() => {
-                    isProcessing = false;
-                }, 1000);
             }
             
-            // AI 요약 컨테이너가 원래 위치로 돌아갔는지 확인하고 다시 삽입
+            // AI 요약 위치 유지
             const summaryContainer = document.getElementById('gemini-summary-container');
-            if (summaryContainer.style.display === 'block' && 
-                results[0] && 
-                summaryContainer.parentElement !== results[0].parentElement) {
+            if (summaryContainer.style.display === 'block' && results.length > 0) {
                 const resultsWrapper = results[0].parentElement;
-                resultsWrapper.insertBefore(summaryContainer, results[0]);
+                if (summaryContainer.parentElement !== resultsWrapper) {
+                    resultsWrapper.insertBefore(summaryContainer, results[0]);
+                }
             }
-        }
-    });
+        });
 
-    resultsObserver.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
-}
+        resultsObserver.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
 
-// 검색 결과 모니터링 시작
-monitorSearchResults();
-
-// toggleMode 함수 내부에도 추가
+    // 검색 결과 모니터링 시작
+    monitorSearchResults();
 
     function removeUnwantedElements() {
         const selectors = [
@@ -1128,7 +1086,7 @@ monitorSearchResults();
                     `;
                     
                     favicon.onerror = function() {
-                        this.style.display = 'none'; // 아이콘 로드 실패 시 숨김
+                        this.style.display = 'none';
                     };
                     
                     titleLink.insertBefore(favicon, titleLink.firstChild);
