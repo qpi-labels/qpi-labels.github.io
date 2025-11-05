@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pH 농도 측정 - 대조군</title>
+    <title>Central Color Picker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Load React and ReactDOM -->
@@ -162,25 +162,43 @@
             }
             ctx.drawImage(image, 0, 0, image.width, image.height);
 
-            const sampleSize = Math.min(10, image.width, image.height);
-            const startX = Math.floor(image.width / 2 - sampleSize / 2);
-            const startY = Math.floor(image.height / 2 - sampleSize / 2);
+            const sampleAreaSide = Math.min(image.width, image.height) * 0.2;
+            const halfSide = sampleAreaSide / 2;
+            const centerX = image.width / 2;
+            const centerY = image.height / 2;
+
+            const points = [
+                // Corners
+                { x: Math.floor(centerX - halfSide), y: Math.floor(centerY - halfSide) },
+                { x: Math.floor(centerX + halfSide), y: Math.floor(centerY - halfSide) },
+                { x: Math.floor(centerX - halfSide), y: Math.floor(centerY + halfSide) },
+                { x: Math.floor(centerX + halfSide), y: Math.floor(centerY + halfSide) },
+                // Midpoints
+                { x: Math.floor(centerX), y: Math.floor(centerY - halfSide) },
+                { x: Math.floor(centerX), y: Math.floor(centerY + halfSide) },
+                { x: Math.floor(centerX - halfSide), y: Math.floor(centerY) },
+                { x: Math.floor(centerX + halfSide), y: Math.floor(centerY) },
+                // Center
+                { x: Math.floor(centerX), y: Math.floor(centerY) },
+            ];
             
             try {
-              const imageData = ctx.getImageData(startX, startY, sampleSize, sampleSize).data;
               let total = { r: 0, g: 0, b: 0 };
-              const pixelCount = sampleSize * sampleSize;
 
-              for (let i = 0; i < imageData.length; i += 4) {
-                total.r += imageData[i];
-                total.g += imageData[i + 1];
-                total.b += imageData[i + 2];
+              for (const point of points) {
+                  const x = Math.max(0, Math.min(point.x, image.width - 1));
+                  const y = Math.max(0, Math.min(point.y, image.height - 1));
+                  
+                  const pixelData = ctx.getImageData(x, y, 1, 1).data;
+                  total.r += pixelData[0];
+                  total.g += pixelData[1];
+                  total.b += pixelData[2];
               }
 
               const avg = {
-                r: Math.round(total.r / pixelCount),
-                g: Math.round(total.g / pixelCount),
-                b: Math.round(total.b / pixelCount),
+                  r: Math.round(total.r / 9),
+                  g: Math.round(total.g / 9),
+                  b: Math.round(total.b / 9),
               };
 
               const closestMatch = findClosestPaletteColor(avg);
@@ -215,9 +233,9 @@
             <main className="w-full max-w-md mx-auto flex flex-col items-center text-center space-y-8">
               <header>
                 <h1 className="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-500">
-                  pH 농도 측정 - 대조군
+                  Central Color Picker
                 </h1>
-                <p className="mt-2 text-slate-400">사진 업로드 하슈</p>
+                <p className="mt-2 text-slate-400">Tap to upload a photo and find its central color.</p>
               </header>
 
               {error && <div className="bg-red-900/50 text-red-300 p-3 rounded-md">{error}</div>}
@@ -238,10 +256,20 @@
                       {imageSrc ? (
                           <>
                               <img src={imageSrc} alt="Uploaded preview" className="object-contain w-full h-full" />
-                              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 z-10 pointer-events-none">
-                                  <div className="absolute top-1/2 left-0 w-full h-[1px] bg-white/50 -translate-y-1/2"></div>
-                                  <div className="absolute left-1/2 top-0 h-full w-[1px] bg-white/50 -translate-x-1/2"></div>
-                                  <div className="w-2 h-2 border border-white/70 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+                              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/5 h-1/5 z-10 pointer-events-none">
+                                  <div className="w-full h-full border-2 border-dashed border-white/70"></div>
+                                  {/* Corners */}
+                                  <div className="absolute -top-1.5 -left-1.5 w-3 h-3 bg-white ring-2 ring-slate-900"></div>
+                                  <div className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-white ring-2 ring-slate-900"></div>
+                                  <div className="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-white ring-2 ring-slate-900"></div>
+                                  <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-white ring-2 ring-slate-900"></div>
+                                  {/* Midpoints */}
+                                  <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white ring-2 ring-slate-900"></div>
+                                  <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white ring-2 ring-slate-900"></div>
+                                  <div className="absolute top-1/2 -left-1.5 -translate-y-1/2 w-3 h-3 bg-white ring-2 ring-slate-900"></div>
+                                  <div className="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 bg-white ring-2 ring-slate-900"></div>
+                                  {/* Center */}
+                                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-white ring-2 ring-slate-900"></div>
                               </div>
                           </>
                       ) : !matchedColor && !isLoading ? (
