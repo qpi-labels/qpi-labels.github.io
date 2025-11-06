@@ -462,6 +462,180 @@
             transform: translateY(-20px);
         }
 
+        /* API 설정 모달 스타일 */
+        #api-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #api-modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--c-bg);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .modal-header {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--c-text);
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+            text-align: left;
+            user-select: text;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+        }
+
+        .modal-body p {
+            color: var(--c-text);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .modal-body a {
+            color: var(--c-blue);
+            text-decoration: none;
+        }
+
+        .modal-body a:hover {
+            text-decoration: underline;
+        }
+
+        .api-input-group {
+            margin: 20px 0;
+        }
+
+        .api-input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--c-text);
+            font-weight: 500;
+        }
+
+        .api-input-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--c-gray2);
+            background-color: var(--c-bg);
+            color: var(--c-text);
+            font-size: 14px;
+            box-sizing: border-box;
+            font-family: 'Pretendard Variable', monospace;
+        }
+
+        .api-input-group input:focus {
+            outline: none;
+            border-color: var(--c-blue);
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .modal-button {
+            padding: 10px 24px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: "BR Cobane", 'Pretendard Variable';
+        }
+
+        .modal-button.primary {
+            background-color: var(--c-blue);
+            color: white;
+        }
+
+        .modal-button.primary:hover {
+            background-color: var(--c-blue-active);
+        }
+
+        .modal-button.secondary {
+            background-color: var(--c-gray2);
+            color: var(--c-text);
+        }
+
+        .modal-button.secondary:hover {
+            background-color: var(--c-gray3);
+        }
+
+        .api-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .api-status.connected {
+            background-color: rgba(52, 199, 89, 0.1);
+            color: #34c759;
+        }
+
+        .api-status.disconnected {
+            background-color: rgba(255, 59, 48, 0.1);
+            color: #ff3b30;
+        }
+
+        .api-status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: currentColor;
+        }
+
+        #api-settings-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--c-blue);
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            z-index: 1000;
+        }
+
+        #api-settings-btn:hover {
+            background-color: var(--c-blue-active);
+            transform: scale(1.1);
+        }
+
         /* Gemini Summary 스타일 */
         #gemini-summary-container {
             max-width: 680px;
@@ -523,7 +697,7 @@
         }
 
         .gemini-error {
-            color: --c-text;
+            color: var(--c-text);
             font-size: 14px;
         }
         
@@ -794,15 +968,103 @@
     <div id="credit">2025 쿼터파이</div>
 </main>
 
+<!-- API 설정 모달 -->
+<div id="api-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            AI 요약 API 설정
+            <span id="api-status-indicator"></span>
+        </div>
+        <div class="modal-body">
+            <p>QISS의 AI 검색 요약 기능을 사용하려면 Groq API 키가 필요합니다.</p>
+            <p><a href="https://console.groq.com/keys" target="_blank">Groq Console</a>에서 무료로 API 키를 발급받을 수 있습니다.</p>
+            
+            <div class="api-input-group">
+                <label for="api-key-input">Groq API 키</label>
+                <input type="password" id="api-key-input" placeholder="gsk_...">
+            </div>
+            
+            <p style="font-size: 12px; color: var(--c-gray6);">
+                API 키는 브라우저의 로컬 저장소에만 저장되며, 외부로 전송되지 않습니다.
+            </p>
+        </div>
+        <div class="modal-buttons">
+            <button class="modal-button secondary" onclick="closeApiModal()">취소</button>
+            <button class="modal-button primary" onclick="saveApiKey()">저장</button>
+        </div>
+    </div>
+</div>
+
+<!-- API 설정 버튼 -->
+<button id="api-settings-btn" onclick="openApiModal()">⚙️</button>
+
 <br><br><br><br><br><br><br>
 
 <script>
-    // Groq 모델 ID는 공개되어도 안전합니다.
     const GROQ_MODEL = 'llama-3.1-8b-instant'; 
 
-    let isCSE = true; // 기본값을 true로 변경
+    let isCSE = true;
     let currentSearchQuery = '';
     let lastProcessedQuery = '';
+
+    // API 상태 업데이트
+    function updateApiStatus() {
+        const apiKey = localStorage.getItem('GROQ_API_KEY');
+        const indicator = document.getElementById('api-status-indicator');
+        
+        if (apiKey) {
+            indicator.innerHTML = '<span class="api-status connected"><span class="api-status-dot"></span>연결됨</span>';
+        } else {
+            indicator.innerHTML = '<span class="api-status disconnected"><span class="api-status-dot"></span>연결 안됨</span>';
+        }
+    }
+
+    // 모달 열기
+    function openApiModal() {
+        const modal = document.getElementById('api-modal');
+        const input = document.getElementById('api-key-input');
+        const savedKey = localStorage.getItem('GROQ_API_KEY');
+        
+        if (savedKey) {
+            input.value = savedKey;
+        }
+        
+        modal.classList.add('show');
+        updateApiStatus();
+    }
+
+    // 모달 닫기
+    function closeApiModal() {
+        const modal = document.getElementById('api-modal');
+        modal.classList.remove('show');
+    }
+
+    // API 키 저장
+    function saveApiKey() {
+        const input = document.getElementById('api-key-input');
+        const apiKey = input.value.trim();
+        
+        if (apiKey) {
+            localStorage.setItem('GROQ_API_KEY', apiKey);
+            alert('API 키가 저장되었습니다!');
+            closeApiModal();
+            updateApiStatus();
+        } else {
+            alert('API 키를 입력해주세요.');
+        }
+    }
+
+    // 모달 외부 클릭 시 닫기
+    document.getElementById('api-modal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeApiModal();
+        }
+    });
+
+    // 페이지 로드 시 API 상태 확인
+    window.addEventListener('DOMContentLoaded', function() {
+        updateApiStatus();
+    });
 
     function toggleMode() {
         isCSE = !isCSE;
@@ -814,13 +1076,11 @@
         const searchButtons = document.getElementById('search-buttons');
         const summaryContainer = document.getElementById('gemini-summary-container');
         
-        // 모드 전환 시 이전 검색 쿼리 초기화
         currentSearchQuery = ''; 
         lastProcessedQuery = '';
         summaryContainer.style.display = 'none';
 
         if (isCSE) {
-            // QISS Search 모드로 전환
             toggleBtn.classList.remove('collapsed');
             custom.classList.remove('fade-in');
             searchButtons.classList.remove('fade-in');
@@ -836,7 +1096,6 @@
                 });
             }, 400);
         } else {
-            // QISS 모드로 전환
             toggleBtn.classList.add('collapsed');
             cse.classList.add('fade-out');
             
@@ -892,8 +1151,7 @@
         const summaryText = document.getElementById('gemini-summary-text');
 
         if (!GROQ_API_KEY) {
-            summaryText.innerHTML = '<div class="gemini-error">QISS의 AI 검색 요약 기능 사용을 위해 API를 설정해야 합니다.<br><a href="https://github.com/qpi-labels/qpi-labels.github.io/discussions/18">API 설정하는 방법 알아보기</a></div>';
-            console.error("API 키가 설정되지 않았습니다. localStorage.setItem('GROQ_API_KEY', 'YOUR_KEY')를 사용하여 키를 설정해주세요.");
+            summaryText.innerHTML = '<div class="gemini-error">AI 검색 요약 기능을 사용하려면 API 키를 설정해주세요.<br><br><button class="modal-button primary" onclick="openApiModal()">API 설정하기</button></div>';
             return;
         }
 
@@ -907,7 +1165,7 @@
             
             const systemPrompt = `당신은 검색 결과들을 바탕으로 사용자에게 명확하고 간결한 요약을 제공하는 AI입니다. 다음은 "${query}"에 대한 검색 결과입니다. 이 검색 결과들을 바탕으로 사용자가 알고 싶어하는 정보를 명확하고 간결하게 요약해주세요. 한국어로 답변해주세요.`;
             
-            const userPrompt = `다음 검색 결과들을 종합하여 "개조식으로" 요약해주세요:\n\n${resultsContext}\n\n요약 시 다음 사항을 지켜주세요:\n1. 핵심 정보를 1-2개의 문단으로 정리\n2. 검색 결과의 주요 내용을 종합적으로 설명\n3. 객관적이고 중립적인 톤 유지\n4. 불필요한 인사말이나 서론 없이 바로 본론으로 시작. 토큰 최대한 아낄것 \n5. 꼭 개조식으로 정리할것.`;
+            const userPrompt = `다음 검색 결과들을 종합하여 요약해주세요:\n\n${resultsContext}\n\n요약 시 다음 사항을 지켜주세요:\n1. 핵심 정보를 1-2개의 문단으로 정리\n2. 검색 결과의 주요 내용을 종합적으로 설명\n3. 객관적이고 중립적인 톤 유지\n4. 불필요한 인사말이나 서론 없이 바로 본론으로 시작. 토큰 최대한 아낄것`;
 
             const response = await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
                 method: 'POST',
@@ -944,21 +1202,19 @@
         } catch (error) {
             console.error('Groq API 오류:', error);
             if (error.message.includes('API 요청 실패')) {
-                summaryText.innerHTML = `<div class="gemini-error"> 요약 생성 중 오류가 발생했습니다: ${error.message}<br>Groq API 키가 유효한지 또는 사용량이 초과되지 않았는지 확인해주세요.</div>`;
+                summaryText.innerHTML = `<div class="gemini-error">요약 생성 중 오류가 발생했습니다: ${error.message}<br><br>API 키가 유효한지 확인해주세요.<br><button class="modal-button primary" onclick="openApiModal()" style="margin-top: 10px;">API 설정 확인</button></div>`;
             } else {
-                summaryText.innerHTML = `<div class="gemini-error"> 요약 생성 중 오류가 발생했습니다: ${error.message}</div>`;
+                summaryText.innerHTML = `<div class="gemini-error">요약 생성 중 오류가 발생했습니다: ${error.message}</div>`;
             }
         }
     }
 
-    // 검색 결과 모니터링
     function monitorSearchResults() {
-        // 엔터 키 감지용 리스너
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && isCSE) {
                 const searchInput = document.querySelector('input.gsc-input');
                 if (searchInput && document.activeElement === searchInput) {
-                    lastProcessedQuery = ''; // 엔터 누르면 초기화하여 새로 처리하도록
+                    lastProcessedQuery = '';
                 }
             }
         });
@@ -986,7 +1242,6 @@
             const query = searchInput ? searchInput.value.trim() : '';
 
             if (results.length > 0 && query && query !== lastProcessedQuery) {
-                // 검색 결과 데이터 추출
                 const searchResults = [];
                 results.forEach(result => {
                     const titleElement = result.querySelector('.gs-title');
@@ -1015,7 +1270,6 @@
                 }
             }
             
-            // AI 요약 위치 유지
             const summaryContainer = document.getElementById('gemini-summary-container');
             if (summaryContainer.style.display === 'block' && results.length > 0) {
                 const resultsWrapper = results[0].parentElement.parentElement.parentElement.parentElement;
@@ -1031,7 +1285,6 @@
         });
     }
 
-    // 검색 결과 모니터링 시작
     monitorSearchResults();
 
     function removeUnwantedElements() {
@@ -1064,7 +1317,6 @@
 
     setInterval(removeUnwantedElements, 500);
 
-    // 실시간 시계
     const timeDisplay = document.getElementById('time-display');
     function updateTime() {
         const now = new Date();
