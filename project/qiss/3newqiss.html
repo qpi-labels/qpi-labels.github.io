@@ -929,15 +929,13 @@
     <!-- QISS 모드 (CSE f514c97399dd34b8b) -->
     <div id="cse-search-qiss" style="display:none;">
         <br>
-        <div class="gcse-searchbox-only" data-resultsUrl="/qiss-results" data-newWindow="false"></div>
-        <div class="gcse-searchresults-only"></div>
+        <div class="gcse-search"></div>
     </div>
 
     <!-- QISS Search 모드 (CSE c31ed7ed73e974099) -->
     <div id="cse-search-main">
         <br>
-        <div class="gcse-searchbox-only" data-resultsUrl="/main-results" data-newWindow="false"></div>
-        <div class="gcse-searchresults-only"></div>
+        <div class="gcse-search"></div>
     </div>
 
     <!-- QISS AI 요약 컨테이너 -->
@@ -1006,9 +1004,30 @@
 
     // CSE 동적 로드
     function loadCSE(cx, containerId) {
+        const container = document.getElementById(containerId);
+        const searchDiv = container.querySelector('.gcse-search');
+        
+        if (!searchDiv) return;
+        
+        // 기존 CSE 제거
+        const oldCse = container.querySelector('.gsc-control-cse');
+        if (oldCse) {
+            oldCse.remove();
+        }
+        
+        // 새 CSE 엘리먼트 생성
+        const newSearchDiv = document.createElement('div');
+        newSearchDiv.className = 'gcse-search';
+        
+        searchDiv.replaceWith(newSearchDiv);
+        
+        // CSE 스크립트 동적 로드
         const script = document.createElement('script');
-        script.src = `https://cse.google.com/cse.js?cx=${cx}`;
+        script.src = 'https://cse.google.com/cse.js?cx=' + cx;
         script.async = true;
+        script.onload = function() {
+            console.log('CSE loaded:', cx);
+        };
         document.head.appendChild(script);
     }
 
@@ -1108,17 +1127,17 @@
             }, 400);
         } else {
             // QISS 모드 (qiss) - 처음 전환 시 CSE 로드
-            if (!qissLoaded) {
-                loadCSE('f514c97399dd34b8b', 'cse-search-qiss');
-                qissLoaded = true;
-            }
-            
             toggleBtn.classList.add('collapsed');
             cseMain.classList.add('fade-out');
             
             setTimeout(() => {
                 cseMain.style.display = 'none';
                 cseQiss.style.display = 'block';
+                
+                if (!qissLoaded) {
+                    loadCSE('f514c97399dd34b8b', 'cse-search-qiss');
+                    qissLoaded = true;
+                }
                 
                 requestAnimationFrame(() => {
                     cseQiss.classList.remove('fade-out');
