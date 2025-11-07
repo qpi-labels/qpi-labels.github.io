@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>QISS</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/logo.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/logo_dark.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" type="image/x-icon" href="/logo.ico" media="(prefers-color-scheme: light)">
+    <meta property="og:url" content="https://qpi.kro.kr">
+    <meta property="og:title" content="쿼터파이">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="/logo.png">
+    <meta property="og:description" content="만족도 2년연속 1위! 쿼터파이">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/colors.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
+
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/br-cobane');
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+        @import url('https://cdn.jsdelivr.net/gh/toss/tossface/dist/tossface.css');
+
+        body {
+            background-color: var(--c-bg);
+            color: var(--c-text);
+            font-family: "BR Cobane", 'Pretendard Variable';
+            text-align: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            margin: 0;
+            padding-top: 60px;
+            overflow-y: scroll;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgb(from var(--c-bg) r g b / 80%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 10px 5px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1.5px solid var(--c-gray1);
+            box-sizing: border-box;
+            min-height: 60px;
+            font-family: "BR Cobane";
+        }
+
+        .nav-wrapper {
+            background: rgb(from var(--c-bg) r g b / 80%);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 0.5px solid rgb(from var(--c-gray7) r g b / 10%);
+        }
+
+        .nav {
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: 0 22px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-size: 2px;
+            font-weight: 600;
+            color: var(--c-text);
+            text-decoration: none;
+            letter-spacing: -.05em;
+        }
+
+        .nav-logo.en {
+            font-family: "BR Cobane", sans-serif;
+            font-size: 12px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--c-text);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 400;
+            opacity: 0.8;
+            transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+        }
+
+        .page-title {
+            font-family: "BR Cobane";
+            font-size: xxx-large;
+            margin-bottom: 0;
+            font-weight: 700;
+        }
+
+        .search-bar {
+            width: 80%;
+            max-width: 584px;
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 1px solid var(--c-gray1);
+            font-size: 16px;
+            outline: none;
+            background-color: var(--c-bg);
+            color: var(--c-text);
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .search-bar:focus {
+            border-color: var(--c-blue);
+            box-shadow: 0 0 10px rgba(0, 102, 255, 0.2);
+        }
+
+        .gcse-search {
+            margin: 0 auto;
+            width: 100%;
+            max-width: 584px;
+        }
+
+        .gsc-control-cse {
+            background: none !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+
+        .gsc-search-box {
+            margin: 0 auto !important;
+            width: 100% !important;
+            max-width: 584px !important;
+            position: relative !important;
+            padding-bottom: 10px !important;
+        }
+
+        table.gsc-search-box {
+            margin: 0 auto !important;
+            border: none !important;
+            background: none !important;
+            width: 100% !important;
+            max-width: 584px !important;
+            padding-bottom: 20px !important;
+        }
+
+        td.gsc-input {
+            padding: 0 !important;
+        }
+
+        input.gsc-input, .gsc-input-box, .gsc-input-box input {
+            border-radius: 30px !important;
+            border: 1px solid var(--c-gray1) !important;
+            background-color: var(--c-bg) !important;
+            color: var(--c-text) !important;
+            font-size: 16px !important;
+            padding: 10px 20px !important;
+            height: 42px !important;
+            line-height: 20px !important;
+            box-shadow: none !important;
+            width: 100% !important;
+            max-width: 584px !important;
+            box-sizing: border-box !important;
+            background: none !important;
+            font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
+        }
+
+        .gsc-input-box {
+            border: none !important;
+            background: none !important;
+            box-shadow: none !important;
+            height: 42px !important;
+        }
+
+        input.gsc-input:focus {
+            border-color: var(--c-blue) !important;
+            box-shadow: 0 0 10px rgba(0, 102, 255, 0.2) !important;
+        }
+
+        .gsc-search-button-v2, button.gsc-search-button, td.gsc-search-button {
+            display: none !important;
+        }
+
+        .gsc-branding, 
+        .gsc-watermark, 
+        .gcsc-branding, 
+        .gcsc-branding-img, 
+        .gcsc-branding-text,
+        .gsc-input-box .gsc-watermark,
+        .gsc-branding-text,
+        .gsc-branding-img,
+        .gsc-branding-img-noclear,
+        .gsc-branding-text-noclear,
+        td.gsc-branding {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            position: absolute !important;
+            left: -9999px !important;
+        }
+
+        .gsc-tabsArea,
+        .gsc-orderby-container,
+        .gcsc-find-more-on-google,
+        .gs-image,
+        .gsc-refinementsArea,
+        .gsc-above-wrapper-area {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            width: 0 !important;
+            opacity: 0 !important;
+        }
+
+        .gsc-adBlock {
+            display: none !important;
+        }
+
+        .gsc-clear-button {
+            right: 15px !important;
+        }
+
+        .gsc-completion-container {
+            background-color: var(--c-bg) !important;
+            border: 1.5px solid var(--c-gray2) !important;
+            border-radius: 20px !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+            margin-top: 5px !important;
+            width: 100% !important;
+            max-width: 584px !important;
+            position: absolute !important;
+            left: 0 !important;
+            transform: none !important;
+            box-sizing: border-box !important;
+            z-index: 1000 !important;
+        }
+
+        .gsc-completion-wrapper {
+            width: 100% !important;
+            max-width: 584px !important;
+            margin: 0 auto !important;
+            position: relative !important;
+        }
+
+        .gsc-completion-container table {
+            background: none !important;
+            width: 100% !important;
+            max-width: 584px !important;
+            margin: 0 !important;
+        }
+
+        .gsc-completion-item {
+            color: var(--c-text) !important;
+            padding: 8px 16px !important;
+            font-size: 15px !important;
+            transition: background-color 0.2s ease;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            text-align: left !important;
+            font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
+        }
+
+        .gsc-completion-item:hover, .gsc-completion-selected {
+            background-color: var(--c-gray1) !important;
+        }
+
+        .gsc-results-wrapper-overlay, .gsc-results-wrapper-visible {
+            background-color: var(--c-bg) !important;
+            border: none !important;
+            box-shadow: none !important;
+            max-width: 680px !important;
+            margin: 30px auto 0 auto !important;
+            text-align: left !important;
+            padding: 0 20px !important;
+        }
+
+        .gsc-resultsbox-visible {
+            background: none !important;
+            border: none !important;
+        }
+
+        .gsc-webResult.gsc-result {
+            background: var(--c-gray1) !important;
+            border: none !important;
+            padding: 20px !important;
+            margin-bottom: 16px !important;
+            border-radius: 20px !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+            transition: box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        .gsc-webResult.gsc-result:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+            transform: translateY(-2px) !important;
+        }
+
+        .gsc-webResult.gsc-result:last-child {
+            border-bottom: none !important;
+        }
+
+        .gs-bidi-start-align.gs-visibleUrl {
+            display: none !important;
+        }
+
+        .gs-title {
+            font-size: 18px !important;
+            line-height: 1.4 !important;
+            margin-bottom: 8px !important;
+            font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
+        }
+
+        .gs-snippet {
+            margin-top: 0 !important;
+            color: #4d5156 !important;
+            font-size: 14px !important;
+            line-height: 1.6 !important;
+            margin-top: 8px !important;
+            text-align: left !important;
+            font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
+        }
+
+        .gsc-result-info {
+            text-align: left !important;
+            color: var(--c-gray6) !important;
+            font-size: 14px !important;
+            padding: 15px 0 !important;
+            border-bottom: 1px solid var(--c-gray1) !important;
+        }
+
+        .gsc-cursor-box {
+            text-align: center !important;
+            margin-top: 30px !important;
+            padding-bottom: 40px !important;
+        }
+
+        .gsc-cursor-page {
+            background-color: var(--c-bg) !important;
+            color: #1a73e8 !important;
+            border: 1px solid var(--c-gray2) !important;
+            padding: 2px 2px !important;
+            border-radius: 12px !important;
+            margin: 0 4px !important;
+            transition: background-color 0.2s ease !important;
+            font-size: 13px !important;
+            min-width: 32px !important;
+            height: 32px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .gsc-cursor-page:hover {
+            background-color: var(--c-gray1) !important;
+        }
+
+        .gsc-cursor-current-page {
+            background-color: #1a73e8 !important;
+            color: white !important;
+            border: 1px solid #1a73e8 !important;
+        }
+
+        .gs-no-results-result {
+            color: var(--c-text) !important;
+            background: none !important;
+            text-align: left !important;
+        }
+
+        .gs-title b, .gs-snippet b {
+            color: inherit !important;
+            font-weight: inherit !important;
+        }
+
+        .gs-spelling,
+        .gs-spelling a {
+            color: var(--c-text) !important;
+            background: none !important;
+            border: none !important;
+            padding: 0px 0 !important;
+            margin: 0px 0 !important;
+            font-size: 14px !important;
+            font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            line-height: 1.4 !important;
+        }
+
+        .gs-spelling a {
+            color: var(--c-blue) !important;
+            text-decoration: none !important;
+            font-weight: 500 !important;
+            display: inline !important;
+        }
+
+        .gs-spelling a:hover {
+            text-decoration: underline !important;
+        }
+
+        .gs-spelling em {
+            color: var(--c-gray6) !important;
+            font-style: normal !important;
+            display: inline !important;
+        }
+
+        #cse-search-qiss, #cse-search-main {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #cse-search-qiss.fade-out, #cse-search-main.fade-out {
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+        }
+
+        #mode-toggle {
+            margin-top: 20px;
+            background-color: var(--c-gray2);
+            color: var(--c-text);
+            border: none;
+            border-radius: 20px;
+            padding: 7px 18px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: padding 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                        min-width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                        background-color 0.3s ease;
+            overflow: hidden;
+            position: relative;
+            min-width: 130px;
+            font-family: "BR Cobane", sans-serif;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        #mode-toggle:hover {
+            background-color: var(--c-gray3);
+        }
+
+        #mode-toggle .qiss-text {
+            display: inline-block;
+        }
+
+        #mode-toggle .search-text {
+            display: inline-block;
+            max-width: 60px;
+            opacity: 1;
+            overflow: hidden;
+            transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                        opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            vertical-align: top;
+        }
+
+        #mode-toggle.collapsed {
+            min-width: 80px;
+        }
+
+        #mode-toggle.collapsed .search-text {
+            max-width: 0;
+            opacity: 0;
+        }
+
+        /* API 설정 모달 스타일 */
+        #api-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #api-modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--c-bg);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .modal-header {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--c-text);
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+            text-align: left;
+            user-select: text;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+        }
+
+        .modal-body p {
+            color: var(--c-text);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .modal-body a {
+            color: var(--c-blue);
+            text-decoration: none;
+        }
+
+        .modal-body a:hover {
+            text-decoration: underline;
+        }
+
+        .api-input-group {
+            margin: 20px 0;
+        }
+
+        .api-input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--c-text);
+            font-weight: 500;
+        }
+
+        .api-input-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--c-gray2);
+            background-color: var(--c-bg);
+            color: var(--c-text);
+            font-size: 14px;
+            box-sizing: border-box;
+            font-family: 'Pretendard Variable', monospace;
+        }
+
+        .api-input-group input:focus {
+            outline: none;
+            border-color: var(--c-blue);
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .modal-button {
+            padding: 10px 24px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: "BR Cobane", 'Pretendard Variable';
+        }
+
+        .modal-button.primary {
+            background-color: var(--c-blue);
+            color: white;
+        }
+
+        .modal-button.primary:hover {
+            background-color: var(--c-blue-active);
+        }
+
+        .modal-button.secondary {
+            background-color: var(--c-gray2);
+            color: var(--c-text);
+        }
+
+        .modal-button.secondary:hover {
+            background-color: var(--c-gray3);
+        }
+
+        .api-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .api-status.connected {
+            background-color: rgba(52, 199, 89, 0.1);
+            color: #34c759;
+        }
+
+        .api-status.disconnected {
+            background-color: rgba(255, 59, 48, 0.1);
+            color: #ff3b30;
+        }
+
+        .api-status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: currentColor;
+        }
+
+        #api-settings-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--c-blue);
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            z-index: 1000;
+        }
+
+        #api-settings-btn:hover {
+            background-color: var(--c-blue-active);
+            transform: scale(1.1);
+        }
+
+        /* Gemini Summary 스타일 */
+        #gemini-summary-container-qiss, #gemini-summary-container-main {
+            max-width: 680px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: none;
+        }
+
+        .gemini-summary {
+            background: linear-gradient(135deg, var(--c-gray1) 0%, rgb(from var(--c-gray1) r g b / 50%) 100%);
+            border: 1px solid var(--c-gray2);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            text-align: left;
+            user-select: text;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+        }
+
+        .gemini-summary h3 {
+            margin: 0 0 16px 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--c-text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .gemini-summary-text {
+            color: var(--c-text);
+            font-size: 15px;
+            line-height: 1.8;
+            font-family: 'Pretendard Variable', sans-serif;
+        }
+
+        /* 마크다운 스타일링 */
+        .gemini-summary-text h1,
+        .gemini-summary-text h2,
+        .gemini-summary-text h3,
+        .gemini-summary-text h4,
+        .gemini-summary-text h5,
+        .gemini-summary-text h6 {
+            color: var(--c-text);
+            font-weight: 600;
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+            line-height: 1.4;
+        }
+
+        .gemini-summary-text h1 { font-size: 1.5em; }
+        .gemini-summary-text h2 { font-size: 1.3em; }
+        .gemini-summary-text h3 { font-size: 1.1em; }
+
+        .gemini-summary-text p {
+            margin: 0.8em 0;
+        }
+
+        .gemini-summary-text strong {
+            font-weight: 600;
+            color: var(--c-text);
+        }
+
+        .gemini-summary-text em {
+            font-style: italic;
+        }
+
+        .gemini-summary-text code {
+            background-color: var(--c-gray2);
+            color: var(--c-text);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+        }
+
+        .gemini-summary-text pre {
+            background-color: var(--c-gray2);
+            border-radius: 8px;
+            padding: 12px;
+            overflow-x: auto;
+            margin: 1em 0;
+        }
+
+        .gemini-summary-text pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85em;
+            line-height: 1.6;
+        }
+
+        .gemini-summary-text ul,
+        .gemini-summary-text ol {
+            margin: 0.8em 0;
+            padding-left: 2em;
+        }
+
+        .gemini-summary-text li {
+            margin: 0.4em 0;
+        }
+
+        .gemini-summary-text blockquote {
+            border-left: 4px solid var(--c-gray3);
+            margin: 1em 0;
+            padding-left: 1em;
+            color: var(--c-gray6);
+            font-style: italic;
+        }
+
+        .gemini-summary-text a {
+            color: var(--c-blue);
+            text-decoration: none;
+        }
+
+        .gemini-summary-text a:hover {
+            text-decoration: underline;
+        }
+
+        .gemini-summary-text hr {
+            border: none;
+            border-top: 1px solid var(--c-gray2);
+            margin: 1.5em 0;
+        }
+
+        .gemini-summary-text table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1em 0;
+        }
+
+        .gemini-summary-text th,
+        .gemini-summary-text td {
+            border: 1px solid var(--c-gray2);
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .gemini-summary-text th {
+            background-color: var(--c-gray2);
+            font-weight: 600;
+        }
+
+        .gemini-loading {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--c-gray6);
+        }
+
+        .gemini-spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--c-gray2);
+            border-top-color: var(--c-blue);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .gemini-error {
+            color: var(--c-text);
+            font-size: 14px;
+        }
+        
+        .gemini-error code {
+            display: block;
+            background-color: var(--c-gray2);
+            color: var(--c-text);
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .gsc-webResult.gsc-result {
+                background: rgb(from var(--c-gray1) r g b / 50%) !important;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+            }
+            
+            .gsc-webResult.gsc-result:hover {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+            }
+
+            .gs-title a {
+                color: #FAFAFA !important;
+            }
+            
+            .gs-title a:visited {
+                color: #FAFAFA !important;
+            }
+
+            .gs-bidi-start-align.gs-visibleUrl {
+                color: #9aa0a6 !important;
+            }
+
+            .gs-snippet {
+                color: #bdc1c6 !important;
+            }
+            
+            .gsc-completion-container {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+            }
+
+            .gsc-cursor-page {
+                color: #8ab4f8 !important;
+            }
+
+            .gsc-cursor-current-page {
+                background-color: #8ab4f8 !important;
+                border: 1px solid #8ab4f8 !important;
+            }
+
+            .gemini-summary {
+                background: linear-gradient(135deg, rgb(from var(--c-gray1) r g b / 60%) 0%, rgb(from var(--c-gray1) r g b / 30%) 100%);
+            }
+
+            .gemini-summary-text a {
+                color: #8ab4f8;
+            }
+
+            .gs-title b, .gs-snippet b {
+                color: inherit !important;
+                font-weight: inherit !important;
+            }
+            
+            .gs-spelling,
+            .gs-spelling a {
+                color: var(--c-text) !important;
+            }
+            
+            .gs-spelling a {
+                color: #8ab4f8 !important;
+            }
+            
+            .gs-spelling em {
+                color: var(--c-gray5) !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="nav-wrapper">
+        <nav class="nav">
+            <a href="/" class="nav-logo en">쿼터파이</a>
+            <div class="nav-links">
+                <a href="https://mail.google.com/" class="nav-link en">메일</a>
+                <a href="https://drive.google.com/" class="nav-link en">드라이브</a>
+                <a href="https://classroom.google.com/" class="nav-link en">클래스룸</a>
+            </div>
+        </nav>
+    </div>
+
+<main>
+    <div style="padding-bottom: 15vh;"></div>
+    <h1 class="page-title">QISS</h1>
+    <button id="mode-toggle" onclick="toggleMode()">
+        <span class="qiss-text">QISS</span><span class="search-text">&nbsp;Search</span>
+    </button>
+
+    <!-- QISS 모드 (CSE f514c97399dd34b8b) -->
+    <div id="cse-search-qiss" style="display:none;">
+        <br>
+        <div class="gcse-searchbox-only" data-resultsUrl="/qiss-results" data-newWindow="false"></div>
+        <div class="gcse-searchresults-only"></div>
+    </div>
+
+    <!-- QISS Search 모드 (CSE c31ed7ed73e974099) -->
+    <div id="cse-search-main">
+        <br>
+        <div class="gcse-searchbox-only" data-resultsUrl="/main-results" data-newWindow="false"></div>
+        <div class="gcse-searchresults-only"></div>
+    </div>
+
+    <!-- QISS AI 요약 컨테이너 -->
+    <div id="gemini-summary-container-qiss">
+        <div class="gemini-summary">
+            <h3>
+                <span>✨</span>
+                <span>AI 요약</span>
+            </h3>
+            <div class="gemini-summary-text" id="gemini-summary-text-qiss"></div>
+        </div>
+    </div>
+
+    <!-- QISS Search AI 요약 컨테이너 -->
+    <div id="gemini-summary-container-main">
+        <div class="gemini-summary">
+            <h3>
+                <span>✨</span>
+                <span>AI 요약</span>
+            </h3>
+            <div class="gemini-summary-text" id="gemini-summary-text-main"></div>
+        </div>
+    </div>
+
+    <br>
+</main>
+
+<!-- API 설정 모달 -->
+<div id="api-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            AI 요약 API 설정
+            <span id="api-status-indicator"></span>
+        </div>
+        <div class="modal-body">
+            <p>QISS의 AI 검색 요약 기능을 사용하려면 Groq API 키가 필요합니다.</p>
+            <p><a href="https://console.groq.com/keys" target="_blank">Groq Console</a>에서 무료로 API 키를 발급받을 수 있습니다.</p>
+            
+            <div class="api-input-group">
+                <label for="api-key-input">Groq API 키</label>
+                <input type="password" id="api-key-input" placeholder="gsk_...">
+            </div>
+            
+            <p style="font-size: 12px; color: var(--c-gray6);">
+                API 키는 브라우저의 로컬 저장소에만 저장되며, 외부로 전송되지 않습니다.
+            </p>
+        </div>
+        <div class="modal-buttons">
+            <button class="modal-button secondary" onclick="closeApiModal()">취소</button>
+            <button class="modal-button primary" onclick="saveApiKey()">저장</button>
+        </div>
+    </div>
+</div>
+
+<!-- API 설정 버튼 -->
+<button id="api-settings-btn" onclick="openApiModal()">⚙️</button>
+
+<br><br><br><br><br><br><br>
+
+<script>
+    const GROQ_MODEL = 'meta-llama/llama-4-maverick-17b-128e-instruct'; 
+
+    let isMain = true; // true = QISS Search (main), false = QISS (qiss)
+    let lastProcessedQueryQiss = '';
+    let lastProcessedQueryMain = '';
+
+    // CSE 동적 로드
+    function loadCSE(cx, containerId) {
+        const script = document.createElement('script');
+        script.src = `https://cse.google.com/cse.js?cx=${cx}`;
+        script.async = true;
+        document.head.appendChild(script);
+    }
+
+    // 페이지 로드 시 메인 CSE만 로드
+    window.addEventListener('DOMContentLoaded', function() {
+        loadCSE('c31ed7ed73e974099', 'cse-search-main'); // QISS Search
+        updateApiStatus();
+    });
+
+    // marked.js 설정
+    marked.setOptions({
+        breaks: true,
+        gfm: true
+    });
+
+    // API 상태 업데이트
+    function updateApiStatus() {
+        const apiKey = localStorage.getItem('GROQ_API_KEY');
+        const indicator = document.getElementById('api-status-indicator');
+        
+        if (apiKey) {
+            indicator.innerHTML = '<span class="api-status connected"><span class="api-status-dot"></span>연결됨</span>';
+        } else {
+            indicator.innerHTML = '<span class="api-status disconnected"><span class="api-status-dot"></span>연결 안됨</span>';
+        }
+    }
+
+    // 모달 열기
+    function openApiModal() {
+        const modal = document.getElementById('api-modal');
+        const input = document.getElementById('api-key-input');
+        const savedKey = localStorage.getItem('GROQ_API_KEY');
+        
+        if (savedKey) {
+            input.value = savedKey;
+        }
+        
+        modal.classList.add('show');
+        updateApiStatus();
+    }
+
+    // 모달 닫기
+    function closeApiModal() {
+        const modal = document.getElementById('api-modal');
+        modal.classList.remove('show');
+    }
+
+    // API 키 저장
+    function saveApiKey() {
+        const input = document.getElementById('api-key-input');
+        const apiKey = input.value.trim();
+        
+        if (apiKey) {
+            localStorage.setItem('GROQ_API_KEY', apiKey);
+            alert('API 키가 저장되었습니다!');
+            closeApiModal();
+            updateApiStatus();
+        } else {
+            alert('API 키를 입력해주세요.');
+        }
+    }
+
+    // 모달 외부 클릭 시 닫기
+    document.getElementById('api-modal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeApiModal();
+        }
+    });
+
+    let qissLoaded = false;
+
+    function toggleMode() {
+        isMain = !isMain;
+        const cseMain = document.getElementById('cse-search-main');
+        const cseQiss = document.getElementById('cse-search-qiss');
+        const toggleBtn = document.getElementById('mode-toggle');
+        const summaryContainerMain = document.getElementById('gemini-summary-container-main');
+        const summaryContainerQiss = document.getElementById('gemini-summary-container-qiss');
+        
+        lastProcessedQueryQiss = '';
+        lastProcessedQueryMain = '';
+        summaryContainerMain.style.display = 'none';
+        summaryContainerQiss.style.display = 'none';
+
+        if (isMain) {
+            // QISS Search 모드 (main)
+            toggleBtn.classList.remove('collapsed');
+            cseQiss.classList.add('fade-out');
+            
+            setTimeout(() => {
+                cseQiss.style.display = 'none';
+                cseMain.style.display = 'block';
+                
+                requestAnimationFrame(() => {
+                    cseMain.classList.remove('fade-out');
+                });
+            }, 400);
+        } else {
+            // QISS 모드 (qiss) - 처음 전환 시 CSE 로드
+            if (!qissLoaded) {
+                loadCSE('f514c97399dd34b8b', 'cse-search-qiss');
+                qissLoaded = true;
+            }
+            
+            toggleBtn.classList.add('collapsed');
+            cseMain.classList.add('fade-out');
+            
+            setTimeout(() => {
+                cseMain.style.display = 'none';
+                cseQiss.style.display = 'block';
+                
+                requestAnimationFrame(() => {
+                    cseQiss.classList.remove('fade-out');
+                });
+            }, 400);
+        }
+    }
+
+    async function generateSummary(query, searchResults, mode) {
+        const GROQ_API_KEY = localStorage.getItem('GROQ_API_KEY');
+        const summaryTextId = mode === 'main' ? 'gemini-summary-text-main' : 'gemini-summary-text-qiss';
+        const summaryText = document.getElementById(summaryTextId);
+
+        if (!GROQ_API_KEY) {
+            summaryText.innerHTML = '<div class="gemini-error">AI 검색 요약 기능을 사용하려면 API 키를 설정해주세요.<br><br><button class="modal-button primary" onclick="openApiModal()">API 설정하기</button></div>';
+            return;
+        }
+
+        summaryText.innerHTML = '<div class="gemini-loading"><div class="gemini-spinner"></div><span>AI가 검색 결과를 분석하고 있습니다...</span></div>';
+        
+        try {
+            let resultsContext = '검색어: ' + query + '\n\n검색 결과:\n\n';
+            searchResults.forEach((result, index) => {
+                resultsContext += `${index + 1}. ${result.title}\n${result.snippet}\n\n`;
+            });
+            
+            const systemPrompt = `당신은 검색 결과들을 바탕으로 사용자에게 명확하고 간결한 요약을 제공하는 AI입니다. 다음은 "${query}"에 대한 검색 결과입니다. 이 검색 결과들을 바탕으로 사용자가 알고 싶어하는 정보를 명확하고 간결하게 요약해주세요. 한국어로 답변해주세요. 마크다운 문법을 자유롭게 사용할 수 있습니다.`;
+            
+            const userPrompt = `다음 검색 결과들을 종합하여 요약해주세요:\n\n${resultsContext}\n\n요약 시 다음 사항을 지켜주세요:\n1. 핵심 정보를 명확하게 정리 (마크다운 사용 가능)\n2. 검색 결과의 주요 내용을 종합적으로 설명. 마지막에 결론을 낼것.\n3. 객관적이고 중립적인 톤 유지\n4. 불필요한 인사말이나 서론 없이 바로 본론으로 시작\n5. 가독성을 위해 적절히 마크다운 문법 활용 (제목, 강조, 리스트 등)`;
+
+            const response = await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${GROQ_API_KEY}`,
+                },
+                body: JSON.stringify({
+                    model: GROQ_MODEL, 
+                    messages: [
+                        { role: 'system', content: systemPrompt },
+                        { role: 'user', content: userPrompt }
+                    ],
+                    temperature: 0.7,
+                    max_tokens: 1024,
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                const errorMessage = errorData?.error?.message || `HTTP status ${response.status}`;
+                throw new Error(`Groq API 요청 실패: ${errorMessage}`);
+            }
+
+            const data = await response.json();
+            
+            if (data.choices && data.choices[0] && data.choices[0].message) {
+                const summary = data.choices[0].message.content;
+                summaryText.innerHTML = marked.parse(summary);
+            } else {
+                const finishReason = data.choices?.[0]?.finish_reason || '알 수 없는 이유';
+                throw new Error(`응답 형식이 올바르지 않거나 응답이 완료되지 않았습니다. (이유: ${finishReason})`);
+            }
+        } catch (error) {
+            console.error('Groq API 오류:', error);
+            if (error.message.includes('API 요청 실패')) {
+                summaryText.innerHTML = `<div class="gemini-error">요약 생성 중 오류가 발생했습니다: ${error.message}<br><br>API 키가 유효한지 확인해주세요.<br><button class="modal-button primary" onclick="openApiModal()" style="margin-top: 10px;">API 설정 확인</button></div>`;
+            } else {
+                summaryText.innerHTML = `<div class="gemini-error">요약 생성 중 오류가 발생했습니다: ${error.message}</div>`;
+            }
+        }
+    }
+
+    function monitorSearchResults() {
+        // Enter 키 감지
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const activeSearch = isMain ? 'main' : 'qiss';
+                lastProcessedQueryMain = '';
+                lastProcessedQueryQiss = '';
+            }
+        });
+    
+        const resultsObserver = new MutationObserver(() => {
+            // Main CSE 모니터링
+            let elMain = document.querySelector("#cse-search-main :is(div.gsc-resultsbox-visible, div.gsc-resultsbox-invisible)");
+            if (elMain && !o2startedMain) {
+                o2startedMain = true;
+                resultsObserver2Main.disconnect();
+                resultsObserver2Main.observe(elMain, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+
+            // Qiss CSE 모니터링
+            let elQiss = document.querySelector("#cse-search-qiss :is(div.gsc-resultsbox-visible, div.gsc-resultsbox-invisible)");
+            if (elQiss && !o2startedQiss) {
+                o2startedQiss = true;
+                resultsObserver2Qiss.disconnect();
+                resultsObserver2Qiss.observe(elQiss, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+        });
+
+        let o2startedMain = false;
+        let o2startedQiss = false;
+
+        // Main CSE 결과 옵저버
+        const resultsObserver2Main = new MutationObserver(() => {
+            if (!isMain) return;
+            
+            const results = document.querySelectorAll('#cse-search-main .gsc-webResult.gsc-result');
+            const searchInput = document.querySelector('#cse-search-main input.gsc-input');
+            const query = searchInput ? searchInput.value.trim() : '';
+
+            if (results.length > 0 && query && query !== lastProcessedQueryMain) {
+                const searchResults = [];
+                results.forEach(result => {
+                    const titleElement = result.querySelector('.gs-title');
+                    const snippetElement = result.querySelector('.gs-snippet');
+                    if (titleElement && snippetElement) {
+                        searchResults.push({
+                            title: titleElement.textContent.trim(),
+                            snippet: snippetElement.textContent.trim()
+                        });
+                    }
+                });
+
+                const summaryContainer = document.getElementById('gemini-summary-container-main');
+                if (!searchResults.length) {
+                    summaryContainer.style.display = 'none';
+                } else {
+                    lastProcessedQueryMain = query;
+                    summaryContainer.style.display = 'block';
+                    
+                    const resultsWrapper = results[0].parentElement.parentElement.parentElement.parentElement;
+                    if (resultsWrapper) {
+                        resultsWrapper.insertAdjacentElement("afterbegin", summaryContainer);
+                    }
+                    
+                    generateSummary(query, searchResults.slice(0, 5), 'main');
+                }
+            }
+            
+            const summaryContainer = document.getElementById('gemini-summary-container-main');
+            if (summaryContainer.style.display === 'block' && results.length > 0) {
+                const resultsWrapper = results[0].parentElement.parentElement.parentElement.parentElement;
+                if (summaryContainer.parentElement !== resultsWrapper) {
+                    resultsWrapper.insertAdjacentElement("afterbegin", summaryContainer);
+                }
+            }
+        });
+
+        // Qiss CSE 결과 옵저버
+        const resultsObserver2Qiss = new MutationObserver(() => {
+            if (isMain) return;
+            
+            const results = document.querySelectorAll('#cse-search-qiss .gsc-webResult.gsc-result');
+            const searchInput = document.querySelector('#cse-search-qiss input.gsc-input');
+            const query = searchInput ? searchInput.value.trim() : '';
+
+            if (results.length > 0 && query && query !== lastProcessedQueryQiss) {
+                const searchResults = [];
+                results.forEach(result => {
+                    const titleElement = result.querySelector('.gs-title');
+                    const snippetElement = result.querySelector('.gs-snippet');
+                    if (titleElement && snippetElement) {
+                        searchResults.push({
+                            title: titleElement.textContent.trim(),
+                            snippet: snippetElement.textContent.trim()
+                        });
+                    }
+                });
+
+                const summaryContainer = document.getElementById('gemini-summary-container-qiss');
+                if (!searchResults.length) {
+                    summaryContainer.style.display = 'none';
+                } else {
+                    lastProcessedQueryQiss = query;
+                    summaryContainer.style.display = 'block';
+                    
+                    const resultsWrapper = results[0].parentElement.parentElement.parentElement.parentElement;
+                    if (resultsWrapper) {
+                        resultsWrapper.insertAdjacentElement("afterbegin", summaryContainer);
+                    }
+                    
+                    generateSummary(query, searchResults.slice(0, 5), 'qiss');
+                }
+            }
+            
+            const summaryContainer = document.getElementById('gemini-summary-container-qiss');
+            if (summaryContainer.style.display === 'block' && results.length > 0) {
+                const resultsWrapper = results[0].parentElement.parentElement.parentElement.parentElement;
+                if (summaryContainer.parentElement !== resultsWrapper) {
+                    resultsWrapper.insertAdjacentElement("afterbegin", summaryContainer);
+                }
+            }
+        });
+
+        resultsObserver.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
+
+    monitorSearchResults();
+
+    function removeUnwantedElements() {
+        const selectors = [
+            '.gsc-tabsArea',
+            '.gsc-orderby-container',
+            '.gcsc-find-more-on-google',
+            '.gs-image',
+            '.gsc-refinementsArea',
+            '.gsc-above-wrapper-area',
+            '.gsc-branding',
+            '.gcsc-branding',
+            '.gsc-watermark',
+            'td.gsc-branding'
+        ];
+        
+        selectors.forEach(selector => {
+            document.querySelectorAll(selector).forEach(el => {
+                el.style.cssText = 'display:none!important;visibility:hidden!important;opacity:0!important;height:0!important;width:0!important;';
+                el.remove();
+            });
+        });
+    }
+
+    const observer = new MutationObserver(removeUnwantedElements);
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+    setInterval(removeUnwantedElements, 500);
+
+    function addFavicons() {
+        const results = document.querySelectorAll('.gsc-webResult.gsc-result');
+        
+        results.forEach(result => {
+            const titleLink = result.querySelector('.gs-title a');
+            if (titleLink && !titleLink.querySelector('.favicon')) {
+                try {
+                    const url = new URL(titleLink.href);
+                    const domain = url.hostname;
+                    
+                    const favicon = document.createElement('img');
+                    favicon.className = 'favicon';
+                    favicon.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
+                    favicon.style.cssText = `
+                        width: 20px !important;
+                        height: 20px !important;
+                        margin-right: 10px !important;
+                        border-radius: 4px !important;
+                        vertical-align: middle !important;
+                        display: inline-block !important;
+                        object-fit: contain !important;
+                    `;
+                    
+                    favicon.onerror = function() {
+                        this.style.display = 'none';
+                    };
+                    
+                    titleLink.insertBefore(favicon, titleLink.firstChild);
+                } catch (e) {
+                    console.log('파비콘 추가 실패:', e);
+                }
+            }
+        });
+    }
+
+    const faviconObserver = new MutationObserver(addFavicons);
+    faviconObserver.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+    setInterval(addFavicons, 1000);
+
+    function applyCardAnimation() {
+        const cards = document.querySelectorAll('.gsc-webResult.gsc-result');
+        
+        cards.forEach((card, index) => {
+            if (card.classList.contains('animated')) return;
+            
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.9) translateY(20px)';
+            
+            setTimeout(() => {
+                card.style.transition = 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out';
+                card.style.opacity = '1';
+                card.style.transform = 'scale(1) translateY(0)';
+                card.classList.add('animated');
+            }, index * 100);
+        });
+    }
+
+    const cardAnimationObserver = new MutationObserver(applyCardAnimation);
+
+    cardAnimationObserver.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+    setTimeout(applyCardAnimation, 500);
+
+    function styleSearchSuggestion() {
+        const suggestions = document.querySelectorAll('.gs-spelling');
+        
+        suggestions.forEach(suggestion => {
+            suggestion.style.cssText = `
+                color: var(--c-text) !important;
+                background: none !important;
+                border: none !important;
+                padding: 3px 0 !important;
+                margin: 3px 0 !important;
+                font-size: 14px !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                line-height: 1.4 !important;
+            `;
+            
+            const links = suggestion.querySelectorAll('a');
+            links.forEach(link => {
+                link.style.color = 'var(--c-blue)';
+                link.style.fontWeight = '500';
+                link.style.textDecoration = 'none';
+                link.style.display = 'inline';
+            });
+            
+            const ems = suggestion.querySelectorAll('em');
+            ems.forEach(em => {
+                em.style.color = 'var(--c-gray6)';
+                em.style.fontStyle = 'normal';
+                em.style.display = 'inline';
+            });
+        });
+    }
+
+    setInterval(styleSearchSuggestion, 500);
+
+    const suggestionObserver = new MutationObserver(styleSearchSuggestion);
+    suggestionObserver.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+</script>
+</body>
+</html>
