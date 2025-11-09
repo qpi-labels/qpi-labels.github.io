@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>QISS 설계</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/logo.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/logo_dark.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" type="image/x-icon" href="/logo.ico" media="(prefers-color-scheme: light)">
+    <meta property="og:url" content="https://qpi.kro.kr/">
+    <meta property="og:title" content="QISS 설계">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="/logo.png">
+    <meta property="og:description" content="모두의 AI 학술 검색">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../colors.css">
+    <link rel="stylesheet" href="../../newstyle.css">
+    <style>
+        body {
+            overflow: hidden;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        
+
+        .hero {
+            background-image: url('design_hero.png');
+            background-size: cover;
+            
+        }
+
+        .grid-item.large {
+            grid-column: span 2;
+            min-height: 120px;
+            background: linear-gradient(135deg, #282a41 0%, #131313 100%);
+            color: var(--c-ltext);
+            padding: 0px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+        }
+
+        .grid-item.large2 {
+            grid-column: span 2;
+            min-height: 120px;
+            background: linear-gradient(135deg, #241e47 0%, #0e0d1d 100%);
+            color: var(--c-ltext);
+            padding: 0px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+        }
+
+        .grid-item.large3 {
+            grid-column: span 2;
+            min-height: 180px;
+            background: linear-gradient(135deg, #373755 0%, #191824 100%);
+            color: var(--c-ltext);
+            padding: 0px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+        }
+
+        .grid-item.accent-1 {
+            background-image: url('korean.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: var(--c-ltext);
+        }
+
+        .grid-item.accent-2 {
+            background-image: url('english.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: var(--c-ltext);
+        }
+
+        .grid-item.accent-3 {
+            min-height: 80px;
+            background: linear-gradient(135deg, #373755 0%, #191824 100%);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: var(--c-ltext);
+        }
+
+        .grid-item.accent-4 {
+            min-height: 80px;
+            background: linear-gradient(135deg, #373755 0%, #191824 100%);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: var(--c-ltext);
+        }
+        
+        .page-title-section {
+            text-align: center;
+            margin-top: 10vh;
+            margin-bottom: 0;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 72px;
+            margin-top: 0em;
+            margin-bottom: 0em;
+            font-weight: 700;
+        }
+
+        .page-subtitle {
+            font-size: 28px;
+            margin-top: 0em;
+            margin-bottom: 0;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        .page-upper {
+            font-size: 20px;
+            margin-top: 0em;
+            margin-bottom: 0;
+            font-weight: 400;
+        }
+
+        .page-middle {
+            font-size: 48px;
+            margin-top: 0em;
+            margin-bottom: 0;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        /* 모더니즘 이미지 */
+        .modernism-image {
+            display: block;
+            max-width: 250px;
+            width: 100%;
+            height: auto;
+            margin: 10px auto;
+        }
+
+        /* 비판 섹션 - 도시 배경 */
+        .criticism-wrapper {
+            position: relative;
+            pointer-events: none;
+            backdrop-filter: blur(10px);            
+            background: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,0));
+            background-image: url('city.png');
+            background-size: cover;
+            background-position: bottom;
+            background-repeat: no-repeat;
+            padding: 0;
+            filter: brightness(100%); 
+            transition: background-image 0.3s ease, filter 0.3s ease, background 0.3s ease;
+        }
+
+        /* data-theme이 dark일 때만 다크 이미지 사용 */
+        [data-theme="dark"] .criticism-wrapper {
+            background: linear-gradient(to bottom, rgba(35,35,35,0.8), rgba(35,35,35,0));
+            background-image: url('city2.png');
+            background-size: cover;
+            background-position: bottom;
+            background-repeat: no-repeat;
+            filter: brightness(100%);
+        }
+
+        .criticism-wrapper .grid-container {
+            background-position: top;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* 플로팅 테마 토글 버튼 */
+        .theme-toggle {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--c-dbg);
+            border: 0.5px solid var(--c-gray1);
+            box-shadow: 0 4px 20px rgb(from var(--c-text) r g b / 15%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 8px 30px rgb(from var(--c-text) r g b / 20%);
+        }
+
+        .theme-toggle:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .theme-toggle svg {
+            width: 24px;
+            height: 24px;
+            color: var(--c-text);
+            position: absolute;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .theme-toggle .sun-icon {
+            opacity: 0;
+            transform: rotate(-90deg) scale(0.5);
+        }
+
+        .theme-toggle .moon-icon {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+        }
+
+        /* 다크모드일 때 */
+        [data-theme="dark"] .theme-toggle .sun-icon {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+        }
+
+        [data-theme="dark"] .theme-toggle .moon-icon {
+            opacity: 0;
+            transform: rotate(90deg) scale(0.5);
+        }
+
+        /* 모바일 반응형 스타일 */
+        @media (max-width: 834px) {
+            .page-title {
+                font-size: 56px;
+            }
+            
+            .page-subtitle {
+                font-size: 24px;
+            }
+            
+            .page-upper {
+                font-size: 18px;
+            }
+            
+            .page-middle {
+                font-size: 44px;
+            } 
+
+            .page-title-section {
+                margin-top: 8vh;
+                margin-bottom: 0;
+            }
+
+            .modernism-image {
+                max-width: 500px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 48px;
+            }
+            
+            .page-subtitle {
+                font-size: 22px;
+            }
+
+            .page-middle {
+                font-size: 42px;
+            } 
+            
+            .page-upper {
+                font-size: 16px;
+            }
+            
+            .hero-subheadline br {
+                display: none;
+            }
+            
+            .page-subtitle br {
+                display: none;
+            }
+            
+            .grid-item.large,
+            .grid-item.large2 {
+                grid-column: span 1;
+                min-height: 140px;
+            }
+
+            .modernism-image {
+                max-width: 400px;
+                margin: 30px auto;
+            }
+            
+            .theme-toggle {
+                bottom: 24px;
+                right: 24px;
+                width: 52px;
+                height: 52px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 36px;
+            }
+            
+            .page-subtitle {
+                font-size: 18px;
+            }
+
+            .page-middle {
+                font-size: 38px;
+            } 
+            
+            .page-upper {
+                font-size: 14px;
+            }
+            
+            .page-title-section {
+                margin-top: 6vh;
+                margin-bottom: 20vh;
+            }
+            
+            .grid-item.large,
+            .grid-item.large2 {
+                min-height: 120px;
+            }
+            
+            .grid-item.large .item-headline,
+            .grid-item.large2 .item-headline {
+                font-size: 24px;
+            }
+            
+            .color-description br {
+                display: none;
+            }
+
+            .modernism-image {
+                max-width: 50%;
+                margin: 20px auto;
+                padding: 0 20px;
+                box-sizing: border-box;
+            }
+            
+            .theme-toggle {
+                bottom: 20px;
+                right: 20px;
+                width: 48px;
+                height: 48px;
+            }
+            
+            .theme-toggle svg {
+                width: 20px;
+                height: 20px;
+            }
+        }
+
+    </style>
+    <script src="/nav.js" defer></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <div id="header"></div>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-eyebrow typography-caption2 en">쿼터파이 설계</div>
+                <h1 class="hero-headline typography-title1">QISS</h1>
+                <p class="hero-subheadline typography-subheadline">모두를 위한 최고의 AI 학술 검색 툴</p>
+            </div>
+        </section>
+
+            <div class="grid-container">
+                <div class="grid">
+                    <div class="grid-item large2">
+                        <div class="item-eyebrow typography-caption2 en">QISS</div>
+                        <h2 class="item-headline typography-headline" style="margin-bottom: 0px;">학술검색을 빠르게</h2>
+                    </div>
+                </div>
+            </div>
+            <div style="height: 0vh;"></div>
+        </section>
+
+        <section class="product-grid">
+            <div class="page-title-section" style="text-align: center;">
+            <p class="page-subtitle">QISS의 첫번째 슬로건</p>
+            </div>
+        </section>
+
+        <div style="margin-bottom: 40vh;"></div>
+
+        <section class="product-grid">
+            <div class="grid-container">
+                <div class="page-title-section" style="margin-top: 0; margin-bottom: 5vh">
+                <p class="page-middle">QISS는 발전합니다.</p>
+                <p class="page-subtitle">빠르기만 한 QISS가 아니라 간편하고 강력한 QISS를 만들겠습니다.</p>
+                </div>
+                <div class="grid">
+                    <div class="grid-item accent-3">
+                        <div class="item-eyebrow typography-caption2 en" >사용자 경험 향상</div>
+                        <h2 class="item-headline typography-headline">부드러운 전환</h2>
+                        <p class="item-description typography-caption1" style="margin-bottom: 0;">
+                            연속적이고 편안한 사용자 경험을 위해 QISS는 QISS와 QISS Search간 전환에 업계 최고 수준의 부드러운 전환을 도입했습니다.
+                        </p>
+                    </div>
+
+                    <div class="grid-item accent-4">
+                        <div class="item-eyebrow typography-caption2 en">사용자 경험 향상</div>
+                        <h2 class="item-headline typography-headline">본질에 집중하기</h2>
+                        <p class="item-description typography-caption1" style="margin-bottom: 0;">
+                            QISS는 "검색"이라는 본질에 집중하기 위해 쿼터파이의 작업 중 가장 미니멀리즘에 가까운 디자인을 가지고 있습니다.
+                        </p>
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="grid-item accent-3">
+                        <div class="item-eyebrow typography-caption2 en" >QISS Search</div>
+                        <h2 class="item-headline typography-headline">일반 검색 기능</h2>
+                        <p class="item-description typography-caption1" style="margin-bottom: 0;">
+                            일반 검색을 위해 사이트를 옮길 필요 없이 QISS Search로 일반 검색까지 한번에 해결할 수 있습니다.
+                        </p>
+                    </div>
+                    <div class="grid-item accent-4">
+                        <div class="item-eyebrow typography-caption2 en">QISS Search AI</div>
+                        <h2 class="item-headline typography-headline">AI 요약 기능</h2>
+                        <p class="item-description typography-caption1" style="margin-bottom: 0;">
+                            AI 검색 검색 요약 기능으로 검색 결과를 한눈에 이해할 수 있습니다. QISS는 앞으로 이 기능을 학술 검색에도 도입하겠습니다.
+                        </p>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="grid-container">
+                <div class="grid">
+                    <div class="grid-item large3">
+                        <div class="item-eyebrow typography-caption2 en">더 나은 QISS를 위해</div>
+                        <p class="item-description typography-caption1" style="margin-bottom: 0;">
+                            <a href="mailto:cnsh31_1410@cnsh.hs.kr" class="footer-link">QISS의 개선점을 언제나 저희에게 알려주세요 </a>
+                </p>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div style="height: 0vh;"></div>
+        </section>
+        
+
+        
+
+        
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p class="footer-text typography-footnote">2025 쿼터파이. 모든 권리 보유</p>
+                <p class="footer-text typography-footnote">
+                    문의사항 : 2308 이재원 | 
+                    <a href="mailto:cnsh31_1410@cnsh.hs.kr" class="footer-link">cnsh31_1410@cnsh.hs.kr</a>
+                </p>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all elements with fade-up class and grid-item class
+        document.querySelectorAll('.fade-up, .grid-item').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 테마 토글 기능
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+
+        // 저장된 테마 불러오기 (localStorage 우선)
+        const savedTheme = localStorage.getItem('theme');
+        
+        // 초기 테마 설정 - localStorage가 있으면 그것을 사용, 없으면 light 기본값
+        if (savedTheme) {
+            html.setAttribute('data-theme', savedTheme);
+        } else {
+            // localStorage가 없을 때만 시스템 설정 확인
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const initialTheme = systemPrefersDark ? 'dark' : 'light';
+            html.setAttribute('data-theme', initialTheme);
+        }
+
+        // 토글 버튼 클릭 이벤트
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // 버튼 애니메이션
+            themeToggle.style.transform = 'rotate(360deg) scale(0.9)';
+            setTimeout(() => {
+                themeToggle.style.transform = '';
+            }, 300);
+        });
+
+        // 시스템 테마 변경 감지 (localStorage에 저장된 값이 없을 때만)
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (!localStorage.getItem('theme')) {
+                html.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+            }
+        });
+    </script>
+</body>
+</html>
