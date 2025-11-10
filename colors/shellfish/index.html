@@ -91,14 +91,18 @@
       );
 
       const ColorDisplay = ({ number, hexCode }) => {
-        const [copied, setCopied] = useState(false);
-
-        const handleCopy = () => {
-          navigator.clipboard.writeText(hexCode).then(() => {
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-          });
+        const getStatus = (ph) => {
+          if (ph >= 1 && ph <= 4) {
+            return { text: '측정 오류', color: 'text-yellow-400', bgColor: 'bg-yellow-900/30' };
+          } else if (ph >= 5 && ph <= 6) {
+            return { text: '정상', color: 'text-green-400', bgColor: 'bg-green-900/30' };
+          } else if (ph >= 7) {
+            return { text: '부패', color: 'text-red-400', bgColor: 'bg-red-900/30' };
+          }
+          return { text: '알 수 없음', color: 'text-slate-400', bgColor: 'bg-slate-800/30' };
         };
+
+        const status = getStatus(number);
 
         return (
           <div className="w-full max-w-sm flex flex-col items-center gap-4 transition-all duration-500 ease-in-out">
@@ -107,13 +111,9 @@
               style={{ backgroundColor: hexCode }}
             />
             <div className="text-center">
-              <h2 className="text-3xl font-bold text-slate-200">pH {number}</h2>
-              <button 
-                onClick={handleCopy}
-                className="bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-lg mt-2 py-2 px-5 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-slate-900"
-              >
-                {copied ? 'Copied!' : hexCode}
-              </button>
+              <div className={`${status.bgColor} ${status.color} text-4xl font-bold py-3 px-8 rounded-xl`}>
+                {status.text}
+              </div>
             </div>
           </div>
         );
