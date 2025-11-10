@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>QISS</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/logo.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/logo_dark.ico" media="(prefers-color-scheme: dark)">
+    <link rel="shortcut icon" type="image/x-icon" href="/logo.ico" media="(prefers-color-scheme: light)">
+    <meta property="og:url" content="https://qpi.kro.kr">
+    <meta property="og:title" content="쿼터파이">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="/logo.png">
+    <meta property="og:description" content="만족도 2년연속 1위! 쿼터파이">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/colors.css">
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/br-cobane');
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+        @import url('https://cdn.jsdelivr.net/gh/toss/tossface/dist/tossface.css');
+
+        body {
+            background-color: var(--c-bg);
+            color: var(--c-text);
+            font-family: "BR Cobane", 'Pretendard Variable';
+            text-align: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            margin: 0;
+            padding-top: 60px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgb(from var(--c-bg) r g b / 80%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 10px 5px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1.5px solid var(--c-gray1);
+            box-sizing: border-box;
+            min-height: 60px;
+            font-family: "BR Cobane";
+        }
+
+        .header-title-link {
+            text-decoration: none;
+            color: inherit;
+            margin-left: 15px;
+        }
+
+        .header-title-link h1 {
+            font-size: x-large;
+            margin: 0;
+            font-weight: 550;
+            display: inline;
+        }
+
+        .header-links {
+            display: flex;
+            gap: 20px;
+            margin-right: 50px;
+        }
+
+        .header-link {
+            color: var(--c-gray7);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .header-link:hover {
+            color: var(--c-gray6);
+            text-decoration: underline;
+        }
+
+        .header-link:visited {
+            color: var(--c-gray7);
+        }
+
+        .logo-link {
+            text-decoration: none;
+            color: inherit;
+        }
+        .page-title {
+            font-family: "BR Cobane";
+            font-size: xxx-large;
+            margin-bottom: 0;
+            font-weight: 700;
+        }
+
+        body img {
+            display: block;
+            margin: 0 auto;
+            width: 800px;
+            height: auto;
+            border: 1px solid rgba(var(--c-ltext) / 0%);
+            border-radius: 5px;
+        }
+
+        #search-bar {
+            width: 80%;
+            padding: 10px;
+            border-radius: 30px;
+            border: 1px solid var(--c-gray1);
+            font-size: 16px;
+            outline: none;
+            background-color: var(--c-bg);
+            color: var(--c-text);
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; /* Add color to transition */
+        }
+
+
+        .search-button {
+            background-color: var(--c-blue);
+            color: var(--c-ltext);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 16px;
+            font-size: small;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease-out, background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .search-button:hover {
+            background-color: var(--c-blue-active);
+        }
+
+        #current-time {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        #credit {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .nav-wrapper {
+            background: rgb(from var(--c-bg) r g b / 80%);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 0.5px solid rgb(from var(--c-gray7) r g b / 10%);
+        }
+
+        .nav {
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: 0 22px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-size: 21px;
+            font-weight: 600;
+            color: var(--c-text);
+            text-decoration: none;
+            letter-spacing: -.05em;
+        }
+
+        .nav-logo.en {
+            font-family: "BR Cobane", sans-serif;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--c-text);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 400;
+            opacity: 0.8;
+            transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+        <div class="nav-wrapper">
+        <nav class="nav">
+            <a href="/" class="nav-logo en">쿼터파이</a>
+            <div class="nav-links">
+                <a href="https://mail.google.com/" class="nav-link en">메일</a>
+                <a href="https://drive.google.com/" class="nav-link en">드라이브</a>
+                <a href="https://classroom.google.com/" class="nav-link en">클래스룸</a>
+            </div>
+        </nav>
+    </div>
+
+    <main>
+        <div style="margin-bottom: 15vh;"></div>
+        <h1 class="page-title">QISS</h1>
+        <input type="text" id="search-bar" placeholder="무엇이 궁금하신가요?" onkeydown="handleEnter(event)">
+        <br><br>
+        <div id="search-buttons">
+            <button class="search-button" onclick="searchInGoogle()">Google</button>
+            <button class="search-button" onclick="searchInNaver()">Naver</button>
+            <button class="search-button" onclick="searchInDBpia()">DBpia</button>
+            <button class="search-button" onclick="searchInGs()">Scholar</button>
+            <button class="search-button" onclick="searchInRISS()">RISS</button>
+        </div>
+
+        <br>
+
+        <div id="current-time">현재 시간 : <span id="time-display"></span></div>
+
+        <div id="credit" style="margin-bottom: 2vh; padding-bottom: 0;">2025 쿼터파이</div>
+
+        <img src="QISSv2.gif" style="max-width: 40%; border-radius: 48px;">
+        <div id="credit" style="font-size: 3vh; padding-bottom: 0; margin-top: 2vh; padding-top: 0;">완전히 새로워진 QISS 2.0 11월 출시</div>
+
+
+    </main>
+
+    <br><br><br><br><br><br><br>
+
+    <script>
+        const searchInput = document.getElementById('search-bar');
+
+        window.onload = function() {
+            searchInput.focus();
+        };
+
+        function handleEnter(event) {
+            if (event.key === 'Enter') {
+                searchInGoogle();
+            }
+        }
+
+        function searchInGoogle() {
+            const searchTerm = document.getElementById('search-bar').value;
+            if (searchTerm.trim() !== "") {
+                window.open('https://www.google.com/search?q=' + encodeURIComponent(searchTerm), '_blank');
+            }
+        }
+
+        function searchInNaver() {
+            const searchTerm = document.getElementById('search-bar').value;
+             if (searchTerm.trim() !== "") {
+                window.open('https://search.naver.com/search.naver?where=nexearch&sm=tab_hty&query=' + encodeURIComponent(searchTerm), '_blank');
+             }
+        }
+
+        function searchInDBpia() {
+            const searchTerm = document.getElementById('search-bar').value;
+            if (searchTerm.trim() !== "") {
+                window.open('https://www.dbpia.co.kr/search/topSearch?searchOption=all&query=' + encodeURIComponent(searchTerm), '_blank');
+            }
+        }
+        function searchInGs() {
+            const searchTerm = document.getElementById('search-bar').value;
+            if (searchTerm.trim() !== "") {
+                window.open('https://scholar.google.com/scholar?hl=ko&as_sdt=0%2C5&q=' + encodeURIComponent(searchTerm), '_blank');
+            }
+        }
+
+        function searchInRISS() {
+            const searchTerm = document.getElementById('search-bar').value;
+            if (searchTerm.trim() !== "") {
+                window.open('https://www.riss.kr/search/Search.do?colName=all&isDetailSearch=N&searchGubun=true&oldQuery=&sflag=1&fsearchMethod=search&isFDetailSearch=N&searchQuery=1&kbid=&pageNumber=1&query=' + encodeURIComponent(searchTerm),'_blank');
+            }
+        }
+
+        const timeDisplay = document.getElementById('time-display');
+
+        setInterval(() => {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            const hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+
+            timeDisplay.textContent = `${year}년 ${month}월 ${day}일 ${hours}:${minutes}:${seconds}`;
+        }, 1000);
+    </script>
+</body>
+</html>
