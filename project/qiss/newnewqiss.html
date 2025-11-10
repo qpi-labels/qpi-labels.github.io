@@ -207,7 +207,6 @@
         .gsc-tabsArea,
         .gsc-orderby-container,
         .gcsc-find-more-on-google,
-        .gs-image,
         .gsc-refinementsArea,
         .gsc-above-wrapper-area {
             display: none !important;
@@ -270,14 +269,34 @@
             background-color: var(--c-gray1) !important;
         }
 
+        /* 검색 결과 레이아웃 컨테이너 */
+        .search-results-layout {
+            max-width: 1200px;
+            margin: 30px auto 0 auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        .search-results-main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .search-results-sidebar {
+            width: 350px;
+            flex-shrink: 0;
+        }
+
         .gsc-results-wrapper-overlay, .gsc-results-wrapper-visible {
             background-color: var(--c-bg) !important;
             border: none !important;
             box-shadow: none !important;
-            max-width: 680px !important;
-            margin: 30px auto 0 auto !important;
+            max-width: 100% !important;
+            margin: 0 !important;
             text-align: left !important;
-            padding: 0 20px !important;
+            padding: 0 !important;
         }
 
         .gsc-resultsbox-visible {
@@ -369,6 +388,58 @@
             color: var(--c-text) !important;
             background: none !important;
             text-align: left !important;
+        }
+
+        /* 이미지 검색 결과 스타일 */
+        #image-results {
+            position: sticky;
+            top: 80px;
+            background: var(--c-gray1);
+            border-radius: 20px;
+            padding: 20px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        #image-results h3 {
+            margin: 0 0 15px 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--c-text);
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .image-item {
+            position: relative;
+            aspect-ratio: 1;
+            overflow: hidden;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .image-item:hover {
+            transform: scale(1.05);
+        }
+
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: var(--c-gray6);
+            padding: 20px;
         }
 
         #cse-search {
@@ -639,9 +710,7 @@
 
         /* Gemini Summary 스타일 */
         #gemini-summary-container {
-            max-width: 680px;
-            margin: 20px auto;
-            padding: 0 20px;
+            margin: 20px 0;
             display: none;
         }
 
@@ -865,6 +934,10 @@
             #gemini-summary-text a {
                 color: #8ab4f8;
             }
+
+            #image-results {
+                background: rgb(from var(--c-gray1) r g b / 50%);
+            }
         }
 
         .nav-wrapper {
@@ -1025,6 +1098,22 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        @media (max-width: 968px) {
+            .search-results-layout {
+                flex-direction: column;
+            }
+
+            .search-results-sidebar {
+                width: 100%;
+                order: -1;
+            }
+
+            #image-results {
+                position: static;
+                max-height: 400px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1061,13 +1150,23 @@
 
     <div id="cse-search" class="gcse-search" data-enableImageSearch="true"></div>
 
-    <div id="gemini-summary-container">
-        <div id="gemini-summary">
-            <h3>
-                <span>✨</span>
-                <span>AI 요약</span>
-            </h3>
-            <div id="gemini-summary-text"></div>
+    <div class="search-results-layout">
+        <div class="search-results-main">
+            <div id="gemini-summary-container">
+                <div id="gemini-summary">
+                    <h3>
+                        <span>✨</span>
+                        <span>AI 요약</span>
+                    </h3>
+                    <div id="gemini-summary-text"></div>
+                </div>
+            </div>
+        </div>
+        <div class="search-results-sidebar">
+            <div id="image-results" style="display: none;">
+                <h3>🖼️ 이미지</h3>
+                <div class="image-grid" id="image-grid"></div>
+            </div>
         </div>
     </div>
 
@@ -1112,6 +1211,8 @@
 
 <script>
     const GROQ_MODEL = 'meta-llama/llama-4-maverick-17b-128e-instruct'; 
+    const GOOGLE_API_KEY = 'AIzaSyBkcL7TeMXm6HAXFJ6WmOjzYGgAo4c3bsk';
+    const GOOGLE_CSE_ID = 'c31ed7ed73e974099';
 
     let isCSE = true;
     let currentSearchQuery = '';
@@ -1182,6 +1283,53 @@
         updateApiStatus();
     });
 
+    // 이미지 검색 함수
+    async function searchImages(query) {
+        const imageResults = document.getElementById('image-results');
+        const imageGrid = document.getElementById('image-grid');
+        
+        imageGrid.innerHTML = '<div class="image-loading"><div class="gemini-spinner"></div><span>이미지 로딩 중...</span></div>';
+        imageResults.style.display = 'block';
+        
+        try {
+            const response = await fetch(
+                `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_API_KEY}&cx=${GOOGLE_CSE_ID}&q=${encodeURIComponent(query)}&searchType=image&num=8`
+            );
+            
+            if (!response.ok) {
+                throw new Error('이미지 검색 실패');
+            }
+            
+            const data = await response.json();
+            
+            if (data.items && data.items.length > 0) {
+                imageGrid.innerHTML = '';
+                data.items.forEach(item => {
+                    const imageItem = document.createElement('div');
+                    imageItem.className = 'image-item';
+                    imageItem.onclick = () => window.open(item.image.contextLink, '_blank');
+                    
+                    const img = document.createElement('img');
+                    img.src = item.link;
+                    img.alt = item.title;
+                    img.loading = 'lazy';
+                    
+                    img.onerror = function() {
+                        this.parentElement.style.display = 'none';
+                    };
+                    
+                    imageItem.appendChild(img);
+                    imageGrid.appendChild(imageItem);
+                });
+            } else {
+                imageGrid.innerHTML = '<div style="color: var(--c-gray6); padding: 20px; text-align: center;">이미지를 찾을 수 없습니다.</div>';
+            }
+        } catch (error) {
+            console.error('이미지 검색 오류:', error);
+            imageGrid.innerHTML = '<div style="color: var(--c-text); padding: 20px; text-align: center;">이미지 로딩 실패</div>';
+        }
+    }
+
     function toggleMode() {
         isCSE = !isCSE;
         const cse = document.getElementById('cse-search');
@@ -1191,10 +1339,12 @@
         const credit = document.getElementById('credit');
         const searchButtons = document.getElementById('search-buttons');
         const summaryContainer = document.getElementById('gemini-summary-container');
+        const imageResults = document.getElementById('image-results');
         
         currentSearchQuery = ''; 
         lastProcessedQuery = '';
         summaryContainer.style.display = 'none';
+        imageResults.style.display = 'none';
 
         if (isCSE) {
             toggleBtn.classList.remove('collapsed');
@@ -1378,20 +1528,33 @@
                     lastProcessedQuery = query;
                     summaryContainer.style.display = 'block';
                     
-                    const resultsWrapper = results[0].parentElement.parentElement.parentElement.parentElement;
-                    if (resultsWrapper) {
-                        resultsWrapper.insertAdjacentElement("afterbegin", summaryContainer);
+                    // 이미지 검색 실행
+                    searchImages(query);
+                    
+                    const mainContainer = document.querySelector('.search-results-main');
+                    if (mainContainer && summaryContainer.parentElement !== mainContainer) {
+                        mainContainer.insertBefore(summaryContainer, mainContainer.firstChild);
                     }
                     
                     generateSummary(query, searchResults.slice(0, 5));
                 }
             }
             
-            const summaryContainer = document.getElementById('gemini-summary-container');
-            if (summaryContainer.style.display === 'block' && results.length > 0) {
-                const resultsWrapper = results[0].parentElement.parentElement.parentElement.parentElement;
-                if (summaryContainer.parentElement !== resultsWrapper) {
-                    resultsWrapper.insertAdjacentElement("afterbegin", summaryContainer);
+            // 레이아웃 조정
+            const resultsWrapper = document.querySelector('.gsc-results-wrapper-visible, .gsc-results-wrapper-overlay');
+            if (resultsWrapper) {
+                const layout = document.querySelector('.search-results-layout');
+                const mainContainer = document.querySelector('.search-results-main');
+                
+                if (layout && mainContainer && resultsWrapper.parentElement !== mainContainer) {
+                    // 검색 결과를 메인 컨테이너로 이동
+                    mainContainer.appendChild(resultsWrapper);
+                    
+                    // 레이아웃을 검색 박스 다음에 위치
+                    const searchBox = document.querySelector('.gsc-search-box');
+                    if (searchBox && searchBox.nextSibling !== layout) {
+                        searchBox.parentElement.insertBefore(layout, searchBox.nextSibling);
+                    }
                 }
             }
         });
@@ -1561,4 +1724,4 @@
     });
 </script>
 </body>
-    </html>
+</html>
