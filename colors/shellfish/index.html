@@ -82,6 +82,8 @@
           };
         };
 
+        //JavaScript
+
         const reset = () => { setImg(null); setResult(null); if (ref.current) ref.current.value = ''; };
 
         const status = result ? getStatus(result.n) : null;
@@ -90,7 +92,7 @@
           <div className="min-h-screen flex items-center justify-center p-4">
             <div className="w-full max-w-md text-center space-y-6">
               <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-teal-500 bg-clip-text text-transparent">
-                🐚 조개류 부패 확인
+                🐚  부패 확인
               </h1>
 
               {result && (

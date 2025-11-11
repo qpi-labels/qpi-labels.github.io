@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>장비 검색 시스템</title>
+    <link rel="stylesheet" href="/colors.css">
+    
+    <style>
+        @font-face {
+            font-family: 'ArittaDodum';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Arita-dotum-Medium.woff') format('woff');
+            font-weight: normal;
+            font-display: swap;
+        }
+        @import url('https://fonts.cdnfonts.com/css/br-cobane');
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+
+        body {
+            background-color: var(--c-bg);
+            color: var(--c-text);
+            font-family: "BR Cobane", 'ArittaDodum';
+            text-align: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            margin: 0;
+            padding-top: 44px;
+            overflow-y: scroll;
+        }
+
+        .nav-wrapper {
+            background: rgb(from var(--c-bg) r g b / 80%);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 0.5px solid rgb(from var(--c-gray7) r g b / 10%);
+        }
+
+        .nav {
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: 0 22px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-family: "BR Cobane", 'ArittaDodum', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--c-text);
+            text-decoration: none;
+            letter-spacing: -.05em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--c-text);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 400;
+            opacity: 0.8;
+            transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+        }
+
+        .page-title {
+            font-family: "BR Cobane", 'ArittaDodum';
+            font-size: xxx-large;
+            margin-top: 60px;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .search-container {
+            max-width: 584px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 50px 12px 20px;
+            border-radius: 30px;
+            border: 1px solid var(--c-gray1);
+            font-size: 16px;
+            outline: none;
+            background-color: var(--c-bg);
+            color: var(--c-text);
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+            box-sizing: border-box;
+            font-family: "BR Cobane", 'ArittaDodum';
+        }
+
+        .search-input:focus {
+            border-color: var(--c-blue);
+            box-shadow: 0 0 10px rgba(0, 102, 255, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--c-gray5);
+            pointer-events: none;
+        }
+
+        .suggestions-container {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: var(--c-bg);
+            border: 1.5px solid var(--c-gray2);
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-top: 5px;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            z-index: 100;
+        }
+
+        .suggestions-container.show {
+            display: block;
+        }
+
+        .suggestion-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            border-bottom: 1px solid var(--c-gray1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: left;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-item:hover {
+            background-color: var(--c-gray1);
+        }
+
+        .suggestion-name {
+            font-weight: 500;
+            color: var(--c-text);
+        }
+
+        .suggestion-location {
+            color: var(--c-blue);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .results-container {
+            max-width: 680px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .results-header {
+            text-align: left;
+            color: var(--c-gray6);
+            font-size: 14px;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--c-gray1);
+            margin-bottom: 20px;
+        }
+
+        .result-card {
+            background: var(--c-gray1);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: left;
+            user-select: text;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            opacity: 0;
+            transform: scale(0.9) translateY(20px);
+        }
+
+        .result-card.show {
+            animation: fadeInUp 0.5s ease-in-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .result-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .result-info {
+            flex: 1;
+        }
+
+        .result-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--c-text);
+            margin-bottom: 8px;
+        }
+
+        .result-category {
+            display: inline-block;
+            padding: 4px 12px;
+            background-color: var(--c-gray2);
+            color: var(--c-text);
+            border-radius: 12px;
+            font-size: 13px;
+        }
+
+        .result-location-box {
+            text-align: right;
+        }
+
+        .result-location-label {
+            font-size: 12px;
+            color: var(--c-gray6);
+            margin-bottom: 4px;
+        }
+
+        .result-location {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--c-blue);
+        }
+
+        .result-description {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--c-gray2);
+        }
+
+        .description-label {
+            font-size: 13px;
+            color: var(--c-gray6);
+            margin-bottom: 8px;
+        }
+
+        .description-content {
+            background-color: rgb(from var(--c-bg) r g b / 50%);
+            border-radius: 12px;
+            padding: 16px;
+            color: var(--c-text);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .no-results-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .no-results-text {
+            color: var(--c-text);
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .no-results-subtext {
+            color: var(--c-gray6);
+            font-size: 14px;
+        }
+
+        .welcome-screen {
+            max-width: 680px;
+            margin: 80px auto;
+            padding: 40px;
+            background: var(--c-gray1);
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .welcome-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .welcome-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--c-text);
+            margin-bottom: 12px;
+        }
+
+        .welcome-text {
+            color: var(--c-gray6);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .result-card {
+                background: rgb(from var(--c-gray1) r g b / 50%);
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            }
+            
+            .result-card:hover {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            }
+
+            .suggestions-container {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-wrapper">
+        <nav class="nav">
+            <a href="#" class="nav-logo">ICL</a>
+            <div class="nav-links">
+                <a href="#" class="nav-link">홈</a>
+                <a href="#" class="nav-link">장비 목록</a>
+                <a href="#" class="nav-link">도움말</a>
+            </div>
+        </nav>
+    </div>
+
+    <main>
+        <h1 class="page-title">ICLSS</h1>
+
+        <div class="search-container">
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="장비 이름을 입력하세요 (예: 드릴, 공구, 테이프...)"
+                    autocomplete="off"
+                >
+                <span class="search-icon"></span>
+                <div id="suggestionsContainer" class="suggestions-container"></div>
+            </div>
+        </div>
+
+        <div id="resultsContainer" class="results-container" style="display: none;">
+            <div id="resultsHeader" class="results-header"></div>
+            <div id="resultsContent"></div>
+        </div>
+
+        <div id="welcomeScreen" class="welcome-screen">
+            <div class="welcome-icon">📦</div>
+            <h3 class="welcome-title">무한상상실 장비 검색</h3>
+            <p class="welcome-text">
+                무한상상실에서 구비하고 있는 장비 검색
+            </p>
+        </div>
+    </main>
+
+    <script>
+        const equipment = [
+            { name: '3D프린터', location: 'A', category: '3D 프린팅', description: '신도리코 DP103 4대가 있습니다.' },
+            { name: '메인 컴퓨터', location: 'D-5', category: '컴퓨터', description: '메인 컴퓨터' },
+            { name: '전자레인지', location: 'B-1', category: '기타 전자기기', description: '전자레인지' },
+            { name: 'WD-40', location: 'B-1', category: '소모품', description: '다목적 윤활제 및 녹 방지제입니다. 환기가 잘 되는 곳에서 사용하세요.' },
+            { name: '목장갑', location: 'B-1', category: '안전 장비', description: '작업 시 손을 보호하기 위한 면 장갑입니다.' },
+            { name: '라텍스 장갑', location: 'B-1', category: '안전 장비', description: '화학물질 취급 시 사용하는 보호 장갑입니다.' },
+            { name: '온도계', location: 'B-1', category: '측정 장비', description: '온도를 측정하는 도구입니다.' },
+            { name: '전압계', location: 'B-1', category: '측정 장비', description: '전기 회로의 전압을 측정하는 장비입니다.' },
+            { name: '목공본드', location: 'B-1', category: '소모품', description: '다양한 재료를 접착할 수 있는 접착제입니다.' },
+            { name: '구리선', location: 'B-1', category: '소모품', description: '구리 전선입니다.' },
+            { name: '사포', location: 'C-1', category: '샌딩', description: '다양한 굵기의 사포를 구비하고 있습니다.' },
+            { name: '초음파 커팅기', location: 'C-1', category: '전동 공구', description: '초음파 진동을 이용해 정밀하게 재료를 절단하는 장비입니다.' },
+            { name: '드릴', location: 'C-1', category: '전동 공구', description: '보쉬 전동 드릴과 DREMEL 두가지 있습니다.' },
+            { name: '벨트 샌더', location: 'C-1', category: '샌딩', description: '표면을 연마하고 매끄럽게 다듬는 전동 공구입니다.' },
+            { name: '덕트테이프', location: 'C-2', category: '소모품', description: '강력한 접착력을 가진 다목적 테이프입니다.' },
+            { name: '자', location: 'C-2', category: '측정 장비', description: '자' },
+            { name: '볼트', location: 'C-2', category: '소모품', description: '볼트' },
+            { name: '너트', location: 'C-2', category: '소모품', description: '너트' },
+            { name: '인두기', location: 'C-2', category: '납땜', description: '인두기' },
+            { name: '게이지 볼록', location: 'B-2', category: '측정 장비', description: '정밀한 크기를 잴 때 사용하는 블록입니다.' },
+            { name: '직소기', location: 'B-2', category: '커팅', description: '작업물 가공용 전동 공구입니다.' },
+            { name: '가위', location: 'B-2', category: '커팅', description: '가위' },
+            { name: '순간접착제', location: 'B-2', category: '', description: '순간접착제' },
+            { name: '핀셋', location: 'B-2', category: '공구', description: '핀셋' },
+            { name: '케이블타이', location: 'B-2', category: '소모품', description: '케이블타이' },
+            { name: '고무줄', location: 'B-2', category: '소모품', description: '노란 고무줄' },
+            { name: '절연테이프', location: 'B-2', category: '소모품', description: '절연 테이프' },
+            { name: '납줄', location: 'B-2', category: '납땜', description: '납땜을 할 때 사용하는 납줄' },
+            { name: '투명테이프', location: 'B-2', category: '소모품', description: '일반적인 투명 테이프입니다.' },
+            { name: '스테이플러', location: 'B-2', category: '공구', description: '스테이플러' },
+            { name: '아두이노', location: 'B-2', category: '기타 전자기기', description: '프로그래밍 가능한 마이크로컨트롤러 보드입니다.' },
+            { name: '커터칼', location: 'B-2', category: '공구', description: '커터칼' },
+            { name: '기타 공구', location: 'B-2', category: '공구', description: '기타 공구' },
+            { name: '건전지', location: 'B-2', category: '소모품', description: 'AA, AAA 건전지 있습니다.' },
+            { name: '보안경', location: 'B-3', category: '안전장비', description: '보안경' },
+            { name: '열풍기', location: 'B-3', category: '공구', description: '열풍기' },
+            { name: '드릴 팁', location: 'B-3', category: '공구', description: '보쉬 드릴에 장착하는 드릴 팁 입니다.' },
+            { name: '공구 세트', location: 'B-3', category: '공구', description: '공구 세트입니다' },
+            { name: '글루건', location: 'B-3', category: '공구', description: '글루건' },
+            { name: '글루건 심', location: 'B-3', category: '소모품', description: '글루건 심' },
+            { name: '과학상자', location: 'D-1', category: '공구', description: '과학 상자' },
+            { name: '공구 세트', location: 'D-1', category: '공구', description: '좀 낡은 공구들입니다' },
+            { name: '필라멘트', location: 'D-2', category: '3D 프린팅', description: 'PLA 필라멘트가 있습니다. 뜯긴 필라멘트부터 사용하고 칩을 잘 보관하세요.' },
+            { name: '카트리지', location: 'D-2', category: '3D 프린팅', description: '필라멘트 카트리지입니다.' },
+            { name: '익스트루더', location: 'D-2', category: '3D 프린팅', description: '3D프린터 익스트루더' },
+            { name: '3D펜', location: 'D-2', category: '3D 프린팅', description: '3D펜' },
+            { name: '투명 아크릴판', location: 'D-3', category: '레이저 커팅', description: '투명한 아크릴 판' },
+            { name: '흰색 아크릴판', location: 'D-3', category: '레아저 커팅', description: '흰색 아크릴 판' },
+            { name: '거울판', location: 'C-3', category: '기타', description: '거울' },
+            { name: '열선 커팅기', location: 'C-3', category: '커팅', description: '열선을 이용해 스티로폼을 절단하는 장비입니다.' },
+            { name: '실리콘', location: 'E', category: '기타', description: '실리콘' },
+            { name: '빈 바구니', location: 'D-4', category: '기타', description: '바구니' },
+            { name: '투명 거치대', location: 'D-4', category: '기타', description: '투명 거치대' },
+            { name: '라즈베리파이', location: 'D-4', category: '기타 전자기기', description: '라즈베리파이' },
+            { name: '코딩팩', location: 'D-4', category: '기타 전자기기', description: '코딩팩' },
+            { name: 'MDF', location: 'D-5', category: '레이저 커팅', description: 'MDF. 커팅시 발생하는 분진에 주의하세요' },
+            { name: '나무판', location: 'D-5', category: '기타', description: '나무판' },
+            { name: '우드락', location: 'D-5', category: '소모품', description: '우드락' },
+            { name: '레진', location: 'D-5', category: '소모품', description: '레진' },
+            { name: '필터', location: 'D-5', category: '소모품', description: '필터' },
+            { name: '표면경화기', location: 'D-5', category: '기타 전자기기', description: '레진 표면을 굳히는 장비' },
+            { name: '레이저 커팅기', location: 'E', category: '레이저 커팅', description: '레이저 커팅기' },
+            { name: '서브 컴퓨터', location: 'E', category: '컴퓨터', description: '서브 컴퓨터' }
+        ];
+
+        const searchInput = document.getElementById('searchInput');
+        const suggestionsContainer = document.getElementById('suggestionsContainer');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const resultsHeader = document.getElementById('resultsHeader');
+        const resultsContent = document.getElementById('resultsContent');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+
+        let currentSearchTerm = '';
+
+        searchInput.addEventListener('input', (e) => {
+            const value = e.target.value.trim().toLowerCase();
+            currentSearchTerm = value;
+
+            if (value.length === 0) {
+                suggestionsContainer.classList.remove('show');
+                showWelcomeScreen();
+                return;
+            }
+
+            const suggestions = equipment.filter(item =>
+                item.name.toLowerCase().includes(value)
+            ).slice(0, 5);
+
+            if (suggestions.length > 0) {
+                displaySuggestions(suggestions);
+            } else {
+                suggestionsContainer.classList.remove('show');
+            }
+        });
+
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+                suggestionsContainer.classList.remove('show');
+            }
+        });
+
+        function displaySuggestions(suggestions) {
+            suggestionsContainer.innerHTML = '';
+            
+            suggestions.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'suggestion-item';
+                div.innerHTML = `
+                    <span class="suggestion-name">${item.name}</span>
+                    <span class="suggestion-location">${item.location}</span>
+                `;
+                div.addEventListener('click', () => {
+                    searchInput.value = item.name;
+                    currentSearchTerm = item.name.toLowerCase();
+                    suggestionsContainer.classList.remove('show');
+                    performSearch();
+                });
+                suggestionsContainer.appendChild(div);
+            });
+
+            suggestionsContainer.classList.add('show');
+        }
+
+        function performSearch() {
+            if (!currentSearchTerm) {
+                showWelcomeScreen();
+                return;
+            }
+
+            const results = equipment.filter(item =>
+                item.name.toLowerCase().includes(currentSearchTerm)
+            );
+
+            displayResults(results);
+        }
+
+        function displayResults(results) {
+            welcomeScreen.style.display = 'none';
+            resultsContainer.style.display = 'block';
+            
+            resultsHeader.textContent = `검색 결과 ${results.length}개`;
+            resultsContent.innerHTML = '';
+
+            if (results.length === 0) {
+                resultsContent.innerHTML = `
+                    <div class="no-results">
+                        <div class="no-results-icon">🔍</div>
+                        <p class="no-results-text">'${searchInput.value}'에 대한 검색 결과가 없습니다.</p>
+                        <p class="no-results-subtext">다른 키워드로 검색해보세요.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            results.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'result-card';
+                card.innerHTML = `
+                    <div class="result-header">
+                        <div class="result-info">
+                            <div class="result-name">${item.name}</div>
+                            <span class="result-category">${item.category}</span>
+                        </div>
+                        <div class="result-location-box">
+                            <div class="result-location-label">위치</div>
+                            <div class="result-location">${item.location}</div>
+                        </div>
+                    </div>
+                    <div class="result-description">
+                        <div class="description-label">장비 설명</div>
+                        <div class="description-content">
+                            ${item.description}
+                        </div>
+                    </div>
+                `;
+                resultsContent.appendChild(card);
+
+                setTimeout(() => {
+                    card.classList.add('show');
+                }, index * 100);
+            });
+        }
+
+        function showWelcomeScreen() {
+            resultsContainer.style.display = 'none';
+            welcomeScreen.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
