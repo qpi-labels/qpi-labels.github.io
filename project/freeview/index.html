@@ -2,100 +2,200 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>사분주율 작업</title>
+    <title>쿼터파이 FreeView</title>
     <link rel="shortcut icon" type="image/x-icon" href="/logo.ico">
-    <link rel="shortcut icon" type="image/x-icon" href="/logo_dark.ico" media="(prefers-color-scheme: dark)">
-    <link rel="shortcut icon" type="image/x-icon" href="/logo.ico" media="(prefers-color-scheme: light)">
     <meta property="og:url" content="https://qpi.kro.kr/">
-    <meta property="og:title" content="사분주율">
+    <meta property="og:title" content="FreeView">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="/logo.png">
-    <meta property="og:description" content="사분주율 최고!!!!!!!!!">
+    <meta property="og:description" content="자유롭게 보다">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../colors.css">
     <link rel="stylesheet" href="../../newstyle.css">
     <style>
+        /* Python Theme Hero Override */
         .hero {
-            background: linear-gradient(150deg, #000000 0%, #616FAA 100%);
-        }
-        .grid-item.accent-1 {
-            background-image: url('qiss.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            color: var(--c-ltext);
+            /* Python Blue/Yellow Theme Dark Navy Background */
+            background: linear-gradient(135deg, #1E2A38 0%, #306998 100%);
         }
 
-        .grid-item.accent-2 {
-            background-image: url('qets.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            color: var(--c-ltext);
+        /* Custom Grid Item Styles for Features */
+        .grid-item {
+            align-items: flex-start; /* Left align text */
+            text-align: left;
+            padding: 40px;
+            background: var(--c-dbg); /* Keep original dark bg */
         }
 
-        .grid-item.accent-3 {
-            background-image: url('study.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            color: var(--c-ltext);
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 20px;
+            color: #FFD43B; /* Python Yellow */
         }
 
-        .grid-item.accent-4 {
-            background-image: url('design.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            color: var(--c-ltext);
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 32px;
+            flex-wrap: wrap;
         }
 
-        .grid-item.accent-5 {
-            background-image: url('design.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            color: var(--c-ltext);
-        }
-
-        .download-btn {
+        .primary-btn {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             padding: 14px 28px;
-            background: #0078d4;
-            color: white;
+            background: #FFD43B;
+            color: #1E2A38;
             border: none;
-            border-radius: 6px;
-            font-size: 16px;
+            border-radius: 980px; /* Pill shape */
+            font-size: 17px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3);
+            text-decoration: none;
         }
 
-        .download-btn:hover {
-            background: #106ebe;
-            box-shadow: 0 6px 16px rgba(0, 120, 212, 0.4);
+        .primary-btn:hover {
+            background: #ffe066;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 212, 59, 0.3);
+        }
+
+        .secondary-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 980px;
+            font-size: 17px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .secondary-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
             transform: translateY(-2px);
         }
 
-        .download-btn:active {
-            transform: translateY(0);
+        /* Section Styles */
+        .section-container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 120px 40px;
         }
 
-        .windows-logo {
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
         }
-        .grid-item.large {
-            grid-column: span 2;
-            min-height: 40px;
-            background: linear-gradient(135deg, #4A569E 0%, #000000 100%);
-            color: var(--c-ltext);
+
+        .section-eyebrow {
+            color: #306998;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        /* Tech Specs List */
+        .specs-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .spec-item {
+            padding: 20px;
+            border-left: 3px solid #306998;
+            background: rgba(128, 128, 128, 0.05);
+            border-radius: 0 12px 12px 0;
+        }
+
+        .spec-title {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-bottom: 4px;
+        }
+
+        .spec-value {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Comparison Table (Based on color-table style) */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--c-dbg);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-top: 40px;
+        }
+
+        .comparison-table th, .comparison-table td {
+            padding: 20px;
+            text-align: left;
+            border-bottom: 1px solid rgba(128, 128, 128, 0.1);
+        }
+
+        .comparison-table th {
+            background: rgba(128, 128, 128, 0.05);
+            font-weight: 600;
+            font-size: 17px;
+        }
+
+        .highlight-cell {
+            color: #306998; /* Python Blue */
+            font-weight: 700;
+        }
+
+        /* Steps */
+        .step-list {
+            counter-reset: step;
+            list-style: none;
+            padding: 0;
+        }
+
+        .step-item {
+            position: relative;
+            padding-left: 50px;
+            margin-bottom: 30px;
+        }
+
+        .step-item::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 32px;
+            height: 32px;
+            background: #306998;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: bold;
+            font-family: "BR Cobane", sans-serif;
+        }
+
+        /* Footer Adjustments */
+        .footer-warning {
+            margin-top: 20px;
+            font-size: 11px;
+            opacity: 0.5;
         }
     </style>
     <script src="/nav.js" defer></script>
@@ -108,41 +208,126 @@
         <!-- Hero Section -->
         <section class="hero">
             <div class="hero-content">
-                <div class="hero-eyebrow typography-caption2 en">쿼터파이 FreeView</div>
-                <h1 class="hero-headline typography-title1">자유롭게 보다</h1>
-                <p class="hero-subheadline typography-subheadline">쿼터파이의 DoH + SNI 파편화 솔루션</p>
+                <div class="hero-eyebrow typography-caption2 en">FreeView</div>
+                <h1 class="hero-headline typography-largetitle fade-up">자유롭게 보다</h1>
+                <p class="hero-subheadline typography-subheadline fade-up delay-1" style="max-width: 700px; margin: 0 auto 40px auto; opacity: 0.9;">
+                    쿼터파이의 DoH + SNI 파편화 솔루션
+                </p>
+                
+                <div class="btn-group fade-up delay-2">
+                    <button class="primary-btn" onclick="downloadFile()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        FreeView 다운로드 (.zip)
+                    </button>
+                    <a href="https://github.com/qpi-labels/qpi-labels.github.io" target="_blank" class="secondary-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                        소스코드 확인
+                    </a>
+                </div>
             </div>
         </section>
         
-        <section class="product-grid">
-            <div class="grid-container">
-                <div class="grid">
-                    <div class="grid-item large" style="padding-top: 0.1; margin-top: 0;">
-                        <div class="item-eyebrow typography-caption2 en" style="font-size: large; padding-top: 0; margin-top: 0;">최신버전 받기</div><br>
-                        <button class="download-btn" onclick="downloadFile()">
-                        <svg class="windows-logo" viewBox="0 0 24 24" fill="currentColor">
+
+        <section class="section-container">
+            <div class="section-header fade-up">
+                <h2 class="typography-title2">FreeView</h2>
+            </div>
+
+        <section class="section-container" style="background: var(--c-dbg); border-radius: 24px;">
+            <div class="section-header fade-up">
+                <span class="section-eyebrow en">사양</span>
+                <h2 class="typography-title3">기술 사양</h2>
+            </div>
             
-                        <rect x="2" y="2" width="9" height="9" fill="currentColor"/>
-           
-                        <rect x="13" y="2" width="9" height="9" fill="currentColor"/>
-            
-                        <rect x="2" y="13" width="9" height="9" fill="currentColor"/>
-                            
-                        <rect x="13" y="13" width="9" height="9" fill="currentColor"/>
-                        </svg>
-                        Windows용 다운로드
-                        </button>
-                    </div>
+            <div class="specs-list fade-up">
+                <div class="spec-item">
+                    <div class="spec-title">Language</div>
+                    <div class="spec-value">Python 3.x</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-title">Network</div>
+                    <div class="spec-value">HTTP Tunneling</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-title">DNS</div>
+                    <div class="spec-value">Cloudflare 1.1.1.1</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-title">OS</div>
+                    <div class="spec-value">Windows 10/11</div>
                 </div>
             </div>
-            </section>
+        </section>
+
+        <section class="section-container">
+            <div class="section-header fade-up">
+                <span class="section-eyebrow en">비교</span>
+                <h2 class="typography-title2">VPN과의 차이점</h2>
+            </div>
+
+            <table class="comparison-table fade-up">
+                <thead>
+                    <tr>
+                        <th style="width: 30%">구분</th>
+                        <th style="width: 35%" class="highlight-cell">FreeView</th>
+                        <th style="width: 35%">일반 VPN</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>비용</strong></td>
+                        <td class="highlight-cell">무료</td>
+                        <td>대부분 유료</td>
+                    </tr>
+                    <tr>
+                        <td><strong>보안</strong></td>
+                        <td class="highlight-cell">데이터 수집 없음</td>
+                        <td>운영자가 볼 수 있음</td>
+                    </tr>
+                    <tr>
+                        <td><strong>투명성</strong></td>
+                        <td class="highlight-cell">코드 확인 가능</td>
+                        <td>확인 불가</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="section-container">
+            <div class="section-header fade-up">
+                <span class="section-eyebrow en">HOW TO USE</span>
+                <h2 class="typography-title2">사용 방법</h2>
+            </div>
+            
+            <div style="max-width: 600px; margin: 0 auto;" class="fade-up">
+                <ul class="step-list">
+                    <li class="step-item">
+                        <h4 class="typography-headline" style="font-size: 24px; margin-bottom: 8px;">준비 및 다운로드</h4>
+                        <p class="typography-body" style="font-size: 17px; opacity: 0.8;">Python이 설치되어 있는지 확인 후, 상단의 'FreeView 다운로드' 버튼을 눌러 파일을 받습니다.</p>
+                    </li>
+                    <li class="step-item">
+                        <h4 class="typography-headline" style="font-size: 24px; margin-bottom: 8px;">실행</h4>
+                        <p class="typography-body" style="font-size: 17px; opacity: 0.8;"><code>run.bat</code> 파일을 마우스 우클릭하여 <strong>"관리자 권한으로 실행"</strong> 합니다.</p>
+                    </li>
+                    <li class="step-item">
+                        <h4 class="typography-headline" style="font-size: 24px; margin-bottom: 8px;">접속</h4>
+                        <p class="typography-body" style="font-size: 17px; opacity: 0.8;">CMD 창에 "가동 중" 메시지가 뜨면 브라우저를 켜고 인터넷을 사용하세요.</p>
+                    </li>
+                    <li class="step-item">
+                        <h4 class="typography-headline" style="font-size: 24px; margin-bottom: 8px;">종료</h4>
+                        <p class="typography-body" style="font-size: 17px; opacity: 0.8;">사용이 끝나면 CMD 창에서 <code>Ctrl+C</code>를 누릅니다. 모든 설정이 자동으로 복구되고 종료됩니다.</p>
+                    </li>
+                </ul>
+            </div>
+        </section>
 
         <!-- Footer -->
         <footer class="footer">
             <div class="footer-content">
-                <p class="footer-text typography-footnote">2025 쿼터파이. 모든 권리 보유</p>
+                <h3 class="typography-headline" style="font-size: 24px; margin-bottom: 16px;">자유롭게 보다.</h3>
+                <p class="footer-text typography-footnote">2025 쿼터파이</p>
                 <p class="footer-text typography-footnote">
-                    문의사항 : 2308 이재원 | 
+                    Contact: 2308 이재원 | 
                     <a href="mailto:cnsh31_1410@cnsh.hs.kr" class="footer-link">cnsh31_1410@cnsh.hs.kr</a>
                 </p>
             </div>
@@ -152,13 +337,14 @@
     <script>
         function downloadFile() {
             const link = document.createElement('a');
-            link.href = 'QPI FreeView V1.0.zip';
+            link.href = 'QPI FreeView V1.0zip';
             link.download = 'QPI FreeView V1.0.zip';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         }
-        // Intersection Observer for scroll animations
+
+
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -172,7 +358,7 @@
             });
         }, observerOptions);
 
-        // Observe all elements with fade-up class and grid-item class
+        // Observe elements
         document.querySelectorAll('.fade-up, .grid-item').forEach(el => {
             observer.observe(el);
         });
