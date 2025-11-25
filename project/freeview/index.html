@@ -57,6 +57,46 @@
             background-repeat: no-repeat;
             color: var(--c-ltext);
         }
+
+        .download-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 28px;
+            background: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3);
+        }
+
+        .download-btn:hover {
+            background: #106ebe;
+            box-shadow: 0 6px 16px rgba(0, 120, 212, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .download-btn:active {
+            transform: translateY(0);
+        }
+
+        .windows-logo {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .grid-item.large {
+            grid-column: span 2;
+            min-height: 40px;
+            background: linear-gradient(135deg, #4A569E 0%, #000000 100%);
+            color: var(--c-ltext);
+        }
     </style>
     <script src="/nav.js" defer></script>
 </head>
@@ -73,76 +113,29 @@
                 <p class="hero-subheadline typography-subheadline">쿼터파이의 DoH + SNI 파편화 솔루션</p>
             </div>
         </section>
+        
         <section class="product-grid">
             <div class="grid-container">
                 <div class="grid">
-                    <div class="grid-item accent-1">
-                        <div class="item-eyebrow typography-caption2 en">작업</div>
-                        <h2 class="item-headline typography-headline">QISS</h2>
-                        <p class="item-description typography-caption1">
-                            쿼터파이 학술 검색 도우미
-                        </p>
-                        <div class="item-cta">
-                            <a href="qiss/" class="cta-link typography-caption1">이동하기 →</a>
-                        </div>
-                    </div>
-
-                    <div class="grid-item accent-2">
-                        <div class="item-eyebrow typography-caption2 en">작업</div>
-                        <h2 class="item-headline typography-headline">QETS</h2>
-                        <p class="item-description typography-caption1">
-                            주기율표
-                        </p>
-                        <div class="item-cta">
-                            <a href="https://kuchipatchi09.github.io/jugiyulpyo/" class="cta-link typography-caption1">이동하기 →</a>
-                        </div>
+                    <div class="grid-item large">
+                        <div class="item-eyebrow typography-caption2 en">최신버전 받기</div><br>
+                        <button class="download-btn" onclick="downloadFile()">
+                        <svg class="windows-logo" viewBox="0 0 24 24" fill="currentColor">
+            
+                        <rect x="2" y="2" width="9" height="9" fill="currentColor"/>
+           
+                        <rect x="13" y="2" width="9" height="9" fill="currentColor"/>
+            
+                        <rect x="2" y="13" width="9" height="9" fill="currentColor"/>
+                            
+                        <rect x="13" y="13" width="9" height="9" fill="currentColor"/>
+                        </svg>
+                        Windows용 다운로드
+                        </button>
                     </div>
                 </div>
             </div>
-        </section>
-        <section class="product-grid">
-            <div class="grid-container">
-                <div class="grid">
-                    <div class="grid-item accent-3">
-                        <div class="item-eyebrow typography-caption2 en">작업</div>
-                        <h2 class="item-headline typography-headline">충곽 스터디카페 예약</h2>
-                        <p class="item-description typography-caption1">
-                            충곽 스터디카페를 예약하세요
-                        </p>
-                        <div class="item-cta">
-                            <a href="https://www.cnshstudy.kro.kr/" class="cta-link typography-caption1">이동하기 →</a>
-                        </div>
-                    </div>
-
-                    <div class="grid-item accent-4">
-                        <div class="item-eyebrow typography-caption2 en">작업</div>
-                        <h2 class="item-headline typography-headline">HEART-Q</h2>
-                        <p class="item-description typography-caption1">
-                            심전도 <strong>모니터링</strong>
-                        </p>
-                        <div class="item-cta">
-                            <a href="../ecg" class="cta-link typography-caption1">이동하기 →</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="product-grid">
-            <div class="grid-container">
-                <div class="grid">
-                    <div class="grid-item accent-5">
-                        <div class="item-eyebrow typography-caption2 en">작업</div>
-                        <h2 class="item-headline typography-headline">2025 학생회장 선거</h2>
-                        <p class="item-description typography-caption1">
-                            2025년 학생회장 선거 정보
-                        </p>
-                        <div class="item-cta">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+            </section>
 
         <!-- Footer -->
         <footer class="footer">
@@ -157,6 +150,14 @@
     </main>
 
     <script>
+        function downloadFile() {
+            const link = document.createElement('a');
+            link.href = 'QPI FreeView V1.0.zip';
+            link.download = 'QPI FreeView V1.0.zip';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
         // Intersection Observer for scroll animations
         const observerOptions = {
             threshold: 0.1,
