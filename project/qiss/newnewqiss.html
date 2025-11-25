@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -207,6 +208,7 @@
         .gsc-tabsArea,
         .gsc-orderby-container,
         .gcsc-find-more-on-google,
+        .gs-image,
         .gsc-refinementsArea,
         .gsc-above-wrapper-area {
             display: none !important;
@@ -269,34 +271,14 @@
             background-color: var(--c-gray1) !important;
         }
 
-        /* 검색 결과 레이아웃 컨테이너 */
-        .search-results-layout {
-            max-width: 1200px;
-            margin: 30px auto 0 auto;
-            padding: 0 20px;
-            display: flex;
-            gap: 30px;
-            align-items: flex-start;
-        }
-
-        .search-results-main {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .search-results-sidebar {
-            width: 350px;
-            flex-shrink: 0;
-        }
-
         .gsc-results-wrapper-overlay, .gsc-results-wrapper-visible {
             background-color: var(--c-bg) !important;
             border: none !important;
             box-shadow: none !important;
-            max-width: 100% !important;
-            margin: 0 !important;
+            max-width: 680px !important;
+            margin: 30px auto 0 auto !important;
             text-align: left !important;
-            padding: 0 !important;
+            padding: 0 20px !important;
         }
 
         .gsc-resultsbox-visible {
@@ -312,6 +294,7 @@
             border-radius: 20px !important;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
             transition: box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            position: relative !important;
         }
 
         .gsc-webResult.gsc-result:hover {
@@ -332,6 +315,7 @@
             line-height: 1.4 !important;
             margin-bottom: 8px !important;
             font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
+            padding-right: 110px !important;
         }
 
         .gs-snippet {
@@ -388,58 +372,6 @@
             color: var(--c-text) !important;
             background: none !important;
             text-align: left !important;
-        }
-
-        /* 이미지 검색 결과 스타일 */
-        #image-results {
-            position: sticky;
-            top: 80px;
-            background: var(--c-gray1);
-            border-radius: 20px;
-            padding: 20px;
-            max-height: calc(100vh - 120px);
-            overflow-y: auto;
-        }
-
-        #image-results h3 {
-            margin: 0 0 15px 0;
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--c-text);
-        }
-
-        .image-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-
-        .image-item {
-            position: relative;
-            aspect-ratio: 1;
-            overflow: hidden;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-
-        .image-item:hover {
-            transform: scale(1.05);
-        }
-
-        .image-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .image-loading {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            color: var(--c-gray6);
-            padding: 20px;
         }
 
         #cse-search {
@@ -708,9 +640,26 @@
             transform: scale(1.1);
         }
 
+        /* Icon Styles */
+        .icon {
+            display: inline-block;
+            vertical-align: middle;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .summary-button .icon, .trust-button .icon {
+            margin-right: 2px;
+        }
+
         /* Gemini Summary 스타일 */
         #gemini-summary-container {
-            margin: 20px 0;
+            max-width: 680px;
+            margin: 20px auto;
+            padding: 0 20px;
             display: none;
         }
 
@@ -728,14 +677,58 @@
             -ms-user-select: text;
         }
 
+        .summary-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
         #gemini-summary h3 {
-            margin: 0 0 16px 0;
+            margin: 0;
             font-size: 18px;
             font-weight: 600;
             color: var(--c-text);
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        .summary-button {
+            background-color: transparent;
+            border: 1px solid var(--c-gray2);
+            color: var(--c-text);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: "BR Cobane", 'Pretendard Variable';
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .summary-button:hover {
+            background-color: var(--c-gray1);
+            transform: translateY(-1px);
+        }
+
+        .summary-button:active {
+            transform: translateY(0);
+        }
+
+        .summary-button:disabled {
+            opacity: 0.7;
+            cursor: wait;
+            transform: none;
+        }
+
+        #gemini-summary-content {
+            display: none;
+            margin-top: 16px;
+            animation: slideDown 0.3s ease;
         }
 
         #gemini-summary-text {
@@ -934,10 +927,6 @@
             #gemini-summary-text a {
                 color: #8ab4f8;
             }
-
-            #image-results {
-                background: rgb(from var(--c-gray1) r g b / 50%);
-            }
         }
 
         .nav-wrapper {
@@ -1099,20 +1088,76 @@
             transform: translateY(0);
         }
 
-        @media (max-width: 968px) {
-            .search-results-layout {
-                flex-direction: column;
-            }
+        /* Trust Analysis Button Styles */
+        .trust-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: var(--c-bg);
+            border: 1px solid var(--c-gray2);
+            border-radius: 12px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--c-gray6);
+            transition: all 0.2s ease;
+            z-index: 10;
+            font-family: "BR Cobane", 'Pretendard Variable';
+            font-weight: 500;
+        }
 
-            .search-results-sidebar {
-                width: 100%;
-                order: -1;
-            }
+        .trust-button:hover {
+            background-color: var(--c-blue);
+            color: white;
+            border-color: var(--c-blue);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 102, 255, 0.2);
+        }
 
-            #image-results {
-                position: static;
-                max-height: 400px;
-            }
+        .trust-button:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+            transform: none !important;
+        }
+
+        .trust-result {
+            margin-top: 15px;
+            padding: 12px 16px;
+            background-color: rgb(from var(--c-gray1) r g b / 50%);
+            border: 1px solid var(--c-gray2);
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.6;
+            animation: slideDown 0.3s ease;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .trust-score {
+            font-size: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+
+        .trust-dns-info {
+            font-size: 11px; 
+            color: var(--c-gray6);
+            text-align: right;
+        }
+
+        .trust-score.high { color: #34c759; }
+        .trust-score.medium { color: #ffcc00; }
+        .trust-score.low { color: #ff3b30; }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -1150,22 +1195,22 @@
 
     <div id="cse-search" class="gcse-search" data-enableImageSearch="true"></div>
 
-    <div class="search-results-layout">
-        <div class="search-results-main">
-            <div id="gemini-summary-container">
-                <div id="gemini-summary">
-                    <h3>
-                        <span>✨</span>
-                        <span>AI 요약</span>
-                    </h3>
-                    <div id="gemini-summary-text"></div>
-                </div>
+    <div id="gemini-summary-container">
+        <div id="gemini-summary">
+            <div class="summary-header">
+                <h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                    <span>AI 요약</span>
+                </h3>
+                <button id="btn-generate-summary" class="summary-button" onclick="triggerSummary()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> 요약하기
+                </button>
             </div>
-        </div>
-        <div class="search-results-sidebar">
-            <div id="image-results" style="display: none;">
-                <h3>🖼️ 이미지</h3>
-                <div class="image-grid" id="image-grid"></div>
+            <div id="gemini-summary-content">
+                <div id="gemini-summary-text"></div>
+                <p style="font-size: 12px; color: var(--c-gray6); margin-top: 12px;">
+                    AI는 잘못된 정보를 전달할 수 있습니다. 주의해서 사용하세요.
+                </p>
             </div>
         </div>
     </div>
@@ -1205,18 +1250,29 @@
 </div>
 
 <!-- API 설정 버튼 -->
-<button id="api-settings-btn" onclick="openApiModal()">⚙️</button>
+<button id="api-settings-btn" onclick="openApiModal()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.47a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+</button>
 
 <br><br><br><br><br><br><br>
 
 <script>
     const GROQ_MODEL = 'meta-llama/llama-4-maverick-17b-128e-instruct'; 
-    const GOOGLE_API_KEY = 'AIzaSyBkcL7TeMXm6HAXFJ6WmOjzYGgAo4c3bsk';
-    const GOOGLE_CSE_ID = 'c31ed7ed73e974099';
 
     let isCSE = true;
     let currentSearchQuery = '';
     let lastProcessedQuery = '';
+    let currentSummaryData = null;
+
+    const ICONS = {
+        sparkles: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>`,
+        edit: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`,
+        refresh: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>`,
+        alert: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>`,
+        settings: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.47a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>`,
+        shield: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+        shieldCheck: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>`
+    };
 
     // marked.js 설정
     marked.setOptions({
@@ -1283,53 +1339,6 @@
         updateApiStatus();
     });
 
-    // 이미지 검색 함수
-    async function searchImages(query) {
-        const imageResults = document.getElementById('image-results');
-        const imageGrid = document.getElementById('image-grid');
-        
-        imageGrid.innerHTML = '<div class="image-loading"><div class="gemini-spinner"></div><span>이미지 로딩 중...</span></div>';
-        imageResults.style.display = 'block';
-        
-        try {
-            const response = await fetch(
-                `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_API_KEY}&cx=${GOOGLE_CSE_ID}&q=${encodeURIComponent(query)}&searchType=image&num=8`
-            );
-            
-            if (!response.ok) {
-                throw new Error('이미지 검색 실패');
-            }
-            
-            const data = await response.json();
-            
-            if (data.items && data.items.length > 0) {
-                imageGrid.innerHTML = '';
-                data.items.forEach(item => {
-                    const imageItem = document.createElement('div');
-                    imageItem.className = 'image-item';
-                    imageItem.onclick = () => window.open(item.image.contextLink, '_blank');
-                    
-                    const img = document.createElement('img');
-                    img.src = item.link;
-                    img.alt = item.title;
-                    img.loading = 'lazy';
-                    
-                    img.onerror = function() {
-                        this.parentElement.style.display = 'none';
-                    };
-                    
-                    imageItem.appendChild(img);
-                    imageGrid.appendChild(imageItem);
-                });
-            } else {
-                imageGrid.innerHTML = '<div style="color: var(--c-gray6); padding: 20px; text-align: center;">이미지를 찾을 수 없습니다.</div>';
-            }
-        } catch (error) {
-            console.error('이미지 검색 오류:', error);
-            imageGrid.innerHTML = '<div style="color: var(--c-text); padding: 20px; text-align: center;">이미지 로딩 실패</div>';
-        }
-    }
-
     function toggleMode() {
         isCSE = !isCSE;
         const cse = document.getElementById('cse-search');
@@ -1339,12 +1348,11 @@
         const credit = document.getElementById('credit');
         const searchButtons = document.getElementById('search-buttons');
         const summaryContainer = document.getElementById('gemini-summary-container');
-        const imageResults = document.getElementById('image-results');
         
         currentSearchQuery = ''; 
         lastProcessedQuery = '';
+        currentSummaryData = null;
         summaryContainer.style.display = 'none';
-        imageResults.style.display = 'none';
 
         if (isCSE) {
             toggleBtn.classList.remove('collapsed');
@@ -1412,12 +1420,29 @@
         if (q) window.open('https://www.riss.kr/search/Search.do?colName=all&isDetailSearch=N&searchGubun=true&oldQuery=&sflag=1&fsearchMethod=search&isFDetailSearch=N&searchQuery=1&kbid=&pageNumber=1&query=' + encodeURIComponent(q), '_blank');
     }
 
+    function triggerSummary() {
+        if (!currentSummaryData) return;
+        
+        const btn = document.getElementById('btn-generate-summary');
+        const contentDiv = document.getElementById('gemini-summary-content');
+        
+        btn.disabled = true;
+        btn.innerHTML = '<div class="gemini-spinner" style="width:12px;height:12px;border-width:1.5px;"></div> 생성 중...';
+        
+        contentDiv.style.display = 'block';
+        
+        generateSummary(currentSummaryData.query, currentSummaryData.results);
+    }
+
     async function generateSummary(query, searchResults) {
         const GROQ_API_KEY = localStorage.getItem('GROQ_API_KEY');
         const summaryText = document.getElementById('gemini-summary-text');
+        const btn = document.getElementById('btn-generate-summary');
 
         if (!GROQ_API_KEY) {
             summaryText.innerHTML = '<div class="gemini-error">AI 검색 요약 기능을 사용하려면 API 키를 설정해주세요.<br><br><button class="modal-button primary" onclick="openApiModal()">API 설정하기</button></div>';
+            btn.innerHTML = ICONS.alert + ' 설정 필요';
+            btn.disabled = false;
             return;
         }
 
@@ -1462,6 +1487,10 @@
                 const summary = data.choices[0].message.content;
                 // 마크다운을 HTML로 변환
                 summaryText.innerHTML = marked.parse(summary);
+                
+                // 성공 시 버튼 업데이트
+                btn.innerHTML = ICONS.refresh + ' 다시 생성';
+                btn.disabled = false;
             } else {
                 const finishReason = data.choices?.[0]?.finish_reason || '알 수 없는 이유';
                 throw new Error(`응답 형식이 올바르지 않거나 응답이 완료되지 않았습니다. (이유: ${finishReason})`);
@@ -1473,6 +1502,10 @@
             } else {
                 summaryText.innerHTML = `<div class="gemini-error">요약 생성 중 오류가 발생했습니다: ${error.message}</div>`;
             }
+            
+            // 오류 시 버튼 업데이트
+            btn.innerHTML = ICONS.refresh + ' 다시 시도';
+            btn.disabled = false;
         }
     }
 
@@ -1528,33 +1561,27 @@
                     lastProcessedQuery = query;
                     summaryContainer.style.display = 'block';
                     
-                    // 이미지 검색 실행
-                    searchImages(query);
-                    
-                    const mainContainer = document.querySelector('.search-results-main');
-                    if (mainContainer && summaryContainer.parentElement !== mainContainer) {
-                        mainContainer.insertBefore(summaryContainer, mainContainer.firstChild);
+                    const resultsWrapper = results[0].parentElement.parentElement.parentElement.parentElement;
+                    if (resultsWrapper) {
+                        resultsWrapper.insertAdjacentElement("afterbegin", summaryContainer);
                     }
                     
-                    generateSummary(query, searchResults.slice(0, 5));
+                    // 데이터 저장 및 UI 초기화 (자동 생성 대신 버튼 대기)
+                    currentSummaryData = { query: query, results: searchResults.slice(0, 5) };
+                    
+                    // UI 리셋
+                    document.getElementById('gemini-summary-content').style.display = 'none';
+                    const btn = document.getElementById('btn-generate-summary');
+                    btn.innerHTML = ICONS.edit + ' 요약하기';
+                    btn.disabled = false;
                 }
             }
             
-            // 레이아웃 조정
-            const resultsWrapper = document.querySelector('.gsc-results-wrapper-visible, .gsc-results-wrapper-overlay');
-            if (resultsWrapper) {
-                const layout = document.querySelector('.search-results-layout');
-                const mainContainer = document.querySelector('.search-results-main');
-                
-                if (layout && mainContainer && resultsWrapper.parentElement !== mainContainer) {
-                    // 검색 결과를 메인 컨테이너로 이동
-                    mainContainer.appendChild(resultsWrapper);
-                    
-                    // 레이아웃을 검색 박스 다음에 위치
-                    const searchBox = document.querySelector('.gsc-search-box');
-                    if (searchBox && searchBox.nextSibling !== layout) {
-                        searchBox.parentElement.insertBefore(layout, searchBox.nextSibling);
-                    }
+            const summaryContainer = document.getElementById('gemini-summary-container');
+            if (summaryContainer.style.display === 'block' && results.length > 0) {
+                const resultsWrapper = results[0].parentElement.parentElement.parentElement.parentElement;
+                if (summaryContainer.parentElement !== resultsWrapper) {
+                    resultsWrapper.insertAdjacentElement("afterbegin", summaryContainer);
                 }
             }
         });
@@ -1722,6 +1749,114 @@
         childList: true,
         subtree: true
     });
+
+    // 신뢰도 분석 버튼 추가 함수
+    function addTrustButtons() {
+        if (!isCSE) return;
+
+        const results = document.querySelectorAll('.gsc-webResult.gsc-result');
+        results.forEach(result => {
+            if (result.querySelector('.trust-button')) return;
+            
+            const titleLink = result.querySelector('.gs-title a');
+            if (!titleLink || !titleLink.href) return;
+
+            const btn = document.createElement('button');
+            btn.className = 'trust-button';
+            btn.innerHTML = ICONS.shield + ' 안전 검사';
+            btn.onclick = (e) => {
+                e.stopPropagation();
+                analyzeTrust(titleLink.href, btn, result);
+            };
+            
+            result.appendChild(btn);
+        });
+    }
+    
+    // 주기적으로 버튼 체크 및 추가
+    setInterval(addTrustButtons, 1000);
+
+    // 신뢰도 분석 로직
+    async function analyzeTrust(url, btn, resultContainer) {
+        const GROQ_API_KEY = localStorage.getItem('GROQ_API_KEY');
+        if (!GROQ_API_KEY) {
+            alert('안전 검사를 사용하려면 설정에서 API 키를 등록해주세요.');
+            openApiModal();
+            return;
+        }
+
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<div class="gemini-spinner" style="width:12px;height:12px;border-width:1.5px;"></div> 분석 중...';
+        btn.disabled = true;
+
+        const existingResult = resultContainer.querySelector('.trust-result');
+        if (existingResult) existingResult.remove();
+
+        try {
+            const hostname = new URL(url).hostname;
+            const dnsRes = await fetch(`https://dns.google/resolve?name=${hostname}&type=A`);
+            const dnsData = await dnsRes.json();
+
+            const systemPrompt = `당신은 사이버 보안 전문가입니다. 사용자의 안전을 위해 도메인을 평가합니다.`;
+            const userPrompt = `대상 도메인: ${hostname}\n\n이 사이트의 보안 신뢰도를 평가하여 '매우 안전', '안전', '양호', '주의 필요', '위험' 중 하나의 단어만 출력하세요. 다른 말은 하지 마세요.`;
+
+            const response = await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${GROQ_API_KEY}`,
+                },
+                body: JSON.stringify({
+                    model: GROQ_MODEL,
+                    messages: [
+                        { role: 'system', content: systemPrompt },
+                        { role: 'user', content: userPrompt }
+                    ],
+                    temperature: 0.1,
+                    max_tokens: 10
+                })
+            });
+
+            if (!response.ok) throw new Error('API Error');
+            const data = await response.json();
+            const grade = data.choices[0].message.content.trim().replace(/['"]/g, '');
+            
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'trust-result';
+            
+            let colorClass = 'high';
+            if (grade.includes('주의 필요')) colorClass = 'medium';
+            if (grade.includes('위험')) colorClass = 'low';
+
+            const ipList = dnsData.Answer ? dnsData.Answer.map(a => a.data).slice(0, 3).join(', ') : '정보 없음';
+
+            resultDiv.innerHTML = `
+                <span class="trust-score ${colorClass}">${grade}</span>
+                <span class="trust-dns-info">DNS IP: ${ipList}</span>
+            `;
+            
+            resultContainer.appendChild(resultDiv);
+            btn.innerHTML = ICONS.shieldCheck + ' 검사 완료';
+            btn.disabled = false;
+            
+            // 다시 클릭시 닫기 기능 추가
+            btn.onclick = (e) => {
+                 e.stopPropagation();
+                 resultDiv.remove();
+                 btn.innerHTML = ICONS.shield + ' 안전 검사';
+                 btn.onclick = (ev) => { ev.stopPropagation(); analyzeTrust(url, btn, resultContainer); };
+            };
+
+        } catch (error) {
+            console.error(error);
+            btn.innerHTML = ICONS.alert + ' 오류';
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }, 2000);
+            alert('분석 실패: ' + error.message);
+        }
+    }
 </script>
 </body>
-</html>
+    </html>

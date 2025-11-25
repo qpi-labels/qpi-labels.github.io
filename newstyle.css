@@ -113,6 +113,10 @@ main {
     letter-spacing: -.01em;
 }
 
+.logo {
+    width: 10vh;
+}
+
 /* Scroll-triggered animations */
 .fade-up {
     opacity: 0;
