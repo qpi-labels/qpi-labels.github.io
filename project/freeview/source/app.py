@@ -6,19 +6,19 @@ import ctypes
 import time
 import winreg
 
-# PyQt5 자동 설치
+# PyQt5 자동 설치 및 임포트
 try:
     from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
-                                  QHBoxLayout, QPushButton, QLabel, QTextEdit)
-    from PyQt5.QtCore import Qt, pyqtSignal, QObject
-    from PyQt5.QtGui import QFont
+                                  QPushButton, QLabel, QTextEdit, QGraphicsDropShadowEffect, QFrame)
+    from PyQt5.QtCore import Qt, pyqtSignal, QObject, QPoint
+    from PyQt5.QtGui import QFont, QColor, QLinearGradient, QPalette, QBrush
 except ImportError:
     print("PyQt5를 설치 중입니다...")
     subprocess.check_call([sys.executable, "-m", "pip", "install", "PyQt5", "-q"])
     from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
-                                  QHBoxLayout, QPushButton, QLabel, QTextEdit)
-    from PyQt5.QtCore import Qt, pyqtSignal, QObject
-    from PyQt5.QtGui import QFont
+                                  QPushButton, QLabel, QTextEdit, QGraphicsDropShadowEffect, QFrame)
+    from PyQt5.QtCore import Qt, pyqtSignal, QObject, QPoint
+    from PyQt5.QtGui import QFont, QColor, QLinearGradient, QPalette, QBrush
 
 EXTERNAL_DNS_PRIMARY = "1.1.1.1"
 EXTERNAL_DNS_SECONDARY = "8.8.8.8"
@@ -53,7 +53,7 @@ class SystemConfigManager:
             self.interface_name = result.stdout.strip()
             
             if self.interface_name:
-                signals.log_signal.emit(f"인터페이스: {self.interface_name} ({local_ip})")
+                signals.log_signal.emit(f"인터페이스 감지: {self.interface_name}")
                 return True
         except:
             pass
@@ -62,18 +62,18 @@ class SystemConfigManager:
 
     def set_dns(self):
         if not self.interface_name: return
-        signals.log_signal.emit(f"DNS: Cloudflare({EXTERNAL_DNS_PRIMARY})")
+        signals.log_signal.emit(f"DNS 라우팅 재설정 (Cloudflare)")
         subprocess.run(f'netsh interface ip set dns name="{self.interface_name}" static {EXTERNAL_DNS_PRIMARY}', shell=True, stdout=subprocess.DEVNULL)
         subprocess.run(f'netsh interface ip add dns name="{self.interface_name}" {EXTERNAL_DNS_SECONDARY} index=2', shell=True, stdout=subprocess.DEVNULL)
 
     def restore_dns(self):
         if not self.interface_name: return
-        signals.log_signal.emit("DNS 설정을 DHCP로 복구...")
+        signals.log_signal.emit("DNS 설정 복원 (DHCP)")
         subprocess.run(f'netsh interface ip set dns name="{self.interface_name}" dhcp', shell=True, stdout=subprocess.DEVNULL)
 
     def set_proxy(self):
         proxy_str = f"{PROXY_LISTEN_IP}:{PROXY_LISTEN_PORT}"
-        signals.log_signal.emit(f"시스템 프록시 설정: {proxy_str}")
+        signals.log_signal.emit(f"SNI 터널링 활성화")
         try:
             winreg.SetValueEx(self.internet_settings, "ProxyEnable", 0, winreg.REG_DWORD, 1)
             winreg.SetValueEx(self.internet_settings, "ProxyServer", 0, winreg.REG_SZ, proxy_str)
@@ -83,7 +83,7 @@ class SystemConfigManager:
             signals.log_signal.emit(f"프록시 설정 실패: {e}")
 
     def restore_proxy(self):
-        signals.log_signal.emit("시스템 프록시 해제...")
+        signals.log_signal.emit("터널링 해제")
         try:
             winreg.SetValueEx(self.internet_settings, "ProxyEnable", 0, winreg.REG_DWORD, 0)
             ctypes.windll.wininet.InternetSetOptionW(0, 39, 0, 0)
@@ -158,7 +158,6 @@ def start_server(stop_event):
     try:
         server.bind((PROXY_LISTEN_IP, PROXY_LISTEN_PORT))
         server.listen(200)
-        signals.log_signal.emit(f"SNI 프록시 가동 (TCP {PROXY_LISTEN_PORT})")
         
         while not stop_event.is_set():
             try:
@@ -183,8 +182,7 @@ class FreeViewApp(QMainWindow):
         self.server_thread = None
         
         if not ctypes.windll.shell32.IsUserAnAdmin():
-            self.show_error("관리자 권한이 필요합니다.")
-            sys.exit(1)
+            print("Admin required")
         
         self.init_ui()
         signals.log_signal.connect(self.add_log)
@@ -192,164 +190,169 @@ class FreeViewApp(QMainWindow):
 
     def init_ui(self):
         self.setWindowTitle("FreeView")
-        self.setGeometry(100, 100, 360, 580)
+        self.setGeometry(100, 100, 360, 560)
+        self.setFixedSize(360, 560)
         
         try:
             from PyQt5.QtGui import QIcon
             self.setWindowIcon(QIcon("logo.ico"))
         except:
             pass
+
+        # macOS 스타일 배경 색상
         self.setStyleSheet("""
             QMainWindow {
-                background-color: #ffffff;
-            }
-            QPushButton {
-                border: none;
-                font-family: 'Pretendard Variable';
-                font-weight: 500;
-            }
-            QLabel {
-                font-family: 'Pretendard Variable';
+                background-color: #F5F5F7;
             }
         """)
         
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
+        
         main_layout = QVBoxLayout()
         main_layout.setSpacing(0)
         main_layout.setContentsMargins(0, 0, 0, 0)
         
-        # Top Section - Logo & Title
-        top_section = QWidget()
-        top_layout = QVBoxLayout()
-        top_layout.setContentsMargins(40, 80, 40, 60)
-        top_layout.setSpacing(6)
+        # 1. 상단 여백
+        main_layout.addStretch(2)
+        
+        # 2. 타이틀 영역
+        title_container = QWidget()
+        title_layout = QVBoxLayout(title_container)
+        title_layout.setContentsMargins(0,0,0,0)
         
         title = QLabel("FreeView")
-        title_font = QFont('BR Cobane', 40)
-        title_font.setWeight(QFont.Bold)
+        # 폰트 굵기를 줄임 (Weight 25 = Light)
+        title_font = QFont('Segoe UI', 40) 
+        title_font.setWeight(25) 
+        title_font.setLetterSpacing(QFont.AbsoluteSpacing, -0.5)
         title.setFont(title_font)
         title.setAlignment(Qt.AlignCenter)
-        title.setStyleSheet("color: #000000;")
+        title.setStyleSheet("color: #1D1D1F;") 
         
-        subtitle = QLabel("v1.1")
-        subtitle_font = QFont('Pretendard Variable', 10)
-        subtitle.setFont(subtitle_font)
+        # 타이틀 그림자
+        shadow = QGraphicsDropShadowEffect()
+        shadow.setBlurRadius(20)
+        shadow.setOffset(0, 5)
+        shadow.setColor(QColor(0, 0, 0, 30))
+        title.setGraphicsEffect(shadow)
+        
+        # 버전 수정 (1.2)
+        subtitle = QLabel("Version 1.2")
+        sub_font = QFont('Segoe UI', 9)
+        subtitle.setFont(sub_font)
         subtitle.setAlignment(Qt.AlignCenter)
-        subtitle.setStyleSheet("color: #bbbbbb;")
+        subtitle.setStyleSheet("color: #86868B; margin-top: 5px;")
         
-        top_layout.addWidget(title)
-        top_layout.addWidget(subtitle)
+        title_layout.addWidget(title)
+        title_layout.addWidget(subtitle)
+        main_layout.addWidget(title_container)
         
-        top_section.setLayout(top_layout)
-        main_layout.addWidget(top_section)
+        # 3. 중앙 여백
+        main_layout.addStretch(3)
         
-        # Middle Section - Toggle
-        middle_section = QWidget()
-        middle_layout = QVBoxLayout()
-        middle_layout.setContentsMargins(40, 0, 40, 60)
-        middle_layout.setSpacing(16)
+        # 4. 버튼 영역
+        button_container = QWidget()
+        button_layout = QVBoxLayout(button_container)
+        button_layout.setContentsMargins(0,0,0,0)
         
-        # Status text
-        self.status_text = QLabel("중지됨")
-        status_font = QFont('Pretendard Variable', 12)
-        status_font.setWeight(QFont.Bold)
-        self.status_text.setFont(status_font)
-        self.status_text.setAlignment(Qt.AlignCenter)
-        self.status_text.setStyleSheet("color: #888888;")
-        
-        # Toggle button
-        self.power_btn = QPushButton()
-        self.power_btn.setFixedHeight(60)
-        self.power_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #f0f0f0;
-                border-radius: 14px;
-                border: none;
-                font-size: 32px;
-            }
-            QPushButton:hover {
-                background-color: #e5e5e5;
-            }
-        """)
+        self.power_btn = QPushButton("Deactivated")
+        self.power_btn.setFixedSize(160, 50)
         self.power_btn.setCursor(Qt.PointingHandCursor)
         self.power_btn.clicked.connect(self.toggle_service)
-        self.update_power_btn()
         
-        middle_layout.addWidget(self.status_text)
-        middle_layout.addWidget(self.power_btn)
-        middle_layout.addStretch()
+        btn_shadow = QGraphicsDropShadowEffect()
+        btn_shadow.setBlurRadius(15)
+        btn_shadow.setOffset(0, 4)
+        btn_shadow.setColor(QColor(0, 0, 0, 25))
+        self.power_btn.setGraphicsEffect(btn_shadow)
         
-        middle_section.setLayout(middle_layout)
-        main_layout.addWidget(middle_section)
+        self.set_btn_style_off()
         
-        # Logs Section
-        logs_section = QWidget()
-        logs_layout = QVBoxLayout()
-        logs_layout.setContentsMargins(30, 0, 30, 30)
-        logs_layout.setSpacing(10)
+        button_layout.addWidget(self.power_btn, 0, Qt.AlignCenter)
+        main_layout.addWidget(button_container)
         
+        # 5. 하단 여백
+        main_layout.addStretch(3)
+        
+        # 6. 로그 영역
+        log_wrapper = QWidget()
+        log_wrapper_layout = QVBoxLayout(log_wrapper)
+        log_wrapper_layout.setContentsMargins(25, 0, 25, 30)
+        
+        log_label = QLabel("SYSTEM STATUS")
+        log_label.setFont(QFont('Segoe UI', 8, QFont.Bold))
+        log_label.setStyleSheet("color: #86868B; margin-bottom: 5px; margin-left: 5px;")
+        log_wrapper_layout.addWidget(log_label)
+
         self.logs_text = QTextEdit()
         self.logs_text.setReadOnly(True)
+        self.logs_text.setFixedHeight(140)
+        self.logs_text.setFrameShape(0)
+        
         self.logs_text.setStyleSheet("""
             QTextEdit {
-                background-color: #fafafa;
-                color: #777777;
-                border: 1px solid #e8e8e8;
-                border-radius: 6px;
-                padding: 10px;
-                font-family: 'Courier New';
-                font-size: 10px;
+                background-color: #FFFFFF;
+                color: #424245;
+                border-radius: 12px;
+                padding: 15px;
+                font-family: 'Consolas', 'Menlo', monospace;
+                font-size: 11px;
+                line-height: 140%;
+                border: 1px solid #E5E5EA;
             }
         """)
-        self.logs_text.setFixedHeight(100)
         
-        logs_layout.addWidget(self.logs_text)
+        log_shadow = QGraphicsDropShadowEffect()
+        log_shadow.setBlurRadius(10)
+        log_shadow.setOffset(0, 2)
+        log_shadow.setColor(QColor(0, 0, 0, 10))
+        self.logs_text.setGraphicsEffect(log_shadow)
         
-        logs_section.setLayout(logs_layout)
-        main_layout.addWidget(logs_section)
-        
-        # Footer
-        footer = QLabel("Administrator Mode")
-        footer_font = QFont('Pretendard Variable', 8)
-        footer.setFont(footer_font)
-        footer.setAlignment(Qt.AlignCenter)
-        footer.setStyleSheet("color: #dddddd;")
-        
-        main_layout.addWidget(footer)
-        main_layout.addSpacing(12)
-        
+        log_wrapper_layout.addWidget(self.logs_text)
+        main_layout.addWidget(log_wrapper)
+
         central_widget.setLayout(main_layout)
 
-    def update_power_btn(self):
-        if self.is_running:
-            self.power_btn.setText("⊙")
-            self.power_btn.setStyleSheet("""
-                QPushButton {
-                    background-color: #10b981;
-                    border-radius: 14px;
-                    border: none;
-                    font-size: 32px;
-                    color: white;
-                }
-                QPushButton:hover {
-                    background-color: #059669;
-                }
-            """)
-        else:
-            self.power_btn.setText("○")
-            self.power_btn.setStyleSheet("""
-                QPushButton {
-                    background-color: #f0f0f0;
-                    border-radius: 14px;
-                    border: none;
-                    font-size: 32px;
-                    color: #bbbbbb;
-                }
-                QPushButton:hover {
-                    background-color: #e5e5e5;
-                }
-            """)
+    def set_btn_style_off(self):
+        self.power_btn.setText("OFF")
+        self.power_btn.setStyleSheet("""
+            QPushButton {
+                background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #FFFFFF, stop:1 #F2F2F7);
+                color: #8E8E93;
+                border-radius: 25px;
+                border: 1px solid #D1D1D6;
+                font-family: 'Segoe UI', sans-serif;
+                font-size: 15px;
+                font-weight: 600;
+                letter-spacing: 1px;
+            }
+            QPushButton:hover {
+                background-color: #FFFFFF;
+                border: 1px solid #C7C7CC;
+            }
+            QPushButton:pressed {
+                background-color: #E5E5EA;
+            }
+        """)
+
+    def set_btn_style_on(self):
+        self.power_btn.setText("ACTIVE")
+        self.power_btn.setStyleSheet("""
+            QPushButton {
+                background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #34C759, stop:1 #30B753);
+                color: white;
+                border-radius: 25px;
+                border: none;
+                font-family: 'Segoe UI', sans-serif;
+                font-size: 15px;
+                font-weight: 700;
+                letter-spacing: 1px;
+            }
+            QPushButton:hover {
+                background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #3CD862, stop:1 #32BE56);
+            }
+        """)
 
     def toggle_service(self):
         if not self.is_running:
@@ -359,19 +362,18 @@ class FreeViewApp(QMainWindow):
 
     def start_service(self):
         self.is_running = True
-        self.status_text.setText("실행 중")
-        self.status_text.setStyleSheet("color: #10b981;")
-        self.update_power_btn()
+        self.set_btn_style_on()
+        
+        self.logs_text.clear()
+        self.add_log("System initializing...")
         
         self.stop_event.clear()
         self.sys_config = SystemConfigManager()
         
         def run_service():
             if not self.sys_config.get_active_interface():
+                signals.log_signal.emit("Error: No active interface found.")
                 self.is_running = False
-                self.status_text.setText("중지됨")
-                self.status_text.setStyleSheet("color: #888888;")
-                self.update_power_btn()
                 return
             
             self.server_thread = threading.Thread(target=start_server, args=(self.stop_event,), daemon=True)
@@ -380,32 +382,31 @@ class FreeViewApp(QMainWindow):
             
             self.sys_config.set_dns()
             self.sys_config.set_proxy()
-            signals.log_signal.emit("✓ 작동 중...")
+            signals.log_signal.emit("✓ Service is fully operational.")
         
         threading.Thread(target=run_service, daemon=True).start()
 
     def stop_service(self):
         self.is_running = False
-        self.status_text.setText("중지됨")
-        self.status_text.setStyleSheet("color: #888888;")
-        self.update_power_btn()
+        self.set_btn_style_off()
+        self.add_log("Stopping services...")
         
-        signals.log_signal.emit("⊘ 종료 요청")
         self.stop_event.set()
         
         if self.sys_config:
             self.sys_config.restore_dns()
             self.sys_config.restore_proxy()
-        
-        signals.log_signal.emit("⊘ 서비스 종료")
+            
+        self.add_log("✓ System standby.")
 
     def add_log(self, message):
-        current = self.logs_text.toPlainText()
-        lines = current.split('\n')
-        lines = lines[-7:] if len(lines) > 7 else lines
-        lines.append(message)
-        self.logs_text.setText('\n'.join(lines))
-        self.logs_text.verticalScrollBar().setValue(self.logs_text.verticalScrollBar().maximum())
+        current_time = time.strftime("%H:%M:%S")
+        formatted_msg = f"<span style='color:#8E8E93;'>[{current_time}]</span> {message}"
+        self.logs_text.append(formatted_msg)
+        
+        cursor = self.logs_text.textCursor()
+        cursor.movePosition(cursor.End)
+        self.logs_text.setTextCursor(cursor)
 
     def update_status(self, status_dict):
         pass
@@ -416,7 +417,25 @@ class FreeViewApp(QMainWindow):
         event.accept()
 
 if __name__ == "__main__":
+    # 관리자 권한 체크
+    if not ctypes.windll.shell32.IsUserAnAdmin():
+        # 관리자 권한이 없으면, 관리자 권한으로 자기 자신을 재실행 ('runas' 명령어 사용)
+        ctypes.windll.shell32.ShellExecuteW(
+            None, "runas", sys.executable, " ".join(sys.argv), None, 1
+        )
+        sys.exit() # 현재 권한 없는 프로세스는 종료
+
+    # 관리자 권한이 있으면 앱 실행
     app = QApplication(sys.argv)
+    
+    # 고해상도 모니터 대응
+    app.setAttribute(Qt.AA_EnableHighDpiScaling)
+    app.setAttribute(Qt.AA_UseHighDpiPixmaps)
+    
+    font = QFont("Segoe UI")
+    font.setStyleStrategy(QFont.PreferAntialias)
+    app.setFont(font)
+    
     window = FreeViewApp()
     window.show()
     sys.exit(app.exec_())
