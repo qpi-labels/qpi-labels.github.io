@@ -303,21 +303,12 @@
                 <ul class="step-list">
                     <li class="step-item">
                         <h4 class="typography-headline" style="font-size: 24px; margin-bottom: 8px;">준비 및 다운로드</h4>
-                        <p class="typography-body" style="font-size: 17px; opacity: 0.8;">Python이 설치되어 있는지 확인 후, 상단의 'FreeView 다운로드' 버튼을 눌러 파일을 받습니다.</p>
+                        <p class="typography-body" style="font-size: 17px; opacity: 0.8;">Python이 설치되어 있는지 확인 후, 상단의 'Windows용 다운로드' 버튼을 눌러 파일을 받습니다.</p>
                     </li>
                     <li class="step-item">
                         <h4 class="typography-headline" style="font-size: 24px; margin-bottom: 8px;">실행</h4>
                         <p class="typography-body" style="font-size: 17px; opacity: 0.8;"><code>run.bat</code> 파일을 마우스 우클릭하여 <strong>"관리자 권한으로 실행"</strong> 합니다.</p>
                     </li>
-                    <li class="step-item">
-                        <h4 class="typography-headline" style="font-size: 24px; margin-bottom: 8px;">접속</h4>
-                        <p class="typography-body" style="font-size: 17px; opacity: 0.8;">CMD 창에 "가동 중" 메시지가 뜨면 브라우저를 켜고 인터넷을 사용하세요.</p>
-                    </li>
-                    <li class="step-item">
-                        <h4 class="typography-headline" style="font-size: 24px; margin-bottom: 8px;">종료</h4>
-                        <p class="typography-body" style="font-size: 17px; opacity: 0.8;">사용이 끝나면 CMD 창에서 <code>Ctrl+C</code>를 누릅니다. 모든 설정이 자동으로 복구되고 종료됩니다.</p>
-                    </li>
-                </ul>
             </div>
         </section>
 
@@ -337,8 +328,8 @@
     <script>
         function downloadFile() {
             const link = document.createElement('a');
-            link.href = 'QPI FreeView V1.0.zip';
-            link.download = 'QPI FreeView V1.0.zip';
+            link.href = 'QPI FreeView v1.1.zip';
+            link.download = 'QPI FreeView v1.1.zip';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);

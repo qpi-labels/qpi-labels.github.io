@@ -12,15 +12,7 @@ if %errorLevel% == 0 (
 )
 
 :RunScript
-    echo ========================================================
-    echo  QPI FreeView @2025 QPI
-    echo ========================================================
-    
-    :: Run the python script
-    python app.py
-
-    echo.
-    echo ========================================================
-    echo  Program finished. Press any key to close.
-    echo ========================================================
-    pause >nul
+    :: Run the python script in detached mode
+    start "" /B pythonw.exe app.py
+    timeout /t 1 /nobreak >nul
+    exit /b
