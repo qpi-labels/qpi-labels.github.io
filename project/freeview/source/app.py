@@ -6,7 +6,6 @@ import ctypes
 import time
 import winreg
 
-# PyQt5 자동 설치 및 임포트
 try:
     from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
                                   QPushButton, QLabel, QTextEdit, QGraphicsDropShadowEffect, QFrame)
@@ -199,7 +198,6 @@ class FreeViewApp(QMainWindow):
         except:
             pass
 
-        # macOS 스타일 배경 색상
         self.setStyleSheet("""
             QMainWindow {
                 background-color: #F5F5F7;
@@ -212,17 +210,12 @@ class FreeViewApp(QMainWindow):
         main_layout = QVBoxLayout()
         main_layout.setSpacing(0)
         main_layout.setContentsMargins(0, 0, 0, 0)
-        
-        # 1. 상단 여백
         main_layout.addStretch(2)
-        
-        # 2. 타이틀 영역
         title_container = QWidget()
         title_layout = QVBoxLayout(title_container)
         title_layout.setContentsMargins(0,0,0,0)
         
         title = QLabel("FreeView")
-        # 폰트 굵기를 줄임 (Weight 25 = Light)
         title_font = QFont('Segoe UI', 40) 
         title_font.setWeight(25) 
         title_font.setLetterSpacing(QFont.AbsoluteSpacing, -0.5)
@@ -230,7 +223,6 @@ class FreeViewApp(QMainWindow):
         title.setAlignment(Qt.AlignCenter)
         title.setStyleSheet("color: #1D1D1F;") 
         
-        # 타이틀 그림자
         shadow = QGraphicsDropShadowEffect()
         shadow.setBlurRadius(20)
         shadow.setOffset(0, 5)
