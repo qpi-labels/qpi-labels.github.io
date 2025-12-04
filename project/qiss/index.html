@@ -1159,6 +1159,24 @@
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+.logo {
+    display: inline-block;
+    width: 25vh;
+    height: 10vh;
+}
+
+@media (prefers-color-scheme: dark) {
+    .logo {
+        background-image: url('QISS_L.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+    .logo > .logo-light {
+        display: none;
+    }
+}
     </style>
 </head>
 <body>
@@ -1176,7 +1194,11 @@
 
 <main>
     <div style="padding-bottom: 15vh;"></div>
-    <h1 class="page-title">QISS</h1>
+    
+    <div class="logo" style="width: 25vh;">
+    <img src="QISS.svg" class="logo-light" alt="QISS Logo">
+    </div>
+    <h1></h1>
     <button id="mode-toggle" onclick="toggleMode()">
         <span class="qiss-text">QISS</span><span class="search-text">&nbsp;Search</span>
     </button>
