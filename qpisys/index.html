@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAGI SYSTEM - Backed Up</title>
+    <style>
+        :root {
+            --bg-color: #0d0d0d;
+            --main-color: #ff8c00; /* Amber/Orange like MAGI */
+            --alert-color: #ff0000;
+            --dim-color: #4a3b2a;
+            --font-stack: "Courier New", Courier, monospace;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--main-color);
+            font-family: var(--font-stack);
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 2rem;
+            letter-spacing: 5px;
+            margin-bottom: 0.5rem;
+            border-bottom: 2px solid var(--main-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            opacity: 0.6;
+            margin-bottom: 2rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        input {
+            background: transparent;
+            border: 1px solid var(--main-color);
+            color: var(--main-color);
+            padding: 10px;
+            font-family: var(--font-stack);
+            font-size: 1rem;
+            outline: none;
+        }
+
+        input:focus {
+            background: rgba(255, 140, 0, 0.1);
+        }
+
+        button {
+            background: var(--main-color);
+            color: var(--bg-color);
+            border: none;
+            padding: 15px;
+            font-family: var(--font-stack);
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button:disabled {
+            background: var(--dim-color);
+            cursor: not-allowed;
+        }
+
+        /* MAGI Visuals */
+        .magi-display {
+            display: none; /* Hidden by default */
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 2rem;
+        }
+
+        .node {
+            border: 1px solid var(--main-color);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-height: 150px;
+        }
+
+        .node-name {
+            font-weight: bold;
+            font-size: 1.2rem;
+            border-bottom: 1px solid var(--dim-color);
+            width: 100%;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .node-role {
+            font-size: 0.7rem;
+            margin-bottom: 10px;
+            opacity: 0.7;
+        }
+
+        .decision {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .decision.YES { color: var(--main-color); }
+        .decision.NO { color: var(--alert-color); }
+        .decision.PASS { color: #888; }
+
+        .reason {
+            font-size: 0.8rem;
+            line-height: 1.4;
+            word-break: keep-all;
+        }
+
+        #final-result {
+            display: none;
+            margin-top: 2rem;
+            border: 2px solid var(--main-color);
+            padding: 2rem;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            animation: blink 2s infinite;
+        }
+
+        .error-msg {
+            color: var(--alert-color);
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 600px) {
+            .magi-display {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        #api-key-container {
+            border-bottom: 1px dashed var(--dim-color);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>QPIS v1.0</h1>
+    <div class="subtitle">QPI Parallel Intelligence System</div>
+
+    <div class="container">
+        <!-- API Configuration -->
+        <div class="input-group" id="api-key-container">
+            <label for="apiKey">Groq API 키 (로컬에 저장됩니다)</label>
+            <input type="password" id="apiKey" placeholder="gsk_..." autocomplete="off">
+        </div>
+
+        <!-- Question Input -->
+        <div class="input-group">
+            <label for="question">주제</label>
+            <input type="text" id="question" placeholder="예/아니오 로 답변할 수 있는 주제">
+        </div>
+
+        <button id="submitBtn" onclick="runMagi()">INITIALIZE QPIS PROTOCOL</button>
+
+        <div id="error-box" class="error-msg"></div>
+
+        <!-- MAGI Results -->
+        <div id="magi-results" class="magi-display">
+            <!-- UNIT 1 -->
+            <div class="node" id="node-unit1">
+                <div class="node-name">UNIT-1</div>
+                <div class="node-role">&lt;SCIENTIST&gt;</div>
+                <div class="decision" id="vote-unit1">...</div>
+                <div class="reason" id="reason-unit1">PROCESSING...</div>
+            </div>
+
+            <!-- UNIT 2 -->
+            <div class="node" id="node-unit2">
+                <div class="node-name">UNIT-2</div>
+                <div class="node-role">&lt;PARENT&gt;</div>
+                <div class="decision" id="vote-unit2">...</div>
+                <div class="reason" id="reason-unit2">PROCESSING...</div>
+            </div>
+
+            <!-- UNIT 3 -->
+            <div class="node" id="node-unit3">
+                <div class="node-name">UNIT-3</div>
+                <div class="node-role">&lt;POLITICIAN&gt;</div>
+                <div class="decision" id="vote-unit3">...</div>
+                <div class="reason" id="reason-unit3">PROCESSING...</div>
+            </div>
+        </div>
+
+        <!-- Final Verdict -->
+        <div id="final-result"></div>
+    </div>
+
+    <script>
+        // Constants
+        const MODEL_ID = "llama-3.3-70b-versatile"; 
+        const STORAGE_KEY = "magi_groq_api_key";
+
+        // Load API Key on Start
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedKey = localStorage.getItem(STORAGE_KEY);
+            if (savedKey) {
+                document.getElementById('apiKey').value = savedKey;
+            }
+        });
+
+        // Save API Key on Change
+        document.getElementById('apiKey').addEventListener('input', (e) => {
+            localStorage.setItem(STORAGE_KEY, e.target.value.trim());
+        });
+
+        async function runMagi() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const question = document.getElementById('question').value.trim();
+            const btn = document.getElementById('submitBtn');
+            const errorBox = document.getElementById('error-box');
+            const magiDisplay = document.getElementById('magi-results');
+            const finalResult = document.getElementById('final-result');
+
+            // Reset UI
+            errorBox.style.display = 'none';
+            errorBox.innerText = '';
+            magiDisplay.style.display = 'none';
+            finalResult.style.display = 'none';
+
+            // Validation
+            if (!apiKey) {
+                showError("ERROR: API KEY MISSING");
+                return;
+            }
+            if (!question) {
+                showError("ERROR: INPUT QUESTION MISSING");
+                return;
+            }
+
+            // Loading State
+            btn.disabled = true;
+            btn.innerText = "SYNCHRONIZING WITH QPIS...";
+            
+            try {
+                const response = await fetchGroq(apiKey, question);
+                
+                if (response.error) {
+                    showError("ERROR: " + response.error);
+                } else {
+                    displayResults(response);
+                }
+            } catch (e) {
+                showError("SYSTEM FAILURE: " + e.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "INITIALIZE QPIS PROTOCOL";
+            }
+        }
+
+        function showError(msg) {
+            const el = document.getElementById('error-box');
+            el.innerText = msg;
+            el.style.display = 'block';
+        }
+
+        async function fetchGroq(apiKey, question) {
+            const systemPrompt = `
+            You are the MAGI Supercomputer System.
+            You simulate three distinct distinct computing units (UNIT-1, UNIT-2, UNIT-3) to vote on a Yes/No question.
+            
+            ROLES:
+            1. UNIT-1 (Scientist): Logical, rational, focuses on scientific facts and feasibility.
+            2. UNIT-2 (Parent): Emotional, protective, focuses on humanity and safety.
+            3. UNIT-3 (Politician): Pragmatic, Machiavellian, focuses on social structure, power, and greater good.
+
+            INSTRUCTIONS:
+            1. Analyze the user's question.
+            2. If the question CANNOT be answered with Yes/No (or is open-ended), return a JSON with {"error": "INVALID_QUESTION_TYPE"}.
+            3. If valid, each unit must decide: "YES", "NO", or "PASS" (Use PASS sparingly, only if insufficient data).
+            4. Provide a 1-sentence reason for each unit in Korean.
+            
+            OUTPUT FORMAT (JSON ONLY):
+            {
+                "unit1": { "vote": "YES/NO/PASS", "reason": "..." },
+                "unit2": { "vote": "YES/NO/PASS", "reason": "..." },
+                "unit3": { "vote": "YES/NO/PASS", "reason": "..." }
+            }
+            `;
+
+            const url = "https://api.groq.com/openai/v1/chat/completions";
+            
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: MODEL_ID,
+                    messages: [
+                        { role: "system", content: systemPrompt },
+                        { role: "user", content: `Question: ${question}` }
+                    ],
+                    temperature: 0.6,
+                    response_format: { type: "json_object" }
+                })
+            });
+
+            if (!response.ok) {
+                const err = await response.json();
+                throw new Error(err.error?.message || "API Request Failed");
+            }
+
+            const data = await response.json();
+            try {
+                return JSON.parse(data.choices[0].message.content);
+            } catch (e) {
+                throw new Error("Failed to parse QPIS response");
+            }
+        }
+
+        function displayResults(data) {
+            const nodes = ['unit1', 'unit2', 'unit3'];
+            const votes = [];
+
+            // Update UI for each node
+            nodes.forEach(node => {
+                const nodeData = data[node];
+                const vote = nodeData.vote.toUpperCase();
+                votes.push(vote);
+
+                const voteEl = document.getElementById(`vote-${node}`);
+                const reasonEl = document.getElementById(`reason-${node}`);
+                
+                voteEl.innerText = vote;
+                voteEl.className = `decision ${vote}`;
+                reasonEl.innerText = nodeData.reason;
+            });
+
+            document.getElementById('magi-results').style.display = 'grid';
+
+            // Calculate Final Verdict
+            const yes = votes.filter(v => v === 'YES').length;
+            const no = votes.filter(v => v === 'NO').length;
+            const pass = votes.filter(v => v === 'PASS').length;
+
+            let resultText = "";
+            let color = "";
+
+            /* 
+               Logic Rules:
+               3 Yes -> 가결 (Approved)
+               3 No -> 부결 (Rejected)
+               2 Yes 1 No -> 조건부 가결 (Cond. App)
+               2 No 1 Yes -> 조건부 부결 (Cond. Rej)
+               1 Yes 1 No 1 Pass -> 조건부 부결 (Cond. Rej)
+               3 Pass -> 부결 (Rejected)
+               1 Yes 2 Pass -> 가결 (Approved)
+               1 No 2 Pass -> 부결 (Rejected)
+               2 Yes 1 Pass -> 조건부 가결 (Cond. App)
+               2 No 1 Pass -> 부결 (Rejected)
+            */
+
+            if (yes === 3) {
+                resultText = "가결 (APPROVED)";
+                color = "var(--main-color)";
+            } else if (no === 3) {
+                resultText = "부결 (REJECTED)";
+                color = "var(--alert-color)";
+            } else if (yes === 2 && no === 1) {
+                resultText = "조건부 가결 (CONDITIONAL APPROVAL)";
+                color = "var(--main-color)";
+            } else if (no === 2 && yes === 1) {
+                resultText = "조건부 부결 (CONDITIONAL REJECTION)";
+                color = "var(--alert-color)";
+            } else if (yes === 1 && no === 1 && pass === 1) {
+                resultText = "조건부 부결 (CONDITIONAL REJECTION)";
+                color = "var(--alert-color)";
+            } else if (pass === 3) {
+                resultText = "부결 (REJECTED)";
+                color = "var(--alert-color)";
+            } else if (yes === 1 && pass === 2) {
+                resultText = "가결 (APPROVED)";
+                color = "var(--main-color)";
+            } else if (no === 1 && pass === 2) {
+                resultText = "부결 (REJECTED)";
+                color = "var(--alert-color)";
+            } else if (yes === 2 && pass === 1) {
+                resultText = "조건부 가결 (CONDITIONAL APPROVAL)";
+                color = "var(--main-color)";
+            } else if (no === 2 && pass === 1) {
+                resultText = "부결 (REJECTED)";
+                color = "var(--alert-color)";
+            } else {
+                resultText = "오류 (UNKNOWN STATE)";
+                color = "#fff";
+            }
+
+            const finalEl = document.getElementById('final-result');
+            finalEl.innerText = resultText;
+            finalEl.style.color = color;
+            finalEl.style.borderColor = color;
+            finalEl.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
