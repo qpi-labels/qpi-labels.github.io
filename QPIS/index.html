@@ -281,7 +281,7 @@
 
             // Loading State
             btn.disabled = true;
-            btn.innerText = "SYNCHRONIZING WITH MAGI...";
+            btn.innerText = "SYNCHRONIZING WITH QPIS...";
             
             try {
                 const response = await fetchGroq(apiKey, question);
@@ -295,7 +295,7 @@
                 showError("SYSTEM FAILURE: " + e.message);
             } finally {
                 btn.disabled = false;
-                btn.innerText = "INITIALIZE MAGI PROTOCOL";
+                btn.innerText = "INITIALIZE QPIS PROTOCOL";
             }
         }
 
