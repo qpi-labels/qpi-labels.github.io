@@ -357,7 +357,7 @@
             try {
                 return JSON.parse(data.choices[0].message.content);
             } catch (e) {
-                throw new Error("Failed to parse MAGI response");
+                throw new Error("Failed to parse QPIS response");
             }
         }
 
