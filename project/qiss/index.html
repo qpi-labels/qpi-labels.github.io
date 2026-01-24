@@ -14,7 +14,8 @@
     <meta property="og:description" content="만족도 2년연속 1위! 쿼터파이">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/colors.css">
-    <script async src="https://cse.google.com/cse.js?cx=c31ed7ed73e974099"></script>
+    <script async src="https://cse.google.com/cse.js?cx=b794e851ac2524ee7">
+</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
 
     <style>
@@ -1159,24 +1160,6 @@
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-.logo {
-    display: inline-block;
-    width: 25vh;
-    height: 10vh;
-}
-
-@media (prefers-color-scheme: dark) {
-    .logo {
-        background-image: url('QISS_L.svg');
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-    .logo > .logo-light {
-        display: none;
-    }
-}
     </style>
 </head>
 <body>
@@ -1194,11 +1177,7 @@
 
 <main>
     <div style="padding-bottom: 15vh;"></div>
-    
-    <div class="logo" style="width: 25vh;">
-    <img src="QISS.svg" class="logo-light" alt="QISS Logo">
-    </div>
-    <h1></h1>
+    <h1 class="page-title">QISS</h1>
     <button id="mode-toggle" onclick="toggleMode()">
         <span class="qiss-text">QISS</span><span class="search-text">&nbsp;Search</span>
     </button>
@@ -1476,9 +1455,9 @@
                 resultsContext += `${index + 1}. ${result.title}\n${result.snippet}\n\n`;
             });
             
-            const systemPrompt = `당신은 검색 결과들을 바탕으로 사용자에게 명확하고 간결한 요약을 제공하는 AI입니다. 다음은 "${query}"에 대한 검색 결과입니다. 이 검색 결과들을 바탕으로 사용자가 알고 싶어하는 정보를 명확하고 간결하게 요약해주세요. 한국어로 답변해주세요. 마크다운 문법을 자유롭게 사용할 수 있습니다.`;
+            const systemPrompt = `당신은 검색 결과들을 바탕으로 사용자에게 과학적이고 간결한 요약을 제공하는 AI입니다. 다음은 "${query}"에 대한 학술 검색 결과입니다. 이 검색 결과들을 바탕으로 사용자가 알고 싶어하는 정보를 과학적이고 간결하게 요약해주세요. 한국어로 답변해주세요. 마크다운 문법을 자유롭게 사용할 수 있습니다.`;
             
-            const userPrompt = `다음 검색 결과들을 종합하여 요약해주세요:\n\n${resultsContext}\n\n요약 시 다음 사항을 지켜주세요:\n1. 핵심 정보를 명확하게 정리 (마크다운 사용 가능)\n2. 검색 결과의 주요 내용을 종합적으로 설명. 마지막에 결론을 낼것.\n3. 객관적이고 중립적인 톤 유지\n4. 불필요한 인사말이나 서론 없이 바로 본론으로 시작\n5. 가독성을 위해 적절히 마크다운 문법 활용 (제목, 강조, 리스트 등)`;
+            const userPrompt = `다음 검색 결과들을 종합하여 요약해주세요:\n\n${resultsContext}\n\n요약 시 다음 사항을 지켜주세요:\n1. 핵심 정보를 명확하게 정리 (마크다운 사용 가능)\n2. 검색 결과의 주요 내용을 종합적으로 설명. 마지막에 결론을 낼것.\n3. 객관적이고 중립적, 과학적이고 전문적인 톤 유지\n4. 불필요한 인사말이나 서론 없이 바로 본론으로 시작\n5. 가독성을 위해 적절히 마크다운 문법 활용 (제목, 강조, 리스트 등)`;
 
             const response = await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
                 method: 'POST',
@@ -1880,6 +1859,5 @@
         }
     }
 </script>
-
 </body>
     </html>
