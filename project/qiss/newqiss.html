@@ -12,7 +12,7 @@
 
     <style>
         /* ----------------------------------------------------------------
-           WINDOWS 98 / IE 4.0 THEME - BRUTAL VERSION
+           WINDOWS 98 / IE 4.0 THEME - ULTRA RETRO
            ---------------------------------------------------------------- */
         :root {
             --win-teal: #008080;
@@ -21,7 +21,12 @@
             --win-gray-dark: #808080;
             --win-black: #000000;
             --win-blue: #000080;
-            --win-link: #0000ff;
+            
+            /* Classic Web Colors */
+            --link-blue: #0000FF;
+            --link-visited: #800080;
+            --link-active: #FF0000;
+            --url-green: #008000;
         }
 
         body {
@@ -82,7 +87,7 @@
             cursor: default;
         }
 
-        /* 메뉴 바 (File, Edit...) */
+        /* 메뉴 바 */
         .menu-bar {
             display: flex;
             border-bottom: 1px solid var(--win-gray-dark);
@@ -132,7 +137,6 @@
             position: relative;
         }
 
-        /* 공통 UI 요소 스타일링 */
         h1.page-title {
             font-size: 28px;
             text-align: center;
@@ -143,7 +147,6 @@
             text-shadow: 2px 2px 0px #ddd;
         }
 
-        /* Fieldset Group Box 스타일 */
         fieldset {
             border: 2px groove #fff;
             margin-bottom: 20px;
@@ -157,11 +160,10 @@
             color: black;
         }
 
-        /* Windows 98 버튼 */
         button {
             background: var(--win-gray);
             border: 2px solid;
-            border-color: #fff #000 #000 #fff; /* Outset */
+            border-color: #fff #000 #000 #fff;
             color: black;
             padding: 4px 12px;
             font-family: 'Gulim', monospace;
@@ -171,7 +173,7 @@
         }
         
         button:active {
-            border-color: #000 #fff #fff #000; /* Inset */
+            border-color: #000 #fff #fff #000;
             transform: translate(1px, 1px);
         }
 
@@ -181,7 +183,6 @@
             cursor: wait;
         }
 
-        /* 입력창 */
         input[type="text"], input[type="password"] {
             border: 2px inset #fff;
             padding: 4px;
@@ -194,171 +195,170 @@
         ::-webkit-scrollbar { width: 16px; background: var(--win-gray); }
         ::-webkit-scrollbar-button { background: var(--win-gray); border: 2px outset #fff; height: 16px; }
         ::-webkit-scrollbar-thumb { background: var(--win-gray); border: 2px outset #fff; }
-        ::-webkit-scrollbar-track { background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzjwqkJYUBkCCmACYGFkCgA+2xUE/97u/AAAAABJRU5ErkJggg=='); } /* Dotted pattern */
+        ::-webkit-scrollbar-track { background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzjwqkJYUBkCCmACYGFkCgA+2xUE/97u/AAAAABJRU5ErkJggg=='); }
 
-        /* 검색 모드 토글 */
-        #mode-toggle {
-            display: block;
-            margin: 0 auto;
-            width: 150px;
-            font-weight: bold;
-        }
-
-        /* Custom Search Area */
-        #custom-search {
-            text-align: center;
-            padding: 10px;
-        }
-        
+        #mode-toggle { display: block; margin: 0 auto; width: 150px; font-weight: bold; }
+        #custom-search { text-align: center; padding: 10px; }
         .search-bar { width: 60%; }
 
-        /* Google CSE 강제 덮어쓰기 (Brutalist Override) */
+        /* ==========================================================================
+           GOOGLE CSE RETRO OVERRIDES (핵심 변경 사항)
+           ========================================================================== */
+        
+        /* 1. 검색창 영역 재정의 */
         .gsc-control-cse {
-            background-color: white !important;
+            background-color: transparent !important;
             border: none !important;
             padding: 0 !important;
             font-family: 'Gulim', monospace !important;
         }
+        
+        /* 검색 버튼과 입력창 */
+        .gsc-search-box { margin-bottom: 10px !important; }
         .gsc-input-box {
             border: 2px inset #fff !important;
             border-radius: 0 !important;
+            background: white !important;
         }
         input.gsc-input {
             padding: 4px !important;
-            font-size: 13px !important;
+            font-size: 12px !important;
+            color: black !important;
         }
         .gsc-search-button-v2 {
             background: var(--win-gray) !important;
             border: 2px outset #fff !important;
             border-radius: 0 !important;
-            padding: 6px 15px !important;
+            padding: 6px 12px !important;
             margin-left: 5px !important;
             color: black !important;
             box-shadow: none !important;
+            cursor: pointer !important;
         }
-        .gsc-search-button-v2 svg { fill: black !important; }
+        .gsc-search-button-v2 svg { fill: black !important; width: 13px !important; height: 13px !important; }
+        .gsc-search-button-v2:active { border-style: inset !important; }
 
-        /* 검색 결과 스타일 */
+        /* 2. 검색 결과 리스트 컨테이너 */
+        .gsc-results-wrapper-visible {
+            background: white !important;
+        }
+        
         .gsc-webResult.gsc-result {
             background: white !important;
-            border-bottom: 1px dashed #999 !important;
-            padding: 15px 0 !important;
+            border-bottom: 1px dashed #999 !important; /* 점선 구분선 */
+            padding: 10px 0 !important;
+            margin: 0 !important;
         }
-        .gs-title a {
-            color: blue !important;
-            font-weight: bold !important;
-            text-decoration: underline !important;
-            font-size: 14px !important;
-        }
-        .gs-title a:visited { color: purple !important; }
-        .gs-snippet { font-family: 'Gulim', monospace !important; font-size: 12px !important; color: black !important; }
-        .gsc-url-top { color: green !important; font-size: 11px !important; }
         
-        /* 불필요한 구글 요소 제거 */
-        .gsc-adBlock, .gsc-above-wrapper-area, .gsc-thumbnail { display: none !important; }
+        /* 마우스 올렸을 때 강조 없음 (90년대 스타일은 hover 강조가 거의 없었음) */
+        .gsc-webResult.gsc-result:hover { background: transparent !important; }
+
+        /* 3. 제목 링크 (가장 중요: 파란색+밑줄) */
+        .gs-title {
+            height: auto !important;
+            text-decoration: none !important;
+            margin-bottom: 2px !important;
+        }
+        .gs-title a, .gs-title b {
+            font-family: 'Gulim', monospace !important;
+            font-size: 14px !important;
+            font-weight: normal !important; /* 굵게 안함 */
+            text-decoration: underline !important; /* 항상 밑줄 */
+        }
+        /* 링크 색상 강제 */
+        .gs-title a:link { color: var(--link-blue) !important; }
+        .gs-title a:visited { color: var(--link-visited) !important; }
+        .gs-title a:hover { color: var(--link-active) !important; cursor: hand !important; }
+        .gs-title b { color: inherit !important; font-weight: bold !important; }
+
+        /* 4. 스니펫 (본문) */
+        .gs-snippet {
+            font-family: 'Gulim', monospace !important;
+            font-size: 12px !important;
+            color: black !important;
+            line-height: 1.4 !important;
+            margin-top: 2px !important;
+        }
+        
+        /* 5. URL 표시 (초록색) */
+        .gsc-url-top, .gs-visibleUrl {
+            color: var(--url-green) !important;
+            font-size: 11px !important;
+            font-family: 'Gulim', monospace !important;
+            display: block !important;
+            margin-top: 2px !important;
+        }
+        
+        /* 6. 썸네일 (액자 효과) */
+        .gsc-thumbnail-inside, .gsc-url-bottom { display: none !important; }
+        .gs-image-box {
+            border: 2px inset #fff !important; /* 3D 효과 */
+            padding: 2px !important;
+            background: #eee !important;
+            margin-right: 10px !important;
+        }
+        img.gs-image {
+            max-width: 60px !important;
+            max-height: 60px !important;
+            border: 1px solid #000 !important;
+        }
+
+        /* 7. 페이지네이션 (버튼 모양으로 변경) */
+        .gsc-cursor-box {
+            margin-top: 20px !important;
+            text-align: center !important;
+            border-top: 2px groove #fff !important;
+            padding-top: 10px !important;
+        }
+        .gsc-cursor-page {
+            display: inline-block !important;
+            background: var(--win-gray) !important;
+            border: 2px outset #fff !important; /* 튀어나온 버튼 */
+            color: black !important;
+            text-decoration: none !important;
+            padding: 2px 8px !important;
+            margin: 0 2px !important;
+            font-size: 12px !important;
+            font-family: 'Gulim', monospace !important;
+        }
+        .gsc-cursor-page:hover {
+            color: black !important;
+            background: white !important;
+        }
+        .gsc-cursor-current-page {
+            background: white !important;
+            border: 2px inset #fff !important; /* 눌린 버튼 */
+            font-weight: bold !important;
+            color: black !important;
+        }
+
+        /* 기타 잡동사니 숨김 */
+        .gsc-adBlock, .gsc-above-wrapper-area { display: none !important; }
+        .gcsc-more-maybe-branding-root { display: none !important; }
+        
+        /* ========================================================================== */
 
         /* AI 요약 (메모장 스타일) */
-        #gemini-summary-container {
-            display: none;
-            margin: 15px 0;
-        }
-        
-        #gemini-summary {
-            background: white;
-            border: 2px solid black;
-            box-shadow: 4px 4px 0px var(--win-gray);
-        }
-
-        .notepad-header {
-            background: var(--win-blue);
-            color: white;
-            padding: 2px 5px;
-            font-size: 12px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        #gemini-summary-content {
-            padding: 10px;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            line-height: 1.4;
-        }
+        #gemini-summary-container { display: none; margin: 15px 0; }
+        #gemini-summary { background: white; border: 2px solid black; box-shadow: 4px 4px 0px var(--win-gray); }
+        .notepad-header { background: var(--win-blue); color: white; padding: 2px 5px; font-size: 12px; display: flex; justify-content: space-between; }
+        #gemini-summary-content { padding: 10px; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.4; }
 
         /* 모달 (에러 메시지 스타일) */
-        #api-modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.2);
-            z-index: 9999;
-            align-items: center;
-            justify-content: center;
-        }
+        #api-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.2); z-index: 9999; align-items: center; justify-content: center; }
         #api-modal.show { display: flex; }
-        
-        .modal-window {
-            background: var(--win-gray);
-            border: 2px outset #fff;
-            width: 350px;
-            padding: 2px;
-            box-shadow: 4px 4px 10px black;
-        }
+        .modal-window { background: var(--win-gray); border: 2px outset #fff; width: 350px; padding: 2px; box-shadow: 4px 4px 10px black; }
+        .modal-body { padding: 15px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; }
 
-        .modal-body {
-            padding: 15px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
+        marquee { background: black; color: #00ff00; font-family: monospace; border: 2px inset #fff; font-size: 12px; padding: 2px 0; }
 
-        /* 마퀴 (흐르는 텍스트) */
-        marquee {
-            background: black;
-            color: #00ff00;
-            font-family: monospace;
-            border: 2px inset #fff;
-            font-size: 12px;
-            padding: 2px 0;
-        }
+        .status-bar { background: var(--win-gray); border-top: 1px solid white; padding: 2px; font-size: 11px; display: flex; gap: 5px; }
+        .status-panel { border: 1px inset #fff; padding: 1px 5px; }
 
-        /* 하단 상태 표시줄 */
-        .status-bar {
-            background: var(--win-gray);
-            border-top: 1px solid white;
-            padding: 2px;
-            font-size: 11px;
-            display: flex;
-            gap: 5px;
-        }
-        .status-panel {
-            border: 1px inset #fff;
-            padding: 1px 5px;
-        }
-
-        /* 플로팅 설정 버튼 */
-        #api-settings-btn {
-            position: fixed;
-            bottom: 40px;
-            right: 20px;
-            z-index: 500;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        #api-settings-btn { position: fixed; bottom: 40px; right: 20px; z-index: 500; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; }
 
         /* Trust Result */
-        .trust-result {
-            background: #ffffe0;
-            border: 1px solid black;
-            padding: 5px;
-            font-size: 11px;
-            margin-top: 5px;
-        }
+        .trust-result { background: #ffffe0; border: 1px solid black; padding: 5px; font-size: 11px; margin-top: 5px; }
         .trust-score.high { color: blue; font-weight: bold; }
         .trust-score.medium { color: #808000; font-weight: bold; }
         .trust-score.low { color: red; font-weight: bold; text-decoration: blink; }
@@ -556,7 +556,7 @@
         function searchInRISS() { const q = getQuery(); if (q) window.open('https://www.riss.kr/search/Search.do?colName=all&isDetailSearch=N&searchGubun=true&query=' + encodeURIComponent(q), '_blank'); }
 
         // ==========================================
-        // API & AI FUNCTIONS (RESTORED PROMPTS)
+        // API & AI FUNCTIONS
         // ==========================================
         function updateApiStatus() {
             const apiKey = localStorage.getItem('GROQ_API_KEY');
@@ -630,7 +630,6 @@
                     resultsContext += `${index + 1}. ${result.title}\n${result.snippet}\n\n`;
                 });
                 
-                // *** RESTORED ORIGINAL PROMPTS ***
                 const systemPrompt = `당신은 검색 결과들을 바탕으로 사용자에게 과학적이고 간결한 요약을 제공하는 AI입니다. 다음은 "${query}"에 대한 학술 검색 결과입니다. 이 검색 결과들을 바탕으로 사용자가 알고 싶어하는 정보를 과학적이고 간결하게 요약해주세요. 한국어로 답변해주세요. 마크다운 문법을 자유롭게 사용할 수 있습니다.`;
                 
                 const userPrompt = `다음 검색 결과들을 종합하여 요약해주세요:\n\n${resultsContext}\n\n요약 시 다음 사항을 지켜주세요:\n1. 핵심 정보를 명확하게 정리 (마크다운 사용 가능)\n2. 검색 결과의 주요 내용을 종합적으로 설명. 마지막에 결론을 낼것.\n3. 객관적이고 중립적, 과학적이고 전문적인 톤 유지\n4. 불필요한 인사말이나 서론 없이 바로 본론으로 시작\n5. 가독성을 위해 적절히 마크다운 문법 활용 (제목, 강조, 리스트 등)`;
