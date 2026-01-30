@@ -2,88 +2,60 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>QISS - Internet Explorer</title>
+    <title>QISS - Microsoft Internet Explorer</title>
     <link rel="shortcut icon" type="image/x-icon" href="/logo.ico">
-    <meta property="og:url" content="https://qpi.kro.kr">
-    <meta property="og:title" content="쿼터파이">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="/logo.png">
-    <meta property="og:description" content="만족도 2년연속 1위! 쿼터파이">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google CSE -->
     <script async src="https://cse.google.com/cse.js?cx=b794e851ac2524ee7"></script>
+    <!-- Marked.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
 
     <style>
-        /* Windows 98 Reset & Base Styles */
+        /* ----------------------------------------------------------------
+           WINDOWS 98 / IE 4.0 THEME - BRUTAL VERSION
+           ---------------------------------------------------------------- */
         :root {
-            --win-bg: #008080;
+            --win-teal: #008080;
             --win-gray: #c0c0c0;
-            --win-gray-light: #dfdfdf;
+            --win-gray-light: #ffffff;
             --win-gray-dark: #808080;
             --win-black: #000000;
-            --win-white: #ffffff;
             --win-blue: #000080;
-            --win-blue-grad: #1084d0;
-            --c-blue: #000080; /* 호환성 유지 */
-            --c-text: #000000;
-            --c-gray1: #dfdfdf;
-            --c-gray2: #808080;
-            --c-gray6: #404040;
+            --win-link: #0000ff;
         }
 
         body {
-            background-color: var(--win-bg);
-            color: black;
-            font-family: 'Gulim', 'Dotum', 'MS Sans Serif', Tahoma, sans-serif;
+            background-color: var(--win-teal);
+            font-family: 'Gulim', '굴림', 'MS Sans Serif', monospace;
             margin: 0;
             padding: 0;
-            height: 100vh;
-            overflow: hidden; /* 창 내부 스크롤을 위해 body 스크롤 막음 */
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-y: scroll;
         }
 
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar {
-            width: 16px;
-            background: var(--win-gray);
-        }
-        ::-webkit-scrollbar-button {
-            background: var(--win-gray);
-            border: 2px outset #fff;
-            display: block;
-            height: 16px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #e0e0e0; /* Checkered pattern simulated */
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--win-gray);
-            border: 2px outset #fff;
-        }
-
-        /* Window Container */
-        .window-frame {
-            width: 95%;
+        /* 메인 윈도우 프레임 */
+        .window {
+            width: 98%;
             max-width: 1024px;
-            height: 90vh;
             background: var(--win-gray);
             border: 2px solid;
-            border-color: #fff #000 #000 #fff; /* Outset 3D */
-            box-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+            border-color: #fff #000 #000 #fff; /* Classic 3D Outset */
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
             display: flex;
             flex-direction: column;
-            position: relative;
+            margin: 10px 0;
         }
 
+        /* 타이틀 바 */
         .title-bar {
-            background: linear-gradient(90deg, var(--win-blue), var(--win-blue-grad));
-            padding: 3px 4px;
+            background: linear-gradient(90deg, var(--win-blue), #1084d0);
+            padding: 3px 5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 18px;
         }
 
         .title-bar-text {
@@ -92,7 +64,7 @@
             font-size: 13px;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
         }
 
         .title-bar-controls button {
@@ -105,140 +77,158 @@
             padding: 0;
             margin-left: 2px;
             font-weight: bold;
+            font-family: sans-serif;
+            color: black;
+            cursor: default;
         }
 
+        /* 메뉴 바 (File, Edit...) */
         .menu-bar {
             display: flex;
-            gap: 15px;
-            padding: 2px 8px;
             border-bottom: 1px solid var(--win-gray-dark);
-            font-size: 13px;
+            padding: 1px 0;
+            background: var(--win-gray);
         }
 
         .menu-item {
+            padding: 2px 8px;
+            font-size: 12px;
             cursor: default;
         }
         .menu-item:hover {
             background-color: var(--win-blue);
             color: white;
         }
-        .menu-item a {
-            text-decoration: none;
-            color: inherit;
-        }
+        .menu-item a { text-decoration: none; color: inherit; }
 
-        .main-content {
+        /* 주소 표시줄 영역 */
+        .address-bar-wrapper {
+            display: flex;
+            align-items: center;
+            padding: 4px;
+            border-bottom: 1px solid white;
+            gap: 5px;
+            font-size: 12px;
+        }
+        
+        .address-label { color: #444; }
+        
+        .address-input {
             flex: 1;
-            padding: 10px;
-            overflow-y: auto;
-            background: #fff;
             border: 2px inset #fff;
-            margin: 4px;
+            padding: 2px 5px;
+            font-family: 'Gulim', monospace;
+            font-size: 12px;
+            background: white;
         }
 
-        /* Typography & Layout */
-        .page-title {
-            font-size: 32px;
+        /* 메인 컨텐츠 영역 */
+        .viewport {
+            background: white;
+            border: 2px inset #fff;
+            padding: 15px;
+            height: 70vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* 공통 UI 요소 스타일링 */
+        h1.page-title {
+            font-size: 28px;
             text-align: center;
-            margin: 20px 0;
+            margin: 10px 0 20px 0;
             font-weight: 900;
             letter-spacing: -1px;
-            text-shadow: 2px 2px var(--win-gray);
+            color: black;
+            text-shadow: 2px 2px 0px #ddd;
         }
 
-        /* Buttons (Windows 98 Style) */
+        /* Fieldset Group Box 스타일 */
+        fieldset {
+            border: 2px groove #fff;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: var(--win-gray);
+        }
+
+        legend {
+            font-size: 12px;
+            padding: 0 4px;
+            color: black;
+        }
+
+        /* Windows 98 버튼 */
         button {
             background: var(--win-gray);
             border: 2px solid;
             border-color: #fff #000 #000 #fff; /* Outset */
             color: black;
-            padding: 4px 10px;
-            font-family: 'Gulim', sans-serif;
+            padding: 4px 12px;
+            font-family: 'Gulim', monospace;
+            font-size: 12px;
             cursor: pointer;
+            margin: 2px;
+        }
+        
+        button:active {
+            border-color: #000 #fff #fff #000; /* Inset */
+            transform: translate(1px, 1px);
+        }
+
+        button:disabled {
+            color: var(--win-gray-dark);
+            text-shadow: 1px 1px white;
+            cursor: wait;
+        }
+
+        /* 입력창 */
+        input[type="text"], input[type="password"] {
+            border: 2px inset #fff;
+            padding: 4px;
+            font-family: 'Gulim', monospace;
+            background: white;
             font-size: 12px;
         }
 
-        button:active {
-            border-color: #000 #fff #fff #000; /* Inset */
-            padding: 5px 9px 3px 11px; /* Shift text */
-        }
+        /* 스크롤바 */
+        ::-webkit-scrollbar { width: 16px; background: var(--win-gray); }
+        ::-webkit-scrollbar-button { background: var(--win-gray); border: 2px outset #fff; height: 16px; }
+        ::-webkit-scrollbar-thumb { background: var(--win-gray); border: 2px outset #fff; }
+        ::-webkit-scrollbar-track { background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzjwqkJYUBkCCmACYGFkCgA+2xUE/97u/AAAAABJRU5ErkJggg=='); } /* Dotted pattern */
 
-        button:hover {
-            box-shadow: none;
-            transform: none;
-        }
-
-        /* Inputs */
-        input[type="text"], input[type="password"] {
-            border: 2px solid;
-            border-color: #404040 #dfdfdf #dfdfdf #404040; /* Inset */
-            background: #fff;
-            padding: 3px;
-            font-family: 'Gulim', sans-serif;
-            border-radius: 0;
-            outline: none;
-        }
-
-        /* Toggle Button Customization */
+        /* 검색 모드 토글 */
         #mode-toggle {
             display: block;
-            margin: 0 auto 20px auto;
-            min-width: 100px;
+            margin: 0 auto;
+            width: 150px;
+            font-weight: bold;
         }
 
-        /* Search Areas */
+        /* Custom Search Area */
         #custom-search {
             text-align: center;
-            background: var(--win-gray);
-            padding: 20px;
-            border: 2px outset #fff;
-            width: 80%;
-            margin: 0 auto;
-            box-sizing: border-box;
+            padding: 10px;
         }
         
-        .search-bar {
-            width: 100%;
-            max-width: 400px;
-        }
+        .search-bar { width: 60%; }
 
-        #search-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 5px;
-            margin-top: 10px;
-        }
-
-        /* CSE (Google Search) Overrides - Brutalist Force */
-        .gcse-search {
-            margin: 0 auto;
-            width: 90%;
-        }
-        
-        /* Reset Google's fancy styles */
+        /* Google CSE 강제 덮어쓰기 (Brutalist Override) */
         .gsc-control-cse {
-            background-color: #fff !important;
+            background-color: white !important;
             border: none !important;
             padding: 0 !important;
-            font-family: 'Gulim', sans-serif !important;
+            font-family: 'Gulim', monospace !important;
         }
-
         .gsc-input-box {
             border: 2px inset #fff !important;
-            background: #fff !important;
-            height: auto !important;
             border-radius: 0 !important;
         }
-
         input.gsc-input {
-            background: none !important;
-            text-indent: 0 !important;
             padding: 4px !important;
             font-size: 13px !important;
         }
-
         .gsc-search-button-v2 {
-            background-color: var(--win-gray) !important;
+            background: var(--win-gray) !important;
             border: 2px outset #fff !important;
             border-radius: 0 !important;
             padding: 6px 15px !important;
@@ -246,251 +236,142 @@
             color: black !important;
             box-shadow: none !important;
         }
-        
-        .gsc-search-button-v2 svg {
-            fill: black !important;
-        }
+        .gsc-search-button-v2 svg { fill: black !important; }
 
-        .gsc-search-button-v2:active {
-            border-style: inset !important;
-        }
-
-        /* Search Results Styling */
+        /* 검색 결과 스타일 */
         .gsc-webResult.gsc-result {
-            background: #fff !important;
-            border-bottom: 1px dashed #808080 !important;
-            padding: 10px 0 !important;
-            margin: 0 !important;
-            box-shadow: none !important;
-            border-radius: 0 !important;
+            background: white !important;
+            border-bottom: 1px dashed #999 !important;
+            padding: 15px 0 !important;
         }
-
-        .gs-title {
-            text-decoration: none !important;
-            height: auto !important;
-        }
-
         .gs-title a {
-            color: #000080 !important; /* Classic Link Blue */
-            font-size: 14px !important;
+            color: blue !important;
             font-weight: bold !important;
-            font-family: 'Gulim', sans-serif !important;
+            text-decoration: underline !important;
+            font-size: 14px !important;
+        }
+        .gs-title a:visited { color: purple !important; }
+        .gs-snippet { font-family: 'Gulim', monospace !important; font-size: 12px !important; color: black !important; }
+        .gsc-url-top { color: green !important; font-size: 11px !important; }
+        
+        /* 불필요한 구글 요소 제거 */
+        .gsc-adBlock, .gsc-above-wrapper-area, .gsc-thumbnail { display: none !important; }
+
+        /* AI 요약 (메모장 스타일) */
+        #gemini-summary-container {
+            display: none;
+            margin: 15px 0;
         }
         
-        .gs-title a:hover {
-            color: red !important;
-            text-decoration: underline !important;
-        }
-
-        .gs-title a:visited {
-            color: #800080 !important;
-        }
-
-        .gs-snippet {
-            font-size: 12px !important;
-            color: black !important;
-            font-family: 'Dotum', sans-serif !important;
-            line-height: 1.4 !important;
-        }
-
-        .gs-visibleUrl {
-            color: #008000 !important;
-            font-size: 11px !important;
-        }
-
-        .gsc-cursor-page {
-            color: black !important;
-            background: var(--win-gray) !important;
-            border: 2px outset #fff !important;
-            border-radius: 0 !important;
-            margin-right: 2px !important;
-        }
-
-        .gsc-cursor-current-page {
-            font-weight: bold !important;
-            background: #fff !important;
-            border: 2px inset #fff !important;
-        }
-
-        /* Remove Google Junk */
-        .gsc-adBlock, .gsc-above-wrapper-area, .gsc-thumbnail {
-            display: none !important;
-        }
-
-        /* AI Summary Box (Notepad Style) */
-        #gemini-summary-container {
-            width: 90%;
-            margin: 20px auto;
-        }
-
         #gemini-summary {
-            background: #fff;
-            border: 2px solid #000;
-            padding: 2px;
-            box-shadow: 4px 4px 0 var(--win-gray-dark);
+            background: white;
+            border: 2px solid black;
+            box-shadow: 4px 4px 0px var(--win-gray);
         }
 
-        .summary-header {
+        .notepad-header {
             background: var(--win-blue);
             color: white;
             padding: 2px 5px;
             font-size: 12px;
-            font-weight: bold;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-        }
-
-        .summary-header h3 {
-            margin: 0;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
         }
 
         #gemini-summary-content {
-            padding: 15px;
-            font-family: 'Courier New', Courier, monospace; /* Notepad feeling */
+            padding: 10px;
+            font-family: 'Courier New', monospace;
             font-size: 13px;
+            line-height: 1.4;
         }
 
-        .summary-button {
-            background: var(--win-gray);
-            color: black;
-            border: 1px outset #fff;
-            border-radius: 0;
-            font-size: 11px;
-            height: 20px;
-        }
-
-        /* Modal (Error Message Style) */
+        /* 모달 (에러 메시지 스타일) */
         #api-modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.1); /* Dotted pattern ideal but alpha ok */
+            background: rgba(0,0,0,0.2);
             z-index: 9999;
             align-items: center;
             justify-content: center;
         }
-
         #api-modal.show { display: flex; }
-
-        .modal-content {
+        
+        .modal-window {
             background: var(--win-gray);
             border: 2px outset #fff;
-            padding: 3px;
-            width: 400px;
-            box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
-        }
-
-        .modal-header {
-            background: var(--win-blue);
-            color: white;
-            padding: 2px 5px;
-            font-weight: bold;
-            font-size: 12px;
-            display: flex;
-            justify-content: space-between;
+            width: 350px;
+            padding: 2px;
+            box-shadow: 4px 4px 10px black;
         }
 
         .modal-body {
             padding: 15px;
             text-align: center;
-        }
-
-        .modal-body p { margin: 10px 0; font-size: 12px; }
-
-        .api-input-group input {
-            width: 100%;
-            margin-top: 5px;
-        }
-
-        .modal-buttons {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
             gap: 10px;
-            margin-top: 15px;
-            padding-bottom: 10px;
         }
 
-        /* Floating Settings Button */
+        /* 마퀴 (흐르는 텍스트) */
+        marquee {
+            background: black;
+            color: #00ff00;
+            font-family: monospace;
+            border: 2px inset #fff;
+            font-size: 12px;
+            padding: 2px 0;
+        }
+
+        /* 하단 상태 표시줄 */
+        .status-bar {
+            background: var(--win-gray);
+            border-top: 1px solid white;
+            padding: 2px;
+            font-size: 11px;
+            display: flex;
+            gap: 5px;
+        }
+        .status-panel {
+            border: 1px inset #fff;
+            padding: 1px 5px;
+        }
+
+        /* 플로팅 설정 버튼 */
         #api-settings-btn {
             position: fixed;
-            bottom: 20px;
+            bottom: 40px;
             right: 20px;
+            z-index: 500;
             width: 32px;
             height: 32px;
-            border-radius: 0;
-            z-index: 2000;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* Marquee */
-        .marquee-container {
-            background: #000;
-            color: #0f0; /* Matrix green */
-            font-family: 'Courier New', monospace;
-            border: 2px inset #fff;
-            margin-bottom: 10px;
-            padding: 2px;
-            font-size: 12px;
-        }
-
-        /* Trust Button */
-        .trust-button {
-            float: right;
-            margin-left: 10px;
-            font-size: 11px;
-            padding: 0 5px;
-            height: 20px;
-        }
-
+        /* Trust Result */
         .trust-result {
-            background: #ffffe0; /* Info tooltip yellow */
-            border: 1px solid #000;
+            background: #ffffe0;
+            border: 1px solid black;
             padding: 5px;
-            margin-top: 5px;
             font-size: 11px;
-            clear: both;
+            margin-top: 5px;
         }
-
-        /* Footer */
-        #current-time, #credit {
-            font-size: 12px;
-            color: #404040;
-            margin-top: 10px;
-        }
-
-        /* Icon reset */
-        .icon {
-            stroke-width: 1.5;
-        }
-        
-        hr {
-            border: 0;
-            border-top: 1px solid #808080;
-            border-bottom: 1px solid #fff;
-            margin: 5px 0;
-        }
-
-        /* Trust Analysis Score Colors */
-        .trust-score.high { color: green; font-weight: bold; }
+        .trust-score.high { color: blue; font-weight: bold; }
         .trust-score.medium { color: #808000; font-weight: bold; }
-        .trust-score.low { color: red; font-weight: bold; }
+        .trust-score.low { color: red; font-weight: bold; text-decoration: blink; }
+        
     </style>
 </head>
 <body>
 
-    <!-- Windows 98 Frame -->
-    <div class="window-frame">
-        <!-- Title Bar -->
+    <div class="window">
+        <!-- 윈도우 타이틀바 -->
         <div class="title-bar">
             <div class="title-bar-text">
-                <img src="/logo.ico" onerror="this.src='https://win98icons.alexmeub.com/icons/png/internet_connection_wiz-0.png'" width="16" height="16" alt="Icon">
+                <img src="/logo.ico" onerror="this.src='https://win98icons.alexmeub.com/icons/png/internet_connection_wiz-0.png'" width="16" height="16" style="margin-right:5px">
                 QISS - Microsoft Internet Explorer
             </div>
             <div class="title-bar-controls">
@@ -500,7 +381,7 @@
             </div>
         </div>
 
-        <!-- Menu Bar -->
+        <!-- 메뉴바 -->
         <div class="menu-bar">
             <div class="menu-item">파일(F)</div>
             <div class="menu-item">편집(E)</div>
@@ -508,134 +389,184 @@
             <div class="menu-item">이동(G)</div>
             <div class="menu-item">즐겨찾기(A)</div>
             <div class="menu-item">도움말(H)</div>
-            <div style="flex-grow:1"></div>
-            <!-- Old Nav Links moved here -->
+            <div style="flex:1"></div>
             <div class="menu-item"><a href="https://mail.google.com/">메일</a></div>
-            <div class="menu-item"><a href="https://drive.google.com/">드라이브</a></div>
-        </div>
-        
-        <!-- Marquee Banner -->
-        <div class="marquee-container">
-            <marquee scrolldelay="150">★ 만족도 2년연속 1위! 쿼터파이 ★ QISS 검색 시스템에 오신 것을 환영합니다... Netscape Navigator보다 빠릅니다...</marquee>
         </div>
 
-        <!-- Main Content Area (White Box) -->
-        <div class="main-content">
-            <h1 class="page-title">QISS <span style="font-size:14px; font-weight:normal; vertical-align:middle">Web Search</span></h1>
+        <!-- 주소창 -->
+        <div class="address-bar-wrapper">
+            <span class="address-label">주소(D):</span>
+            <input type="text" class="address-input" value="http://www.qiss.com/index.html" readonly>
+        </div>
+
+        <!-- 마퀴 -->
+        <marquee scrolldelay="100">
+            *** 만족도 2년 연속 1위! 쿼터파이 검색 시스템 QISS *** AI 요약 기능 탑재 *** Netscape 호환 ***
+        </marquee>
+
+        <!-- 뷰포트 (실제 내용) -->
+        <div class="viewport">
+            <h1 class="page-title">QISS <span style="font-size:12px; font-weight:normal; color:#666;">Ver 2.0</span></h1>
             
-            <button id="mode-toggle" onclick="toggleMode()">
-                <span class="qiss-text">QISS</span><span class="search-text">&nbsp;검색 모드</span>
-            </button>
-
-            <hr>
+            <fieldset>
+                <legend>검색 모드 설정</legend>
+                <button id="mode-toggle" onclick="toggleMode()">
+                    <span class="qiss-text">QISS</span><span class="search-text">&nbsp;검색</span>
+                </button>
+            </fieldset>
 
             <div id="custom-search" style="display:none;">
-                <p>검색어를 입력하십시오:</p>
-                <input type="text" id="search-bar" class="search-bar" onkeydown="handleEnter(event)">
-                <br><br>
-                <div id="search-buttons">
-                    <button class="search-button" onclick="searchInNaver()">Naver 검색</button>
-                    <button class="search-button" onclick="searchInDBpia()">DBpia</button>
-                    <button class="search-button" onclick="searchInGs()">Scholar</button>
-                    <button class="search-button" onclick="searchInRISS()">RISS</button>
-                </div>
+                <fieldset>
+                    <legend>사용자 지정 검색</legend>
+                    <input type="text" id="search-bar" class="search-bar" placeholder="검색어를 입력하세요..." onkeydown="handleEnter(event)">
+                    <div style="margin-top:10px;">
+                        <button onclick="searchInNaver()">Naver</button>
+                        <button onclick="searchInDBpia()">DBpia</button>
+                        <button onclick="searchInGs()">Scholar</button>
+                        <button onclick="searchInRISS()">RISS</button>
+                    </div>
+                </fieldset>
             </div>
 
             <!-- Google CSE -->
             <div id="cse-search" class="gcse-search" data-enableImageSearch="true"></div>
 
-            <!-- Gemini Summary (Notepad Look) -->
-            <div id="gemini-summary-container" style="display:none">
+            <!-- Gemini Summary (Notepad Style) -->
+            <div id="gemini-summary-container">
                 <div id="gemini-summary">
-                    <div class="summary-header">
-                        <h3>
-                            <span>AI 요약.txt - 메모장</span>
-                        </h3>
-                        <button id="btn-generate-summary" class="summary-button" onclick="triggerSummary()">
-                            요약 실행
-                        </button>
+                    <div class="notepad-header">
+                        <span>AI_Summary.txt - 메모장</span>
+                        <button style="height:16px; width:16px; font-size:8px; padding:0; line-height:8px;" onclick="document.getElementById('gemini-summary-container').style.display='none'">X</button>
+                    </div>
+                    <div style="padding:2px; background:#e0e0e0; border-bottom:1px solid gray; font-size:11px;">
+                        파일(F) 편집(E) 검색(S) 도움말(H)
                     </div>
                     <div id="gemini-summary-content">
                         <div id="gemini-summary-text"></div>
-                        <p style="font-size: 11px; color: #808080; margin-top: 12px; border-top: 1px dashed #ccc; padding-top:5px;">
-                            ※ AI는 부정확할 수 있습니다.
+                        <br>
+                        <hr style="border-style: dashed; border-color: #999;">
+                        <p style="font-size: 11px; color: #666;">
+                            [SYSTEM] AI는 잘못된 정보를 전달할 수 있습니다. 주의해서 사용하세요.
                         </p>
+                    </div>
+                    <div style="padding:10px; text-align:right; background:white;">
+                        <button id="btn-generate-summary" onclick="triggerSummary()">요약 실행 (Enter)</button>
                     </div>
                 </div>
             </div>
 
-            <br>
-            <div style="text-align:center;">
-                <div id="current-time">Ready</div>
-                <div id="credit">Copyright ⓒ 2025 쿼터파이 Corp.</div>
-                <img src="https://web.archive.org/web/20091027073238/http://geocities.com/Heartland/Plains/8637/ie_logo.gif" alt="IE Logo" style="margin-top:10px;">
-            </div>
+            <br><br>
+            <center>
+                <img src="https://web.archive.org/web/20091027073238/http://geocities.com/Heartland/Plains/8637/ie_logo.gif" alt="IE Logo">
+                <div id="current-time" style="font-size:12px; margin-top:5px;"></div>
+                <div id="credit" style="font-size:12px; color:#888;">Copyright ⓒ 2025 쿼터파이 Corp.</div>
+            </center>
         </div>
-        
-        <!-- Bottom Status Bar -->
-        <div style="background:var(--win-gray); border-top:1px solid #fff; padding:2px 5px; font-size:11px; display:flex; gap:10px;">
-            <div style="border:1px inset #fff; padding:0 5px; width:100px;">준비</div>
-            <div style="border:1px inset #fff; padding:0 5px; flex-grow:1;" id="api-status-indicator">오프라인</div>
-            <div style="border:1px inset #fff; padding:0 5px; width:50px;">CAPS</div>
+
+        <!-- 상태바 -->
+        <div class="status-bar">
+            <div class="status-panel" style="width:150px;">완료</div>
+            <div class="status-panel" style="flex:1;" id="api-status-indicator">오프라인</div>
+            <div class="status-panel" style="width:20px;"></div>
         </div>
     </div>
 
-    <!-- API 설정 모달 (Error Dialog Style) -->
+    <!-- API 설정 모달 -->
     <div id="api-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                시스템 설정
-                <button onclick="closeApiModal()" style="width:16px; height:14px; font-size:9px; line-height:10px;">X</button>
+        <div class="modal-window">
+            <div class="title-bar" style="background: navy;">
+                <div class="title-bar-text">시스템 경고</div>
+                <button onclick="closeApiModal()" style="height:14px; width:14px; padding:0; line-height:10px;">X</button>
             </div>
             <div class="modal-body">
-                <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; justify-content:center;">
-                    <img src="https://win98icons.alexmeub.com/icons/png/key_access-0.png" width="32" height="32">
-                    <p style="text-align:left; font-weight:bold;">Groq API 키가 필요합니다.</p>
+                <div style="display:flex; align-items:center; gap:15px; width:100%;">
+                    <img src="https://win98icons.alexmeub.com/icons/png/msg_warning-0.png" width="32" height="32">
+                    <div style="text-align:left; font-size:12px;">
+                        QISS AI 기능을 사용하려면<br>
+                        Groq API 키가 필요합니다.
+                    </div>
                 </div>
-                <p>AI 요약 기능을 사용하려면 키를 입력하십시오.</p>
-                
-                <div class="api-input-group">
-                    <label for="api-key-input" style="font-size:12px;">암호(P):</label>
-                    <input type="password" id="api-key-input">
+                <fieldset style="width:90%; padding:5px; margin:5px 0;">
+                    <legend>API Key 입력</legend>
+                    <input type="password" id="api-key-input" style="width:95%;">
+                </fieldset>
+                <div style="display:flex; gap:10px; justify-content:center; width:100%;">
+                    <button onclick="saveApiKey()" style="width:80px;">확인</button>
+                    <button onclick="closeApiModal()" style="width:80px;">취소</button>
                 </div>
-            </div>
-            <div class="modal-buttons">
-                <button class="modal-button primary" onclick="saveApiKey()">확인</button>
-                <button class="modal-button secondary" onclick="closeApiModal()">취소</button>
             </div>
         </div>
     </div>
 
-    <!-- API 설정 버튼 (Floater) -->
+    <!-- 설정 버튼 -->
     <button id="api-settings-btn" onclick="openApiModal()" title="설정">
-        <img src="https://win98icons.alexmeub.com/icons/png/settings_gear-0.png" width="20" height="20">
+        <img src="https://win98icons.alexmeub.com/icons/png/settings_gear-0.png" width="16" height="16">
     </button>
 
     <script>
+        // ==========================================
+        // CONFIGURATION
+        // ==========================================
         const GROQ_MODEL = 'meta-llama/llama-4-maverick-17b-128e-instruct'; 
-
         let isCSE = true;
         let currentSearchQuery = '';
         let lastProcessedQuery = '';
         let currentSummaryData = null;
 
-        // 아이콘은 텍스트나 이미지로 대체하므로 SVG 변수는 최소화
-        const ICONS = {
-            spinner: '⏳',
-            refresh: '↻'
-        };
-
+        // Marked.js 옵션
         marked.setOptions({ breaks: true, gfm: true });
 
+        // ==========================================
+        // UI FUNCTIONS
+        // ==========================================
+        function toggleMode() {
+            isCSE = !isCSE;
+            const cse = document.getElementById('cse-search');
+            const custom = document.getElementById('custom-search');
+            const toggleBtn = document.getElementById('mode-toggle');
+            
+            document.getElementById('gemini-summary-container').style.display = 'none';
+
+            if (isCSE) {
+                toggleBtn.querySelector('.search-text').innerText = " 모드: 구글";
+                custom.style.display = 'none';
+                cse.style.display = 'block';
+            } else {
+                toggleBtn.querySelector('.search-text').innerText = " 모드: 사용자";
+                cse.style.display = 'none';
+                custom.style.display = 'block';
+            }
+        }
+
+        // 시간 업데이트
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('current-time').innerText = now.toLocaleString();
+        }, 1000);
+
+        // 검색 엔터 처리
+        function handleEnter(event) { if (event.key === 'Enter') searchInGoogle(); }
+        function getQuery() { return document.getElementById('search-bar').value.trim(); }
+        
+        // 검색 함수들
+        function searchInGoogle() { const q = getQuery(); if (q) window.open('https://www.google.com/search?q=' + encodeURIComponent(q), '_blank'); }
+        function searchInNaver() { const q = getQuery(); if (q) window.open('https://search.naver.com/search.naver?where=nexearch&sm=tab_hty&query=' + encodeURIComponent(q), '_blank'); }
+        function searchInDBpia() { const q = getQuery(); if (q) window.open('https://www.dbpia.co.kr/search/topSearch?searchOption=all&query=' + encodeURIComponent(q), '_blank'); }
+        function searchInGs() { const q = getQuery(); if (q) window.open('https://scholar.google.com/scholar?hl=ko&as_sdt=0%2C5&q=' + encodeURIComponent(q), '_blank'); }
+        function searchInRISS() { const q = getQuery(); if (q) window.open('https://www.riss.kr/search/Search.do?colName=all&isDetailSearch=N&searchGubun=true&query=' + encodeURIComponent(q), '_blank'); }
+
+        // ==========================================
+        // API & AI FUNCTIONS (RESTORED PROMPTS)
+        // ==========================================
         function updateApiStatus() {
             const apiKey = localStorage.getItem('GROQ_API_KEY');
             const indicator = document.getElementById('api-status-indicator');
             if (apiKey) {
                 indicator.innerHTML = 'API 연결됨';
-                indicator.style.color = 'black';
+                indicator.style.color = 'navy';
             } else {
-                indicator.innerHTML = 'API 키 없음';
-                indicator.style.color = '#808080';
+                indicator.innerHTML = '키 필요함';
+                indicator.style.color = 'red';
             }
         }
 
@@ -657,44 +588,15 @@
             const apiKey = input.value.trim();
             if (apiKey) {
                 localStorage.setItem('GROQ_API_KEY', apiKey);
-                alert('시스템 레지스트리에 키가 저장되었습니다.');
+                alert('시스템: 키가 저장되었습니다.');
                 closeApiModal();
                 updateApiStatus();
             } else {
-                alert('경고: 키가 입력되지 않았습니다.');
+                alert('오류: 키를 입력하십시오.');
             }
         }
 
         window.addEventListener('DOMContentLoaded', updateApiStatus);
-
-        function toggleMode() {
-            isCSE = !isCSE;
-            const cse = document.getElementById('cse-search');
-            const custom = document.getElementById('custom-search');
-            const toggleBtn = document.getElementById('mode-toggle');
-            
-            // UI Reset
-            document.getElementById('gemini-summary-container').style.display = 'none';
-
-            if (isCSE) {
-                toggleBtn.querySelector('.search-text').innerText = " 모드: 구글";
-                custom.style.display = 'none';
-                cse.style.display = 'block';
-            } else {
-                toggleBtn.querySelector('.search-text').innerText = " 모드: 사용자";
-                cse.style.display = 'none';
-                custom.style.display = 'block';
-            }
-        }
-
-        function handleEnter(event) { if (event.key === 'Enter') searchInGoogle(); }
-        function getQuery() { return document.getElementById('search-bar').value.trim(); }
-        
-        function searchInGoogle() { const q = getQuery(); if (q) window.open('https://www.google.com/search?q=' + encodeURIComponent(q), '_blank'); }
-        function searchInNaver() { const q = getQuery(); if (q) window.open('https://search.naver.com/search.naver?where=nexearch&sm=tab_hty&query=' + encodeURIComponent(q), '_blank'); }
-        function searchInDBpia() { const q = getQuery(); if (q) window.open('https://www.dbpia.co.kr/search/topSearch?searchOption=all&query=' + encodeURIComponent(q), '_blank'); }
-        function searchInGs() { const q = getQuery(); if (q) window.open('https://scholar.google.com/scholar?hl=ko&as_sdt=0%2C5&q=' + encodeURIComponent(q), '_blank'); }
-        function searchInRISS() { const q = getQuery(); if (q) window.open('https://www.riss.kr/search/Search.do?colName=all&isDetailSearch=N&searchGubun=true&query=' + encodeURIComponent(q), '_blank'); }
 
         function triggerSummary() {
             if (!currentSummaryData) return;
@@ -702,8 +604,9 @@
             const contentDiv = document.getElementById('gemini-summary-content');
             
             btn.disabled = true;
-            btn.innerText = '처리 중...';
+            btn.innerHTML = '처리 중...';
             contentDiv.style.display = 'block';
+            
             generateSummary(currentSummaryData.query, currentSummaryData.results);
         }
 
@@ -713,13 +616,13 @@
             const btn = document.getElementById('btn-generate-summary');
 
             if (!GROQ_API_KEY) {
-                summaryText.innerHTML = '오류: API 키가 없습니다. 설정 메뉴를 확인하십시오.';
-                btn.innerText = '오류';
+                summaryText.innerHTML = '<span style="color:red">치명적 오류: API 키 누락.</span>';
+                btn.innerHTML = '설정 필요';
                 btn.disabled = false;
                 return;
             }
 
-            summaryText.innerHTML = '데이터 수신 중...';
+            summaryText.innerHTML = '데이터 분석 중...';
             
             try {
                 let resultsContext = '검색어: ' + query + '\n\n검색 결과:\n\n';
@@ -727,38 +630,51 @@
                     resultsContext += `${index + 1}. ${result.title}\n${result.snippet}\n\n`;
                 });
                 
+                // *** RESTORED ORIGINAL PROMPTS ***
+                const systemPrompt = `당신은 검색 결과들을 바탕으로 사용자에게 과학적이고 간결한 요약을 제공하는 AI입니다. 다음은 "${query}"에 대한 학술 검색 결과입니다. 이 검색 결과들을 바탕으로 사용자가 알고 싶어하는 정보를 과학적이고 간결하게 요약해주세요. 한국어로 답변해주세요. 마크다운 문법을 자유롭게 사용할 수 있습니다.`;
+                
+                const userPrompt = `다음 검색 결과들을 종합하여 요약해주세요:\n\n${resultsContext}\n\n요약 시 다음 사항을 지켜주세요:\n1. 핵심 정보를 명확하게 정리 (마크다운 사용 가능)\n2. 검색 결과의 주요 내용을 종합적으로 설명. 마지막에 결론을 낼것.\n3. 객관적이고 중립적, 과학적이고 전문적인 톤 유지\n4. 불필요한 인사말이나 서론 없이 바로 본론으로 시작\n5. 가독성을 위해 적절히 마크다운 문법 활용 (제목, 강조, 리스트 등)`;
+
                 const response = await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${GROQ_API_KEY}`,
+                    },
                     body: JSON.stringify({
                         model: GROQ_MODEL, 
                         messages: [
-                            { role: 'system', content: "당신은 90년대 컴퓨터 전문가입니다. 정보를 매우 건조하고 전문적으로 요약하십시오." },
-                            { role: 'user', content: `다음 정보를 요약하시오:\n\n${resultsContext}` }
+                            { role: 'system', content: systemPrompt },
+                            { role: 'user', content: userPrompt }
                         ],
-                        temperature: 0.7, max_tokens: 1024
+                        temperature: 0.7,
+                        max_tokens: 1024,
                     })
                 });
 
-                if (!response.ok) throw new Error('Network response was not ok');
+                if (!response.ok) throw new Error('API 응답 실패');
                 const data = await response.json();
                 
                 if (data.choices && data.choices[0]) {
-                    summaryText.innerHTML = marked.parse(data.choices[0].message.content);
-                    btn.innerText = '다시 실행';
+                    const summary = data.choices[0].message.content;
+                    summaryText.innerHTML = marked.parse(summary);
+                    btn.innerHTML = '다시 요약';
                     btn.disabled = false;
                 }
             } catch (error) {
-                summaryText.innerHTML = '치명적 오류 발생: ' + error.message;
-                btn.innerText = '재시도';
+                summaryText.innerHTML = `<span style="color:red">오류 발생: ${error.message}</span>`;
+                btn.innerHTML = '재시도';
                 btn.disabled = false;
             }
         }
 
-        // Search Monitor (Mutation Observer)
+        // ==========================================
+        // OBSERVERS (SEARCH & DOM)
+        // ==========================================
         function monitorSearchResults() {
             const resultsObserver = new MutationObserver(() => {
                 if (!isCSE) return;
+                
                 const results = document.querySelectorAll('.gsc-webResult.gsc-result');
                 const searchInput = document.querySelector('input.gsc-input');
                 const query = searchInput ? searchInput.value.trim() : '';
@@ -766,58 +682,59 @@
                 if (results.length > 0 && query && query !== lastProcessedQuery) {
                     const searchResults = [];
                     results.forEach(result => {
-                        const titleEl = result.querySelector('.gs-title');
-                        const snippetEl = result.querySelector('.gs-snippet');
-                        if (titleEl && snippetEl) {
-                            searchResults.push({ title: titleEl.textContent, snippet: snippetEl.textContent });
+                        const titleElement = result.querySelector('.gs-title');
+                        const snippetElement = result.querySelector('.gs-snippet');
+                        if (titleElement && snippetElement) {
+                            searchResults.push({
+                                title: titleElement.textContent.trim(),
+                                snippet: snippetElement.textContent.trim()
+                            });
                         }
                     });
 
+                    const summaryContainer = document.getElementById('gemini-summary-container');
                     if (searchResults.length > 0) {
                         lastProcessedQuery = query;
-                        const container = document.getElementById('gemini-summary-container');
-                        container.style.display = 'block';
+                        summaryContainer.style.display = 'block';
                         
-                        // Insert Summary Box at top of results
-                        const wrapper = results[0].closest('.gsc-results-wrapper-visible') || results[0].parentElement;
-                        if(wrapper) wrapper.insertBefore(container, wrapper.firstChild);
-                        
+                        // Insert above results
+                        const wrapper = results[0].closest('.gsc-results-wrapper-visible') || results[0].parentElement.parentElement;
+                        if(wrapper) wrapper.insertBefore(summaryContainer, wrapper.firstChild);
+
                         currentSummaryData = { query: query, results: searchResults.slice(0, 5) };
-                        document.getElementById('gemini-summary-content').style.display = 'none';
-                        document.getElementById('btn-generate-summary').innerText = '요약 실행';
+                        document.getElementById('gemini-summary-content').style.display = 'none'; // Initially hidden
+                        document.getElementById('btn-generate-summary').innerHTML = '요약 실행';
                         document.getElementById('btn-generate-summary').disabled = false;
                     }
                 }
-                addTrustButtons(); // Re-apply buttons
+                addTrustButtons();
             });
 
             resultsObserver.observe(document.body, { childList: true, subtree: true });
         }
         monitorSearchResults();
 
-        // Time
-        setInterval(() => {
-            const now = new Date();
-            document.getElementById('current-time').innerText = "현재 시간: " + now.toLocaleString();
-        }, 1000);
-
-        // Trust Button Logic
+        // Trust Analysis Buttons
         function addTrustButtons() {
             if (!isCSE) return;
             const results = document.querySelectorAll('.gsc-webResult.gsc-result');
             results.forEach(result => {
                 if (result.querySelector('.trust-button')) return;
+                
                 const titleLink = result.querySelector('.gs-title a');
                 if (!titleLink || !titleLink.href) return;
 
                 const btn = document.createElement('button');
                 btn.className = 'trust-button';
-                btn.innerText = '🛡 보안 검사';
-                btn.onclick = (e) => { e.stopPropagation(); analyzeTrust(titleLink.href, btn, result); };
+                btn.innerHTML = '🛡 보안 검사';
+                btn.style.float = 'right';
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    analyzeTrust(titleLink.href, btn, result);
+                };
                 
-                // Insert next to title
-                const titleContainer = result.querySelector('.gs-title');
-                if(titleContainer) titleContainer.appendChild(btn);
+                const snippet = result.querySelector('.gs-snippet');
+                if(snippet) snippet.parentNode.insertBefore(btn, snippet);
             });
         }
 
@@ -825,44 +742,51 @@
             const GROQ_API_KEY = localStorage.getItem('GROQ_API_KEY');
             if (!GROQ_API_KEY) { openApiModal(); return; }
 
-            const originalText = btn.innerText;
-            btn.innerText = '검사 중...';
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '분석 중...';
             btn.disabled = true;
 
-            const existing = resultContainer.querySelector('.trust-result');
-            if (existing) existing.remove();
+            const existingResult = resultContainer.querySelector('.trust-result');
+            if (existingResult) existingResult.remove();
 
             try {
                 const hostname = new URL(url).hostname;
+                const systemPrompt = `당신은 사이버 보안 전문가입니다. 사용자의 안전을 위해 도메인을 평가합니다.`;
+                const userPrompt = `대상 도메인: ${hostname}\n\n이 사이트의 보안 신뢰도를 평가하여 '매우 안전', '안전', '양호', '주의 필요', '위험' 중 하나의 단어만 출력하세요. 다른 말은 하지 마세요.`;
+
                 const response = await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
                     body: JSON.stringify({
                         model: GROQ_MODEL,
                         messages: [
-                            { role: 'system', content: "You are a security bot. Reply with one word safety level: '안전', '주의', '위험'." },
-                            { role: 'user', content: `Domain: ${hostname}` }
+                            { role: 'system', content: systemPrompt },
+                            { role: 'user', content: userPrompt }
                         ],
-                        temperature: 0.1, max_tokens: 10
+                        temperature: 0.1,
+                        max_tokens: 10
                     })
                 });
-                
+
+                if (!response.ok) throw new Error('API Error');
                 const data = await response.json();
                 const grade = data.choices[0].message.content.trim().replace(/['"]/g, '');
                 
                 const resultDiv = document.createElement('div');
                 resultDiv.className = 'trust-result';
-                let colorClass = grade.includes('안전') ? 'high' : (grade.includes('위험') ? 'low' : 'medium');
                 
+                let colorClass = 'high';
+                if (grade.includes('주의')) colorClass = 'medium';
+                if (grade.includes('위험')) colorClass = 'low';
+
                 resultDiv.innerHTML = `분석 결과: <span class="trust-score ${colorClass}">${grade}</span> (도메인: ${hostname})`;
                 resultContainer.appendChild(resultDiv);
                 
-                btn.innerText = '완료';
+                btn.innerHTML = '완료';
                 btn.disabled = false;
-            } catch (e) {
-                alert('검사 실패');
-                btn.innerText = originalText;
-                btn.disabled = false;
+            } catch (error) {
+                btn.innerHTML = '오류';
+                setTimeout(() => { btn.innerHTML = originalText; btn.disabled = false; }, 2000);
             }
         }
     </script>
