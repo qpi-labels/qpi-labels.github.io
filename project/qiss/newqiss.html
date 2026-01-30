@@ -5,6 +5,10 @@
     <title>QISS - Microsoft Internet Explorer</title>
     <link rel="shortcut icon" type="image/x-icon" href="/logo.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Marlett Font (Windows System Icons) -->
+    <link href="https://db.onlinewebfonts.com/c/c8da7be807a6253e53142d51f6d3c37d?family=Marlett" rel="stylesheet">
+    
     <!-- Google CSE -->
     <script async src="https://cse.google.com/cse.js?cx=b794e851ac2524ee7"></script>
     <!-- Marked.js -->
@@ -39,6 +43,12 @@
             align-items: center;
             min-height: 100vh;
             overflow-y: scroll;
+            
+            /* 픽셀 폰트 효과 (Anti-aliasing 제거) */
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: none;
+            font-smooth: never;
+            text-rendering: geometricPrecision;
         }
 
         /* 메인 윈도우 프레임 */
@@ -366,7 +376,7 @@
         <div class="title-bar">
             <div class="title-bar-text">
                 <img src="/logo.ico" onerror="this.src='https://win98icons.alexmeub.com/icons/png/internet_connection_wiz-0.png'" width="16" height="16" style="margin-right:5px">
-                QISS - Microsoft Internet Explorer
+                QISS - 마이크로소프트 인터넷 익스플로러® 4.0
             </div>
             <div class="title-bar-controls">
                 <button>_</button>
@@ -390,20 +400,20 @@
         <!-- 주소창 -->
         <div class="address-bar-wrapper">
             <span class="address-label">주소(D):</span>
-            <input type="text" class="address-input" value="http://www.qiss.com/index.html" readonly>
+            <input type="text" class="address-input" value="http://qpi.kro.kr/" readonly>
         </div>
 
         <!-- 마퀴 -->
         <marquee scrolldelay="100">
-            *** 만족도 2년 연속 1위! 쿼터파이 검색 시스템 QISS *** AI 요약 기능 탑재 *** Netscape 호환 ***
+            *** 학술 논문 대여점 <사분주율 연구> 가 마침내 정보의 바다 월드 와이드 웹(WWW)에 상륙했다! QISS! *** 본 페이지는 Microsoft Internet Explorer 4.0 환경에서 가장 쾌적하게 열람하실 수 있습니다. 넷스케이프 네비게이터 사용자는 화면이 깨질 수 있으니 주의하십시오. ***
         </marquee>
 
         <!-- 뷰포트 (실제 내용) -->
         <div class="viewport">
-            <h1 class="page-title">QISS <span style="font-size:12px; font-weight:normal; color:#666;">Ver 2.0</span></h1>
+            <h1 class="page-title">QISS <span style="font-size:20px; font-weight:normal; color:#666;">'98</span></h1>
             
             <fieldset>
-                <legend>검색 모드 설정</legend>
+                <legend>검색 방식</legend>
                 <button id="mode-toggle" onclick="toggleMode()">
                     <span class="qiss-text">QISS</span><span class="search-text">&nbsp;검색</span>
                 </button>
@@ -411,13 +421,13 @@
 
             <div id="custom-search" style="display:none;">
                 <fieldset>
-                    <legend>사용자 지정 검색</legend>
+                    <legend>사용자 정의 검색</legend>
                     <input type="text" id="search-bar" class="search-bar" placeholder="검색어를 입력하세요..." onkeydown="handleEnter(event)">
                     <div style="margin-top:10px;">
-                        <button onclick="searchInNaver()">Naver</button>
-                        <button onclick="searchInDBpia()">DBpia</button>
-                        <button onclick="searchInGs()">Scholar</button>
-                        <button onclick="searchInRISS()">RISS</button>
+                        <button onclick="searchInNaver()">네이버 (NAVER)</button>
+                        <button onclick="searchInDBpia()">국어국문학회지 CD-ROM</button>
+                        <button onclick="searchInGs()">야후! 코리아 학술검색</button>
+                        <button onclick="searchInRISS()">학술연구정보서비스</button>
                     </div>
                 </fieldset>
             </div>
@@ -429,7 +439,7 @@
             <div id="gemini-summary-container">
                 <div id="gemini-summary">
                     <div class="notepad-header">
-                        <span>AI_Summary.txt - 메모장</span>
+                        <span>QISS_도우미.hlp - Windows 도움말</span>
                         <button style="height:16px; width:16px; font-size:8px; padding:0; line-height:8px;" onclick="document.getElementById('gemini-summary-container').style.display='none'">X</button>
                     </div>
                     <div style="padding:2px; background:#e0e0e0; border-bottom:1px solid gray; font-size:11px;">
@@ -440,7 +450,7 @@
                         <br>
                         <hr style="border-style: dashed; border-color: #999;">
                         <p style="font-size: 11px; color: #666;">
-                            [SYSTEM] AI는 잘못된 정보를 전달할 수 있습니다. 주의해서 사용하세요.
+                            [시스템] 지능형 도우미는 잘못된 정보를 전달할 수 있습니다. 주의해서 사용하세요.
                         </p>
                     </div>
                     <div style="padding:10px; text-align:right; background:white;">
@@ -451,16 +461,18 @@
 
             <br><br>
             <center>
-                <img src="https://web.archive.org/web/20091027073238/http://geocities.com/Heartland/Plains/8637/ie_logo.gif" alt="IE Logo">
-                <div id="current-time" style="font-size:12px; margin-top:5px;"></div>
-                <div id="credit" style="font-size:12px; color:#888;">Copyright ⓒ 2025 쿼터파이 Corp.</div>
+            <div style="font-size:11px; color:#444; margin-top:10px;">
+        이 페이지는 <span style="color:navy; font-weight:bold;">Internet Explorer 4.0</span>에서 가장 잘 보입니다.<br>
+        해상도 800x600 High Color / 글꼴: 굴림 (9pt)<br>
+        Copyright ⓒ 1998 쿼터파이 전산. All rights reserved.
+    </div>
             </center>
         </div>
 
         <!-- 상태바 -->
         <div class="status-bar">
             <div class="status-panel" style="width:150px;">완료</div>
-            <div class="status-panel" style="flex:1;" id="api-status-indicator">오프라인</div>
+            <div class="status-panel" style="flex:1;" id="api-status-indicator">연결되지 않음</div>
             <div class="status-panel" style="width:20px;"></div>
         </div>
     </div>
@@ -469,24 +481,24 @@
     <div id="api-modal">
         <div class="modal-window">
             <div class="title-bar" style="background: navy;">
-                <div class="title-bar-text">시스템 경고</div>
+                <div class="title-bar-text">경고</div>
                 <button onclick="closeApiModal()" style="height:14px; width:14px; padding:0; line-height:10px;">X</button>
             </div>
             <div class="modal-body">
                 <div style="display:flex; align-items:center; gap:15px; width:100%;">
                     <img src="https://win98icons.alexmeub.com/icons/png/msg_warning-0.png" width="32" height="32">
                     <div style="text-align:left; font-size:12px;">
-                        QISS AI 기능을 사용하려면<br>
-                        Groq API 키가 필요합니다.
+                        QISS 인공지능 기능을 사용하려면<br>
+                        groq 등록 정보 키가 필요합니다.
                     </div>
                 </div>
                 <fieldset style="width:90%; padding:5px; margin:5px 0;">
-                    <legend>API Key 입력</legend>
+                    <legend>등록 정보 키 입력</legend>
                     <input type="password" id="api-key-input" style="width:95%;">
                 </fieldset>
                 <div style="display:flex; gap:10px; justify-content:center; width:100%;">
-                    <button onclick="saveApiKey()" style="width:80px;">확인</button>
-                    <button onclick="closeApiModal()" style="width:80px;">취소</button>
+                    <button onclick="saveApiKey()" style="width:70px;">예 (Y)</button>
+                    <button onclick="closeApiModal()" style="width:100px;">아니오 (N)</button>
                 </div>
             </div>
         </div>
@@ -522,7 +534,7 @@
             document.getElementById('gemini-summary-container').style.display = 'none';
 
             if (isCSE) {
-                toggleBtn.querySelector('.search-text').innerText = " 모드: 구글";
+                toggleBtn.querySelector('.search-text').innerText = " 모드: 검색";
                 custom.style.display = 'none';
                 cse.style.display = 'block';
             } else {
@@ -556,7 +568,7 @@
             const apiKey = localStorage.getItem('GROQ_API_KEY');
             const indicator = document.getElementById('api-status-indicator');
             if (apiKey) {
-                indicator.innerHTML = 'API 연결됨';
+                indicator.innerHTML = '등록 정보 연결됨';
                 indicator.style.color = 'navy';
             } else {
                 indicator.innerHTML = '키 필요함';
@@ -582,7 +594,7 @@
             const apiKey = input.value.trim();
             if (apiKey) {
                 localStorage.setItem('GROQ_API_KEY', apiKey);
-                alert('시스템: 키가 저장되었습니다.');
+                alert('시스템: 설정을 저장했습니다.');
                 closeApiModal();
                 updateApiStatus();
             } else {
@@ -610,13 +622,13 @@
             const btn = document.getElementById('btn-generate-summary');
 
             if (!GROQ_API_KEY) {
-                summaryText.innerHTML = '<span style="color:red">치명적 오류: API 키 누락.</span>';
+                summaryText.innerHTML = '<span style="color:red">오류: 등록 정보 키를 찾을 수 없습니다.</span>';
                 btn.innerHTML = '설정 필요';
                 btn.disabled = false;
                 return;
             }
 
-            summaryText.innerHTML = '데이터 분석 중...';
+            summaryText.innerHTML = '정보 분석 중...';
             
             try {
                 let resultsContext = '검색어: ' + query + '\n\n검색 결과:\n\n';
@@ -645,7 +657,7 @@
                     })
                 });
 
-                if (!response.ok) throw new Error('API 응답 실패');
+                if (!response.ok) throw new Error('등록 정보 응답 실패');
                 const data = await response.json();
                 
                 if (data.choices && data.choices[0]) {
@@ -696,7 +708,7 @@
 
                         currentSummaryData = { query: query, results: searchResults.slice(0, 5) };
                         document.getElementById('gemini-summary-content').style.display = 'none'; // Initially hidden
-                        document.getElementById('btn-generate-summary').innerHTML = '요약 실행';
+                        document.getElementById('btn-generate-summary').innerHTML = '분석 실행';
                         document.getElementById('btn-generate-summary').disabled = false;
                     }
                 }
@@ -784,4 +796,4 @@
         }
     </script>
 </body>
-    </html>
+</html>
