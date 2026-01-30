@@ -2,1017 +2,869 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>QISS</title>
+    <title>QISS - Internet Explorer</title>
     <link rel="shortcut icon" type="image/x-icon" href="/logo.ico">
-    <link rel="shortcut icon" type="image/x-icon" href="/logo_dark.ico" media="(prefers-color-scheme: dark)">
-    <link rel="shortcut icon" type="image/x-icon" href="/logo.ico" media="(prefers-color-scheme: light)">
     <meta property="og:url" content="https://qpi.kro.kr">
     <meta property="og:title" content="쿼터파이">
     <meta property="og:type" content="website">
     <meta property="og:image" content="/logo.png">
     <meta property="og:description" content="만족도 2년연속 1위! 쿼터파이">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/colors.css">
-    <script async src="https://cse.google.com/cse.js?cx=c31ed7ed73e974099"></script>
+    <script async src="https://cse.google.com/cse.js?cx=b794e851ac2524ee7"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
 
     <style>
-        @import url('https://fonts.cdnfonts.com/css/br-cobane');
-        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
-        @import url('https://cdn.jsdelivr.net/gh/toss/tossface/dist/tossface.css');
+        /* Windows 98 Reset & Base Styles */
+        :root {
+            --win-bg: #008080;
+            --win-gray: #c0c0c0;
+            --win-gray-light: #dfdfdf;
+            --win-gray-dark: #808080;
+            --win-black: #000000;
+            --win-white: #ffffff;
+            --win-blue: #000080;
+            --win-blue-grad: #1084d0;
+            --c-blue: #000080; /* 호환성 유지 */
+            --c-text: #000000;
+            --c-gray1: #dfdfdf;
+            --c-gray2: #808080;
+            --c-gray6: #404040;
+        }
 
         body {
-    background-color: var(--c-bg);
-    color: var(--c-text);
-    font-family: "BR Cobane", 'Pretendard Variable';
-    text-align: center;
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    margin: 0;
-    padding-top: 60px;
-    overflow-y: scroll;
-}
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: rgb(from var(--c-bg) r g b / 80%);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 10px 5px;
-            z-index: 100;
+            background-color: var(--win-bg);
+            color: black;
+            font-family: 'Gulim', 'Dotum', 'MS Sans Serif', Tahoma, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden; /* 창 내부 스크롤을 위해 body 스크롤 막음 */
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            border-bottom: 1.5px solid var(--c-gray1);
-            box-sizing: border-box;
-            min-height: 60px;
-            font-family: "BR Cobane";
+            justify-content: center;
         }
 
-        .header-title-link {
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 16px;
+            background: var(--win-gray);
+        }
+        ::-webkit-scrollbar-button {
+            background: var(--win-gray);
+            border: 2px outset #fff;
+            display: block;
+            height: 16px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e0e0e0; /* Checkered pattern simulated */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--win-gray);
+            border: 2px outset #fff;
+        }
+
+        /* Window Container */
+        .window-frame {
+            width: 95%;
+            max-width: 1024px;
+            height: 90vh;
+            background: var(--win-gray);
+            border: 2px solid;
+            border-color: #fff #000 #000 #fff; /* Outset 3D */
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .title-bar {
+            background: linear-gradient(90deg, var(--win-blue), var(--win-blue-grad));
+            padding: 3px 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 18px;
+        }
+
+        .title-bar-text {
+            color: white;
+            font-weight: bold;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .title-bar-controls button {
+            width: 16px;
+            height: 14px;
+            background: var(--win-gray);
+            border: 1px outset #fff;
+            font-size: 9px;
+            line-height: 10px;
+            padding: 0;
+            margin-left: 2px;
+            font-weight: bold;
+        }
+
+        .menu-bar {
+            display: flex;
+            gap: 15px;
+            padding: 2px 8px;
+            border-bottom: 1px solid var(--win-gray-dark);
+            font-size: 13px;
+        }
+
+        .menu-item {
+            cursor: default;
+        }
+        .menu-item:hover {
+            background-color: var(--win-blue);
+            color: white;
+        }
+        .menu-item a {
             text-decoration: none;
             color: inherit;
-            margin-left: 15px;
         }
 
-        .header-title-link h1 {
-            font-size: x-large;
-            margin: 0;
-            font-weight: 550;
-            display: inline;
+        .main-content {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            background: #fff;
+            border: 2px inset #fff;
+            margin: 4px;
         }
 
-        .header-links {
-            display: flex;
-            gap: 20px;
-            margin-right: 50px;
-        }
-
-        .header-link {
-            color: var(--c-gray7);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s ease;
-            white-space: nowrap;
-        }
-
-        .header-link:hover {
-            color: var(--c-gray6);
-            text-decoration: underline;
-        }
-
-        .header-link:visited {
-            color: var(--c-gray7);
-        }
-
+        /* Typography & Layout */
         .page-title {
-            font-family: "BR Cobane";
-            font-size: xxx-large;
-            margin-bottom: 0;
-            font-weight: 700;
+            font-size: 32px;
+            text-align: center;
+            margin: 20px 0;
+            font-weight: 900;
+            letter-spacing: -1px;
+            text-shadow: 2px 2px var(--win-gray);
         }
 
-        /* 공통 검색바 디자인 */
-        .search-bar {
-            width: 80%;
-            max-width: 584px;
-            padding: 10px 20px;
-            border-radius: 30px;
-            border: 1px solid var(--c-gray1);
-            font-size: 16px;
+        /* Buttons (Windows 98 Style) */
+        button {
+            background: var(--win-gray);
+            border: 2px solid;
+            border-color: #fff #000 #000 #fff; /* Outset */
+            color: black;
+            padding: 4px 10px;
+            font-family: 'Gulim', sans-serif;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        button:active {
+            border-color: #000 #fff #fff #000; /* Inset */
+            padding: 5px 9px 3px 11px; /* Shift text */
+        }
+
+        button:hover {
+            box-shadow: none;
+            transform: none;
+        }
+
+        /* Inputs */
+        input[type="text"], input[type="password"] {
+            border: 2px solid;
+            border-color: #404040 #dfdfdf #dfdfdf #404040; /* Inset */
+            background: #fff;
+            padding: 3px;
+            font-family: 'Gulim', sans-serif;
+            border-radius: 0;
             outline: none;
-            background-color: var(--c-bg);
-            color: var(--c-text);
-            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Toggle Button Customization */
+        #mode-toggle {
+            display: block;
+            margin: 0 auto 20px auto;
+            min-width: 100px;
+        }
+
+        /* Search Areas */
+        #custom-search {
+            text-align: center;
+            background: var(--win-gray);
+            padding: 20px;
+            border: 2px outset #fff;
+            width: 80%;
+            margin: 0 auto;
             box-sizing: border-box;
         }
-
-        .search-bar:focus {
-            border-color: var(--c-blue);
-            box-shadow: 0 0 10px rgba(0, 102, 255, 0.2);
-        }
-
-        /* CSE 검색창 스타일 개선 */
-        .gcse-search {
-            margin: 0 auto;
+        
+        .search-bar {
             width: 100%;
-            max-width: 584px;
-        }
-
-        .gsc-control-cse {
-            background: none !important;
-            border: none !important;
-            padding: 0 !important;
-        }
-
-        /* 검색창 wrapper */
-        .gsc-search-box {
-            margin: 0 auto !important;
-            width: 100% !important;
-            max-width: 584px !important;
-            position: relative !important;
-            padding-bottom: 10px !important;
-        }
-
-        table.gsc-search-box {
-            margin: 0 auto !important;
-            border: none !important;
-            background: none !important;
-            width: 100% !important;
-            max-width: 584px !important;
-            padding-bottom: 20px !important;
-        }
-
-        td.gsc-input {
-            padding: 0 !important;
-        }
-
-        /* 실제 검색창 스타일 */
-        input.gsc-input, .gsc-input-box, .gsc-input-box input {
-            border-radius: 30px !important;
-            border: 1px solid var(--c-gray1) !important;
-            background-color: var(--c-bg) !important;
-            color: var(--c-text) !important;
-            font-size: 16px !important;
-            padding: 10px 20px !important;
-            height: 42px !important;
-            line-height: 20px !important;
-            box-shadow: none !important;
-            width: 100% !important;
-            max-width: 584px !important;
-            box-sizing: border-box !important;
-            font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
-        }
-
-        .gsc-input-box {
-            border: none !important;
-            background: none !important;
-            box-shadow: none !important;
-            height: 42px !important;
-        }
-
-        input.gsc-input:focus {
-            border-color: var(--c-blue) !important;
-            box-shadow: 0 0 10px rgba(0, 102, 255, 0.2) !important;
-        }
-
-        /* 검색 버튼 숨김 */
-        .gsc-search-button-v2, button.gsc-search-button, td.gsc-search-button {
-            display: none !important;
-        }
-
-        .gsc-branding, 
-        .gsc-watermark, 
-        .gcsc-branding, 
-        .gcsc-branding-img, 
-        .gcsc-branding-text,
-        .gsc-input-box .gsc-watermark,
-        .gsc-branding-text,
-        .gsc-branding-img,
-        .gsc-branding-img-noclear,
-        .gsc-branding-text-noclear,
-        td.gsc-branding {
-            display: none !important;
-            visibility: hidden !important;
-            opacity: 0 !important;
-            height: 0 !important;
-            width: 0 !important;
-            position: absolute !important;
-            left: -9999px !important;
-        }
-
-        /* 불필요한 요소들 완전 제거 */
-        .gsc-tabsArea,
-        .gsc-orderby-container,
-        .gcsc-find-more-on-google,
-        .gs-image,
-        .gsc-refinementsArea,
-        .gsc-above-wrapper-area {
-            display: none !important;
-            visibility: hidden !important;
-            height: 0 !important;
-            width: 0 !important;
-            opacity: 0 !important;
-        }
-
-        .gsc-adBlock {
-            display: none !important;
-        }
-
-        /* 검색창 clear 버튼 위치 조정 */
-        .gsc-clear-button {
-            right: 15px !important;
-        }
-
-/* 자동완성 드롭다운 위치 수정 - 검색창 바로 아래 */
-.gsc-completion-container {
-    background-color: var(--c-bg) !important;
-    border: 1.5px solid var(--c-gray2) !important;
-    border-radius: 20px !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-    margin-top: 5px !important;
-    width: 100% !important;
-    max-width: 584px !important;
-    position: absolute !important;  /* fixed에서 absolute로 변경 */
-    left: 0 !important;  /* 50%에서 0으로 */
-    transform: none !important;  /* transform 제거 */
-    box-sizing: border-box !important;
-    z-index: 1000 !important;
-}
-
-/* 검색창 wrapper를 relative로 */
-.gsc-search-box {
-    margin: 0 auto !important;
-    width: 100% !important;
-    max-width: 584px !important;
-    position: relative !important;
-    padding-bottom: 10px !important;
-}
-
-/* 자동완성 wrapper */
-.gsc-completion-wrapper {
-    width: 100% !important;
-    max-width: 584px !important;
-    margin: 0 auto !important;
-    position: relative !important;
-}
-
-/* 자동완성 테이블 */
-.gsc-completion-container table {
-    background: none !important;
-    width: 100% !important;
-    max-width: 584px !important;
-    margin: 0 !important;
-}
-
-/* 자동완성 아이템 */
-.gsc-completion-item {
-    color: var(--c-text) !important;
-    padding: 8px 16px !important;
-    font-size: 15px !important;
-    transition: background-color 0.2s ease;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    text-align: left !important;
-    font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
-}
-
-.gsc-completion-item:hover, .gsc-completion-selected {
-    background-color: var(--c-gray1) !important;
-}
-
-        .gsc-completion-item:hover, .gsc-completion-selected {
-            background-color: var(--c-gray1) !important;
-        }
-
-        .gsc-completion-wrapper {
-            width: 100% !important;
-            max-width: 584px !important;
-            margin: 0 auto !important;
-        }
-
-        /* 검색 결과 컨테이너 - 좌측 정렬 */
-        .gsc-results-wrapper-overlay, .gsc-results-wrapper-visible {
-            background-color: var(--c-bg) !important;
-            border: none !important;
-            box-shadow: none !important;
-            max-width: 680px !important;
-            margin: 30px auto 0 auto !important;
-            text-align: left !important;
-            padding: 0 20px !important;
-        }
-
-        .gsc-resultsbox-visible {
-            background: none !important;
-            border: none !important;
-        }
-
-        /* 검색 결과를 카드 디자인으로 변경 */
-        .gsc-webResult.gsc-result {
-            background: var(--c-gray1) !important;
-            border: none !important;
-            padding: 20px !important;
-            margin-bottom: 16px !important;
-            border-radius: 20px !important;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
-            transition: box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;  /* 더 느리고 부드럽게 */
-        }
-
-        .gsc-webResult.gsc-result:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-            transform: translateY(-2px) !important;
-        }
-
-        .gsc-webResult.gsc-result:last-child {
-            border-bottom: none !important;
-        }
-
-        /* URL 링크 숨김 */
-        .gs-bidi-start-align.gs-visibleUrl {
-            display: none !important;
-        }
-
-/* 검색 결과 제목 수정 */
-.gs-title {
-    font-size: 18px !important;
-    line-height: 1.4 !important;
-    margin-bottom: 8px !important;
-    font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
-    /* display: flex 제거 */
-}
-
-/* ::before 제거 (JavaScript로 파비콘 추가하므로 불필요) */
-
-        .gs-snippet {
-            margin-top: 0 !important;
-            color: #4d5156 !important;
-            font-size: 14px !important;
-            line-height: 1.6 !important;
-            margin-top: 8px !important;
-            text-align: left !important;
-            font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
-        }
-
-        .gsc-result-info {
-            text-align: left !important;
-            color: var(--c-gray6) !important;
-            font-size: 14px !important;
-            padding: 15px 0 !important;
-            border-bottom: 1px solid var(--c-gray1) !important;
-        }
-
-        .gsc-cursor-box {
-            text-align: center !important;
-            margin-top: 30px !important;
-            padding-bottom: 40px !important;
-        }
-
-        .gsc-cursor-page {
-            background-color: var(--c-bg) !important;
-            color: #1a73e8 !important;
-            border: 1px solid var(--c-gray2) !important;
-            padding: 2px 2px !important;
-            border-radius: 12px !important;
-            margin: 0 4px !important;
-            transition: background-color 0.2s ease !important;
-            font-size: 13px !important;
-            min-width: 32px !important;
-            height: 32px !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-        }
-
-        .gsc-cursor-page:hover {
-            background-color: var(--c-gray1) !important;
-        }
-
-        .gsc-cursor-current-page {
-            background-color: #1a73e8 !important;
-            color: white !important;
-            border: 1px solid #1a73e8 !important;
-        }
-
-        .gs-no-results-result {
-            color: var(--c-text) !important;
-            background: none !important;
-            text-align: left !important;
-        }
-
-        #cse-search {
-            display: none;
+            max-width: 400px;
         }
 
         #search-buttons {
-            margin-top: 0;
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 10px;
         }
 
-        .search-button {
-            background-color: var(--c-blue);
-            color: var(--c-ltext);
-            border: none;
-            padding: 8px 20px;
-            border-radius: 16px;
-            font-size: small;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s ease-out, background-color 0.3s ease;
-        }
-
-        .search-button:hover {
-            background-color: var(--c-blue-active);
-            transform: translateY(-2px);
-        }
-
-/* 모드 토글 버튼 */
-#mode-toggle {
-    margin-top: 20px;
-    background-color: var(--c-gray2);
-    color: var(--c-text);
-    border: none;
-    border-radius: 20px;
-    padding: 7px 18px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: padding 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                min-width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                background-color 0.3s ease;
-    overflow: hidden;
-    position: relative;
-    min-width: 80px;
-    font-family: "BR Cobane", sans-serif;
-    display: inline-block;
-    white-space: nowrap;
-}
-
-#mode-toggle:hover {
-    background-color: var(--c-gray3);
-}
-
-/* QISS 텍스트 */
-#mode-toggle .qiss-text {
-    display: inline-block;
-}
-
-/* Search 텍스트 */
-#mode-toggle .search-text {
-    display: inline-block;
-    max-width: 0;
-    opacity: 0;
-    overflow: hidden;
-    transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    vertical-align: top;
-}
-
-/* 확장 상태 */
-#mode-toggle.expanded {
-    min-width: 130px;
-}
-
-#mode-toggle.expanded .search-text {
-    max-width: 60px;
-    opacity: 1;
-}
-
-        #current-time {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 16px;
-        }
-
-        #credit {
-            text-align: center;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-
-
-        @media (prefers-color-scheme: dark) {
-            .gsc-webResult.gsc-result {
-                background: rgb(from var(--c-gray1) r g b / 50%) !important;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
-            }
-            
-            .gsc-webResult.gsc-result:hover {
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
-            }
-
-            .gs-title a {
-                color: #FAFAFA !important;
-            }
-            
-            .gs-title a:visited {
-                color: #FAFAFA !important;
-            }
-
-            .gs-bidi-start-align.gs-visibleUrl {
-                color: #9aa0a6 !important;
-            }
-
-            .gs-snippet {
-                color: #bdc1c6 !important;
-            }
-            
-            .gsc-completion-container {
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
-            }
-
-            .gsc-cursor-page {
-                color: #8ab4f8 !important;
-            }
-
-            .gsc-cursor-current-page {
-                background-color: #8ab4f8 !important;
-                border: 1px solid #8ab4f8 !important;
-            }
-        }
-
-        .nav-wrapper {
-            background: rgb(from var(--c-bg) r g b / 80%);
-            backdrop-filter: saturate(180%) blur(20px);
-            -webkit-backdrop-filter: saturate(180%) blur(20px);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            border-bottom: 0.5px solid rgb(from var(--c-gray7) r g b / 10%);
-        }
-
-        .nav {
-            max-width: 1024px;
+        /* CSE (Google Search) Overrides - Brutalist Force */
+        .gcse-search {
             margin: 0 auto;
-            padding: 0 22px;
-            height: 44px;
+            width: 90%;
+        }
+        
+        /* Reset Google's fancy styles */
+        .gsc-control-cse {
+            background-color: #fff !important;
+            border: none !important;
+            padding: 0 !important;
+            font-family: 'Gulim', sans-serif !important;
+        }
+
+        .gsc-input-box {
+            border: 2px inset #fff !important;
+            background: #fff !important;
+            height: auto !important;
+            border-radius: 0 !important;
+        }
+
+        input.gsc-input {
+            background: none !important;
+            text-indent: 0 !important;
+            padding: 4px !important;
+            font-size: 13px !important;
+        }
+
+        .gsc-search-button-v2 {
+            background-color: var(--win-gray) !important;
+            border: 2px outset #fff !important;
+            border-radius: 0 !important;
+            padding: 6px 15px !important;
+            margin-left: 5px !important;
+            color: black !important;
+            box-shadow: none !important;
+        }
+        
+        .gsc-search-button-v2 svg {
+            fill: black !important;
+        }
+
+        .gsc-search-button-v2:active {
+            border-style: inset !important;
+        }
+
+        /* Search Results Styling */
+        .gsc-webResult.gsc-result {
+            background: #fff !important;
+            border-bottom: 1px dashed #808080 !important;
+            padding: 10px 0 !important;
+            margin: 0 !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+        }
+
+        .gs-title {
+            text-decoration: none !important;
+            height: auto !important;
+        }
+
+        .gs-title a {
+            color: #000080 !important; /* Classic Link Blue */
+            font-size: 14px !important;
+            font-weight: bold !important;
+            font-family: 'Gulim', sans-serif !important;
+        }
+        
+        .gs-title a:hover {
+            color: red !important;
+            text-decoration: underline !important;
+        }
+
+        .gs-title a:visited {
+            color: #800080 !important;
+        }
+
+        .gs-snippet {
+            font-size: 12px !important;
+            color: black !important;
+            font-family: 'Dotum', sans-serif !important;
+            line-height: 1.4 !important;
+        }
+
+        .gs-visibleUrl {
+            color: #008000 !important;
+            font-size: 11px !important;
+        }
+
+        .gsc-cursor-page {
+            color: black !important;
+            background: var(--win-gray) !important;
+            border: 2px outset #fff !important;
+            border-radius: 0 !important;
+            margin-right: 2px !important;
+        }
+
+        .gsc-cursor-current-page {
+            font-weight: bold !important;
+            background: #fff !important;
+            border: 2px inset #fff !important;
+        }
+
+        /* Remove Google Junk */
+        .gsc-adBlock, .gsc-above-wrapper-area, .gsc-thumbnail {
+            display: none !important;
+        }
+
+        /* AI Summary Box (Notepad Style) */
+        #gemini-summary-container {
+            width: 90%;
+            margin: 20px auto;
+        }
+
+        #gemini-summary {
+            background: #fff;
+            border: 2px solid #000;
+            padding: 2px;
+            box-shadow: 4px 4px 0 var(--win-gray-dark);
+        }
+
+        .summary-header {
+            background: var(--win-blue);
+            color: white;
+            padding: 2px 5px;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .summary-header h3 {
+            margin: 0;
+            font-size: 12px;
             display: flex;
             align-items: center;
+            gap: 5px;
+        }
+
+        #gemini-summary-content {
+            padding: 15px;
+            font-family: 'Courier New', Courier, monospace; /* Notepad feeling */
+            font-size: 13px;
+        }
+
+        .summary-button {
+            background: var(--win-gray);
+            color: black;
+            border: 1px outset #fff;
+            border-radius: 0;
+            font-size: 11px;
+            height: 20px;
+        }
+
+        /* Modal (Error Message Style) */
+        #api-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.1); /* Dotted pattern ideal but alpha ok */
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #api-modal.show { display: flex; }
+
+        .modal-content {
+            background: var(--win-gray);
+            border: 2px outset #fff;
+            padding: 3px;
+            width: 400px;
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .modal-header {
+            background: var(--win-blue);
+            color: white;
+            padding: 2px 5px;
+            font-weight: bold;
+            font-size: 12px;
+            display: flex;
             justify-content: space-between;
         }
 
-        .nav-logo {
-            font-size: 21px;
-            font-weight: 600;
-            color: var(--c-text);
-            text-decoration: none;
-            letter-spacing: -.05em;
+        .modal-body {
+            padding: 15px;
+            text-align: center;
         }
 
-        .nav-logo.en {
-            font-family: "BR Cobane", sans-serif;
+        .modal-body p { margin: 10px 0; font-size: 12px; }
+
+        .api-input-group input {
+            width: 100%;
+            margin-top: 5px;
         }
 
-        .nav-links {
+        .modal-buttons {
             display: flex;
-            gap: 40px;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            padding-bottom: 10px;
+        }
+
+        /* Floating Settings Button */
+        #api-settings-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 32px;
+            height: 32px;
+            border-radius: 0;
+            z-index: 2000;
+            display: flex;
             align-items: center;
+            justify-content: center;
         }
 
-        .nav-link {
-            color: var(--c-text);
-            text-decoration: none;
+        /* Marquee */
+        .marquee-container {
+            background: #000;
+            color: #0f0; /* Matrix green */
+            font-family: 'Courier New', monospace;
+            border: 2px inset #fff;
+            margin-bottom: 10px;
+            padding: 2px;
             font-size: 12px;
-            font-weight: 400;
-            opacity: 0.8;
-            transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        .nav-link:hover {
-            opacity: 1;
+        /* Trust Button */
+        .trust-button {
+            float: right;
+            margin-left: 10px;
+            font-size: 11px;
+            padding: 0 5px;
+            height: 20px;
         }
 
-.gs-title b, .gs-snippet b {
-    color: var(--c-text) !important;
-    font-weight: 700 !important;
-}
+        .trust-result {
+            background: #ffffe0; /* Info tooltip yellow */
+            border: 1px solid #000;
+            padding: 5px;
+            margin-top: 5px;
+            font-size: 11px;
+            clear: both;
+        }
 
-.gs-title b, .gs-snippet b {
-    color: var(--c-blue) !important;
-    font-weight: 700 !important;
-}
+        /* Footer */
+        #current-time, #credit {
+            font-size: 12px;
+            color: #404040;
+            margin-top: 10px;
+        }
 
-.gs-title b, .gs-snippet b {
-    color: inherit !important;
-    font-weight: inherit !important;
-}
+        /* Icon reset */
+        .icon {
+            stroke-width: 1.5;
+        }
+        
+        hr {
+            border: 0;
+            border-top: 1px solid #808080;
+            border-bottom: 1px solid #fff;
+            margin: 5px 0;
+        }
 
-@media (prefers-color-scheme: dark) {
-    .gs-title b, .gs-snippet b {
-        color: #8ab4f8 !important;
-        font-weight: 700 !important;
-    }
-    
-    .gs-title b, .gs-snippet b {
-        color: inherit !important;
-        font-weight: inherit !important;
-    }
-}
-/* 검색어 제안 ("이것을 찾으셨나요?") 스타일 */
-.gs-spelling,
-.gs-spelling a {
-    color: var(--c-text) !important;
-    background: none !important;
-    border: none !important;
-    padding: 0px 0 !important;  /* 15px에서 8px로 줄임 */
-    margin: 0px 0 !important;  /* 10px에서 5px로 줄임 */
-    font-size: 14px !important;
-    font-family: "BR Cobane", 'Pretendard Variable', sans-serif !important;
-    box-shadow: none !important;
-    border-radius: 0 !important;
-    line-height: 1.4 !important;  /* 줄 간격 추가 */
-}
-
-/* 수정된 검색어 링크 */
-.gs-spelling a {
-    color: var(--c-blue) !important;
-    text-decoration: none !important;
-    font-weight: 500 !important;
-    display: inline !important;  /* 추가 */
-}
-
-.gs-spelling a:hover {
-    text-decoration: underline !important;
-}
-
-/* "이것을 찾으셨나요?" 텍스트 */
-.gs-spelling em {
-    color: var(--c-gray6) !important;
-    font-style: normal !important;
-    display: inline !important;  /* 추가 */
-}
-
-/* 다크모드 대응 */
-@media (prefers-color-scheme: dark) {
-    .gs-spelling,
-    .gs-spelling a {
-        color: var(--c-text) !important;
-    }
-    
-    .gs-spelling a {
-        color: #8ab4f8 !important;
-    }
-    
-    .gs-spelling em {
-        color: var(--c-gray5) !important;
-    }
-}
-
-#custom-search {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-#custom-search.fade-out {
-    opacity: 0;
-    transform: translateY(-10px);
-    pointer-events: none;
-}
-
-
-#cse-search {
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-#cse-search.fade-in {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-#current-time, #credit {
-    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-#current-time.fade-out, #credit.fade-out {
-    opacity: 0;
-    transform: translateY(-20px);
-}
-
-#search-buttons {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.2s,
-                transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
-}
-
-#search-buttons.fade-out {
-    opacity: 0;
-    transform: translateY(-10px);
-    transition-delay: 0s;
-}
+        /* Trust Analysis Score Colors */
+        .trust-score.high { color: green; font-weight: bold; }
+        .trust-score.medium { color: #808000; font-weight: bold; }
+        .trust-score.low { color: red; font-weight: bold; }
     </style>
 </head>
 <body>
 
-
-    <div class="nav-wrapper">
-        <nav class="nav">
-            <a href="/" class="nav-logo en">쿼터파이</a>
-            <div class="nav-links">
-                <a href="https://mail.google.com/" class="nav-link en">메일</a>
-                <a href="https://drive.google.com/" class="nav-link en">드라이브</a>
-                <a href="https://classroom.google.com/" class="nav-link en">클래스룸</a>
+    <!-- Windows 98 Frame -->
+    <div class="window-frame">
+        <!-- Title Bar -->
+        <div class="title-bar">
+            <div class="title-bar-text">
+                <img src="/logo.ico" onerror="this.src='https://win98icons.alexmeub.com/icons/png/internet_connection_wiz-0.png'" width="16" height="16" alt="Icon">
+                QISS - Microsoft Internet Explorer
             </div>
-        </nav>
-    </div>
+            <div class="title-bar-controls">
+                <button>_</button>
+                <button>□</button>
+                <button onclick="window.close()">X</button>
+            </div>
+        </div>
 
-<main>
-    <div style="padding-bottom: 15vh;"></div>
-    <h1 class="page-title">QISS</h1>
-    <button id="mode-toggle" onclick="toggleMode()">QISS</button>
+        <!-- Menu Bar -->
+        <div class="menu-bar">
+            <div class="menu-item">파일(F)</div>
+            <div class="menu-item">편집(E)</div>
+            <div class="menu-item">보기(V)</div>
+            <div class="menu-item">이동(G)</div>
+            <div class="menu-item">즐겨찾기(A)</div>
+            <div class="menu-item">도움말(H)</div>
+            <div style="flex-grow:1"></div>
+            <!-- Old Nav Links moved here -->
+            <div class="menu-item"><a href="https://mail.google.com/">메일</a></div>
+            <div class="menu-item"><a href="https://drive.google.com/">드라이브</a></div>
+        </div>
+        
+        <!-- Marquee Banner -->
+        <div class="marquee-container">
+            <marquee scrolldelay="150">★ 만족도 2년연속 1위! 쿼터파이 ★ QISS 검색 시스템에 오신 것을 환영합니다... Netscape Navigator보다 빠릅니다...</marquee>
+        </div>
 
-    <!-- 다중 검색 -->
-    <div id="custom-search">
-        <br>
-        <input type="text" id="search-bar" class="search-bar" placeholder="무엇이 궁금하신가요?" onkeydown="handleEnter(event)">
-        <br><br>
-        <div id="search-buttons">
-            <button class="search-button" onclick="searchInNaver()">Naver</button>
-            <button class="search-button" onclick="searchInDBpia()">DBpia</button>
-            <button class="search-button" onclick="searchInGs()">Scholar</button>
-            <button class="search-button" onclick="searchInRISS()">RISS</button>
+        <!-- Main Content Area (White Box) -->
+        <div class="main-content">
+            <h1 class="page-title">QISS <span style="font-size:14px; font-weight:normal; vertical-align:middle">Web Search</span></h1>
+            
+            <button id="mode-toggle" onclick="toggleMode()">
+                <span class="qiss-text">QISS</span><span class="search-text">&nbsp;검색 모드</span>
+            </button>
+
+            <hr>
+
+            <div id="custom-search" style="display:none;">
+                <p>검색어를 입력하십시오:</p>
+                <input type="text" id="search-bar" class="search-bar" onkeydown="handleEnter(event)">
+                <br><br>
+                <div id="search-buttons">
+                    <button class="search-button" onclick="searchInNaver()">Naver 검색</button>
+                    <button class="search-button" onclick="searchInDBpia()">DBpia</button>
+                    <button class="search-button" onclick="searchInGs()">Scholar</button>
+                    <button class="search-button" onclick="searchInRISS()">RISS</button>
+                </div>
+            </div>
+
+            <!-- Google CSE -->
+            <div id="cse-search" class="gcse-search" data-enableImageSearch="true"></div>
+
+            <!-- Gemini Summary (Notepad Look) -->
+            <div id="gemini-summary-container" style="display:none">
+                <div id="gemini-summary">
+                    <div class="summary-header">
+                        <h3>
+                            <span>AI 요약.txt - 메모장</span>
+                        </h3>
+                        <button id="btn-generate-summary" class="summary-button" onclick="triggerSummary()">
+                            요약 실행
+                        </button>
+                    </div>
+                    <div id="gemini-summary-content">
+                        <div id="gemini-summary-text"></div>
+                        <p style="font-size: 11px; color: #808080; margin-top: 12px; border-top: 1px dashed #ccc; padding-top:5px;">
+                            ※ AI는 부정확할 수 있습니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+            <div style="text-align:center;">
+                <div id="current-time">Ready</div>
+                <div id="credit">Copyright ⓒ 2025 쿼터파이 Corp.</div>
+                <img src="https://web.archive.org/web/20091027073238/http://geocities.com/Heartland/Plains/8637/ie_logo.gif" alt="IE Logo" style="margin-top:10px;">
+            </div>
+        </div>
+        
+        <!-- Bottom Status Bar -->
+        <div style="background:var(--win-gray); border-top:1px solid #fff; padding:2px 5px; font-size:11px; display:flex; gap:10px;">
+            <div style="border:1px inset #fff; padding:0 5px; width:100px;">준비</div>
+            <div style="border:1px inset #fff; padding:0 5px; flex-grow:1;" id="api-status-indicator">오프라인</div>
+            <div style="border:1px inset #fff; padding:0 5px; width:50px;">CAPS</div>
         </div>
     </div>
 
-    <div id="cse-search" class="gcse-search" data-enableImageSearch="true"></div>
-
-    <br>
-
-    <div id="current-time">현재 시간 : <span id="time-display"></span></div>
-
-    <div id="credit">2025 쿼터파이</div>
-</main>
-
-<br><br><br><br><br><br><br>
-
-<script>
-    let isCSE = false;
-
-function toggleMode() {
-    isCSE = !isCSE;
-    const cse = document.getElementById('cse-search');
-    const custom = document.getElementById('custom-search');
-    const toggleBtn = document.getElementById('mode-toggle');
-    const currentTime = document.getElementById('current-time');
-    const credit = document.getElementById('credit');
-    const searchButtons = document.getElementById('search-buttons');
-
-    if (isCSE) {
-        // QISS Search로 전환
-        toggleBtn.innerHTML = '<span class="qiss-text">QISS</span><span class="search-text">&nbsp;Search</span>';
-        
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                toggleBtn.classList.add('expanded');
-                custom.classList.add('fade-out');
-                searchButtons.classList.add('fade-out');
-                currentTime.classList.add('fade-out');
-                credit.classList.add('fade-out');
-            });
-        });
-        
-        setTimeout(() => {
-            custom.style.display = 'none';
-            cse.style.display = 'block';
-            
-            requestAnimationFrame(() => {
-                cse.classList.add('fade-in');
-            });
-        }, 400);
-    } else {
-    toggleBtn.classList.remove('expanded');
-    cse.classList.remove('fade-in');
-    
-    setTimeout(() => {
-        cse.style.display = 'none';
-        custom.style.display = 'block';
-        currentTime.classList.remove('fade-out');
-        credit.classList.remove('fade-out');
-        
-        requestAnimationFrame(() => {
-            custom.classList.remove('fade-out');
-            searchButtons.classList.remove('fade-out');
-        });
-    }, 400);
-}
-}
-
-window.addEventListener('DOMContentLoaded', function() {
-    const toggleBtn = document.getElementById('mode-toggle');
-    toggleBtn.innerHTML = '<span class="qiss-text">QISS</span>';
-});
-
-    function handleEnter(event) {
-        if (event.key === 'Enter') searchInGoogle();
-    }
-
-    function getQuery() {
-        return document.getElementById('search-bar').value.trim();
-    }
-
-    function searchInGoogle() {
-        const q = getQuery();
-        if (q) window.open('https://www.google.com/search?q=' + encodeURIComponent(q), '_blank');
-    }
-
-    function searchInNaver() {
-        const q = getQuery();
-        if (q) window.open('https://search.naver.com/search.naver?where=nexearch&sm=tab_hty&query=' + encodeURIComponent(q), '_blank');
-    }
-
-    function searchInDBpia() {
-        const q = getQuery();
-        if (q) window.open('https://www.dbpia.co.kr/search/topSearch?searchOption=all&query=' + encodeURIComponent(q), '_blank');
-    }
-
-    function searchInGs() {
-        const q = getQuery();
-        if (q) window.open('https://scholar.google.com/scholar?hl=ko&as_sdt=0%2C5&q=' + encodeURIComponent(q), '_blank');
-    }
-
-    function searchInRISS() {
-        const q = getQuery();
-        if (q) window.open('https://www.riss.kr/search/Search.do?colName=all&isDetailSearch=N&searchGubun=true&oldQuery=&sflag=1&fsearchMethod=search&isFDetailSearch=N&searchQuery=1&kbid=&pageNumber=1&query=' + encodeURIComponent(q), '_blank');
-    }
-
-    function removeUnwantedElements() {
-        const selectors = [
-            '.gsc-tabsArea',
-            '.gsc-orderby-container',
-            '.gcsc-find-more-on-google',
-            '.gs-image',
-            '.gsc-refinementsArea',
-            '.gsc-above-wrapper-area',
-            '.gsc-branding',
-            '.gcsc-branding',
-            '.gsc-watermark',
-            'td.gsc-branding'
-        ];
-        
-        selectors.forEach(selector => {
-            document.querySelectorAll(selector).forEach(el => {
-                el.style.cssText = 'display:none!important;visibility:hidden!important;opacity:0!important;height:0!important;width:0!important;';
-                el.remove();
-            });
-        });
-    }
-
-    const observer = new MutationObserver(removeUnwantedElements);
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
-
-    setInterval(removeUnwantedElements, 500);
-
-    // 실시간 시계
-    const timeDisplay = document.getElementById('time-display');
-    setInterval(() => {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = now.getMonth() + 1;
-        const day = now.getDate();
-        const hours = now.getHours();
-        const minutes = now.getMinutes().toString().padStart(2, '0');
-        const seconds = now.getSeconds().toString().padStart(2, '0');
-
-        timeDisplay.textContent = `${year}년 ${month}월 ${day}일 ${hours}:${minutes}:${seconds}`;
-    }, 1000);
-// 고해상도 파비콘 버전
-function addFavicons() {
-    const results = document.querySelectorAll('.gsc-webResult.gsc-result');
-    
-    results.forEach(result => {
-        const titleLink = result.querySelector('.gs-title a');
-        if (titleLink && !titleLink.querySelector('.favicon')) {
-            try {
-                const url = new URL(titleLink.href);
-                const domain = url.hostname;
+    <!-- API 설정 모달 (Error Dialog Style) -->
+    <div id="api-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                시스템 설정
+                <button onclick="closeApiModal()" style="width:16px; height:14px; font-size:9px; line-height:10px;">X</button>
+            </div>
+            <div class="modal-body">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; justify-content:center;">
+                    <img src="https://win98icons.alexmeub.com/icons/png/key_access-0.png" width="32" height="32">
+                    <p style="text-align:left; font-weight:bold;">Groq API 키가 필요합니다.</p>
+                </div>
+                <p>AI 요약 기능을 사용하려면 키를 입력하십시오.</p>
                 
-                const favicon = document.createElement('img');
-                favicon.className = 'favicon';
-                // DuckDuckGo 파비콘 서비스 사용 (더 고품질)
-                favicon.src = `https://icons.duckduckgo.com/ip3/${domain}.ico`;
-                favicon.style.cssText = `
-                    width: 20px !important;
-                    height: 20px !important;
-                    margin-right: 10px !important;
-                    border-radius: 4px !important;
-                    vertical-align: middle !important;
-                    display: inline-block !important;
-                    object-fit: contain !important;
-                `;
-                
-                // 로드 실패 시 Google 파비콘으로 대체
-                favicon.onerror = function() {
-                    this.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
-                };
-                
-                titleLink.insertBefore(favicon, titleLink.firstChild);
-            } catch (e) {
-                console.log('파비콘 추가 실패:', e);
+                <div class="api-input-group">
+                    <label for="api-key-input" style="font-size:12px;">암호(P):</label>
+                    <input type="password" id="api-key-input">
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-button primary" onclick="saveApiKey()">확인</button>
+                <button class="modal-button secondary" onclick="closeApiModal()">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- API 설정 버튼 (Floater) -->
+    <button id="api-settings-btn" onclick="openApiModal()" title="설정">
+        <img src="https://win98icons.alexmeub.com/icons/png/settings_gear-0.png" width="20" height="20">
+    </button>
+
+    <script>
+        const GROQ_MODEL = 'meta-llama/llama-4-maverick-17b-128e-instruct'; 
+
+        let isCSE = true;
+        let currentSearchQuery = '';
+        let lastProcessedQuery = '';
+        let currentSummaryData = null;
+
+        // 아이콘은 텍스트나 이미지로 대체하므로 SVG 변수는 최소화
+        const ICONS = {
+            spinner: '⏳',
+            refresh: '↻'
+        };
+
+        marked.setOptions({ breaks: true, gfm: true });
+
+        function updateApiStatus() {
+            const apiKey = localStorage.getItem('GROQ_API_KEY');
+            const indicator = document.getElementById('api-status-indicator');
+            if (apiKey) {
+                indicator.innerHTML = 'API 연결됨';
+                indicator.style.color = 'black';
+            } else {
+                indicator.innerHTML = 'API 키 없음';
+                indicator.style.color = '#808080';
             }
         }
-    });
-}
 
-const faviconObserver = new MutationObserver(addFavicons);
-faviconObserver.observe(document.body, {
-    childList: true,
-    subtree: true
-});
+        function openApiModal() {
+            const modal = document.getElementById('api-modal');
+            const input = document.getElementById('api-key-input');
+            const savedKey = localStorage.getItem('GROQ_API_KEY');
+            if (savedKey) input.value = savedKey;
+            modal.classList.add('show');
+            updateApiStatus();
+        }
 
-setInterval(addFavicons, 1000);
+        function closeApiModal() {
+            document.getElementById('api-modal').classList.remove('show');
+        }
 
-// 검색 결과 카드 애니메이션 적용
-function applyCardAnimation() {
-    const cards = document.querySelectorAll('.gsc-webResult.gsc-result');
-    
-    cards.forEach((card, index) => {
-        // 이미 애니메이션 적용된 카드는 건너뛰기
-        if (card.classList.contains('animated')) return;
+        function saveApiKey() {
+            const input = document.getElementById('api-key-input');
+            const apiKey = input.value.trim();
+            if (apiKey) {
+                localStorage.setItem('GROQ_API_KEY', apiKey);
+                alert('시스템 레지스트리에 키가 저장되었습니다.');
+                closeApiModal();
+                updateApiStatus();
+            } else {
+                alert('경고: 키가 입력되지 않았습니다.');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', updateApiStatus);
+
+        function toggleMode() {
+            isCSE = !isCSE;
+            const cse = document.getElementById('cse-search');
+            const custom = document.getElementById('custom-search');
+            const toggleBtn = document.getElementById('mode-toggle');
+            
+            // UI Reset
+            document.getElementById('gemini-summary-container').style.display = 'none';
+
+            if (isCSE) {
+                toggleBtn.querySelector('.search-text').innerText = " 모드: 구글";
+                custom.style.display = 'none';
+                cse.style.display = 'block';
+            } else {
+                toggleBtn.querySelector('.search-text').innerText = " 모드: 사용자";
+                cse.style.display = 'none';
+                custom.style.display = 'block';
+            }
+        }
+
+        function handleEnter(event) { if (event.key === 'Enter') searchInGoogle(); }
+        function getQuery() { return document.getElementById('search-bar').value.trim(); }
         
-        // 초기 상태 설정
-        card.style.opacity = '0';
-        card.style.transform = 'scale(0.9) translateY(20px)';
-        
-        // 지연 시간 후 애니메이션 실행
-        setTimeout(() => {
-            card.style.transition = 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out';
-            card.style.opacity = '1';
-            card.style.transform = 'scale(1) translateY(0)';
-            card.classList.add('animated');
-        }, index * 100); // 각 카드마다 100ms 지연
-    });
-}
+        function searchInGoogle() { const q = getQuery(); if (q) window.open('https://www.google.com/search?q=' + encodeURIComponent(q), '_blank'); }
+        function searchInNaver() { const q = getQuery(); if (q) window.open('https://search.naver.com/search.naver?where=nexearch&sm=tab_hty&query=' + encodeURIComponent(q), '_blank'); }
+        function searchInDBpia() { const q = getQuery(); if (q) window.open('https://www.dbpia.co.kr/search/topSearch?searchOption=all&query=' + encodeURIComponent(q), '_blank'); }
+        function searchInGs() { const q = getQuery(); if (q) window.open('https://scholar.google.com/scholar?hl=ko&as_sdt=0%2C5&q=' + encodeURIComponent(q), '_blank'); }
+        function searchInRISS() { const q = getQuery(); if (q) window.open('https://www.riss.kr/search/Search.do?colName=all&isDetailSearch=N&searchGubun=true&query=' + encodeURIComponent(q), '_blank'); }
 
-// 검색 결과가 로드될 때마다 실행
-const cardAnimationObserver = new MutationObserver(() => {
-    applyCardAnimation();
-});
+        function triggerSummary() {
+            if (!currentSummaryData) return;
+            const btn = document.getElementById('btn-generate-summary');
+            const contentDiv = document.getElementById('gemini-summary-content');
+            
+            btn.disabled = true;
+            btn.innerText = '처리 중...';
+            contentDiv.style.display = 'block';
+            generateSummary(currentSummaryData.query, currentSummaryData.results);
+        }
 
-cardAnimationObserver.observe(document.body, {
-    childList: true,
-    subtree: true
-});
+        async function generateSummary(query, searchResults) {
+            const GROQ_API_KEY = localStorage.getItem('GROQ_API_KEY');
+            const summaryText = document.getElementById('gemini-summary-text');
+            const btn = document.getElementById('btn-generate-summary');
 
-// 초기 실행
-setTimeout(applyCardAnimation, 500);
-// 검색어 제안 스타일 적용
-function styleSearchSuggestion() {
-    const suggestions = document.querySelectorAll('.gs-spelling');
-    
-    suggestions.forEach(suggestion => {
-        suggestion.style.cssText = `
-            color: var(--c-text) !important;
-            background: none !important;
-            border: none !important;
-            padding: 3px 0 !important;
-            margin: 3px 0 !important;
-            font-size: 14px !important;
-            box-shadow: none !important;
-            border-radius: 0 !important;
-            line-height: 1.4 !important;
-        `;
-        
-        // 링크 스타일
-        const links = suggestion.querySelectorAll('a');
-        links.forEach(link => {
-            link.style.color = 'var(--c-blue)';
-            link.style.fontWeight = '500';
-            link.style.textDecoration = 'none';
-            link.style.display = 'inline';
-        });
-        
-        // em 태그 스타일
-        const ems = suggestion.querySelectorAll('em');
-        ems.forEach(em => {
-            em.style.color = 'var(--c-gray6)';
-            em.style.fontStyle = 'normal';
-            em.style.display = 'inline';
-        });
-    });
-}
+            if (!GROQ_API_KEY) {
+                summaryText.innerHTML = '오류: API 키가 없습니다. 설정 메뉴를 확인하십시오.';
+                btn.innerText = '오류';
+                btn.disabled = false;
+                return;
+            }
 
-// 주기적으로 적용
-setInterval(styleSearchSuggestion, 500);
+            summaryText.innerHTML = '데이터 수신 중...';
+            
+            try {
+                let resultsContext = '검색어: ' + query + '\n\n검색 결과:\n\n';
+                searchResults.forEach((result, index) => {
+                    resultsContext += `${index + 1}. ${result.title}\n${result.snippet}\n\n`;
+                });
+                
+                const response = await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
+                    body: JSON.stringify({
+                        model: GROQ_MODEL, 
+                        messages: [
+                            { role: 'system', content: "당신은 90년대 컴퓨터 전문가입니다. 정보를 매우 건조하고 전문적으로 요약하십시오." },
+                            { role: 'user', content: `다음 정보를 요약하시오:\n\n${resultsContext}` }
+                        ],
+                        temperature: 0.7, max_tokens: 1024
+                    })
+                });
 
-// MutationObserver로 감지
-const suggestionObserver = new MutationObserver(styleSearchSuggestion);
-suggestionObserver.observe(document.body, {
-    childList: true,
-    subtree: true
-});
-</script>
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                
+                if (data.choices && data.choices[0]) {
+                    summaryText.innerHTML = marked.parse(data.choices[0].message.content);
+                    btn.innerText = '다시 실행';
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                summaryText.innerHTML = '치명적 오류 발생: ' + error.message;
+                btn.innerText = '재시도';
+                btn.disabled = false;
+            }
+        }
+
+        // Search Monitor (Mutation Observer)
+        function monitorSearchResults() {
+            const resultsObserver = new MutationObserver(() => {
+                if (!isCSE) return;
+                const results = document.querySelectorAll('.gsc-webResult.gsc-result');
+                const searchInput = document.querySelector('input.gsc-input');
+                const query = searchInput ? searchInput.value.trim() : '';
+
+                if (results.length > 0 && query && query !== lastProcessedQuery) {
+                    const searchResults = [];
+                    results.forEach(result => {
+                        const titleEl = result.querySelector('.gs-title');
+                        const snippetEl = result.querySelector('.gs-snippet');
+                        if (titleEl && snippetEl) {
+                            searchResults.push({ title: titleEl.textContent, snippet: snippetEl.textContent });
+                        }
+                    });
+
+                    if (searchResults.length > 0) {
+                        lastProcessedQuery = query;
+                        const container = document.getElementById('gemini-summary-container');
+                        container.style.display = 'block';
+                        
+                        // Insert Summary Box at top of results
+                        const wrapper = results[0].closest('.gsc-results-wrapper-visible') || results[0].parentElement;
+                        if(wrapper) wrapper.insertBefore(container, wrapper.firstChild);
+                        
+                        currentSummaryData = { query: query, results: searchResults.slice(0, 5) };
+                        document.getElementById('gemini-summary-content').style.display = 'none';
+                        document.getElementById('btn-generate-summary').innerText = '요약 실행';
+                        document.getElementById('btn-generate-summary').disabled = false;
+                    }
+                }
+                addTrustButtons(); // Re-apply buttons
+            });
+
+            resultsObserver.observe(document.body, { childList: true, subtree: true });
+        }
+        monitorSearchResults();
+
+        // Time
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('current-time').innerText = "현재 시간: " + now.toLocaleString();
+        }, 1000);
+
+        // Trust Button Logic
+        function addTrustButtons() {
+            if (!isCSE) return;
+            const results = document.querySelectorAll('.gsc-webResult.gsc-result');
+            results.forEach(result => {
+                if (result.querySelector('.trust-button')) return;
+                const titleLink = result.querySelector('.gs-title a');
+                if (!titleLink || !titleLink.href) return;
+
+                const btn = document.createElement('button');
+                btn.className = 'trust-button';
+                btn.innerText = '🛡 보안 검사';
+                btn.onclick = (e) => { e.stopPropagation(); analyzeTrust(titleLink.href, btn, result); };
+                
+                // Insert next to title
+                const titleContainer = result.querySelector('.gs-title');
+                if(titleContainer) titleContainer.appendChild(btn);
+            });
+        }
+
+        async function analyzeTrust(url, btn, resultContainer) {
+            const GROQ_API_KEY = localStorage.getItem('GROQ_API_KEY');
+            if (!GROQ_API_KEY) { openApiModal(); return; }
+
+            const originalText = btn.innerText;
+            btn.innerText = '검사 중...';
+            btn.disabled = true;
+
+            const existing = resultContainer.querySelector('.trust-result');
+            if (existing) existing.remove();
+
+            try {
+                const hostname = new URL(url).hostname;
+                const response = await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
+                    body: JSON.stringify({
+                        model: GROQ_MODEL,
+                        messages: [
+                            { role: 'system', content: "You are a security bot. Reply with one word safety level: '안전', '주의', '위험'." },
+                            { role: 'user', content: `Domain: ${hostname}` }
+                        ],
+                        temperature: 0.1, max_tokens: 10
+                    })
+                });
+                
+                const data = await response.json();
+                const grade = data.choices[0].message.content.trim().replace(/['"]/g, '');
+                
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'trust-result';
+                let colorClass = grade.includes('안전') ? 'high' : (grade.includes('위험') ? 'low' : 'medium');
+                
+                resultDiv.innerHTML = `분석 결과: <span class="trust-score ${colorClass}">${grade}</span> (도메인: ${hostname})`;
+                resultContainer.appendChild(resultDiv);
+                
+                btn.innerText = '완료';
+                btn.disabled = false;
+            } catch (e) {
+                alert('검사 실패');
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        }
+    </script>
 </body>
-</html>
+    </html>
