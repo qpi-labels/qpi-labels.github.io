@@ -63,11 +63,12 @@
     width: 85%;
     
     /* [수정] 높이 설정이 중요합니다 */
-    height: 65%; /* 기본적으로 화면의 85% 높이 사용 */
+    height: 85%; /* 기본적으로 화면의 85% 높이 사용 */
     
     /* [수정] 가로 모드 등 화면이 작을 때 창이 짤리지 않도록 최대 높이 제한 */
     /* 화면 전체에서 작업표시줄(약 28px) + 여백(약 12px) = 40px을 뺀 크기보다 커질 수 없음 */
     max-height: calc(100vh -80px); 
+    max-width: 1024px;
     
     background: var(--win-gray);
     border: 2px solid;
@@ -602,7 +603,7 @@ input.gsc-input {
         <div class="taskbar-tasks">
             <div class="task-button">
                 <img src="/logo.ico" onerror="this.src='https://win98icons.alexmeub.com/icons/png/internet_connection_wiz-0.png'" width="16" height="16" style="margin-right:4px;"> 
-                Internet Explorer 4.0...
+                마이크로소프트 인터넷...
             </div>
         </div>
         <div class="taskbar-tray">
