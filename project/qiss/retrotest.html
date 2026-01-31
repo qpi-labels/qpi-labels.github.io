@@ -332,6 +332,29 @@
         }
         .gsc-adBlock, .gsc-above-wrapper-area { display: none !important; }
         .gcsc-more-maybe-branding-root { display: none !important; }
+
+        /* ==========================================================================
+   GOOGLE BRANDING REMOVAL
+   ========================================================================== */
+/* 구글 로고 및 텍스트 컨테이너 숨기기 */
+.gcsc-branding,
+.gcsc-branding-img,
+.gcsc-branding-text,
+.gsc-branding,
+.gcsc-more-maybe-branding-root {
+    display: none !important;
+}
+
+/* 입력창 내부에 희미하게 보이는 구글 로고 제거 */
+input.gsc-input {
+    background-image: none !important; 
+    text-indent: 0 !important;
+}
+
+/* 로고가 사라지면서 검색 버튼 위치가 어긋날 경우를 대비해 마진 조정 */
+.gsc-search-button {
+    margin-left: 0 !important;
+}
         
         /* ========================================================================== */
 
