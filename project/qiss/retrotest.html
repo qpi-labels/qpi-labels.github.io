@@ -44,7 +44,7 @@
             padding: 0;
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* 상단 정렬로 변경하여 꽉 채움 */
+            align-items: center; /* 상단 정렬로 변경하여 꽉 채움 */
             height: 100vh;
             box-sizing: border-box;
             overflow: hidden; /* 전체 페이지 스크롤 방지 (창 내부만 스크롤) */
@@ -59,8 +59,8 @@
         /* 메인 윈도우 프레임 */
         .window {
             /* [UPDATED] 화면 꽉 채우기 로직 */
-            width: 80%;
-            height: calc(100vh - 100px); /* 작업표시줄 높이만큼 뺌 */
+            width: 85%;
+            height: calc(85vh - 30px); /* 작업표시줄 높이만큼 뺌 */
             max-width: none; /* 최대 너비 제한 해제 */
             margin: 0; /* 마진 제거 */
             
