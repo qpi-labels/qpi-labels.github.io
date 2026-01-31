@@ -38,16 +38,16 @@
 
         body {
             background-color: var(--win-teal);
-            /* [UPDATED] 폰트 적용 순서 변경: Galmuri9 우선 적용으로 모바일 픽셀 폰트 지원 */
-            font-family: 'Galmuri9', 'Gulim', '굴림', 'MS Sans Serif', monospace;
+            /* [UPDATED] 폰트 순서: PC(GulimChe/굴림체) -> 없으면 모바일/맥(Galmuri9) */
+            font-family: 'GulimChe', '굴림체', 'Galmuri9', 'Gulim', '굴림', 'MS Sans Serif', monospace;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding-bottom: 35px; /* 작업 표시줄 공간 확보 */
+            align-items: flex-start; /* 상단 정렬로 변경하여 꽉 채움 */
+            height: 100vh;
             box-sizing: border-box;
+            overflow: hidden; /* 전체 페이지 스크롤 방지 (창 내부만 스크롤) */
             
             /* 픽셀 폰트 효과 */
             -webkit-font-smoothing: none;
@@ -58,16 +58,19 @@
 
         /* 메인 윈도우 프레임 */
         .window {
-            width: 98%;
-            max-width: 1024px;
+            /* [UPDATED] 화면 꽉 채우기 로직 */
+            width: 80%;
+            height: calc(100vh - 100px); /* 작업표시줄 높이만큼 뺌 */
+            max-width: none; /* 최대 너비 제한 해제 */
+            margin: 0; /* 마진 제거 */
+            
             background: var(--win-gray);
             border: 2px solid;
             border-color: #fff #000 #000 #fff; /* Classic 3D Outset */
-            box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
+            box-shadow: none; /* 전체화면이라 그림자 제거 */
             display: flex;
             flex-direction: column;
-            margin: 10px 0;
-            height: 85vh; /* 작업표시줄 때문에 높이 조정 */
+            position: relative; /* 내부 절대 위치 요소를 위해 */
         }
 
         /* 타이틀 바 */
@@ -77,6 +80,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-shrink: 0; /* 높이 고정 */
         }
 
         .title-bar-text {
@@ -109,6 +113,7 @@
             border-bottom: 1px solid var(--win-gray-dark);
             padding: 1px 0;
             background: var(--win-gray);
+            flex-shrink: 0;
         }
 
         .menu-item {
@@ -130,6 +135,7 @@
             border-bottom: 1px solid white;
             gap: 5px;
             font-size: 12px;
+            flex-shrink: 0;
         }
         
         .address-label { color: #444; }
@@ -138,8 +144,7 @@
             flex: 1;
             border: 2px inset #fff;
             padding: 2px 5px;
-            /* [UPDATED] Font family */
-            font-family: 'Galmuri9', 'Gulim', monospace;
+            font-family: inherit;
             font-size: 12px;
             background: white;
         }
@@ -183,8 +188,7 @@
             border-color: #fff #000 #000 #fff;
             color: black;
             padding: 4px 12px;
-            /* [UPDATED] Font family */
-            font-family: 'Galmuri9', 'Gulim', monospace;
+            font-family: inherit;
             font-size: 12px;
             cursor: pointer;
             margin: 2px;
@@ -204,8 +208,7 @@
         input[type="text"], input[type="password"] {
             border: 2px inset #fff;
             padding: 4px;
-            /* [UPDATED] Font family */
-            font-family: 'Galmuri9', 'Gulim', monospace;
+            font-family: inherit;
             background: white;
             font-size: 12px;
         }
@@ -227,7 +230,7 @@
             background-color: transparent !important;
             border: none !important;
             padding: 0 !important;
-            font-family: 'Galmuri9', 'Gulim', monospace !important;
+            font-family: inherit !important;
         }
         .gsc-search-box { margin-bottom: 10px !important; }
         .gsc-input-box {
@@ -269,7 +272,7 @@
             overflow: visible !important;
         }
         .gs-title a, .gs-title a b, .gs-title a * {
-            font-family: 'Galmuri9', 'Gulim', monospace !important;
+            font-family: inherit !important;
             font-size: 16px !important;
             font-weight: bold !important;
             text-decoration: underline !important;
@@ -279,7 +282,7 @@
         .gs-title a:visited { color: var(--link-visited) !important; }
         .gs-title a:hover { color: var(--link-active) !important; cursor: hand !important; }
         .gs-snippet {
-            font-family: 'Galmuri9', 'Gulim', monospace !important;
+            font-family: inherit !important;
             font-size: 12px !important;
             color: black !important;
             line-height: 1.5 !important;
@@ -288,7 +291,7 @@
         .gsc-url-top, .gs-visibleUrl {
             color: var(--url-green) !important;
             font-size: 11px !important;
-            font-family: 'Galmuri9', 'Gulim', monospace !important;
+            font-family: inherit !important;
             display: block !important;
             margin-top: 2px !important;
         }
@@ -308,7 +311,7 @@
             padding: 2px 8px !important;
             margin: 0 2px !important;
             font-size: 12px !important;
-            font-family: 'Galmuri9', 'Gulim', monospace !important;
+            font-family: inherit !important;
         }
         .gsc-cursor-page:hover { color: black !important; background: white !important; }
         .gsc-cursor-current-page {
@@ -326,7 +329,7 @@
         #gemini-summary-container { display: none; margin: 15px 0; }
         #gemini-summary { background: white; border: 2px solid black; box-shadow: 4px 4px 0px var(--win-gray); }
         .notepad-header { background: var(--win-blue); color: white; padding: 2px 5px; font-size: 12px; display: flex; justify-content: space-between; }
-        #gemini-summary-content { padding: 10px; font-family: 'Galmuri9', monospace; font-size: 13px; line-height: 1.4; }
+        #gemini-summary-content { padding: 10px; font-family: inherit; font-size: 13px; line-height: 1.4; }
 
         /* 모달 */
         #api-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.2); z-index: 9999; align-items: center; justify-content: center; }
@@ -334,12 +337,23 @@
         .modal-window { background: var(--win-gray); border: 2px outset #fff; width: 350px; padding: 2px; box-shadow: 4px 4px 10px black; }
         .modal-body { padding: 15px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; }
 
-        marquee { background: black; color: #00ff00; font-family: monospace; border: 2px inset #fff; font-size: 12px; padding: 2px 0; }
+        marquee { background: black; color: #00ff00; font-family: monospace; border: 2px inset #fff; font-size: 12px; padding: 2px 0; flex-shrink: 0; }
 
-        .status-bar { background: var(--win-gray); border-top: 1px solid white; padding: 2px; font-size: 11px; display: flex; gap: 5px; }
+        .status-bar { background: var(--win-gray); border-top: 1px solid white; padding: 2px; font-size: 11px; display: flex; gap: 5px; flex-shrink: 0; }
         .status-panel { border: 1px inset #fff; padding: 1px 5px; }
 
-        #api-settings-btn { position: fixed; bottom: 40px; right: 20px; z-index: 500; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; }
+        /* [UPDATED] 버튼 위치 조정 (IE 창 내부 절대 위치) */
+        #api-settings-btn { 
+            position: absolute; 
+            bottom: 25px; /* 상태바 위쪽 */
+            right: 5px; 
+            z-index: 500; 
+            width: 32px; 
+            height: 32px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
 
         /* Trust Result */
         .trust-result { background: #ffffe0; border: 1px solid black; padding: 5px; font-size: 11px; margin-top: 5px; }
@@ -398,7 +412,8 @@
 
         /* 실행 중인 프로그램 (눌린 버튼 효과) */
         .task-button {
-            width: 160px;
+            /* [UPDATED] 너비 증가 */
+            width: 200px;
             height: 22px;
             background: #e0e0e0; /* 약간 어두운 회색 (눌린 상태) */
             border: 2px inset #fff;
@@ -416,7 +431,8 @@
         }
 
         .taskbar-tray {
-            width: 70px;
+            /* [UPDATED] 너비 증가 */
+            width: 95px;
             height: 22px;
             border: 2px inset #fff;
             background: var(--win-gray);
@@ -536,6 +552,11 @@
             <div class="status-panel" style="flex:1;" id="api-status-indicator">연결되지 않음</div>
             <div class="status-panel" style="width:20px;"></div>
         </div>
+
+        <!-- [UPDATED] 설정 버튼 (창 내부로 이동) -->
+        <button id="api-settings-btn" onclick="openApiModal()" title="설정">
+            <img src="https://win98icons.alexmeub.com/icons/png/settings_gear-0.png" width="16" height="16">
+        </button>
     </div>
 
     <!-- [NEW] 작업표시줄 (Taskbar) -->
@@ -583,11 +604,6 @@
             </div>
         </div>
     </div>
-
-    <!-- 설정 버튼 -->
-    <button id="api-settings-btn" onclick="openApiModal()" title="설정">
-        <img src="https://win98icons.alexmeub.com/icons/png/settings_gear-0.png" width="16" height="16">
-    </button>
 
     <script>
         // ==========================================
@@ -889,4 +905,4 @@
         }
     </script>
 </body>
-</html>
+    </html>
