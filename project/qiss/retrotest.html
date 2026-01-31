@@ -37,41 +37,51 @@
         }
 
         body {
-            background-color: var(--win-teal);
-            /* [UPDATED] 폰트 순서: PC(GulimChe/굴림체) -> 없으면 모바일/맥(Galmuri9) */
-            font-family: 'GulimChe', '굴림체', 'Galmuri9', 'Gulim', '굴림', 'MS Sans Serif', monospace;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center; /* 상단 정렬로 변경하여 꽉 채움 */
-            height: 100vh;
-            box-sizing: border-box;
-            overflow: hidden; /* 전체 페이지 스크롤 방지 (창 내부만 스크롤) */
-            padding-bottom: 30px; 
-            
-            /* 픽셀 폰트 효과 */
-            -webkit-font-smoothing: none;
-            -moz-osx-font-smoothing: none;
-            font-smooth: never;
-            text-rendering: geometricPrecision;
+    background-color: var(--win-teal);
+    font-family: 'GulimChe', '굴림체', 'Galmuri9', 'Gulim', '굴림', 'MS Sans Serif', monospace;
+    margin: 0;
+    padding: 0;
+    
+    /* [수정] 화면 꽉 채우고 중앙 정렬 */
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden; /* 배경 스크롤 방지 */
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* 폰트 렌더링 옵션 유지 */
+    -webkit-font-smoothing: none;
+    font-smooth: never;
+    text-rendering: geometricPrecision;
         }
 
         /* 메인 윈도우 프레임 */
         .window {
-            /* [UPDATED] 화면 꽉 채우기 로직 */
-            width: 85%;
-            height: 85vh; /* 작업표시줄 높이만큼 뺌 */
-            max-width: none; /* 최대 너비 제한 해제 */
-            margin: 0; /* 마진 제거 */
-            
-            background: var(--win-gray);
-            border: 2px solid;
-            border-color: #fff #000 #000 #fff; /* Classic 3D Outset */
-            box-shadow: none; /* 전체화면이라 그림자 제거 */
-            display: flex;
-            flex-direction: column;
-            position: relative; /* 내부 절대 위치 요소를 위해 */
+    /* 너비 설정 */
+    width: 98%;
+    max-width: 1024px;
+    
+    /* [수정] 높이 설정이 중요합니다 */
+    height: 85%; /* 기본적으로 화면의 85% 높이 사용 */
+    
+    /* [수정] 가로 모드 등 화면이 작을 때 창이 짤리지 않도록 최대 높이 제한 */
+    /* 화면 전체에서 작업표시줄(약 28px) + 여백(약 12px) = 40px을 뺀 크기보다 커질 수 없음 */
+    max-height: calc(100vh - 40px); 
+    
+    background: var(--win-gray);
+    border: 2px solid;
+    border-color: #fff #000 #000 #fff;
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
+    
+    display: flex;
+    flex-direction: column;
+    
+    /* [수정] 작업표시줄 위에 공간 확보를 위해 아래쪽 마진 추가 */
+    margin-bottom: 28px; 
+    
+    position: relative;
         }
 
         /* 타이틀 바 */
