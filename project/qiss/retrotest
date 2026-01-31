@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>QISS - Microsoft Internet Explorer</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/logo.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Marlett Font (Windows System Icons) -->
+    <link href="https://db.onlinewebfonts.com/c/c8da7be807a6253e53142d51f6d3c37d?family=Marlett" rel="stylesheet">
+    
+    <!-- [NEW] Galmuri Font (모바일 굴림체 대체용 웹폰트) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@latest/dist/galmuri.css">
+    
+    <!-- Google CSE -->
+    <script async src="https://cse.google.com/cse.js?cx=b794e851ac2524ee7"></script>
+    <!-- Marked.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
+
+    <style>
+        /* ----------------------------------------------------------------
+           WINDOWS 98 / IE 4.0 THEME - BASE
+           ---------------------------------------------------------------- */
+        :root {
+            --win-teal: #008080;
+            --win-gray: #c0c0c0;
+            --win-gray-light: #ffffff;
+            --win-gray-dark: #808080;
+            --win-black: #000000;
+            --win-blue: #000080;
+            
+            /* Classic Web Colors */
+            --link-blue: #0000FF;
+            --link-visited: #800080;
+            --link-active: #FF0000;
+            --url-green: #008000;
+        }
+
+        body {
+            background-color: var(--win-teal);
+            /* [UPDATED] 폰트 적용 순서 변경: Galmuri9 우선 적용으로 모바일 픽셀 폰트 지원 */
+            font-family: 'Galmuri9', 'Gulim', '굴림', 'MS Sans Serif', monospace;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding-bottom: 35px; /* 작업 표시줄 공간 확보 */
+            box-sizing: border-box;
+            
+            /* 픽셀 폰트 효과 */
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: none;
+            font-smooth: never;
+            text-rendering: geometricPrecision;
+        }
+
+        /* 메인 윈도우 프레임 */
+        .window {
+            width: 98%;
+            max-width: 1024px;
+            background: var(--win-gray);
+            border: 2px solid;
+            border-color: #fff #000 #000 #fff; /* Classic 3D Outset */
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            margin: 10px 0;
+            height: 85vh; /* 작업표시줄 때문에 높이 조정 */
+        }
+
+        /* 타이틀 바 */
+        .title-bar {
+            background: linear-gradient(90deg, var(--win-blue), #1084d0);
+            padding: 3px 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .title-bar-text {
+            color: white;
+            font-weight: bold;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .title-bar-controls button {
+            width: 16px;
+            height: 14px;
+            background: var(--win-gray);
+            border: 1px outset #fff;
+            font-size: 9px;
+            line-height: 10px;
+            padding: 0;
+            margin-left: 2px;
+            font-weight: bold;
+            font-family: sans-serif;
+            color: black;
+            cursor: default;
+        }
+
+        /* 메뉴 바 */
+        .menu-bar {
+            display: flex;
+            border-bottom: 1px solid var(--win-gray-dark);
+            padding: 1px 0;
+            background: var(--win-gray);
+        }
+
+        .menu-item {
+            padding: 2px 8px;
+            font-size: 12px;
+            cursor: default;
+        }
+        .menu-item:hover {
+            background-color: var(--win-blue);
+            color: white;
+        }
+        .menu-item a { text-decoration: none; color: inherit; }
+
+        /* 주소 표시줄 영역 */
+        .address-bar-wrapper {
+            display: flex;
+            align-items: center;
+            padding: 4px;
+            border-bottom: 1px solid white;
+            gap: 5px;
+            font-size: 12px;
+        }
+        
+        .address-label { color: #444; }
+        
+        .address-input {
+            flex: 1;
+            border: 2px inset #fff;
+            padding: 2px 5px;
+            /* [UPDATED] Font family */
+            font-family: 'Galmuri9', 'Gulim', monospace;
+            font-size: 12px;
+            background: white;
+        }
+
+        /* 메인 컨텐츠 영역 */
+        .viewport {
+            background: white;
+            border: 2px inset #fff;
+            padding: 15px;
+            flex: 1; /* 남은 공간 채우기 */
+            overflow-y: auto;
+            position: relative;
+        }
+
+        h1.page-title {
+            font-size: 28px;
+            text-align: center;
+            margin: 10px 0 20px 0;
+            font-weight: 900;
+            letter-spacing: -1px;
+            color: black;
+            text-shadow: 2px 2px 0px #ddd;
+        }
+
+        fieldset {
+            border: 2px groove #fff;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: var(--win-gray);
+        }
+
+        legend {
+            font-size: 12px;
+            padding: 0 4px;
+            color: black;
+        }
+
+        button {
+            background: var(--win-gray);
+            border: 2px solid;
+            border-color: #fff #000 #000 #fff;
+            color: black;
+            padding: 4px 12px;
+            /* [UPDATED] Font family */
+            font-family: 'Galmuri9', 'Gulim', monospace;
+            font-size: 12px;
+            cursor: pointer;
+            margin: 2px;
+        }
+        
+        button:active {
+            border-color: #000 #fff #fff #000;
+            transform: translate(1px, 1px);
+        }
+
+        button:disabled {
+            color: var(--win-gray-dark);
+            text-shadow: 1px 1px white;
+            cursor: wait;
+        }
+
+        input[type="text"], input[type="password"] {
+            border: 2px inset #fff;
+            padding: 4px;
+            /* [UPDATED] Font family */
+            font-family: 'Galmuri9', 'Gulim', monospace;
+            background: white;
+            font-size: 12px;
+        }
+
+        /* 스크롤바 */
+        ::-webkit-scrollbar { width: 16px; background: var(--win-gray); }
+        ::-webkit-scrollbar-button { background: var(--win-gray); border: 2px outset #fff; height: 16px; }
+        ::-webkit-scrollbar-thumb { background: var(--win-gray); border: 2px outset #fff; }
+        ::-webkit-scrollbar-track { background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzjwqkJYUBkCCmACYGFkCgA+2xUE/97u/AAAAABJRU5ErkJggg=='); }
+
+        #mode-toggle { display: block; margin: 0 auto; width: 150px; font-weight: bold; }
+        #custom-search { text-align: center; padding: 10px; }
+        .search-bar { width: 60%; }
+
+        /* ==========================================================================
+           GOOGLE CSE RETRO OVERRIDES 
+           ========================================================================== */
+        .gsc-control-cse {
+            background-color: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+            font-family: 'Galmuri9', 'Gulim', monospace !important;
+        }
+        .gsc-search-box { margin-bottom: 10px !important; }
+        .gsc-input-box {
+            border: 2px inset #fff !important;
+            border-radius: 0 !important;
+            background: white !important;
+        }
+        input.gsc-input {
+            padding: 4px !important;
+            font-size: 12px !important;
+            color: black !important;
+        }
+        .gsc-search-button-v2 {
+            background: var(--win-gray) !important;
+            border: 2px outset #fff !important;
+            border-radius: 0 !important;
+            padding: 6px 12px !important;
+            margin-left: 5px !important;
+            color: black !important;
+            box-shadow: none !important;
+            cursor: pointer !important;
+        }
+        .gsc-search-button-v2 svg { fill: black !important; width: 13px !important; height: 13px !important; }
+        .gsc-search-button-v2:active { border-style: inset !important; }
+        .gsc-results-wrapper-visible { background: white !important; }
+        .gsc-webResult.gsc-result {
+            background: white !important;
+            border-bottom: 1px dashed #999 !important;
+            padding: 15px 0 !important;
+            margin: 0 !important;
+        }
+        .gsc-webResult.gsc-result:hover { background: transparent !important; }
+        .gs-title {
+            height: auto !important;
+            line-height: normal !important;
+            text-decoration: none !important;
+            margin-bottom: 4px !important;
+            display: block !important;
+            overflow: visible !important;
+        }
+        .gs-title a, .gs-title a b, .gs-title a * {
+            font-family: 'Galmuri9', 'Gulim', monospace !important;
+            font-size: 16px !important;
+            font-weight: bold !important;
+            text-decoration: underline !important;
+            display: inline !important;
+        }
+        .gs-title a:link { color: var(--link-blue) !important; }
+        .gs-title a:visited { color: var(--link-visited) !important; }
+        .gs-title a:hover { color: var(--link-active) !important; cursor: hand !important; }
+        .gs-snippet {
+            font-family: 'Galmuri9', 'Gulim', monospace !important;
+            font-size: 12px !important;
+            color: black !important;
+            line-height: 1.5 !important;
+            margin-top: 5px !important;
+        }
+        .gsc-url-top, .gs-visibleUrl {
+            color: var(--url-green) !important;
+            font-size: 11px !important;
+            font-family: 'Galmuri9', 'Gulim', monospace !important;
+            display: block !important;
+            margin-top: 2px !important;
+        }
+        .gsc-thumbnail-inside, .gsc-url-bottom { display: none !important; }
+        .gsc-cursor-box {
+            margin-top: 20px !important;
+            text-align: center !important;
+            border-top: 2px groove #fff !important;
+            padding-top: 10px !important;
+        }
+        .gsc-cursor-page {
+            display: inline-block !important;
+            background: var(--win-gray) !important;
+            border: 2px outset #fff !important;
+            color: black !important;
+            text-decoration: none !important;
+            padding: 2px 8px !important;
+            margin: 0 2px !important;
+            font-size: 12px !important;
+            font-family: 'Galmuri9', 'Gulim', monospace !important;
+        }
+        .gsc-cursor-page:hover { color: black !important; background: white !important; }
+        .gsc-cursor-current-page {
+            background: white !important;
+            border: 2px inset #fff !important;
+            font-weight: bold !important;
+            color: black !important;
+        }
+        .gsc-adBlock, .gsc-above-wrapper-area { display: none !important; }
+        .gcsc-more-maybe-branding-root { display: none !important; }
+        
+        /* ========================================================================== */
+
+        /* AI 요약 */
+        #gemini-summary-container { display: none; margin: 15px 0; }
+        #gemini-summary { background: white; border: 2px solid black; box-shadow: 4px 4px 0px var(--win-gray); }
+        .notepad-header { background: var(--win-blue); color: white; padding: 2px 5px; font-size: 12px; display: flex; justify-content: space-between; }
+        #gemini-summary-content { padding: 10px; font-family: 'Galmuri9', monospace; font-size: 13px; line-height: 1.4; }
+
+        /* 모달 */
+        #api-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.2); z-index: 9999; align-items: center; justify-content: center; }
+        #api-modal.show { display: flex; }
+        .modal-window { background: var(--win-gray); border: 2px outset #fff; width: 350px; padding: 2px; box-shadow: 4px 4px 10px black; }
+        .modal-body { padding: 15px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+
+        marquee { background: black; color: #00ff00; font-family: monospace; border: 2px inset #fff; font-size: 12px; padding: 2px 0; }
+
+        .status-bar { background: var(--win-gray); border-top: 1px solid white; padding: 2px; font-size: 11px; display: flex; gap: 5px; }
+        .status-panel { border: 1px inset #fff; padding: 1px 5px; }
+
+        #api-settings-btn { position: fixed; bottom: 40px; right: 20px; z-index: 500; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; }
+
+        /* Trust Result */
+        .trust-result { background: #ffffe0; border: 1px solid black; padding: 5px; font-size: 11px; margin-top: 5px; }
+        .trust-score.high { color: blue; font-weight: bold; }
+        .trust-score.medium { color: #808000; font-weight: bold; }
+        .trust-score.low { color: red; font-weight: bold; text-decoration: blink; }
+
+        /* [NEW] Windows 98 Taskbar Style */
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 28px;
+            background: var(--win-gray);
+            border-top: 1px solid #fff;
+            display: flex;
+            align-items: center;
+            padding: 2px;
+            z-index: 10000;
+            box-shadow: 0 -1px 0 #808080 inset; /* 상단 3D 느낌 */
+        }
+
+        .start-btn {
+            display: flex;
+            align-items: center;
+            height: 22px;
+            margin: 0 2px 0 2px;
+            padding: 0 4px;
+            font-weight: bold;
+            font-style: italic;
+            font-size: 13px;
+            background: var(--win-gray);
+            border: 2px outset #fff;
+            box-shadow: 1px 1px 0 black;
+        }
+        .start-btn img { margin-right: 3px; }
+        .start-btn:active {
+            border: 2px inset #fff;
+            padding: 1px 3px 0 5px; /* 눌린 효과 */
+        }
+
+        .taskbar-divider {
+            width: 2px;
+            height: 20px;
+            border-left: 1px solid #808080;
+            border-right: 1px solid #fff;
+            margin: 0 5px;
+        }
+
+        .taskbar-tasks {
+            flex: 1;
+            display: flex;
+            padding-left: 2px;
+        }
+
+        /* 실행 중인 프로그램 (눌린 버튼 효과) */
+        .task-button {
+            width: 160px;
+            height: 22px;
+            background: #e0e0e0; /* 약간 어두운 회색 (눌린 상태) */
+            border: 2px inset #fff;
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: default;
+            /* 바둑판 무늬 패턴 효과 */
+            background-image: linear-gradient(45deg, #ddd 25%, transparent 25%, transparent 75%, #ddd 75%, #ddd), 
+            linear-gradient(45deg, #ddd 25%, transparent 25%, transparent 75%, #ddd 75%, #ddd);
+            background-size: 2px 2px;
+            background-position: 0 0, 1px 1px;
+        }
+
+        .taskbar-tray {
+            width: 70px;
+            height: 22px;
+            border: 2px inset #fff;
+            background: var(--win-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 2px;
+            font-size: 12px;
+            padding-right: 2px;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="window">
+        <!-- 윈도우 타이틀바 -->
+        <div class="title-bar">
+            <div class="title-bar-text">
+                <img src="/logo.ico" onerror="this.src='https://win98icons.alexmeub.com/icons/png/internet_connection_wiz-0.png'" width="16" height="16" style="margin-right:5px">
+                QISS - 마이크로소프트 인터넷 익스플로러® 4.0
+            </div>
+            <div class="title-bar-controls">
+                <button>_</button>
+                <button>□</button>
+                <button onclick="window.close()">X</button>
+            </div>
+        </div>
+
+        <!-- 메뉴바 -->
+        <div class="menu-bar">
+            <div class="menu-item">파일(F)</div>
+            <div class="menu-item">편집(E)</div>
+            <div class="menu-item">보기(V)</div>
+            <div class="menu-item">이동(G)</div>
+            <div class="menu-item">즐겨찾기(A)</div>
+            <div class="menu-item">도움말(H)</div>
+            <div style="flex:1"></div>
+            <div class="menu-item"><a href="https://mail.google.com/">메일</a></div>
+        </div>
+
+        <!-- 주소창 -->
+        <div class="address-bar-wrapper">
+            <span class="address-label">주소(D):</span>
+            <input type="text" class="address-input" value="http://qpi.kro.kr/" readonly>
+        </div>
+
+        <!-- 마퀴 -->
+        <marquee scrolldelay="100">
+            *** 학술 논문 대여점 <사분주율 연구> 가 마침내 정보의 바다 월드 와이드 웹(WWW)에 상륙했다! QISS! *** 본 페이지는 Microsoft Internet Explorer® 4.0 환경에서 가장 쾌적하게 열람하실 수 있습니다. 넷스케이프 네비게이터 사용자는 화면이 깨질 수 있으니 주의하십시오. ***
+        </marquee>
+
+        <!-- 뷰포트 (실제 내용) -->
+        <div class="viewport">
+            <h1 class="page-title">QISS <span style="font-size:20px; font-weight:normal; color:#666;">'98</span></h1>
+            
+            <fieldset>
+                <legend>검색 방식</legend>
+                <button id="mode-toggle" onclick="toggleMode()">
+                    <span class="qiss-text">QISS</span><span class="search-text">&nbsp;검색</span>
+                </button>
+            </fieldset>
+
+            <div id="custom-search" style="display:none;">
+                <fieldset>
+                    <legend>사용자 정의 검색</legend>
+                    <input type="text" id="search-bar" class="search-bar" placeholder="검색어를 입력하세요..." onkeydown="handleEnter(event)">
+                    <div style="margin-top:10px;">
+                        <button onclick="searchInNaver()">네이버 (NAVER)</button>
+                        <button onclick="searchInDBpia()">누리미디어 DBPia 1.0</button>
+                        <button onclick="searchInGs()">야후! 코리아 학술검색</button>
+                        <button onclick="searchInRISS()">학술연구정보서비스</button>
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- Google CSE -->
+            <div id="cse-search" class="gcse-search" data-enableImageSearch="true"></div>
+
+            <!-- Gemini Summary (Notepad Style) -->
+            <div id="gemini-summary-container">
+                <div id="gemini-summary">
+                    <div class="notepad-header">
+                        <span>QISS_도우미.hlp - Windows 도움말</span>
+                        <button style="height:16px; width:16px; font-size:8px; padding:0; line-height:8px;" onclick="document.getElementById('gemini-summary-container').style.display='none'">X</button>
+                    </div>
+                    <div style="padding:2px; background:#e0e0e0; border-bottom:1px solid gray; font-size:11px;">
+                        파일(F) 편집(E) 검색(S) 도움말(H)
+                    </div>
+                    <div id="gemini-summary-content">
+                        <div id="gemini-summary-text"></div>
+                        <br>
+                        <hr style="border-style: dashed; border-color: #999;">
+                        <p style="font-size: 11px; color: #666;">
+                            [시스템] 지능형 도우미는 잘못된 정보를 전달할 수 있습니다. 주의해서 사용하세요.
+                        </p>
+                    </div>
+                    <div style="padding:10px; text-align:right; background:white;">
+                        <button id="btn-generate-summary" onclick="triggerSummary()">요약 실행 (Enter)</button>
+                    </div>
+                </div>
+            </div>
+
+            <br><br>
+            <center>
+            <div style="font-size:11px; color:#444; margin-top:10px;">
+        이 페이지는 <span style="color:navy; font-weight:bold;">Internet Explorer 4.0</span>에서 가장 잘 보입니다.<br>
+        해상도 800x600 High Color / 글꼴: 굴림 (9pt)<br>
+        Copyright ⓒ 1998 쿼터파이 전산. All rights reserved.
+    </div>
+            </center>
+        </div>
+
+        <!-- 상태바 -->
+        <div class="status-bar">
+            <div class="status-panel" style="width:150px;">완료</div>
+            <div class="status-panel" style="flex:1;" id="api-status-indicator">연결되지 않음</div>
+            <div class="status-panel" style="width:20px;"></div>
+        </div>
+    </div>
+
+    <!-- [NEW] 작업표시줄 (Taskbar) -->
+    <div class="taskbar">
+        <button class="start-btn">
+            <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" width="16" height="16" alt="Win">
+            시작
+        </button>
+        <div class="taskbar-divider"></div>
+        <div class="taskbar-tasks">
+            <div class="task-button">
+                <img src="/logo.ico" onerror="this.src='https://win98icons.alexmeub.com/icons/png/internet_connection_wiz-0.png'" width="16" height="16" style="margin-right:4px;"> 
+                Internet Explorer 4.0...
+            </div>
+        </div>
+        <div class="taskbar-tray">
+            <img src="https://win98icons.alexmeub.com/icons/png/loudspeaker_rays-0.png" width="16" height="16" style="margin-right:5px;">
+            <span id="current-time"></span>
+        </div>
+    </div>
+
+    <!-- API 설정 모달 -->
+    <div id="api-modal">
+        <div class="modal-window">
+            <div class="title-bar" style="background: navy;">
+                <div class="title-bar-text">경고</div>
+                <button onclick="closeApiModal()" style="height:14px; width:14px; padding:0; line-height:10px;">X</button>
+            </div>
+            <div class="modal-body">
+                <div style="display:flex; align-items:center; gap:15px; width:100%;">
+                    <img src="https://win98icons.alexmeub.com/icons/png/msg_warning-0.png" width="32" height="32">
+                    <div style="text-align:left; font-size:12px;">
+                        QISS 지능형 검색 도우미 기능을 사용하려면<br>
+                        groq 등록 정보 키가 필요합니다.
+                    </div>
+                </div>
+                <fieldset style="width:90%; padding:5px; margin:5px 0;">
+                    <legend>등록 정보 키 입력</legend>
+                    <input type="password" id="api-key-input" style="width:95%;">
+                </fieldset>
+                <div style="display:flex; gap:10px; justify-content:center; width:100%;">
+                    <button onclick="saveApiKey()" style="width:70px;">예 (Y)</button>
+                    <button onclick="closeApiModal()" style="width:100px;">아니오 (N)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 설정 버튼 -->
+    <button id="api-settings-btn" onclick="openApiModal()" title="설정">
+        <img src="https://win98icons.alexmeub.com/icons/png/settings_gear-0.png" width="16" height="16">
+    </button>
+
+    <script>
+        // ==========================================
+        // CONFIGURATION
+        // ==========================================
+        const GROQ_MODEL = 'meta-llama/llama-4-maverick-17b-128e-instruct'; 
+        let isCSE = true;
+        let currentSearchQuery = '';
+        let lastProcessedQuery = '';
+        let currentSummaryData = null;
+
+        // Marked.js 옵션
+        marked.setOptions({ breaks: true, gfm: true });
+
+        // ==========================================
+        // UI FUNCTIONS
+        // ==========================================
+        function toggleMode() {
+            isCSE = !isCSE;
+            const cse = document.getElementById('cse-search');
+            const custom = document.getElementById('custom-search');
+            const toggleBtn = document.getElementById('mode-toggle');
+            
+            document.getElementById('gemini-summary-container').style.display = 'none';
+
+            if (isCSE) {
+                toggleBtn.querySelector('.search-text').innerText = " 모드: 검색";
+                custom.style.display = 'none';
+                cse.style.display = 'block';
+            } else {
+                toggleBtn.querySelector('.search-text').innerText = " 모드: 사용자";
+                cse.style.display = 'none';
+                custom.style.display = 'block';
+            }
+        }
+
+        // [UPDATED] 시간 업데이트 (작업 표시줄 트레이)
+        function updateTime() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = now.getMinutes();
+            const ampm = hours >= 12 ? '오후' : '오전';
+            
+            hours = hours % 12;
+            hours = hours ? hours : 12; // 0시는 12시로 표시
+            
+            const strTime = ampm + ' ' + hours + ':' + (minutes < 10 ? '0' + minutes : minutes);
+            const timeElement = document.getElementById('current-time');
+            if (timeElement) {
+                timeElement.innerText = strTime;
+            }
+        }
+        setInterval(updateTime, 1000);
+        updateTime(); // 초기 실행
+
+        // 검색 엔터 처리
+        function handleEnter(event) { if (event.key === 'Enter') searchInGoogle(); }
+        function getQuery() { return document.getElementById('search-bar').value.trim(); }
+        
+        // 검색 함수들
+        function searchInGoogle() { const q = getQuery(); if (q) window.open('https://www.google.com/search?q=' + encodeURIComponent(q), '_blank'); }
+        function searchInNaver() { const q = getQuery(); if (q) window.open('https://search.naver.com/search.naver?where=nexearch&sm=tab_hty&query=' + encodeURIComponent(q), '_blank'); }
+        function searchInDBpia() { const q = getQuery(); if (q) window.open('https://www.dbpia.co.kr/search/topSearch?searchOption=all&query=' + encodeURIComponent(q), '_blank'); }
+        function searchInGs() { const q = getQuery(); if (q) window.open('https://scholar.google.com/scholar?hl=ko&as_sdt=0%2C5&q=' + encodeURIComponent(q), '_blank'); }
+        function searchInRISS() { const q = getQuery(); if (q) window.open('https://www.riss.kr/search/Search.do?colName=all&isDetailSearch=N&searchGubun=true&query=' + encodeURIComponent(q), '_blank'); }
+
+        // ==========================================
+        // API & AI FUNCTIONS
+        // ==========================================
+        function updateApiStatus() {
+            const apiKey = localStorage.getItem('GROQ_API_KEY');
+            const indicator = document.getElementById('api-status-indicator');
+            if (apiKey) {
+                indicator.innerHTML = '등록 정보 연결됨';
+                indicator.style.color = 'navy';
+            } else {
+                indicator.innerHTML = '키 필요함';
+                indicator.style.color = 'red';
+            }
+        }
+
+        function openApiModal() {
+            const modal = document.getElementById('api-modal');
+            const input = document.getElementById('api-key-input');
+            const savedKey = localStorage.getItem('GROQ_API_KEY');
+            if (savedKey) input.value = savedKey;
+            modal.classList.add('show');
+            updateApiStatus();
+        }
+
+        function closeApiModal() {
+            document.getElementById('api-modal').classList.remove('show');
+        }
+
+        function saveApiKey() {
+            const input = document.getElementById('api-key-input');
+            const apiKey = input.value.trim();
+            if (apiKey) {
+                localStorage.setItem('GROQ_API_KEY', apiKey);
+                alert('시스템: 설정을 저장했습니다.');
+                closeApiModal();
+                updateApiStatus();
+            } else {
+                alert('오류: 키를 입력하십시오.');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', updateApiStatus);
+
+        function triggerSummary() {
+            if (!currentSummaryData) return;
+            const btn = document.getElementById('btn-generate-summary');
+            const contentDiv = document.getElementById('gemini-summary-content');
+            
+            btn.disabled = true;
+            btn.innerHTML = '처리 중...';
+            contentDiv.style.display = 'block';
+            
+            generateSummary(currentSummaryData.query, currentSummaryData.results);
+        }
+
+        async function generateSummary(query, searchResults) {
+            const GROQ_API_KEY = localStorage.getItem('GROQ_API_KEY');
+            const summaryText = document.getElementById('gemini-summary-text');
+            const btn = document.getElementById('btn-generate-summary');
+
+            if (!GROQ_API_KEY) {
+                summaryText.innerHTML = '<span style="color:red">오류: 등록 정보 키를 찾을 수 없습니다.</span>';
+                btn.innerHTML = '설정 필요';
+                btn.disabled = false;
+                return;
+            }
+
+            summaryText.innerHTML = '정보 분석 중...';
+            
+            try {
+                let resultsContext = '검색어: ' + query + '\n\n검색 결과:\n\n';
+                searchResults.forEach((result, index) => {
+                    resultsContext += `${index + 1}. ${result.title}\n${result.snippet}\n\n`;
+                });
+                
+                const systemPrompt = `당신은 검색 결과들을 바탕으로 사용자에게 과학적이고 간결한 요약을 제공하는 AI입니다. 다음은 "${query}"에 대한 학술 검색 결과입니다. 이 검색 결과들을 바탕으로 사용자가 알고 싶어하는 정보를 과학적이고 간결하게 요약해주세요. 한국어로 답변해주세요. 마크다운 문법을 자유롭게 사용할 수 있습니다.`;
+                
+                const userPrompt = `다음 검색 결과들을 종합하여 요약해주세요:\n\n${resultsContext}\n\n요약 시 다음 사항을 지켜주세요:\n1. 핵심 정보를 명확하게 정리 (마크다운 사용 가능)\n2. 검색 결과의 주요 내용을 종합적으로 설명. 마지막에 결론을 낼것.\n3. 객관적이고 중립적, 과학적이고 전문적인 톤 유지\n4. 불필요한 인사말이나 서론 없이 바로 본론으로 시작\n5. 가독성을 위해 적절히 마크다운 문법 활용 (제목, 강조, 리스트 등)`;
+
+                const response = await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${GROQ_API_KEY}`,
+                    },
+                    body: JSON.stringify({
+                        model: GROQ_MODEL, 
+                        messages: [
+                            { role: 'system', content: systemPrompt },
+                            { role: 'user', content: userPrompt }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 1024,
+                    })
+                });
+
+                if (!response.ok) throw new Error('등록 정보 응답 실패');
+                const data = await response.json();
+                
+                if (data.choices && data.choices[0]) {
+                    const summary = data.choices[0].message.content;
+                    summaryText.innerHTML = marked.parse(summary);
+                    btn.innerHTML = '다시 요약';
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                summaryText.innerHTML = `<span style="color:red">오류 발생: ${error.message}</span>`;
+                btn.innerHTML = '재시도';
+                btn.disabled = false;
+            }
+        }
+
+        // ==========================================
+        // OBSERVERS (SEARCH & DOM)
+        // ==========================================
+        function monitorSearchResults() {
+            const resultsObserver = new MutationObserver(() => {
+                if (!isCSE) return;
+                
+                const results = document.querySelectorAll('.gsc-webResult.gsc-result');
+                const searchInput = document.querySelector('input.gsc-input');
+                const query = searchInput ? searchInput.value.trim() : '';
+
+                if (results.length > 0 && query && query !== lastProcessedQuery) {
+                    const searchResults = [];
+                    results.forEach(result => {
+                        const titleElement = result.querySelector('.gs-title');
+                        const snippetElement = result.querySelector('.gs-snippet');
+                        if (titleElement && snippetElement) {
+                            searchResults.push({
+                                title: titleElement.textContent.trim(),
+                                snippet: snippetElement.textContent.trim()
+                            });
+                        }
+                    });
+
+                    const summaryContainer = document.getElementById('gemini-summary-container');
+                    if (searchResults.length > 0) {
+                        lastProcessedQuery = query;
+                        summaryContainer.style.display = 'block';
+                        
+                        // Insert above results
+                        const wrapper = results[0].closest('.gsc-results-wrapper-visible') || results[0].parentElement.parentElement;
+                        if(wrapper) wrapper.insertBefore(summaryContainer, wrapper.firstChild);
+
+                        currentSummaryData = { query: query, results: searchResults.slice(0, 5) };
+                        document.getElementById('gemini-summary-content').style.display = 'none'; // Initially hidden
+                        document.getElementById('btn-generate-summary').innerHTML = '분석 실행';
+                        document.getElementById('btn-generate-summary').disabled = false;
+                    }
+                }
+                addTrustButtons();
+            });
+
+            resultsObserver.observe(document.body, { childList: true, subtree: true });
+        }
+        monitorSearchResults();
+
+        // Trust Analysis Buttons
+        function addTrustButtons() {
+            if (!isCSE) return;
+            const results = document.querySelectorAll('.gsc-webResult.gsc-result');
+            results.forEach(result => {
+                if (result.querySelector('.trust-button')) return;
+                
+                const titleLink = result.querySelector('.gs-title a');
+                if (!titleLink || !titleLink.href) return;
+
+                const btn = document.createElement('button');
+                btn.className = 'trust-button';
+                btn.innerHTML = '🛡 보안 검사';
+                btn.style.float = 'right';
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    analyzeTrust(titleLink.href, btn, result);
+                };
+                
+                const snippet = result.querySelector('.gs-snippet');
+                if(snippet) snippet.parentNode.insertBefore(btn, snippet);
+            });
+        }
+
+        async function analyzeTrust(url, btn, resultContainer) {
+            const GROQ_API_KEY = localStorage.getItem('GROQ_API_KEY');
+            if (!GROQ_API_KEY) { openApiModal(); return; }
+
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '분석 중...';
+            btn.disabled = true;
+
+            const existingResult = resultContainer.querySelector('.trust-result');
+            if (existingResult) existingResult.remove();
+
+            try {
+                const hostname = new URL(url).hostname;
+                const systemPrompt = `당신은 사이버 보안 전문가입니다. 사용자의 안전을 위해 도메인을 평가합니다.`;
+                const userPrompt = `대상 도메인: ${hostname}\n\n이 사이트의 보안 신뢰도를 평가하여 '매우 안전', '안전', '양호', '주의 필요', '위험' 중 하나의 단어만 출력하세요. 다른 말은 하지 마세요.`;
+
+                const response = await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
+                    body: JSON.stringify({
+                        model: GROQ_MODEL,
+                        messages: [
+                            { role: 'system', content: systemPrompt },
+                            { role: 'user', content: userPrompt }
+                        ],
+                        temperature: 0.1,
+                        max_tokens: 10
+                    })
+                });
+
+                if (!response.ok) throw new Error('API Error');
+                const data = await response.json();
+                const grade = data.choices[0].message.content.trim().replace(/['"]/g, '');
+                
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'trust-result';
+                
+                let colorClass = 'high';
+                if (grade.includes('주의')) colorClass = 'medium';
+                if (grade.includes('위험')) colorClass = 'low';
+
+                resultDiv.innerHTML = `분석 결과: <span class="trust-score ${colorClass}">${grade}</span> (도메인: ${hostname})`;
+                resultContainer.appendChild(resultDiv);
+                
+                btn.innerHTML = '완료';
+                btn.disabled = false;
+            } catch (error) {
+                btn.innerHTML = '오류';
+                setTimeout(() => { btn.innerHTML = originalText; btn.disabled = false; }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>
