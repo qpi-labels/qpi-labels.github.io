@@ -172,10 +172,8 @@
         let currentTrack = trackA, isPlaying = false;
         let cfTimeout = null;
         function crossfadeLoop() {
-            console.log("hi");
             if (!isPlaying) return;
             const nextTrack = (currentTrack === trackA) ? trackB : trackA;
-            console.log(`hii ${nextTrack === trackB}`);
             cfTimeout = setTimeout(() => {
                 if(!isPlaying) return;
                 nextTrack.currentTime = 0; nextTrack.play(); nextTrack.volume = 0;
