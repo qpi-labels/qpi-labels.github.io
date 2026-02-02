@@ -170,17 +170,33 @@
         const audioURL = 'https://assets.mixkit.co/active_storage/sfx/2453/2453-preview.mp3';
         const trackA = new Audio(audioURL), trackB = new Audio(audioURL);
         let currentTrack = trackA, isPlaying = false;
+        let cfTimeout = null;
         function crossfadeLoop() {
+            console.log("hi");
             if (!isPlaying) return;
             const nextTrack = (currentTrack === trackA) ? trackB : trackA;
-            setTimeout(() => {
+            console.log(`hii ${nextTrack === trackB}`);
+            cfTimeout = setTimeout(() => {
                 if(!isPlaying) return;
                 nextTrack.currentTime = 0; nextTrack.play(); nextTrack.volume = 0;
                 let v = 0;
-                const f = setInterval(() => { v += 0.05; if (v >= 0.4) { nextTrack.volume = 0.4; currentTrack.volume = 0; currentTrack.pause(); currentTrack = nextTrack; clearInterval(f); crossfadeLoop(); } else { nextTrack.volume = v; currentTrack.volume = 0.4 - v; } }, 150);
+                const f = setInterval(() => {
+                    v += 0.05;
+                    if (v >= 0.4) {
+                        nextTrack.volume = 0.4;
+                        currentTrack.volume = 0;
+                        currentTrack.pause();
+                        currentTrack = nextTrack;
+                        clearInterval(f);
+                        crossfadeLoop();
+                    } else {
+                        nextTrack.volume = v;
+                        currentTrack.volume = 0.4 - v;
+                    }
+                }, 150);
             }, 25000); 
         }
-        document.getElementById('soundToggle').addEventListener('change', function() { isPlaying = this.checked; if (isPlaying) { trackA.volume = 0.4; trackA.play(); crossfadeLoop(); } else { trackA.pause(); trackB.pause(); } });
+        document.getElementById('soundToggle').addEventListener('change', function() { isPlaying = this.checked; if (isPlaying) { trackA.volume = 0.4; trackA.play(); crossfadeLoop(); } else { trackA.pause(); trackB.pause(); clearTimeout(cfTimeout); } });
 
         // 3. Smooth Adaptive Visualizer (PC - 16kHz Log Scale)
         const canvas = document.getElementById('vizCanvas'), ctx = canvas.getContext('2d');
