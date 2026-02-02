@@ -196,53 +196,21 @@
             } catch (e) { alert("Capture failed."); }
         });
         function drawViz() {
-    if (!isVizActive) return;
-    requestAnimationFrame(drawViz);
-    analyser.getByteFrequencyData(dataArray);
-    
-    canvas.width = window.innerWidth;
-    canvas.height = 200;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    const cutoff = Math.floor((16000 / (sampleRate/2)) * dataArray.length);
-    const bars = Math.min(dataArray.length, cutoff);
-
-    // 1. 모든 막대의 가중치 총합 계산
-    let totalWeight = 0;
-    const weights = [];
-    for (let i = 0; i < bars; i++) {
-        // 지수 함수를 사용하여 왼쪽(저음)에 더 큰 가중치 부여
-        // Math.pow의 수치를 높일수록 저음부와 고음부의 너비 차이가 극명해집니다.
-        const w = Math.pow((bars - i) / bars, 1.5) + 0.2; 
-        weights.push(w);
-        totalWeight += w;
-    }
-
-    // 2. 가중치에 따라 막대 그리기
-    let currentX = 0;
-    for (let i = 0; i < bars; i++) {
-        // 실제 막대 너비 = (나의 가중치 / 전체 가중치 합) * 화면 전체 너비
-        const barWidth = (weights[i] / totalWeight) * canvas.width;
-
-        let m = 0.5 + (bars - i) / bars * 0.6; 
-        let target = (dataArray[i] / 255) * canvas.height * m;
-
-        if (!smoothHeights[i]) smoothHeights[i] = 0;
-        if (target > smoothHeights[i]) smoothHeights[i] = target;
-        else smoothHeights[i] *= 0.94;
-
-        const h = Math.min(smoothHeights[i], canvas.height * 0.8);
-        
-        // 색상 적용 및 그리기
-        ctx.fillStyle = uiColorGlobal.replace(/[\d.]+\)$/g, `${Math.max(0.08, dataArray[i]/255 * 0.4)})`);
-        
-        // 막대 사이 간격을 위해 barWidth에서 1~2px 정도를 뺍니다.
-        ctx.fillRect(currentX, canvas.height - h, barWidth - 1, h);
-
-        // 다음 막대의 시작 좌표 갱신
-        currentX += barWidth;
-    }
-}
+            if (!isVizActive) return; requestAnimationFrame(drawViz);
+            analyser.getByteFrequencyData(dataArray);
+            canvas.width = window.innerWidth; canvas.height = 200; ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const bars = Math.min(dataArray.length, Math.floor((14000 / (sampleRate/2)) * dataArray.length));
+            const bw = canvas.width / bars;
+            for (let i = 0; i < bars; i++) {
+                let m = 0.5 + (bars - i) / bars * 0.6; 
+                let target = (dataArray[i] / 255) * canvas.height * m;
+                if (!smoothHeights[i]) smoothHeights[i] = 0;
+                if (target > smoothHeights[i]) smoothHeights[i] = target; else smoothHeights[i] *= 0.94;
+                const h = Math.min(smoothHeights[i], canvas.height * 0.8);
+                ctx.fillStyle = uiColorGlobal.replace(/[\d.]+\)$/g, `${Math.max(0.08, dataArray[i]/255 * 0.4)})`);
+                ctx.fillRect(i * bw, canvas.height - h, bw - 1, h);
+            }
+        }
 
         // 4. High-Precision Engine & Adaptive UI
         const autoCheck = document.getElementById('autoCheck'), timeRange = document.getElementById('timeRange'), speedValDisp = document.getElementById('speedVal'), clock = document.getElementById('clock'), manualSection = document.getElementById('manualSection');
