@@ -204,7 +204,7 @@
             canvas.width = window.innerWidth; canvas.height = 200; ctx.clearRect(0, 0, canvas.width, canvas.height);
             
             const bw = canvas.width / TOTAL_BARS;
-            const minFreq = 0, maxFreq = 14000, nyquist = sampleRate / 2;
+            const minFreq = 20, maxFreq = 14000, nyquist = sampleRate / 2;
 
             for (let i = 0; i < TOTAL_BARS; i++) {
                 const freq = minFreq * Math.pow(maxFreq / minFreq, i / (TOTAL_BARS - 1));
