@@ -132,7 +132,7 @@
 
         const canv = document.getElementById('starfield-stars');
         const context = canv.getContext('2d');
-        canv.width = canv.height = 6000;
+        canv.width = canv.height = 5000;
         const drawCirc = (cx, cy, r) => {
             context.beginPath();
             context.arc(cx, cy, r, 0, 2 * Math.PI, false);
@@ -142,8 +142,8 @@
         for(let i=0; i<15000; i++){
             const s = document.createElement('div'); s.className = 'star';
             const size = Math.random()*1.2 + 0.4;
-            const x = Math.random()*6000;
-            const y = Math.random()*6000;
+            const x = Math.random()*5000;
+            const y = Math.random()*5000;
             context.fillStyle = `rgba(255, 255, 255, ${Math.random()})`;
             drawCirc(x, y, size);
             //starField.appendChild(s);
