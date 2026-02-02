@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Realistic Sky - High Speed Simulation</title>
+    <title>Realistic Sky - Adaptive Logic Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -30,52 +30,53 @@
 
         .satellite { position: absolute; width: 1.5px; height: 1.5px; background: #fff; border-radius: 50%; z-index: 2; box-shadow: 0 0 3px 1px rgba(255,255,255,0.7); }
 
-        .sun-aura { position: absolute; left: var(--sun-x); top: var(--sun-y); transform: translate(-50%, -50%); width: 160vmax; height: 160vmax; background: radial-gradient(circle, rgba(255, 255, 255, 0.35) 0%, rgba(255, 200, 100, 0.1) 20%, transparent 70%); mix-blend-mode: screen; z-index: 4; }
-        .sun-disk { position: absolute; left: var(--sun-x); top: var(--sun-y); transform: translate(-50%, -50%); width: 65px; height: 65px; border-radius: 50%; background: #fff; box-shadow: 0 0 50px 15px #fff, 0 0 120px 40px rgba(255, 230, 150, 0.5); z-index: 5; }
-        .moon-aura { position: absolute; left: var(--moon-x); top: var(--moon-y); transform: translate(-50%, -50%); width: 100vmax; height: 100vmax; background: radial-gradient(circle, rgba(180, 220, 255, 0.25) 0%, rgba(100, 150, 255, 0.05) 30%, transparent 60%); mix-blend-mode: screen; z-index: 4; }
-        .moon-disk { position: absolute; left: var(--moon-x); top: var(--moon-y); transform: translate(-50%, -50%); width: 50px; height: 50px; border-radius: 50%; background: #e0e0e0; box-shadow: 0 0 30px 5px rgba(255, 255, 255, 0.4); z-index: 5; }
+        .sun-aura { position: absolute; left: var(--sun-x); top: var(--sun-y); transform: translate(-50%, -50%); width: 160vmax; height: 160vmax; background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 200, 100, 0.08) 25%, transparent 65%); mix-blend-mode: screen; z-index: 4; }
+        .sun-disk { position: absolute; left: var(--sun-x); top: var(--sun-y); transform: translate(-50%, -50%); width: 60px; height: 60px; border-radius: 50%; background: #fff; box-shadow: 0 0 50px 15px #fff, 0 0 120px 40px rgba(255, 230, 150, 0.5); z-index: 5; }
+        .moon-aura { position: absolute; left: var(--moon-x); top: var(--moon-y); transform: translate(-50%, -50%); width: 100vmax; height: 100vmax; background: radial-gradient(circle, rgba(180, 220, 255, 0.2) 0%, transparent 60%); mix-blend-mode: screen; z-index: 4; }
+        .moon-disk { position: absolute; left: var(--moon-x); top: var(--moon-y); transform: translate(-50%, -50%); width: 45px; height: 45px; border-radius: 50%; background: #e0e0e0; box-shadow: 0 0 30px 5px rgba(255, 255, 255, 0.4); z-index: 5; }
 
         .viz-canvas {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 200px;
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 220px;
             z-index: 10; pointer-events: none;
-            mask-image: linear-gradient(to top, black 20%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to top, black 20%, transparent 100%);
+            mask-image: linear-gradient(to top, black 30%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to top, black 30%, transparent 100%);
         }
 
         .bottom-clock { 
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); 
-            color: var(--ui-color); 
-            font-weight: 100; font-size: 14px; letter-spacing: 2.5px; z-index: 50; 
-            text-shadow: 0 0 10px rgba(0,0,0,0.5), 0 0 2px rgba(0,0,0,0.8);
+            color: var(--ui-color); font-weight: 100; font-size: 15px; letter-spacing: 3px; z-index: 100; 
+            text-shadow: 0 0 15px rgba(0,0,0,0.6), 0 0 3px rgba(0,0,0,0.9);
             transition: color 1s ease; pointer-events: none;
         }
 
-        /* Settings UI */
-        .fab { position: fixed; bottom: 30px; right: 30px; width: 48px; height: 48px; border-radius: 50%; background: rgba(127,127,127,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(127,127,127,0.2); cursor: pointer; z-index: 100; display: flex; justify-content: center; align-items: center; }
-        .popup { position: fixed; bottom: 90px; right: 30px; width: 260px; background: rgba(10,10,10,0.95); backdrop-filter: blur(25px); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); color: #fff; z-index: 110; opacity: 0; pointer-events: none; transform: translateY(15px); transition: 0.4s; }
+        .fab { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; border-radius: 50%; background: rgba(127,127,127,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(127,127,127,0.2); cursor: pointer; z-index: 110; display: flex; justify-content: center; align-items: center; }
+        .popup { position: fixed; bottom: 95px; right: 30px; width: 260px; background: rgba(10,10,10,0.95); backdrop-filter: blur(25px); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); color: #fff; z-index: 120; opacity: 0; pointer-events: none; transform: translateY(15px); transition: 0.4s cubic-bezier(0.2, 1, 0.3, 1); }
         .popup.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
-        .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .label { font-size: 11px; font-weight: 300; letter-spacing: 1px; color: #aaa; text-transform: uppercase; }
         
-        /* Speed Buttons Style */
-        .speed-ctrl { display: flex; gap: 8px; align-items: center; }
+        .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; transition: opacity 0.3s ease; }
+        .label { font-size: 11px; font-weight: 300; letter-spacing: 1px; color: #999; text-transform: uppercase; }
+        
+        /* Disabled State for Manual Controls */
+        .manual-ui.disabled { opacity: 0.2; pointer-events: none; filter: grayscale(1); }
+
+        .speed-ctrl { display: flex; gap: 10px; align-items: center; }
         .speed-btn {
-            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-            color: #fff; border-radius: 6px; padding: 4px 12px; font-size: 12px; cursor: pointer;
-            transition: background 0.2s; font-family: inherit;
+            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+            color: #fff; border-radius: 6px; padding: 5px 14px; font-size: 11px; cursor: pointer;
+            transition: 0.2s; font-family: inherit;
         }
-        .speed-btn:hover { background: rgba(255,255,255,0.2); }
-        .speed-btn:active { transform: scale(0.95); }
+        .speed-btn:hover { background: rgba(255,255,255,0.15); }
 
         input[type=range] { width: 100%; -webkit-appearance: none; background: rgba(255,255,255,0.1); height: 2px; outline: none; }
         input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--primary); cursor: pointer; }
-        .switch { position: relative; width: 34px; height: 16px; }
+        
+        .switch { position: relative; width: 34px; height: 18px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #333; border-radius: 18px; transition: 0.4s; cursor: pointer; }
-        .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 2px; bottom: 2px; background: white; border-radius: 50%; transition: 0.4s; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 2px; bottom: 2px; background: white; border-radius: 50%; transition: 0.4s; }
         input:checked + .slider { background: var(--primary); }
-        input:checked + .slider:before { transform: translateX(18px); }
-        .btn-action { width: 100%; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #90caf9; font-size: 11px; cursor: pointer; margin-top: 10px; }
+        input:checked + .slider:before { transform: translateX(16px); }
+        .btn-action { width: 100%; padding: 12px; background: rgba(144,202,249,0.1); border: 1px solid rgba(144,202,249,0.3); border-radius: 8px; color: #90caf9; font-size: 11px; cursor: pointer; margin-top: 5px; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -97,31 +98,44 @@
     </div>
 
     <div class="popup" id="popup">
-        <div class="row"><span class="label">AUTO SYNC</span><label class="switch"><input type="checkbox" id="autoCheck" checked><span class="slider"></span></label></div>
-        <div class="row" style="flex-direction:column; align-items:flex-start; gap:8px;"><span class="label">TIME SLIDER</span><input type="range" id="timeRange" min="0" max="1439" value="720"></div>
-        <div class="row" style="margin-bottom:25px;">
-            <span class="label">SPEED (<span id="speedVal">1</span>x)</span>
-            <div class="speed-ctrl">
-                <button class="speed-btn" onclick="adjustSpeed(0.5)">x0.5</button>
-                <button class="speed-btn" onclick="adjustSpeed(2)">x2</button>
+        <div class="row">
+            <span class="label">시간 자동 설정</span>
+            <label class="switch"><input type="checkbox" id="autoCheck" checked onchange="handleSyncToggle()"><span class="slider"></span></label>
+        </div>
+        
+        <!-- 수동 모드 섹션 -->
+        <div id="manualSection" class="manual-ui disabled">
+            <div class="row" style="flex-direction:column; align-items:flex-start; gap:8px;">
+                <span class="label">시간 수동 설정</span>
+                <input type="range" id="timeRange" min="0" max="1439.99" step="0.01" value="720">
+            </div>
+            <div class="row" style="margin-bottom:25px;">
+                <span class="label">속도 (<span id="speedVal">1</span>배속)</span>
+                <div class="speed-ctrl">
+                    <button class="speed-btn" onclick="adjustSpeed(0.5)">x0.5</button>
+                    <button class="speed-btn" onclick="adjustSpeed(2)">x2</button>
+                </div>
             </div>
         </div>
-        <div class="row"><span class="label">AMBIENT SOUNDS</span><label class="switch"><input type="checkbox" id="soundToggle"><span class="slider"></span></label></div>
-        <button class="btn-action" id="btnViz">Enable Visualizer (PC)</button>
+
+        <div class="row">
+            <span class="label">배경음</span>
+            <label class="switch"><input type="checkbox" id="soundToggle"><span class="slider"></span></label>
+        </div>
+        <button class="btn-action" id="btnViz">사운드 비주얼라이저 (PC 전용)</button>
     </div>
 
     <script>
-        // 1. Stars initialization
+        // 1. Stars & Satellites (Frequency 0.5x)
         const starField = document.getElementById('starField');
         for(let i=0; i<300; i++){
             const s = document.createElement('div'); s.className = 'star';
             s.style.width = s.style.height = (Math.random()*1.2 + 0.4)+'px';
             s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%';
-            s.style.setProperty('--dur', (Math.random()*3+2)+'s');
+            s.style.opacity = Math.random();
             starField.appendChild(s);
         }
 
-        // 2. Satellite (Ultra Slow)
         const satLayer = document.getElementById('satLayer');
         let currentSunAlt = 0;
         function animateObject(isStarlink = false) {
@@ -138,9 +152,9 @@
                 setTimeout(() => {
                     const sat = document.createElement('div'); sat.className = 'satellite';
                     satLayer.appendChild(sat);
-                    const startTime = performance.now();
+                    const startT = performance.now();
                     const move = (now) => {
-                        const t = (now - startTime) / duration;
+                        const t = (now - startT) / duration;
                         if (t < 1) { sat.style.transform = `translate(${sx + (ex - sx) * t}vw, ${sy + (ey - sy) * t}vh)`; requestAnimationFrame(move); }
                         else { sat.remove(); }
                     };
@@ -152,7 +166,7 @@
         const starlinkLoop = () => { animateObject(true); setTimeout(starlinkLoop, Math.random() * 150000 + 150000); };
         satLoop(); starlinkLoop();
 
-        // 3. Audio Crossfade (Night Only)
+        // 2. Audio Engine (Crossfade)
         const audioURL = 'https://assets.mixkit.co/active_storage/sfx/2453/2453-preview.mp3';
         const trackA = new Audio(audioURL), trackB = new Audio(audioURL);
         let currentTrack = trackA, isPlaying = false;
@@ -162,81 +176,60 @@
             setTimeout(() => {
                 if(!isPlaying) return;
                 nextTrack.currentTime = 0; nextTrack.play(); nextTrack.volume = 0;
-                let vol = 0;
-                const fade = setInterval(() => {
-                    vol += 0.05;
-                    if (vol >= 0.4) { nextTrack.volume = 0.4; currentTrack.volume = 0; currentTrack.pause(); currentTrack = nextTrack; clearInterval(fade); crossfadeLoop(); }
-                    else { nextTrack.volume = vol; currentTrack.volume = 0.4 - vol; }
-                }, 150);
+                let v = 0;
+                const f = setInterval(() => { v += 0.05; if (v >= 0.4) { nextTrack.volume = 0.4; currentTrack.volume = 0; currentTrack.pause(); currentTrack = nextTrack; clearInterval(f); crossfadeLoop(); } else { nextTrack.volume = v; currentTrack.volume = 0.4 - v; } }, 150);
             }, 25000); 
         }
-        document.getElementById('soundToggle').addEventListener('change', function() {
-            isPlaying = this.checked;
-            if (isPlaying) { trackA.volume = 0.4; trackA.play(); crossfadeLoop(); }
-            else { trackA.pause(); trackB.pause(); }
-        });
+        document.getElementById('soundToggle').addEventListener('change', function() { isPlaying = this.checked; if (isPlaying) { trackA.volume = 0.4; trackA.play(); crossfadeLoop(); } else { trackA.pause(); trackB.pause(); } });
 
-        // 4. Dramatic Smooth Visualizer (16kHz)
-        const canvas = document.getElementById('vizCanvas');
-        const ctx = canvas.getContext('2d');
-        let analyser, dataArray, isVizActive = false, sampleRate = 48000;
-        let smoothHeights = [];
-
+        // 3. Smooth Adaptive Visualizer (PC)
+        const canvas = document.getElementById('vizCanvas'), ctx = canvas.getContext('2d');
+        let analyser, dataArray, isVizActive = false, sampleRate = 48000, smoothHeights = [];
         document.getElementById('btnViz').addEventListener('click', async () => {
             try {
                 const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
-                const aCtx = new AudioContext();
-                sampleRate = aCtx.sampleRate;
+                const aCtx = new AudioContext(); sampleRate = aCtx.sampleRate;
                 const src = aCtx.createMediaStreamSource(stream);
-                analyser = aCtx.createAnalyser();
-                src.connect(analyser);
-                analyser.fftSize = 512;
-                analyser.smoothingTimeConstant = 0.88;
-                dataArray = new Uint8Array(analyser.frequencyBinCount);
-                isVizActive = true;
-                drawViz();
+                analyser = aCtx.createAnalyser(); src.connect(analyser);
+                analyser.fftSize = 512; analyser.smoothingTimeConstant = 0.9;
+                dataArray = new Uint8Array(analyser.frequencyBinCount); isVizActive = true; drawViz();
             } catch (e) { alert("Capture failed."); }
         });
-
         function drawViz() {
-            if (!isVizActive) return;
-            requestAnimationFrame(drawViz);
+            if (!isVizActive) return; requestAnimationFrame(drawViz);
             analyser.getByteFrequencyData(dataArray);
-            canvas.width = window.innerWidth;
-            canvas.height = 200;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const cutoff = Math.floor((16000 / (sampleRate/2)) * dataArray.length);
-            const bars = Math.min(dataArray.length, cutoff);
+            canvas.width = window.innerWidth; canvas.height = 200; ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const bars = Math.min(dataArray.length, Math.floor((16000 / (sampleRate/2)) * dataArray.length));
             const bw = canvas.width / bars;
             for (let i = 0; i < bars; i++) {
-                let mult = 0.7 + (bars - i) / bars * 0.8; 
-                let target = (dataArray[i] / 255) * canvas.height * mult;
+                let m = 0.5 + (bars - i) / bars * 0.6; 
+                let target = (dataArray[i] / 255) * canvas.height * m;
                 if (!smoothHeights[i]) smoothHeights[i] = 0;
-                if (target > smoothHeights[i]) smoothHeights[i] = target;
-                else smoothHeights[i] *= 0.92;
-                const h = Math.min(smoothHeights[i], canvas.height * 0.85);
-                ctx.fillStyle = uiColorGlobal.replace(/[\d.]+\)$/g, `${Math.max(0.1, dataArray[i]/255 * 0.4)})`);
+                if (target > smoothHeights[i]) smoothHeights[i] = target; else smoothHeights[i] *= 0.94;
+                const h = Math.min(smoothHeights[i], canvas.height * 0.8);
+                ctx.fillStyle = uiColorGlobal.replace(/[\d.]+\)$/g, `${Math.max(0.08, dataArray[i]/255 * 0.4)})`);
                 ctx.fillRect(i * bw, canvas.height - h, bw - 1, h);
             }
         }
 
-        // 5. Advanced Continuous Time Engine (Speed Controls)
-        const autoCheck = document.getElementById('autoCheck');
-        const timeRange = document.getElementById('timeRange');
-        const speedValDisp = document.getElementById('speedVal');
-        const clock = document.getElementById('clock');
-        
-        let manualMinutes = 720;
-        let lastTimestamp = Date.now();
-        let currentSpeed = 1;
-        let uiColorGlobal = "rgba(255,255,255,0.4)";
+        // 4. High-Precision Engine & Adaptive UI
+        const autoCheck = document.getElementById('autoCheck'), timeRange = document.getElementById('timeRange'), speedValDisp = document.getElementById('speedVal'), clock = document.getElementById('clock'), manualSection = document.getElementById('manualSection');
+        let manualMinutes = 720, lastTimestamp = performance.now(), currentSpeed = 1, uiColorGlobal = "rgba(255,255,255,0.4)";
 
-        function adjustSpeed(factor) {
-            let nextSpeed = currentSpeed * factor;
-            if (nextSpeed >= 1 && nextSpeed <= 128) {
-                currentSpeed = nextSpeed;
-                speedValDisp.textContent = currentSpeed;
+        function handleSyncToggle() {
+            if (autoCheck.checked) {
+                manualSection.classList.add('disabled');
+            } else {
+                manualSection.classList.remove('disabled');
+                const d = new Date();
+                manualMinutes = d.getHours()*60 + d.getMinutes() + d.getSeconds()/60;
+                lastTimestamp = performance.now();
             }
+        }
+
+        function adjustSpeed(f) { 
+            let n = currentSpeed * f; 
+            if (n >= 1 && n <= 128) { currentSpeed = n; speedValDisp.textContent = currentSpeed; } 
         }
 
         const skyKeyframes = [
@@ -252,29 +245,25 @@
         function lerpRGB(c1, c2, t) { return [Math.round(c1[0]+(c2[0]-c1[0])*t), Math.round(c1[1]+(c2[1]-c1[1])*t), Math.round(c1[2]+(c2[2]-c1[2])*t)]; }
 
         function updateSky(m) {
-            const mG = m % 1440;
-            const h = mG / 60, s = (mG * 60) % 60;
+            const mG = m % 1440; const h = mG / 60, s = (mG * 60) % 60;
             let c;
             for(let i=0; i<skyKeyframes.length-1; i++) {
                 const st = skyKeyframes[i], en = skyKeyframes[i+1];
                 if(h >= st.h && h <= en.h) {
                     const t = (h - st.h) / (en.h - st.h);
-                    const zenith = lerpRGB(st.z, en.z, t);
-                    const horizon = lerpRGB(st.hz, en.hz, t);
+                    const zenith = lerpRGB(st.z, en.z, t); const horizon = lerpRGB(st.hz, en.hz, t);
                     c = { z: `rgb(${zenith.join(',')})`, hz: `rgb(${horizon.join(',')})` };
-                    const brightness = (horizon[0] + horizon[1] + horizon[2]) / 3;
-                    uiColorGlobal = (brightness > 135) ? "rgba(10, 30, 60, 0.5)" : "rgba(255, 255, 255, 0.4)";
+                    const bright = (horizon[0] + horizon[1] + horizon[2]) / 3;
+                    uiColorGlobal = (bright > 135) ? "rgba(10, 30, 60, 0.5)" : "rgba(255, 255, 255, 0.4)";
                     document.documentElement.style.setProperty('--ui-color', uiColorGlobal);
                     break;
                 }
             }
-            document.documentElement.style.setProperty('--zenith', c.z);
-            document.documentElement.style.setProperty('--horizon', c.hz);
+            document.documentElement.style.setProperty('--zenith', c.z); document.documentElement.style.setProperty('--horizon', c.hz);
             const sPr = (h>=5 && h<=19) ? (h-5)/14 : -1;
             if(sPr >= 0) { currentSunAlt = Math.sin(sPr*Math.PI); document.documentElement.style.setProperty('--sun-x', (sPr*120-10)+'%'); document.documentElement.style.setProperty('--sun-y', (100-currentSunAlt*90)+'%'); }
             else { currentSunAlt = -1; document.documentElement.style.setProperty('--sun-y', '150%'); }
-            const moonH = (h + 12) % 24;
-            const mPr = (moonH >= 5 && moonH <= 19) ? (moonH - 5)/14 : -1;
+            const moonH = (h + 12) % 24; const mPr = (moonH >= 5 && moonH <= 19) ? (moonH - 5)/14 : -1;
             if(mPr >= 0) { const alt = Math.sin(mPr*Math.PI); document.documentElement.style.setProperty('--moon-x', (mPr*120-10)+'%'); document.documentElement.style.setProperty('--moon-y', (100-alt*85)+'%'); }
             else { document.documentElement.style.setProperty('--moon-y', '150%'); }
             document.documentElement.style.setProperty('--star-opacity', currentSunAlt > 0.1 ? 0 : 1);
@@ -282,28 +271,23 @@
             clock.textContent = `${Math.floor(h).toString().padStart(2,'0')}:${Math.floor(mG % 60).toString().padStart(2,'0')}:${Math.floor(s).toString().padStart(2,'0')}`;
         }
 
-        timeRange.addEventListener('input', () => { if(!autoCheck.checked) manualMinutes = parseFloat(timeRange.value); });
+        timeRange.addEventListener('input', () => { if(!autoCheck.checked) { manualMinutes = parseFloat(timeRange.value); lastTimestamp = performance.now(); } });
 
-        function loop() {
-            const now = Date.now();
-            const deltaMinutes = (now - lastTimestamp) / 60000;
-            lastTimestamp = now;
+        function loop(now) {
+            const deltaMs = now - lastTimestamp; lastTimestamp = now;
             let m;
             if(autoCheck.checked) {
-                const d = new Date();
-                m = d.getHours()*60 + d.getMinutes() + d.getSeconds()/60;
-                timeRange.value = m;
-                manualMinutes = m;
+                const d = new Date(); m = d.getHours()*60 + d.getMinutes() + d.getSeconds()/60;
+                timeRange.value = m; manualMinutes = m;
             } else {
-                manualMinutes += deltaMinutes * currentSpeed;
-                m = manualMinutes;
-                timeRange.value = m % 1440;
+                manualMinutes += (deltaMs / 60000) * currentSpeed;
+                m = manualMinutes; timeRange.value = m % 1440;
             }
             updateSky(m);
             requestAnimationFrame(loop);
         }
         function togglePopup() { trackA.play().then(()=> {if(!isPlaying) trackA.pause();}); document.getElementById('popup').classList.toggle('active'); }
-        loop();
+        requestAnimationFrame(loop);
     </script>
 </body>
 </html>
