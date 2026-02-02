@@ -198,7 +198,7 @@
 
     </style>
 </head>
-<body>
+<body onclick="handleFirstInteraction()">
 
     <div class="layer-fixed sky"></div>
     <div class="layer-fixed star-field" id="starField"></div>
@@ -219,7 +219,7 @@
 
     <div class="bottom-clock" id="clockDisplay">00:00:00</div>
 
-    <div class="fab-btn" id="fabBtn" onclick="togglePopup()">
+    <div class="fab-btn" id="fabBtn" onclick="togglePopup(event)">
         <svg class="fab-icon" viewBox="0 0 24 24">
             <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.49l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
         </svg>
@@ -275,11 +275,20 @@
 
         let isAuto = true;
         let isSoundOn = false;
+        let hasInteracted = false;
         let nowMin = 720;
         let nowSec = 0;
 
-        function togglePopup() {
+        function togglePopup(e) {
+            e.stopPropagation();
             settingsPanel.classList.toggle('active');
+        }
+
+        function handleFirstInteraction() {
+            if (!hasInteracted) {
+                hasInteracted = true;
+                if(isSoundOn) initAmbient();
+            }
         }
 
         autoCheck.addEventListener('change', (e) => {
@@ -290,15 +299,12 @@
 
         soundCheck.addEventListener('change', (e) => {
             isSoundOn = e.target.checked;
-            if(isSoundOn) initAmbient();
+            if(isSoundOn && hasInteracted) initAmbient();
             else stopAmbient();
         });
 
         // === 3. Ambient Sound Logic ===
         let audioElements = {};
-        const soundTypes = ['morning', 'day', 'night'];
-        
-        // 저작권 무료 오디오 소스 (공용 샘플)
         const soundSources = {
             morning: 'https://assets.mixkit.co/sfx/preview/mixkit-forest-birds-ambience-1210.mp3',
             day: 'https://assets.mixkit.co/sfx/preview/mixkit-soft-wind-light-rain-ambience-2495.mp3',
@@ -325,7 +331,7 @@
         }
 
         function updateAmbientVolumes() {
-            if (!isSoundOn) return;
+            if (!isSoundOn || !hasInteracted) return;
             const h = nowMin / 60;
             let volumes = { morning: 0, day: 0, night: 0 };
 
@@ -344,18 +350,17 @@
             }
         }
 
-        // === 4. Satellite & Starlink Logic ===
+        // === 4. Satellite & Starlink Logic (빈도 대폭 상향) ===
         function createSatellite(isStarlink = false) {
             const h = nowMin / 60;
-            // 밤에만 등장 (태양이 지평선 아래일 때 더 잘 보임)
+            // 낮에는 안보이게 처리 (기존 유지)
             const sunStart = 5, sunEnd = 19;
             if (h > sunStart + 1 && h < sunEnd - 1) return; 
 
-            const count = isStarlink ? 12 : 1;
-            const startY = Math.random() * 60 + 10;
-            const speed = Math.random() * 2 + 1;
-            const angle = (Math.random() - 0.5) * 0.2;
-            const id = Date.now();
+            const count = isStarlink ? 15 : 1; // 스타링크 점 개수
+            const startY = Math.random() * 70 + 5;
+            const speed = Math.random() * 1.5 + 0.8; // 속도 약간 다양화
+            const angle = (Math.random() - 0.5) * 0.15;
 
             for (let i = 0; i < count; i++) {
                 setTimeout(() => {
@@ -363,7 +368,7 @@
                     sat.className = 'satellite';
                     satelliteLayer.appendChild(sat);
 
-                    let x = -10;
+                    let x = -5;
                     let y = startY;
 
                     function move() {
@@ -371,19 +376,24 @@
                         y += angle;
                         sat.style.left = x + 'vw';
                         sat.style.top = y + 'vh';
+                        // 가운데에서 가장 밝고 양 끝에서 사라짐
                         sat.style.opacity = Math.sin((x / 100) * Math.PI) * 0.8;
 
-                        if (x < 110) requestAnimationFrame(move);
+                        if (x < 105) requestAnimationFrame(move);
                         else sat.remove();
                     }
                     move();
-                }, i * (isStarlink ? 400 : 0));
+                }, i * (isStarlink ? 300 : 0)); // 줄지어 나오는 간격
             }
         }
 
+        // 2초마다 체크하여 50% 확률로 생성 (1분에 평균 15번 생성 시도)
         setInterval(() => {
-            if (Math.random() > 0.98) createSatellite(Math.random() > 0.8);
-        }, 3000);
+            if (Math.random() > 0.5) {
+                // 30% 확률로 스타링크, 70% 일반 위성
+                createSatellite(Math.random() > 0.7);
+            }
+        }, 2000);
 
         // === 5. Audio Visualizer Logic (기존 유지) ===
         const canvas = document.getElementById('vizCanvas');
@@ -398,7 +408,8 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        btnViz.addEventListener('click', async () => {
+        btnViz.addEventListener('click', async (e) => {
+            e.stopPropagation();
             if (isVizRunning) return;
             try {
                 const stream = await navigator.mediaDevices.getDisplayMedia({
