@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>QPI Ambient</title>
+    <title>QPI Ambient - Professional Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -30,6 +30,7 @@
 
         .satellite { position: absolute; width: 1.5px; height: 1.5px; background: #fff; border-radius: 50%; z-index: 2; box-shadow: 0 0 3px 1px rgba(255,255,255,0.7); }
 
+        /* Celestial Objects */
         .sun-aura { position: absolute; left: var(--sun-x); top: var(--sun-y); transform: translate(-50%, -50%); width: 160vmax; height: 160vmax; background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 200, 100, 0.08) 25%, transparent 65%); mix-blend-mode: screen; z-index: 4; }
         .sun-disk { position: absolute; left: var(--sun-x); top: var(--sun-y); transform: translate(-50%, -50%); width: 60px; height: 60px; border-radius: 50%; background: #fff; box-shadow: 0 0 50px 15px #fff, 0 0 120px 40px rgba(255, 230, 150, 0.5); z-index: 5; }
         .moon-aura { position: absolute; left: var(--moon-x); top: var(--moon-y); transform: translate(-50%, -50%); width: 100vmax; height: 100vmax; background: radial-gradient(circle, rgba(180, 220, 255, 0.2) 0%, transparent 60%); mix-blend-mode: screen; z-index: 4; }
@@ -56,7 +57,6 @@
         .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; transition: opacity 0.3s ease; }
         .label { font-size: 11px; font-weight: 300; letter-spacing: 1px; color: #999; text-transform: uppercase; }
         
-        /* Disabled State for Manual Controls */
         .manual-ui.disabled { opacity: 0.2; pointer-events: none; filter: grayscale(1); }
 
         .speed-ctrl { display: flex; gap: 10px; align-items: center; }
@@ -103,7 +103,6 @@
             <label class="switch"><input type="checkbox" id="autoCheck" checked onchange="handleSyncToggle()"><span class="slider"></span></label>
         </div>
         
-        <!-- 수동 모드 섹션 -->
         <div id="manualSection" class="manual-ui disabled">
             <div class="row" style="flex-direction:column; align-items:flex-start; gap:8px;">
                 <span class="label">시간 수동 설정</span>
@@ -122,7 +121,7 @@
             <span class="label">배경음</span>
             <label class="switch"><input type="checkbox" id="soundToggle"><span class="slider"></span></label>
         </div>
-        <button class="btn-action" id="btnViz">사운드 비주얼라이저 (PC 전용)</button>
+        <button class="btn-action" id="btnViz">비주얼라이저 (PC 전용)</button>
     </div>
 
     <script>
@@ -130,7 +129,8 @@
         const starField = document.getElementById('starField');
         for(let i=0; i<300; i++){
             const s = document.createElement('div'); s.className = 'star';
-            s.style.width = s.style.height = (Math.random()*1.2 + 0.4)+'px';
+            const size = Math.random()*1.2 + 0.4;
+            s.style.width = s.style.height = size+'px';
             s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%';
             s.style.opacity = Math.random();
             starField.appendChild(s);
@@ -182,49 +182,55 @@
         }
         document.getElementById('soundToggle').addEventListener('change', function() { isPlaying = this.checked; if (isPlaying) { trackA.volume = 0.4; trackA.play(); crossfadeLoop(); } else { trackA.pause(); trackB.pause(); } });
 
-        // 3. Smooth Adaptive Visualizer (PC)
+        // 3. Smooth Adaptive Visualizer (PC - 16kHz Log Scale)
         const canvas = document.getElementById('vizCanvas'), ctx = canvas.getContext('2d');
         let analyser, dataArray, isVizActive = false, sampleRate = 48000, smoothHeights = [];
+        const TOTAL_BARS = 80;
+
         document.getElementById('btnViz').addEventListener('click', async () => {
             try {
                 const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
                 const aCtx = new AudioContext(); sampleRate = aCtx.sampleRate;
                 const src = aCtx.createMediaStreamSource(stream);
                 analyser = aCtx.createAnalyser(); src.connect(analyser);
-                analyser.fftSize = 512; analyser.smoothingTimeConstant = 0.9;
+                analyser.fftSize = 1024; analyser.smoothingTimeConstant = 0.92;
                 dataArray = new Uint8Array(analyser.frequencyBinCount); isVizActive = true; drawViz();
             } catch (e) { alert("Capture failed."); }
         });
+
         function drawViz() {
             if (!isVizActive) return; requestAnimationFrame(drawViz);
             analyser.getByteFrequencyData(dataArray);
             canvas.width = window.innerWidth; canvas.height = 200; ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const bars = Math.min(dataArray.length, Math.floor((14000 / (sampleRate/2)) * dataArray.length));
-            const bw = canvas.width / bars;
-            for (let i = 0; i < bars; i++) {
-                let m = 0.5 + (bars - i) / bars * 0.6; 
-                let target = (dataArray[i] / 255) * canvas.height * m;
+            
+            const bw = canvas.width / TOTAL_BARS;
+            const minFreq = 0, maxFreq = 14000, nyquist = sampleRate / 2;
+
+            for (let i = 0; i < TOTAL_BARS; i++) {
+                const freq = minFreq * Math.pow(maxFreq / minFreq, i / (TOTAL_BARS - 1));
+                const dIdx = Math.floor((freq / nyquist) * dataArray.length);
+                
+                let raw = dataArray[dIdx] || 0;
+                let boost = 0.6 + (i / TOTAL_BARS) * 0.5; // 고음부 살짝 보정
+                let target = (raw / 255) * canvas.height * boost;
+                
                 if (!smoothHeights[i]) smoothHeights[i] = 0;
-                if (target > smoothHeights[i]) smoothHeights[i] = target; else smoothHeights[i] *= 0.94;
+                if (target > smoothHeights[i]) smoothHeights[i] = target; 
+                else smoothHeights[i] *= 0.94; // 부드럽게 하강
+                
                 const h = Math.min(smoothHeights[i], canvas.height * 0.8);
-                ctx.fillStyle = uiColorGlobal.replace(/[\d.]+\)$/g, `${Math.max(0.08, dataArray[i]/255 * 0.4)})`);
+                ctx.fillStyle = uiColorGlobal.replace(/[\d.]+\)$/g, `${Math.max(0.08, raw/255 * 0.4)})`);
                 ctx.fillRect(i * bw, canvas.height - h, bw - 1, h);
             }
         }
 
-        // 4. High-Precision Engine & Adaptive UI
+        // 4. High-Precision Engine & Adaptive UI (Bugfix Applied)
         const autoCheck = document.getElementById('autoCheck'), timeRange = document.getElementById('timeRange'), speedValDisp = document.getElementById('speedVal'), clock = document.getElementById('clock'), manualSection = document.getElementById('manualSection');
         let manualMinutes = 720, lastTimestamp = performance.now(), currentSpeed = 1, uiColorGlobal = "rgba(255,255,255,0.4)";
 
         function handleSyncToggle() {
-            if (autoCheck.checked) {
-                manualSection.classList.add('disabled');
-            } else {
-                manualSection.classList.remove('disabled');
-                const d = new Date();
-                manualMinutes = d.getHours()*60 + d.getMinutes() + d.getSeconds()/60;
-                lastTimestamp = performance.now();
-            }
+            if (autoCheck.checked) { manualSection.classList.add('disabled'); } 
+            else { manualSection.classList.remove('disabled'); manualMinutes = parseFloat(timeRange.value); lastTimestamp = performance.now(); }
         }
 
         function adjustSpeed(f) { 
@@ -245,13 +251,18 @@
         function lerpRGB(c1, c2, t) { return [Math.round(c1[0]+(c2[0]-c1[0])*t), Math.round(c1[1]+(c2[1]-c1[1])*t), Math.round(c1[2]+(c2[2]-c1[2])*t)]; }
 
         function updateSky(m) {
-            const mG = m % 1440; const h = mG / 60, s = (mG * 60) % 60;
-            let c;
+            const mG = ((m % 1440) + 1440) % 1440; // 음수 및 오버플로 방지
+            const h = mG / 60, s = (mG * 60) % 60;
+            
+            // Default color (fallback)
+            let c = { z: 'rgb(5,10,25)', hz: 'rgb(10,20,35)' };
+
             for(let i=0; i<skyKeyframes.length-1; i++) {
                 const st = skyKeyframes[i], en = skyKeyframes[i+1];
                 if(h >= st.h && h <= en.h) {
                     const t = (h - st.h) / (en.h - st.h);
-                    const zenith = lerpRGB(st.z, en.z, t); const horizon = lerpRGB(st.hz, en.hz, t);
+                    const zenith = lerpRGB(st.z, en.z, t); 
+                    const horizon = lerpRGB(st.hz, en.hz, t);
                     c = { z: `rgb(${zenith.join(',')})`, hz: `rgb(${horizon.join(',')})` };
                     const bright = (horizon[0] + horizon[1] + horizon[2]) / 3;
                     uiColorGlobal = (bright > 135) ? "rgba(10, 30, 60, 0.5)" : "rgba(255, 255, 255, 0.4)";
@@ -259,13 +270,18 @@
                     break;
                 }
             }
-            document.documentElement.style.setProperty('--zenith', c.z); document.documentElement.style.setProperty('--horizon', c.hz);
+            document.documentElement.style.setProperty('--zenith', c.z); 
+            document.documentElement.style.setProperty('--horizon', c.hz);
+            
             const sPr = (h>=5 && h<=19) ? (h-5)/14 : -1;
             if(sPr >= 0) { currentSunAlt = Math.sin(sPr*Math.PI); document.documentElement.style.setProperty('--sun-x', (sPr*120-10)+'%'); document.documentElement.style.setProperty('--sun-y', (100-currentSunAlt*90)+'%'); }
             else { currentSunAlt = -1; document.documentElement.style.setProperty('--sun-y', '150%'); }
-            const moonH = (h + 12) % 24; const mPr = (moonH >= 5 && moonH <= 19) ? (moonH - 5)/14 : -1;
+            
+            const moonH = (h + 12) % 24; 
+            const mPr = (moonH >= 5 && moonH <= 19) ? (moonH - 5)/14 : -1;
             if(mPr >= 0) { const alt = Math.sin(mPr*Math.PI); document.documentElement.style.setProperty('--moon-x', (mPr*120-10)+'%'); document.documentElement.style.setProperty('--moon-y', (100-alt*85)+'%'); }
             else { document.documentElement.style.setProperty('--moon-y', '150%'); }
+            
             document.documentElement.style.setProperty('--star-opacity', currentSunAlt > 0.1 ? 0 : 1);
             document.documentElement.style.setProperty('--star-rot', (mG/4)+'deg');
             clock.textContent = `${Math.floor(h).toString().padStart(2,'0')}:${Math.floor(mG % 60).toString().padStart(2,'0')}:${Math.floor(s).toString().padStart(2,'0')}`;
@@ -274,7 +290,8 @@
         timeRange.addEventListener('input', () => { if(!autoCheck.checked) { manualMinutes = parseFloat(timeRange.value); lastTimestamp = performance.now(); } });
 
         function loop(now) {
-            const deltaMs = now - lastTimestamp; lastTimestamp = now;
+            const deltaMs = now - lastTimestamp; 
+            lastTimestamp = now;
             let m;
             if(autoCheck.checked) {
                 const d = new Date(); m = d.getHours()*60 + d.getMinutes() + d.getSeconds()/60;
