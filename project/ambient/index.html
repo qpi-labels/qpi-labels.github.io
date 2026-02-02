@@ -3,564 +3,310 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Sky with Audio Visualizer & Satellite</title>
+    <title>Realistic Sky - Continuous Manual Time</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #90caf9;
-            --accent: #ffffff;
-            --panel-bg: rgba(20, 20, 20, 0.85);
-            
-            /* Sky Variables */
-            --zenith: #000;
-            --horizon: #000;
+            --zenith: #000; --horizon: #000;
             --sun-x: 50%; --sun-y: 110%;
             --moon-x: 50%; --moon-y: 110%;
-            --star-opacity: 0;
-            --star-rot: 0deg;
+            --star-opacity: 0; --star-rot: 0deg;
         }
 
         html, body {
-            margin: 0; padding: 0;
-            width: 100%; height: 100%;
-            overflow: hidden;
-            background-color: #000;
-            font-family: 'Roboto', sans-serif;
-            user-select: none;
-            -webkit-user-select: none;
-            position: fixed;
-            top: 0; left: 0;
-            overscroll-behavior: none;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; background-color: #000;
+            font-family: 'Roboto', sans-serif; user-select: none;
+            position: fixed; top: 0; left: 0; overscroll-behavior: none;
         }
 
-        /* === Layers === */
-        .layer-fixed {
-            position: fixed; top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            pointer-events: none;
-        }
-
-        .sky {
-            background: linear-gradient(to bottom, var(--zenith) 0%, var(--horizon) 100%);
-            z-index: 0;
-        }
-
-        .star-field {
-            top: 50%; left: 50%;
-            width: 200vmax; height: 200vmax;
-            transform: translate(-50%, -50%) rotate(var(--star-rot));
-            z-index: 1;
-            opacity: var(--star-opacity);
-            transition: opacity 0.5s;
-        }
+        .layer { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; }
+        .sky { background: linear-gradient(to bottom, var(--zenith) 0%, var(--horizon) 100%); z-index: 0; }
         
-        .star {
-            position: absolute; background: white; border-radius: 50%;
-            animation: twinkle var(--dur) ease-in-out infinite;
-        }
+        /* Stars */
+        .star-field { top: 50%; left: 50%; width: 200vmax; height: 200vmax; transform: translate(-50%, -50%) rotate(var(--star-rot)); z-index: 1; opacity: var(--star-opacity); transition: opacity 3s ease-in-out; }
+        .star { position: absolute; background: white; border-radius: 50%; }
 
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; transform: scale(0.8); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
-
-        /* Satellite Styles */
+        /* Satellites */
         .satellite {
-            position: absolute;
-            width: 2px; height: 2px;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.8;
-            filter: blur(0.5px);
-            z-index: 2;
+            position: absolute; width: 1.5px; height: 1.5px; background: #fff;
+            border-radius: 50%; z-index: 2; box-shadow: 0 0 3px 1px rgba(255,255,255,0.7);
+            will-change: transform;
         }
 
-        /* === Celestial Bodies === */
-        .celestial-container { z-index: 5; }
-
-        .sun-group {
-            position: absolute; left: var(--sun-x); top: var(--sun-y);
-            transform: translate(-50%, -50%); width: 0; height: 0;
-        }
-        .sun-glow-large {
-            position: absolute; transform: translate(-50%, -50%);
-            width: 150vmax; height: 150vmax;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, rgba(200, 200, 255, 0.1) 30%, transparent 70%);
-            mix-blend-mode: screen;
-        }
-        .sun-glow-intense {
-            position: absolute; transform: translate(-50%, -50%);
-            width: 400px; height: 400px;
-            background: radial-gradient(circle, rgba(255, 250, 220, 0.8) 0%, rgba(255, 200, 50, 0.2) 40%, transparent 70%);
-            mix-blend-mode: screen;
+        /* === Celestial Enhancements === */
+        .sun-aura {
+            position: absolute; left: var(--sun-x); top: var(--sun-y); transform: translate(-50%, -50%);
+            width: 160vmax; height: 160vmax;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.35) 0%, rgba(255, 200, 100, 0.1) 20%, rgba(255, 150, 50, 0.05) 40%, transparent 70%);
+            mix-blend-mode: screen; z-index: 4;
         }
         .sun-disk {
-            position: absolute; transform: translate(-50%, -50%);
-            width: 80px; height: 80px; border-radius: 50%;
-            background: #ffffff;
-            box-shadow: 0 0 20px 5px rgba(255, 255, 240, 0.9);
+            position: absolute; left: var(--sun-x); top: var(--sun-y); transform: translate(-50%, -50%);
+            width: 65px; height: 65px; border-radius: 50%; background: #fff;
+            box-shadow: 0 0 50px 15px #fff, 0 0 120px 40px rgba(255, 230, 150, 0.5);
+            z-index: 5;
         }
 
-        .moon-group {
-            position: absolute; left: var(--moon-x); top: var(--moon-y);
-            transform: translate(-50%, -50%); width: 0; height: 0;
-        }
-        .moon-glow {
-            position: absolute; transform: translate(-50%, -50%);
+        .moon-aura {
+            position: absolute; left: var(--moon-x); top: var(--moon-y); transform: translate(-50%, -50%);
             width: 100vmax; height: 100vmax;
-            background: radial-gradient(circle, rgba(200, 225, 255, 0.25) 0%, transparent 60%);
-            mix-blend-mode: screen;
+            background: radial-gradient(circle, rgba(180, 220, 255, 0.25) 0%, rgba(100, 150, 255, 0.05) 30%, transparent 60%);
+            mix-blend-mode: screen; z-index: 4;
         }
         .moon-disk {
-            position: absolute; transform: translate(-50%, -50%);
-            width: 70px; height: 70px; border-radius: 50%;
-            background: #dcdcdc;
-            background-image: 
-                radial-gradient(circle at 30% 30%, rgba(0,0,0,0.1) 0%, transparent 20%),
-                radial-gradient(circle at 60% 70%, rgba(0,0,0,0.1) 0%, transparent 30%);
-            box-shadow: 0 0 30px 2px rgba(255, 255, 255, 0.6);
+            position: absolute; left: var(--moon-x); top: var(--moon-y); transform: translate(-50%, -50%);
+            width: 50px; height: 50px; border-radius: 50%; background: #e0e0e0;
+            box-shadow: 0 0 30px 5px rgba(255, 255, 255, 0.4);
+            z-index: 5;
         }
 
-        /* === Visualizer === */
-        .visualizer-canvas {
-            position: fixed;
-            bottom: 0; left: 0;
-            width: 100%; height: 200px;
-            z-index: 10;
-            pointer-events: none;
-            -webkit-mask-image: linear-gradient(to top, black 0%, transparent 100%);
-            mask-image: linear-gradient(to top, black 0%, transparent 100%);
-        }
+        /* UI */
+        .bottom-clock { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); color: rgba(255, 255, 255, 0.4); font-weight: 100; font-size: 13px; letter-spacing: 2px; z-index: 50; }
+        .fab { position: fixed; bottom: 30px; right: 30px; width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.06); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; z-index: 100; display: flex; justify-content: center; align-items: center; }
+        .popup { position: fixed; bottom: 90px; right: 30px; width: 260px; background: rgba(10,10,10,0.95); backdrop-filter: blur(25px); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); color: #fff; z-index: 90; opacity: 0; pointer-events: none; transform: translateY(15px); transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1); }
+        .popup.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .label { font-size: 11px; font-weight: 300; letter-spacing: 1px; color: #aaa; }
 
-        /* === UI === */
-        .bottom-clock {
-            position: fixed; bottom: 30px; left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 100; font-size: 14px; letter-spacing: 2px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-            z-index: 50; pointer-events: none;
-        }
-
-        .fab-btn {
-            position: fixed; bottom: 30px; right: 30px;
-            width: 48px; height: 48px; border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-            cursor: pointer; z-index: 101;
-            display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            transition: transform 0.2s, background 0.2s;
-        }
-        .fab-btn:hover { background: rgba(255, 255, 255, 0.25); }
-        .fab-btn:active { transform: scale(0.95); }
-        .fab-icon { width: 24px; height: 24px; fill: white; }
-
-        .settings-popup {
-            position: fixed; bottom: 90px; right: 30px;
-            width: 280px;
-            background: var(--panel-bg);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            padding: 20px; border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.1);
-            color: var(--accent); z-index: 100;
-            opacity: 0; pointer-events: none;
-            transform: translateY(20px) scale(0.95);
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            transform-origin: bottom right;
-        }
-        .settings-popup.active { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
-        
-        .popup-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .popup-label { font-size: 14px; font-weight: 300; }
-
-        input[type=range] { width: 100%; -webkit-appearance: none; background: transparent; margin: 0; }
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 14px; width: 14px; border-radius: 50%; background: var(--primary); cursor: pointer; margin-top: -5px; box-shadow: 0 0 10px rgba(144, 202, 249, 0.5); }
-        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; }
-        
-        .switch { position: relative; display: inline-block; width: 36px; height: 20px; }
+        input[type=range] { width: 100%; -webkit-appearance: none; background: rgba(255,255,255,0.1); height: 2px; outline: none; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--primary); cursor: pointer; }
+        .switch { position: relative; width: 34px; height: 16px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider-tg { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #555; border-radius: 34px; transition: .4s; }
-        .slider-tg:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider-tg { background-color: var(--primary); }
-        input:checked + .slider-tg:before { transform: translateX(16px); }
-
-        .btn-viz {
-            width: 100%; padding: 10px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 8px; color: white;
-            font-family: inherit; font-size: 14px; cursor: pointer;
-            transition: background 0.2s;
-        }
-        .btn-viz:hover { background: rgba(255,255,255,0.2); }
-
+        .slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #333; border-radius: 18px; transition: 0.4s; cursor: pointer; }
+        .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 2px; bottom: 2px; background: white; border-radius: 50%; transition: 0.4s; }
+        input:checked + .slider { background: var(--primary); }
+        input:checked + .slider:before { transform: translateX(18px); }
     </style>
 </head>
-<body onclick="handleFirstInteraction()">
+<body>
 
-    <div class="layer-fixed sky"></div>
-    <div class="layer-fixed star-field" id="starField"></div>
-    <div class="layer-fixed celestial-container">
-        <div class="sun-group">
-            <div class="sun-glow-large"></div>
-            <div class="sun-glow-intense"></div>
-            <div class="sun-disk"></div>
-        </div>
-        <div class="moon-group">
-            <div class="moon-glow"></div>
-            <div class="moon-disk"></div>
-        </div>
-    </div>
-    <div id="satelliteLayer" class="layer-fixed"></div>
-
-    <canvas id="vizCanvas" class="visualizer-canvas"></canvas>
-
-    <div class="bottom-clock" id="clockDisplay">00:00:00</div>
-
-    <div class="fab-btn" id="fabBtn" onclick="togglePopup(event)">
-        <svg class="fab-icon" viewBox="0 0 24 24">
-            <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.49l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
-        </svg>
+    <div class="layer sky"></div>
+    <div class="layer star-field" id="starField"></div>
+    <div id="satLayer" class="layer"></div>
+    
+    <div class="layer celestial">
+        <div class="sun-aura"></div>
+        <div class="sun-disk"></div>
+        <div class="moon-aura"></div>
+        <div class="moon-disk"></div>
     </div>
 
-    <div class="settings-popup" id="settingsPanel">
-        <div class="popup-row">
-            <span class="popup-label">Auto Sync</span>
-            <label class="switch">
-                <input type="checkbox" id="autoCheck" checked>
-                <span class="slider-tg"></span>
-            </label>
+    <div class="bottom-clock" id="clock">00:00:00</div>
+
+    <div class="fab" onclick="togglePopup()">
+        <svg style="width:20px;height:20px;fill:rgba(255,255,255,0.6)" viewBox="0 0 24 24"><path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11.03L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.47,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.53,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11.03C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.53,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.47,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/></svg>
+    </div>
+
+    <div class="popup" id="popup">
+        <div class="row">
+            <span class="label">AUTO SYNC</span>
+            <label class="switch"><input type="checkbox" id="autoCheck" checked><span class="slider"></span></label>
         </div>
-        <div class="popup-row">
-            <span class="popup-label">Ambient Sound</span>
-            <label class="switch">
-                <input type="checkbox" id="soundCheck">
-                <span class="slider-tg"></span>
-            </label>
+        <div class="row" style="flex-direction:column; align-items:flex-start; gap:10px; margin-bottom:25px;">
+            <span class="label">TIME SLIDER</span>
+            <input type="range" id="timeRange" min="0" max="1439" value="720">
         </div>
-        <div class="popup-row" style="flex-direction: column; align-items: flex-start; gap: 8px;">
-            <span class="popup-label">Time Adjustment</span>
-            <input type="range" id="timeRange" min="0" max="1440" value="720" disabled>
-        </div>
-        <div class="popup-row">
-            <button class="btn-viz" id="btnViz">Enable Visualizer (Audio)</button>
+        <div class="row">
+            <span class="label">AMBIENT (NIGHT)</span>
+            <label class="switch"><input type="checkbox" id="soundToggle"><span class="slider"></span></label>
         </div>
     </div>
 
     <script>
-        // === 1. Init Stars ===
+        // --- 1. Star Field ---
         const starField = document.getElementById('starField');
-        for(let i=0; i<400; i++) {
-            const s = document.createElement('div');
-            s.className = 'star';
-            const size = Math.random() * 2 + 0.5;
-            s.style.width = size + 'px';
-            s.style.height = size + 'px';
-            s.style.left = Math.random() * 100 + '%';
-            s.style.top = Math.random() * 100 + '%';
-            s.style.setProperty('--dur', (Math.random()*3 + 1) + 's');
+        for(let i=0; i<300; i++){
+            const s = document.createElement('div'); s.className = 'star';
+            const size = Math.random()*1.2 + 0.4;
+            s.style.width = s.style.height = size+'px';
+            s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%';
+            s.style.opacity = Math.random();
             starField.appendChild(s);
         }
 
-        // === 2. UI Variables ===
-        const settingsPanel = document.getElementById('settingsPanel');
-        const clockDisplay = document.getElementById('clockDisplay');
-        const autoCheck = document.getElementById('autoCheck');
-        const soundCheck = document.getElementById('soundCheck');
-        const timeRange = document.getElementById('timeRange');
-        const btnViz = document.getElementById('btnViz');
-        const satelliteLayer = document.getElementById('satelliteLayer');
+        // --- 2. Ultra-Slow Satellite Engine (0.5x Frequency) ---
+        const satLayer = document.getElementById('satLayer');
+        let currentSunAlt = 0;
 
-        let isAuto = true;
-        let isSoundOn = false;
-        let hasInteracted = false;
-        let nowMin = 720;
-        let nowSec = 0;
+        function animateObject(isStarlink = false) {
+            if (currentSunAlt > 0.05) return; 
 
-        function togglePopup(e) {
-            e.stopPropagation();
-            settingsPanel.classList.toggle('active');
-        }
+            const side = Math.floor(Math.random() * 4);
+            let sx, sy, ex, ey;
+            if(side === 0) { sx = -15; sy = Math.random()*100; ex = 115; ey = Math.random()*100; }
+            else if(side === 1) { sx = 115; sy = Math.random()*100; ex = -15; ey = Math.random()*100; }
+            else if(side === 2) { sx = Math.random()*100; sy = -15; ex = Math.random()*100; ey = 115; }
+            else { sx = Math.random()*100; sy = 115; ex = Math.random()*100; ey = -15; }
 
-        function handleFirstInteraction() {
-            if (!hasInteracted) {
-                hasInteracted = true;
-                if(isSoundOn) initAmbient();
-            }
-        }
-
-        autoCheck.addEventListener('change', (e) => {
-            isAuto = e.target.checked;
-            timeRange.disabled = isAuto;
-            timeRange.style.opacity = isAuto ? 0.5 : 1;
-        });
-
-        soundCheck.addEventListener('change', (e) => {
-            isSoundOn = e.target.checked;
-            if(isSoundOn && hasInteracted) initAmbient();
-            else stopAmbient();
-        });
-
-        // === 3. Ambient Sound Logic ===
-        let audioElements = {};
-        const soundSources = {
-            morning: 'https://assets.mixkit.co/sfx/preview/mixkit-forest-birds-ambience-1210.mp3',
-            day: 'https://assets.mixkit.co/sfx/preview/mixkit-soft-wind-light-rain-ambience-2495.mp3',
-            night: 'https://assets.mixkit.co/sfx/preview/mixkit-crickets-and-insects-in-the-wild-ambience-39.mp3'
-        };
-
-        function initAmbient() {
-            if (Object.keys(audioElements).length === 0) {
-                for (let type in soundSources) {
-                    let audio = new Audio(soundSources[type]);
-                    audio.loop = true;
-                    audio.volume = 0;
-                    audioElements[type] = audio;
-                }
-            }
-            updateAmbientVolumes();
-        }
-
-        function stopAmbient() {
-            for (let type in audioElements) {
-                audioElements[type].pause();
-                audioElements[type].volume = 0;
-            }
-        }
-
-        function updateAmbientVolumes() {
-            if (!isSoundOn || !hasInteracted) return;
-            const h = nowMin / 60;
-            let volumes = { morning: 0, day: 0, night: 0 };
-
-            if (h >= 4 && h < 10) volumes.morning = 0.5;
-            else if (h >= 10 && h < 17) volumes.day = 0.3;
-            else volumes.night = 0.5;
-
-            for (let type in audioElements) {
-                let targetVol = volumes[type];
-                if (targetVol > 0) {
-                    if (audioElements[type].paused) audioElements[type].play().catch(()=>{});
-                    audioElements[type].volume = targetVol;
-                } else {
-                    audioElements[type].volume = 0;
-                }
-            }
-        }
-
-        // === 4. Satellite & Starlink Logic (빈도 대폭 상향) ===
-        function createSatellite(isStarlink = false) {
-            const h = nowMin / 60;
-            // 낮에는 안보이게 처리 (기존 유지)
-            const sunStart = 5, sunEnd = 19;
-            if (h > sunStart + 1 && h < sunEnd - 1) return; 
-
-            const count = isStarlink ? 15 : 1; // 스타링크 점 개수
-            const startY = Math.random() * 70 + 5;
-            const speed = Math.random() * 1.5 + 0.8; // 속도 약간 다양화
-            const angle = (Math.random() - 0.5) * 0.15;
+            const duration = Math.random() * 20000 + 40000; // 40~60초 동안 아주 천천히 이동
+            const count = isStarlink ? 18 : 1;
 
             for (let i = 0; i < count; i++) {
                 setTimeout(() => {
                     const sat = document.createElement('div');
                     sat.className = 'satellite';
-                    satelliteLayer.appendChild(sat);
+                    satLayer.appendChild(sat);
+                    const startTime = performance.now();
 
-                    let x = -5;
-                    let y = startY;
-
-                    function move() {
-                        x += speed;
-                        y += angle;
-                        sat.style.left = x + 'vw';
-                        sat.style.top = y + 'vh';
-                        // 가운데에서 가장 밝고 양 끝에서 사라짐
-                        sat.style.opacity = Math.sin((x / 100) * Math.PI) * 0.8;
-
-                        if (x < 105) requestAnimationFrame(move);
-                        else sat.remove();
-                    }
-                    move();
-                }, i * (isStarlink ? 300 : 0)); // 줄지어 나오는 간격
+                    const move = (now) => {
+                        const t = (now - startTime) / duration;
+                        if (t < 1) {
+                            sat.style.transform = `translate(${sx + (ex - sx) * t}vw, ${sy + (ey - sy) * t}vh)`;
+                            requestAnimationFrame(move);
+                        } else { sat.remove(); }
+                    };
+                    requestAnimationFrame(move);
+                }, isStarlink ? i * (800 + Math.random() * 400) : 0);
             }
         }
 
-        // 2초마다 체크하여 50% 확률로 생성 (1분에 평균 15번 생성 시도)
-        setInterval(() => {
-            if (Math.random() > 0.5) {
-                // 30% 확률로 스타링크, 70% 일반 위성
-                createSatellite(Math.random() > 0.7);
-            }
-        }, 2000);
+        const satLoop = () => { animateObject(false); setTimeout(satLoop, Math.random() * 60000 + 40000); };
+        const starlinkLoop = () => { animateObject(true); setTimeout(starlinkLoop, Math.random() * 120000 + 120000); };
+        
+        satLoop();
+        starlinkLoop();
 
-        // === 5. Audio Visualizer Logic (기존 유지) ===
-        const canvas = document.getElementById('vizCanvas');
-        const ctx = canvas.getContext('2d');
-        let audioCtx, analyser, dataArray, source;
-        let isVizRunning = false;
+        // --- 3. Seamless Audio Crossfade ---
+        const audioURL = 'https://assets.mixkit.co/active_storage/sfx/2453/2453-preview.mp3';
+        const trackA = new Audio(audioURL);
+        const trackB = new Audio(audioURL);
+        let currentTrack = trackA, isPlaying = false;
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = 200;
+        function crossfadeLoop() {
+            if (!isPlaying) return;
+            const nextTrack = (currentTrack === trackA) ? trackB : trackA;
+            setTimeout(() => {
+                if(!isPlaying) return;
+                nextTrack.currentTime = 0; nextTrack.play(); nextTrack.volume = 0;
+                let vol = 0;
+                const fade = setInterval(() => {
+                    vol += 0.05;
+                    if (vol >= 0.4) {
+                        nextTrack.volume = 0.4; currentTrack.volume = 0; currentTrack.pause();
+                        currentTrack = nextTrack; clearInterval(fade); crossfadeLoop();
+                    } else { nextTrack.volume = vol; currentTrack.volume = 0.4 - vol; }
+                }, 150);
+            }, 25000); 
         }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
 
-        btnViz.addEventListener('click', async (e) => {
-            e.stopPropagation();
-            if (isVizRunning) return;
-            try {
-                const stream = await navigator.mediaDevices.getDisplayMedia({
-                    video: true,
-                    audio: true
-                });
-                if (stream.getAudioTracks().length === 0) {
-                    alert("시스템 오디오가 공유되지 않았습니다.");
-                    stream.getTracks().forEach(track => track.stop());
-                    return;
-                }
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                analyser = audioCtx.createAnalyser();
-                analyser.fftSize = 256;
-                source = audioCtx.createMediaStreamSource(stream);
-                source.connect(analyser);
-                dataArray = new Uint8Array(analyser.frequencyBinCount);
-                isVizRunning = true;
-                btnViz.textContent = "Visualizer Active";
-                btnViz.style.background = "rgba(100, 255, 100, 0.2)";
-                animateVisualizer();
-                stream.getVideoTracks()[0].onended = () => {
-                    isVizRunning = false;
-                    btnViz.textContent = "Enable Visualizer (Audio)";
-                    btnViz.style.background = "";
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    if(audioCtx) audioCtx.close();
-                };
-            } catch (err) { console.error(err); }
+        const soundToggle = document.getElementById('soundToggle');
+        function unlockAudio() {
+            trackA.play().then(() => { if(!soundToggle.checked) trackA.pause(); });
+            trackB.play().then(() => { if(!soundToggle.checked) trackB.pause(); });
+        }
+
+        soundToggle.addEventListener('change', function() {
+            isPlaying = this.checked;
+            if (isPlaying) { trackA.volume = 0.4; trackA.play(); crossfadeLoop(); }
+            else { trackA.pause(); trackB.pause(); }
         });
 
-        function animateVisualizer() {
-            if (!isVizRunning) return;
-            requestAnimationFrame(animateVisualizer);
-            analyser.getByteFrequencyData(dataArray);
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const barCount = dataArray.length;
-            const barWidth = canvas.width / barCount;
-            for (let i = 0; i < barCount; i++) {
-                const barHeight = (dataArray[i] / 255) * canvas.height;
-                ctx.fillStyle = `rgba(255, 255, 255, ${dataArray[i]/255 * 0.8})`;
-                const x = i * barWidth;
-                const y = canvas.height - barHeight;
-                ctx.fillRect(x, y, barWidth - 1, barHeight);
-            }
+        function togglePopup() { 
+            unlockAudio();
+            document.getElementById('popup').classList.toggle('active'); 
         }
 
-        // === 6. Sky Logic (기존 유지) ===
-        const lerp = (a, b, t) => a + (b - a) * t;
-        const lerpRGB = (c1, c2, t) => {
-            const r = Math.round(lerp(c1[0], c2[0], t));
-            const g = Math.round(lerp(c1[1], c2[1], t));
-            const b = Math.round(lerp(c1[2], c2[2], t));
-            return `rgb(${r},${g},${b})`;
-        };
+        // --- 4. Continuous Time Engine (Manual Jump & Continue) ---
+        const autoCheck = document.getElementById('autoCheck');
+        const timeRange = document.getElementById('timeRange');
+        const clock = document.getElementById('clock');
+        
+        let manualStartMinutes = 720; // 사용자가 설정한 기준 분
+        let manualReferenceTime = Date.now(); // 설정을 변경한 실제 시간
+        let minutesGlobal = 720;
 
         const skyKeyframes = [
-            { h: 0,  z: [5, 10, 25],      hz: [10, 20, 35] },
-            { h: 4,  z: [5, 10, 25],      hz: [10, 20, 35] },
-            { h: 5,  z: [20, 30, 60],     hz: [80, 50, 50] },
-            { h: 6,  z: [40, 80, 140],    hz: [255, 150, 100] },
-            { h: 8,  z: [30, 100, 200],   hz: [170, 220, 255] },
-            { h: 12, z: [20, 90, 190],    hz: [180, 230, 255] },
-            { h: 16, z: [30, 100, 200],   hz: [170, 220, 255] },
-            { h: 18, z: [30, 50, 110],    hz: [255, 120, 50] },
-            { h: 19, z: [20, 30, 70],     hz: [100, 50, 100] },
-            { h: 21, z: [5, 10, 25],      hz: [10, 20, 35] },
-            { h: 24, z: [5, 10, 25],      hz: [10, 20, 35] }
+            { h: 0,  z: [5, 10, 25], hz: [10, 20, 35] },
+            { h: 6,  z: [40, 80, 140], hz: [255, 150, 100] },
+            { h: 11, z: [30, 100, 220], hz: [180, 230, 255] },
+            { h: 16, z: [30, 100, 220], hz: [180, 230, 255] },
+            { h: 19, z: [30, 50, 110], hz: [255, 120, 50] },
+            { h: 22, z: [5, 10, 25], hz: [10, 20, 35] },
+            { h: 24, z: [5, 10, 25], hz: [10, 20, 35] }
         ];
 
-        function getSkyColors(hour) {
-            for (let i = 0; i < skyKeyframes.length - 1; i++) {
-                const start = skyKeyframes[i];
-                const end = skyKeyframes[i+1];
-                if (hour >= start.h && hour <= end.h) {
-                    const range = end.h - start.h;
-                    const progress = (hour - start.h) / range;
-                    return {
-                        z: lerpRGB(start.z, end.z, progress),
-                        hz: lerpRGB(start.hz, end.hz, progress)
+        function updateSky(m) {
+            minutesGlobal = m % 1440;
+            const h = minutesGlobal / 60;
+            const s = (minutesGlobal * 60) % 60;
+
+            let c;
+            for(let i=0; i<skyKeyframes.length-1; i++) {
+                const start = skyKeyframes[i], end = skyKeyframes[i+1];
+                if(h >= start.h && h <= end.h) {
+                    const t = (h - start.h) / (end.h - start.h);
+                    const l = (c1, c2) => Math.round(c1 + (c2 - c1) * t);
+                    c = { 
+                        z: `rgb(${l(start.z[0],end.z[0])},${l(start.z[1],end.z[1])},${l(start.z[2],end.z[2])})`,
+                        hz: `rgb(${l(start.hz[0],end.hz[0])},${l(start.hz[1],end.hz[1])},${l(start.hz[2],end.hz[2])})`
                     };
+                    break;
                 }
             }
-            return { z: 'rgb(0,0,0)', hz: 'rgb(0,0,0)' };
-        }
+            document.documentElement.style.setProperty('--zenith', c.z);
+            document.documentElement.style.setProperty('--horizon', c.hz);
 
-        function update(minutes, seconds) {
-            const h = minutes / 60;
-            const colors = getSkyColors(h);
-            document.documentElement.style.setProperty('--zenith', colors.z);
-            document.documentElement.style.setProperty('--horizon', colors.hz);
-
-            const sunStart = 5, sunEnd = 19;
-            let sunAlt = -1;
-            if(h >= sunStart && h <= sunEnd) {
-                const prog = (h - sunStart) / (sunEnd - sunStart);
-                const rad = prog * Math.PI;
-                sunAlt = Math.sin(rad);
-                const sx = (prog * 120) - 10; 
-                const sy = 100 - (sunAlt * 90);
-                document.documentElement.style.setProperty('--sun-x', sx + '%');
-                document.documentElement.style.setProperty('--sun-y', sy + '%');
-            } else {
-                document.documentElement.style.setProperty('--sun-y', '150%');
-            }
+            const sProg = (h>=5 && h<=19) ? (h-5)/14 : -1;
+            if(sProg >= 0) {
+                currentSunAlt = Math.sin(sProg*Math.PI);
+                document.documentElement.style.setProperty('--sun-x', (sProg*120-10)+'%');
+                document.documentElement.style.setProperty('--sun-y', (100-currentSunAlt*90)+'%');
+            } else { currentSunAlt = -1; document.documentElement.style.setProperty('--sun-y', '150%'); }
 
             const moonH = (h + 12) % 24;
-            if(moonH >= 5 && moonH <= 19) {
-                const prog = (moonH - 5) / 14;
-                const rad = prog * Math.PI;
-                const alt = Math.sin(rad);
-                const sx = (prog * 120) - 10;
-                const sy = 100 - (alt * 85);
-                document.documentElement.style.setProperty('--moon-x', sx + '%');
-                document.documentElement.style.setProperty('--moon-y', sy + '%');
-            } else {
-                document.documentElement.style.setProperty('--moon-y', '150%');
-            }
+            const mProg = (moonH >= 5 && moonH <= 19) ? (moonH - 5)/14 : -1;
+            if(mProg >= 0) {
+                const alt = Math.sin(mProg*Math.PI);
+                document.documentElement.style.setProperty('--moon-x', (mProg*120-10)+'%');
+                document.documentElement.style.setProperty('--moon-y', (100-alt*85)+'%');
+            } else { document.documentElement.style.setProperty('--moon-y', '150%'); }
 
-            let starOp = (sunAlt > 0) ? 0 : 1;
-            if(sunAlt > 0 && sunAlt < 0.2) starOp = 0;
-            else if(sunAlt <= 0 && sunAlt > -0.2) starOp = Math.abs(sunAlt) * 5;
+            document.documentElement.style.setProperty('--star-opacity', currentSunAlt > 0.1 ? 0 : 1);
+            document.documentElement.style.setProperty('--star-rot', (minutesGlobal/4)+'deg');
             
-            document.documentElement.style.setProperty('--star-opacity', starOp);
-            document.documentElement.style.setProperty('--star-rot', (minutes/4) + 'deg');
-
             const hh = Math.floor(h);
-            const mm = Math.floor(minutes % 60);
-            const ss = Math.floor(seconds);
-            clockDisplay.textContent = 
-                `${hh.toString().padStart(2,'0')}:${mm.toString().padStart(2,'0')}:${ss.toString().padStart(2,'0')}`;
-            
-            updateAmbientVolumes();
+            const mm = Math.floor(minutesGlobal % 60);
+            const ss = Math.floor(s);
+            clock.textContent = `${hh.toString().padStart(2,'0')}:${mm.toString().padStart(2,'0')}:${ss.toString().padStart(2,'0')}`;
         }
+
+        // 슬라이더 조작 시 기준점 갱신
+        timeRange.addEventListener('input', () => {
+            if(!autoCheck.checked) {
+                manualStartMinutes = parseFloat(timeRange.value);
+                manualReferenceTime = Date.now();
+                updateSky(manualStartMinutes);
+            }
+        });
+
+        autoCheck.addEventListener('change', () => {
+            if(!autoCheck.checked) {
+                // 자동에서 수동으로 넘어갈 때 현재 시간을 기준으로 수동 시작점 설정
+                const d = new Date();
+                manualStartMinutes = d.getHours()*60 + d.getMinutes() + d.getSeconds()/60;
+                manualReferenceTime = Date.now();
+            }
+        });
 
         function loop() {
-            if(isAuto) {
+            let m;
+            if(autoCheck.checked) {
                 const d = new Date();
-                nowMin = d.getHours()*60 + d.getMinutes() + d.getSeconds()/60;
-                nowSec = d.getSeconds();
-                timeRange.value = nowMin;
+                m = d.getHours()*60 + d.getMinutes() + d.getSeconds()/60;
+                timeRange.value = m;
             } else {
-                nowMin = parseFloat(timeRange.value);
-                nowSec = 0;
+                // 수동 모드: (설정된 분) + (설정 이후 흐른 실제 시간)
+                const elapsedMinutes = (Date.now() - manualReferenceTime) / 60000;
+                m = manualStartMinutes + elapsedMinutes;
+                // 슬라이더도 같이 움직이게 하려면 아래 주석 해제
+                // timeRange.value = m % 1440;
             }
-            update(nowMin, nowSec);
+            updateSky(m);
             requestAnimationFrame(loop);
         }
-
         loop();
-
     </script>
 </body>
 </html>
