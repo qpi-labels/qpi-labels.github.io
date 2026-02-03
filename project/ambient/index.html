@@ -15,13 +15,19 @@
         :root {
             --primary: #90caf9;
             --on-primary-container: #003354;
-            --surface-variant: rgba(25, 25, 30, 0.92);
             --sun-x: 50%; --sun-y: 110%;
             --moon-x: 50%; --moon-y: 110%;
             --star-opacity: 0; --star-rot: 0deg;
-            --ui-color: rgba(255, 255, 255, 0.4);
             --star-mask-y: -50%;
             --atm-opacity: 0;
+            
+            /* 동적 글래스모피즘 변수 초기값 */
+            --glass-bg: rgba(20, 25, 35, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: rgba(255, 255, 255, 0.95);
+            --text-sub: rgba(255, 255, 255, 0.6);
+            --ui-color: rgba(255, 255, 255, 0.4);
+            --chip-bg: rgba(255, 255, 255, 0.1);
         }
 
         html, body {
@@ -43,7 +49,6 @@
         .star-container { z-index: 2; top: 50%; left: 50%; width: 200vmax; height: 200vmax; transform: translate(-50%, -50%) rotate(var(--star-rot)) translate3d(0,0,0); opacity: var(--star-opacity); mask-image: linear-gradient(to bottom, #fff calc(var(--star-mask-y) - 40%), transparent calc(var(--star-mask-y) + 40%)); -webkit-mask-image: linear-gradient(to bottom, #fff calc(var(--star-mask-y) - 40%), transparent calc(var(--star-mask-y) + 40%)); will-change: opacity, transform; }
         #starCanvas { width: 100%; height: 100%; }
         
-        /* 인공위성 CSS 추가 */
         .satellite { position: absolute; width: 1.5px; height: 1.5px; z-index: 3; background: #fff; border-radius: 50%; box-shadow: 0 0 3px 1px rgba(255,255,255,0.7); will-change: transform; }
 
         .celestial { z-index: 4; transform: translate3d(0,0,0); }
@@ -59,27 +64,62 @@
         .sun-streak { position: absolute; left: var(--sun-x); top: var(--sun-y); width: 200vw; height: 3px; transform: translate(-50%, -50%) rotate(-3deg); background: linear-gradient(90deg, transparent, rgba(255, 230, 180, 0.5), rgba(255, 255, 255, 0.9), rgba(255, 230, 180, 0.5), transparent); filter: blur(5px); will-change: left, top; }
 
         .viz-canvas { position: fixed; bottom: 0; left: 0; width: 100%; height: 200px; z-index: 10; pointer-events: none; mask-image: linear-gradient(to top, black 30%, transparent 100%); -webkit-mask-image: linear-gradient(to top, black 30%, transparent 100%); }
-        .bottom-clock { position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%); color: var(--ui-color); font-weight: 300; font-size: 16px; letter-spacing: 4px; z-index: 500; text-shadow: 0 0 15px rgba(0,0,0,0.8); cursor: pointer; pointer-events: auto; }
-        .info-panel { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px); width: 320px; background: var(--surface-variant); backdrop-filter: blur(35px); padding: 24px; border-radius: 32px; border: 1px solid rgba(255,255,255,0.15); color: #fff; z-index: 510; opacity: 0; pointer-events: none; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 15px 50px rgba(0,0,0,0.6); }
+        
+        /* Glassmorphism Classes */
+        .glass-panel-base {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+            transition: background 0.5s, border 0.5s, color 0.5s;
+        }
+
+        .bottom-clock { 
+            position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%); 
+            color: var(--text-main); /* 가독성 적용 */
+            font-weight: 300; font-size: 16px; letter-spacing: 4px; z-index: 500; 
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3); 
+            cursor: pointer; pointer-events: auto; 
+            transition: color 0.5s;
+        }
+
+        .info-panel { 
+            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px); 
+            width: 320px; padding: 24px; border-radius: 32px; 
+            z-index: 510; opacity: 0; pointer-events: none; 
+            transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.5s, color 0.5s; 
+        }
         .info-panel.active { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
         .info-panel b { color: var(--primary); font-weight: 500; }
 
-        .fab { position: fixed; bottom: 30px; right: 30px; width: 56px; height: 56px; border-radius: 16px; background: var(--surface-variant); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; z-index: 500; display: flex; justify-content: center; align-items: center; }
-        .popup { position: fixed; bottom: 100px; right: 30px; width: 280px; background: var(--surface-variant); backdrop-filter: blur(35px); padding: 28px; border-radius: 32px; border: 1px solid rgba(255,255,255,0.15); color: #fff; z-index: 520; opacity: 0; pointer-events: none; transform: scale(0.9) translateY(20px); transition: 0.4s; transform-origin: bottom right; }
+        .fab { 
+            position: fixed; bottom: 30px; right: 30px; width: 56px; height: 56px; border-radius: 16px; 
+            cursor: pointer; z-index: 500; display: flex; justify-content: center; align-items: center; 
+            transition: background 0.5s, border 0.5s;
+        }
+        
+        .popup { 
+            position: fixed; bottom: 100px; right: 30px; width: 280px; padding: 28px; border-radius: 32px; 
+            z-index: 520; opacity: 0; pointer-events: none; 
+            transform: scale(0.9) translateY(20px); transform-origin: bottom right; 
+            transition: 0.4s, background 0.5s, color 0.5s; 
+        }
         .popup.active { opacity: 1; pointer-events: auto; transform: scale(1) translateY(0); }
         
         .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
-        .label { font-size: 11px; font-weight: 700; color: #bbb; text-transform: uppercase; }
+        .label { font-size: 11px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; transition: color 0.5s; }
         .manual-ui.disabled { opacity: 0.2; pointer-events: none; filter: grayscale(1); }
         .speed-chips { display: flex; gap: 8px; flex-wrap: wrap; }
-        .chip { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 8px; padding: 6px 10px; font-size: 11px; cursor: pointer; font-weight: 700; }
+        .chip { background: var(--chip-bg); border: 1px solid var(--glass-border); color: var(--text-main); border-radius: 8px; padding: 6px 10px; font-size: 11px; cursor: pointer; font-weight: 700; transition: background 0.5s, color 0.5s; }
         .btn-action { width: 100%; padding: 14px; background: var(--primary); color: var(--on-primary-container); border: none; border-radius: 12px; font-size: 12px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: 0.2s; }
-        input[type=range] { width: 100%; appearance: none; background: rgba(255,255,255,0.15); height: 6px; border-radius: 3px; outline: none; margin: 10px 0; pointer-events: auto; }
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: var(--primary); cursor: pointer; border: 2px solid #fff; }
+        input[type=range] { width: 100%; appearance: none; background: var(--chip-bg); height: 6px; border-radius: 3px; outline: none; margin: 10px 0; pointer-events: auto; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: var(--primary); cursor: pointer; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         .switch { position: relative; width: 44px; height: 24px; display: inline-block; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider-sw { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #444; border-radius: 24px; transition: 0.3s; cursor: pointer; }
-        .slider-sw:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; }
+        .slider-sw { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(100,100,100,0.5); border-radius: 24px; transition: 0.3s; cursor: pointer; }
+        .slider-sw:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
         input:checked + .slider-sw { background: var(--primary); }
         input:checked + .slider-sw:before { transform: translateX(20px); background: var(--on-primary-container); }
     </style>
@@ -89,7 +129,6 @@
     <div id="skyLayer" class="layer sky-layer"></div>
     <div class="layer atmosphere"></div>
     <div class="layer star-container"><canvas id="starCanvas"></canvas></div>
-    <!-- 인공위성 레이어 추가 (위치: 별 레이어 위, 천체 레이어 아래) -->
     <div id="satLayer" class="layer" style="z-index: 3;"></div>
     <div class="layer celestial"><div class="moon-aura"></div><div class="moon-disk"></div><div class="sun-disk"></div></div>
 
@@ -109,10 +148,11 @@
 
     <canvas id="vizCanvas" class="viz-canvas"></canvas>
 
-    <div class="info-panel" id="infoPanel">
+    <!-- 글래스모피즘 클래스 적용 -->
+    <div class="info-panel glass-panel-base" id="infoPanel">
         <div class="row"><span><b>DATE</b> <span id="infoDate">-</span></span></div>
         <div class="row" style="font-size: 10px;"><span><b>RISE</b> <span id="infoRise">-</span></span><span><b>SET</b> <span id="infoSet">-</span></span></div>
-        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;">
+        <hr style="border: 0; border-top: 1px solid var(--glass-border); margin-bottom: 20px;">
         <div class="row"><span class="label">Auto Sync</span><label class="switch"><input type="checkbox" id="autoCheck" checked onchange="handleSyncToggle()"><span class="slider-sw"></span></label></div>
         <div id="manualSection" class="manual-ui disabled">
             <div class="row" style="flex-direction:column; align-items:flex-start; gap:4px;"><span class="label">Time Slider</span><input type="range" id="timeRange" min="0" max="1439.99" step="0.01" value="720"></div>
@@ -121,9 +161,11 @@
     </div>
 
     <div class="bottom-clock" id="clock" onclick="toggleInfo()">00:00:00</div>
-    <div class="fab" onclick="togglePopup()"><svg style="width:24px;height:24px;fill:var(--ui-color)" viewBox="0 0 24 24"><path d="M 12 15.5 A 3.5 3.5 0 0 1 8.5 12 A 3.5 3.5 0 0 1 12 8.5 A 3.5 3.5 0 0 1 15.5 12 A 3.5 3.5 0 0 1 12 15.5 M 19.43 12.97 C 19.47 12.65 19.5 12.33 19.5 12 C 19.5 11.67 19.47 11.34 19.43 11.03 L 21.54 9.37 C 21.73 9.22 21.78 8.95 21.66 8.73 L 19.66 5.27 C 19.54 5.05 19.27 4.96 19.05 5.05 L 16.56 6.05 C 16.04 5.66 15.47 5.32 14.87 5.07 L 14.5 2.42 C 14.46 2.18 14.25 2 14 2 H 10 C 9.75 2 9.54 2.18 9.5 2.42 L 9.13 5.07 C 8.53 5.32 7.96 5.66 7.44 6.05 L 4.95 5.05 C 4.73 4.96 4.46 5.05 4.34 5.27 L 2.34 8.73 C 2.21 8.95 2.27 9.22 2.46 9.37 L 4.57 11.03 C 4.53 11.34 4.5 12 4.57 11.03 C 4.5 12.33 4.53 12.65 4.57 12.97 L 2.46 14.63 C 2.27 14.78 2.21 15.05 2.34 15.27 L 4.34 18.73 C 4.46 18.95 4.73 19.03 4.95 18.95 L 7.44 17.94 C 7.96 18.34 8.53 18.68 9.13 18.93 L 9.5 21.58 C 9.54 21.82 9.75 22 10 22 H 14 C 14.25 22 14.46 21.82 14.5 21.58 L 14.87 18.93 C 15.47 18.67 16.04 18.34 16.56 17.94 L 19.05 18.95 C 19.27 19.03 19.54 18.95 19.66 18.73 L 21.66 15.27 C 21.78 15.05 21.73 14.78 21.54 14.63 L 19.43 12.97 Z"/></svg></div>
+    
+    <!-- FAB에도 글래스모피즘 적용, 아이콘 색상도 CSS 변수로 변경 -->
+    <div class="fab glass-panel-base" onclick="togglePopup()"><svg style="width:24px;height:24px;fill:var(--text-main); transition:fill 0.5s" viewBox="0 0 24 24"><path d="M 12 15.5 A 3.5 3.5 0 0 1 8.5 12 A 3.5 3.5 0 0 1 12 8.5 A 3.5 3.5 0 0 1 15.5 12 A 3.5 3.5 0 0 1 12 15.5 M 19.43 12.97 C 19.47 12.65 19.5 12.33 19.5 12 C 19.5 11.67 19.47 11.34 19.43 11.03 L 21.54 9.37 C 21.73 9.22 21.78 8.95 21.66 8.73 L 19.66 5.27 C 19.54 5.05 19.27 4.96 19.05 5.05 L 16.56 6.05 C 16.04 5.66 15.47 5.32 14.87 5.07 L 14.5 2.42 C 14.46 2.18 14.25 2 14 2 H 10 C 9.75 2 9.54 2.18 9.5 2.42 L 9.13 5.07 C 8.53 5.32 7.96 5.66 7.44 6.05 L 4.95 5.05 C 4.73 4.96 4.46 5.05 4.34 5.27 L 2.34 8.73 C 2.21 8.95 2.27 9.22 2.46 9.37 L 4.57 11.03 C 4.53 11.34 4.5 12 4.57 11.03 C 4.5 12.33 4.53 12.65 4.57 12.97 L 2.46 14.63 C 2.27 14.78 2.21 15.05 2.34 15.27 L 4.34 18.73 C 4.46 18.95 4.73 19.03 4.95 18.95 L 7.44 17.94 C 7.96 18.34 8.53 18.68 9.13 18.93 L 9.5 21.58 C 9.54 21.82 9.75 22 10 22 H 14 C 14.25 22 14.46 21.82 14.5 21.58 L 14.87 18.93 C 15.47 18.67 16.04 18.34 16.56 17.94 L 19.05 18.95 C 19.27 19.03 19.54 18.95 19.66 18.73 L 21.66 15.27 C 21.78 15.05 21.73 14.78 21.54 14.63 L 19.43 12.97 Z"/></svg></div>
 
-    <div class="popup" id="popup">
+    <div class="popup glass-panel-base" id="popup">
         <div class="row"><span class="label">Ambient Night</span><label class="switch"><input type="checkbox" id="soundToggle"><span class="slider-sw"></span></label></div>
         <div class="row" style="flex-direction:column; align-items:flex-start; gap:4px;"><span class="label">Volume</span><input type="range" id="volumeRange" min="0" max="100" step="1" value="20"></div>
         <button class="btn-action" id="btnViz">ENABLE VISUALIZER</button>
@@ -147,7 +189,7 @@
         };
 
         let manualMinutes = 720, lastTimestamp = performance.now(), currentSpeed = 1;
-        let uiColorGlobal = "rgba(255,255,255,0.4)", isCatchingUp = false, catchUpStartMinutes = 0, catchUpStartTime = 0;
+        let isCatchingUp = false, catchUpStartMinutes = 0, catchUpStartTime = 0;
         const CATCHUP_DURATION = 2000;
 
         let cachedSunTimes = null, lastCachedDateStr = "";
@@ -213,7 +255,6 @@
             const mG = (m % 1440 + 1440) % 1440; 
             const solar = getSunTimes(new Date());
             
-            // 수정된 부분: 여명 및 노을 시작 2시간 15분 전 (135분)
             const dawnStart = solar.sunrise - 135;
             const preSunset = solar.sunset - 135;
             const sunsetEnd = solar.sunset + 30;
@@ -224,7 +265,6 @@
                 { m: solar.sunrise, z: [40, 80, 140], hz: [255, 150, 100] }, 
                 { m: (solar.sunrise + solar.sunset)/2, z: [25, 90, 180], hz: [180, 230, 255] },
                 { m: preSunset, z: [25, 90, 180], hz: [180, 230, 255] },
-                // 노을 색상 유지: 너무 붉지 않은 주황빛 [245, 125, 75]
                 { m: solar.sunset, z: [20, 30, 80], hz: [245, 125, 75] }, 
                 { m: solar.sunset + 15, z: [10, 15, 40], hz: [60, 30, 60] }, 
                 { m: sunsetEnd, z: [5, 10, 25], hz: [10, 20, 35] }, 
@@ -232,7 +272,8 @@
             ];
             
             let zenith = 'rgb(5, 10, 25)', horizon = 'rgb(10, 20, 35)';
-            
+            let brightness = 15;
+
             for(let i=0; i<kf.length-1; i++){
                 if(mG >= kf[i].m && mG < kf[i+1].m){
                     const t = (mG - kf[i].m) / (kf[i+1].m - kf[i].m);
@@ -248,14 +289,50 @@
 
                     zenith = `rgb(${zr}, ${zg}, ${zb})`;
                     horizon = `rgb(${r}, ${g}, ${b})`;
-                    
-                    const brightness = (r + g + b) / 3;
-                    uiColorGlobal = brightness > 140 ? "rgba(10, 30, 60, 0.6)" : "rgba(255, 255, 255, 0.4)";
-                    root.setProperty('--ui-color', uiColorGlobal);
+                    brightness = (r + g + b) / 3;
                     break;
                 }
             }
             
+            // --- 동적 글래스모피즘 및 대비 조절 로직 시작 ---
+            // tContrast: 0(밤, 어두움) ~ 1(낮, 밝음)
+            // 밝기가 40(밤)에서 190(낮)까지 변한다고 가정하고 정규화
+            let tContrast = Math.min(1, Math.max(0, (brightness - 40) / 150));
+            
+            // 1. 패널 배경색 보간: 밤(어두운 반투명) -> 낮(밝은 반투명)
+            // Night: rgba(20, 25, 35, 0.65)
+            // Day:   rgba(235, 245, 255, 0.45)
+            const bgR = 20 + (215 * tContrast);
+            const bgG = 25 + (220 * tContrast);
+            const bgB = 35 + (220 * tContrast);
+            const bgA = 0.65 - (0.2 * tContrast);
+
+            // 2. 텍스트 메인 색상 보간: 밤(흰색) -> 낮(진한 남색)
+            // Night: rgb(255, 255, 255)
+            // Day:   rgb(0, 20, 40)
+            const txtR = 255 - (255 * tContrast);
+            const txtG = 255 - (235 * tContrast);
+            const txtB = 255 - (215 * tContrast);
+
+            // 3. 서브 텍스트(라벨) 색상
+            // Night: rgba(255,255,255,0.6)
+            // Day:   rgba(0, 20, 50, 0.6)
+            const subR = 255 - (255 * tContrast);
+            const subG = 255 - (235 * tContrast);
+            const subB = 255 - (205 * tContrast);
+
+            // 4. 테두리 및 칩 배경
+            // 낮에는 테두리가 진해야 잘 보이고, 밤에는 밝아야 잘 보임
+            const bordA = 0.1 + (0.1 * tContrast); // 0.1 ~ 0.2
+            const bordRGB = 255 - (200 * tContrast); // 흰색 -> 어두운 회색
+
+            root.setProperty('--glass-bg', `rgba(${bgR}, ${bgG}, ${bgB}, ${bgA})`);
+            root.setProperty('--text-main', `rgb(${txtR}, ${txtG}, ${txtB})`);
+            root.setProperty('--text-sub', `rgba(${subR}, ${subG}, ${subB}, 0.7)`);
+            root.setProperty('--glass-border', `rgba(${bordRGB}, ${bordRGB}, ${bordRGB}, ${bordA})`);
+            root.setProperty('--chip-bg', `rgba(${bordRGB}, ${bordRGB}, ${bordRGB}, 0.1)`);
+            // --- 로직 끝 ---
+
             if (zenith !== lastZenith || horizon !== lastHorizon) {
                 skyLayer.style.background = `linear-gradient(to bottom, ${zenith} 0%, ${horizon} 100%)`;
                 lastZenith = zenith; lastHorizon = horizon;
@@ -359,7 +436,7 @@
         requestAnimationFrame(loop);
 
         /* ----------------------------------------------------
-           1. 인공위성 / 스타링크 기능 이식
+           1. 인공위성 / 스타링크 기능
            ---------------------------------------------------- */
         const satLayer = document.getElementById('satLayer');
 
@@ -406,7 +483,7 @@
         }, 5000);
 
         /* ----------------------------------------------------
-           2. 오디오 비주얼라이저 기능 이식 (기존 기능 대체)
+           2. 오디오 비주얼라이저 기능
            ---------------------------------------------------- */
         let audioCtx, gainNode, audioInitialized = false;
         async function initAudio() {
@@ -450,6 +527,10 @@
             canvas.width = window.innerWidth; canvas.height = 200; ctx.clearRect(0, 0, canvas.width, canvas.height);
             const bw = canvas.width / 80;
             const minFreq = 80, maxFreq = 14000, nyquist = sampleRate / 2;
+            
+            // 시각화 색상도 CSS 변수에 맞춰서 조정
+            const tColor = getComputedStyle(document.documentElement).getPropertyValue('--text-main').trim();
+
             for (let i = 0; i < 80; i++) {
                 const freq = minFreq * Math.pow(maxFreq / minFreq, i / 79);
                 const dIdx = Math.floor((freq / nyquist) * dataArray.length);
@@ -458,8 +539,9 @@
                 if (!smoothHeights[i]) smoothHeights[i] = 0;
                 if (target > smoothHeights[i]) smoothHeights[i] = target; else smoothHeights[i] *= 0.94;
                 const h = Math.min(smoothHeights[i], canvas.height * 0.8);
-                // uiColorGlobal 변수를 사용하여 색상 적용 (기존 색상 체계와 호환)
-                ctx.fillStyle = uiColorGlobal.replace(/[\d.]+\)$/g, `${Math.max(0.08, raw/255 * 0.4)})`);
+                
+                // 기존 동적 색상 로직을 유지하되 text-main 기반으로 alpha값 조절
+                ctx.fillStyle = tColor.replace('rgb', 'rgba').replace(')', `, ${Math.max(0.08, raw/255 * 0.4)})`);
                 ctx.fillRect(i * bw, canvas.height - h, bw - 1, h);
             }
         }
