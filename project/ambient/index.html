@@ -27,19 +27,18 @@
             --ui-color: rgba(255, 255, 255, 0.4);
             color-scheme: only light !important;
             --flare-opacity: 0;
-            /* 별 마스킹 제어 변수 */
             --star-mask-y: -50%;
         }
 
         html, body {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            overflow: hidden; background-color: var(--horizon);
+            overflow: hidden; background-color: #000;
             font-family: 'Roboto', sans-serif; user-select: none;
             position: fixed; top: 0; left: 0; overscroll-behavior: none;
             filter: none !important; 
         }
 
-        .layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .layer { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; }
         .sky { z-index: 0; background: linear-gradient(to bottom, var(--zenith) 0%, var(--horizon) 100%) !important; }
         
         .atmosphere {
@@ -53,7 +52,6 @@
             transform: translate(-50%, -50%) rotate(var(--star-rot)); 
             opacity: var(--star-opacity); 
             transition: opacity 0.5s linear;
-            /* 위에서 아래로 나타나는 마스크 효과 */
             -webkit-mask-image: linear-gradient(to bottom, #fff calc(var(--star-mask-y) - 40%), transparent calc(var(--star-mask-y) + 40%));
             mask-image: linear-gradient(to bottom, #fff calc(var(--star-mask-y) - 40%), transparent calc(var(--star-mask-y) + 40%));
         }
@@ -61,9 +59,50 @@
         .satellite { position: absolute; width: 1.5px; height: 1.5px; z-index: 3; background: #fff; border-radius: 50%; box-shadow: 0 0 3px 1px rgba(255,255,255,0.7); }
 
         .sun-aura { position: absolute; left: var(--sun-x); top: var(--sun-y); width: 160vmax; height: 160vmax; z-index: 4; transform: translate(-50%, -50%); background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 220, 150, 0.08) 25%, transparent 65%) !important; mix-blend-mode: screen; }
-        .sun-disk { position: absolute; left: var(--sun-x); top: var(--sun-y); width: 60px; height: 60px; z-index: 5; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle at 45% 45%, #fffef8 0%, #fffdf5 30%, #fff9e8 60%, #ffe8c0 95%, #ffd080 100%) !important; box-shadow: inset 0 0 15px rgba(255, 240, 200, 0.8), 0 0 30px 8px rgba(255, 255, 255, 0.9), 0 0 60px 20px rgba(255, 245, 220, 0.7), 0 0 100px 35px rgba(255, 230, 180, 0.4), 0 0 150px 50px rgba(255, 210, 120, 0.2) !important; }
-        .moon-aura { position: absolute; left: var(--moon-x); top: var(--moon-y); width: 120vmax; height: 120vmax; z-index: 4; transform: translate(-50%, -50%); background: radial-gradient(circle, rgba(200, 220, 240, 0.25) 0%, rgba(180, 210, 235, 0.12) 20%, transparent 50%) !important; mix-blend-mode: screen; }
-        .moon-disk { position: absolute; left: var(--moon-x); top: var(--moon-y); width: 52px; height: 52px; z-index: 5; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle, #ffffff 0%, #fffef9 30%, #fffbf0 65%, #fff7e5 100%) !important; box-shadow: 0 0 28px 7px rgba(255, 255, 255, 0.85), 0 0 55px 14px rgba(245, 248, 255, 0.55), 0 0 90px 22px rgba(230, 238, 255, 0.35), 0 0 140px 35px rgba(210, 225, 250, 0.18) !important; }
+        .sun-disk { 
+            position: absolute; left: var(--sun-x); top: var(--sun-y); 
+            width: 60px; height: 60px; z-index: 5; 
+            transform: translate(-50%, -50%); 
+            border-radius: 50%; 
+            background: radial-gradient(circle at 45% 45%, 
+                #fffef8 0%, 
+                #fffdf5 30%, 
+                #fff9e8 60%, 
+                #ffe8c0 95%, 
+                #ffd080 100%) !important; 
+            box-shadow: 
+                inset 0 0 15px rgba(255, 240, 200, 0.8),
+                0 0 30px 8px rgba(255, 255, 255, 0.9),
+                0 0 60px 20px rgba(255, 245, 220, 0.7),
+                0 0 100px 35px rgba(255, 230, 180, 0.4),
+                0 0 150px 50px rgba(255, 210, 120, 0.2) !important; 
+        }
+        .moon-aura { 
+            position: absolute; left: var(--moon-x); top: var(--moon-y); 
+            width: 120vmax; height: 120vmax; z-index: 4; 
+            transform: translate(-50%, -50%); 
+            background: radial-gradient(circle, 
+                rgba(200, 220, 240, 0.25) 0%, 
+                rgba(180, 210, 235, 0.12) 20%, 
+                transparent 50%) !important; 
+            mix-blend-mode: screen; 
+        }
+        .moon-disk { 
+            position: absolute; left: var(--moon-x); top: var(--moon-y); 
+            width: 52px; height: 52px; z-index: 5; 
+            transform: translate(-50%, -50%); 
+            border-radius: 50%; 
+            background: radial-gradient(circle, 
+                #ffffff 0%, 
+                #fffef9 30%, 
+                #fffbf0 65%, 
+                #fff7e5 100%) !important; 
+            box-shadow: 
+                0 0 28px 7px rgba(255, 255, 255, 0.85),
+                0 0 55px 14px rgba(245, 248, 255, 0.55),
+                0 0 90px 22px rgba(230, 238, 255, 0.35),
+                0 0 140px 35px rgba(210, 225, 250, 0.18) !important; 
+        }
 
         .lens-flare-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 6; pointer-events: none; mix-blend-mode: screen; opacity: var(--flare-opacity); will-change: opacity; }
         .flare-ghost { position: absolute; transform: translate(-50%, -50%); border-radius: 50%; will-change: left, top; }
@@ -139,12 +178,29 @@
     </div>
 
     <div class="popup" id="popup">
-        <div class="row"><span class="label">시간 자동 설정</span><label class="switch"><input type="checkbox" id="autoCheck" checked onchange="handleSyncToggle()"><span class="slider"></span></label></div>
-        <div id="manualSection" class="manual-ui disabled">
-            <div class="row" style="flex-direction:column; align-items:flex-start; gap:8px;"><span class="label">시간 수동 설정</span><input type="range" id="timeRange" min="0" max="1439.99" step="0.01" value="720"></div>
-            <div class="row" style="margin-bottom:25px;"><span class="label">속도 (<span id="speedVal">1</span>배속)</span><div class="speed-ctrl"><button class="speed-btn" onclick="adjustSpeed(0.5)">x0.5</button><button class="speed-btn" onclick="adjustSpeed(2)">x2</button></div></div>
+        <div class="row">
+            <span class="label">시간 자동 설정</span>
+            <label class="switch"><input type="checkbox" id="autoCheck" checked onchange="handleSyncToggle()"><span class="slider"></span></label>
         </div>
-        <div class="row"><span class="label">배경음</span><label class="switch"><input type="checkbox" id="soundToggle"><span class="slider"></span></label></div>
+        
+        <div id="manualSection" class="manual-ui disabled">
+            <div class="row" style="flex-direction:column; align-items:flex-start; gap:8px;">
+                <span class="label">시간 수동 설정</span>
+                <input type="range" id="timeRange" min="0" max="1439.99" step="0.01" value="720">
+            </div>
+            <div class="row" style="margin-bottom:25px;">
+                <span class="label">속도 (<span id="speedVal">1</span>배속)</span>
+                <div class="speed-ctrl">
+                    <button class="speed-btn" onclick="adjustSpeed(0.5)">x0.5</button>
+                    <button class="speed-btn" onclick="adjustSpeed(2)">x2</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <span class="label">배경음</span>
+            <label class="switch"><input type="checkbox" id="soundToggle"><span class="slider"></span></label>
+        </div>
         <div class="row" style="flex-direction:column; align-items:flex-start; gap:8px;">
             <span class="label">배경음 볼륨</span>
             <input type="range" id="volumeRange" min="0" max="100" step="1" value="20">
@@ -204,12 +260,13 @@
             context.fillStyle = `rgba(255, 255, 255, ${prand()})`;
             context.beginPath(); context.arc(x, y, size, 0, 2 * Math.PI); context.fill();
         }
+        context.fillStyle = `white`;
+        context.beginPath(); context.arc(2000, 2000, 1.6, 0, 2 * Math.PI); context.fill();
 
         const satLayer = document.getElementById('satLayer');
         let currentSunAlt = 1;
 
         function animateObject(isStarlink = false) {
-            // 태양 고도를 루프에서 사용하는 전역 대신 수동 시간 기준으로 즉시 재계산.
             const solar = getSunTimes(new Date());
             const mG = (manualMinutes % 1440 + 1440) % 1440;
             let tempSunAlt = -1;
@@ -351,20 +408,32 @@
             const setFlarePos = (id, scale) => {
                 const el = document.getElementById(id);
                 if(!el) return;
-                const fx = sx + (50 - sx) * scale;
-                const fy = sy + (50 - sy) * scale;
+                const fx = cx + (cx - sx) * scale;
+                const fy = cy + (cy - sy) * scale;
                 el.style.left = fx + '%';
                 el.style.top = fy + '%';
             };
-            setFlarePos('flare-halo', 0.5); setFlarePos('gh-rb', 1.3); setFlarePos('gh-1', 1.6); setFlarePos('gh-2', 1.1); setFlarePos('gh-3', 2.0); setFlarePos('gh-4', 0.2); setFlarePos('gh-5', 2.4); setFlarePos('gh-6', 1.8); setFlarePos('gh-7', -0.3); setFlarePos('gh-8', 2.8);
+            setFlarePos('flare-halo', -0.5); setFlarePos('gh-rb', 0.4); setFlarePos('gh-1', 0.8); setFlarePos('gh-2', 0.6); setFlarePos('gh-3', 1.2); setFlarePos('gh-4', -0.1); setFlarePos('gh-5', 1.5); setFlarePos('gh-6', 1.1); setFlarePos('gh-7', -0.8); setFlarePos('gh-8', 1.9);
         }
 
         function updateSky(m) {
             const mG = ((m % 1440) + 1440) % 1440;
             const hRaw = mG / 60, s = Math.round((mG * 60) % 60);
             const solar = getSunTimes(new Date());
-            const dawnStart = solar.sunrise - 180, sunsetEnd = solar.sunset + 180;
-            const kf = [{ m: 0, z: [5, 10, 25], hz: [10, 20, 35] }, { m: dawnStart, z: [5, 10, 25], hz: [10, 20, 35] }, { m: solar.sunrise, z: [40, 80, 140], hz: [255, 150, 100] }, { m: (solar.sunrise + solar.sunset)/2, z: [30, 100, 220], hz: [180, 230, 255] }, { m: solar.sunset, z: [30, 50, 110], hz: [255, 120, 50] }, { m: sunsetEnd, z: [5, 10, 25], hz: [10, 20, 35] }, { m: 1440, z: [5, 10, 25], hz: [10, 20, 35] }];
+            
+            const dawnStart = solar.sunrise - 180, sunsetEnd = solar.sunset + 30;
+            
+            const kf = [
+                { m: 0, z: [5, 10, 25], hz: [10, 20, 35] }, 
+                { m: dawnStart, z: [5, 10, 25], hz: [10, 20, 35] }, 
+                { m: solar.sunrise, z: [40, 80, 140], hz: [255, 150, 100] }, 
+                { m: (solar.sunrise + solar.sunset)/2, z: [30, 100, 220], hz: [180, 230, 255] }, 
+                { m: solar.sunset, z: [20, 30, 80], hz: [230, 80, 40] }, // 사실적 노을: 깊은 오렌지/레드
+                { m: solar.sunset + 15, z: [10, 15, 40], hz: [60, 30, 60] }, // 일몰 15분 후: 딥 퍼플/인디고
+                { m: sunsetEnd, z: [5, 10, 25], hz: [10, 20, 35] }, // 일몰 30분 후: 완전한 밤
+                { m: 1440, z: [5, 10, 25], hz: [10, 20, 35] }
+            ];
+
             let c = { z: 'rgb(5,10,25)', hz: 'rgb(10,20,35)' };
             for(let i=0; i<kf.length-1; i++){
                 if(mG >= kf[i].m && mG <= kf[i+1].m){
@@ -389,7 +458,12 @@
                 document.documentElement.style.setProperty('--sun-y', sy + '%');
                 updateFlare(sx, sy, currentSunAlt);
                 document.documentElement.style.setProperty('--atmosphere-opacity', Math.min(currentSunAlt * 1.2, 0.85));
-            } else { currentSunAlt = -1; document.documentElement.style.setProperty('--sun-y', '150%'); updateFlare(0,0,-1); document.documentElement.style.setProperty('--atmosphere-opacity', 0); }
+            } else { 
+                currentSunAlt = -1; 
+                document.documentElement.style.setProperty('--sun-y', '150%'); 
+                updateFlare(0, 0, -1); 
+                document.documentElement.style.setProperty('--atmosphere-opacity', 0);
+            }
             const moonM = (mG + 720) % 1440;
             if(moonM >= solar.sunrise && moonM <= solar.sunset){
                 const prog = (moonM - solar.sunrise) / (solar.sunset - solar.sunrise);
@@ -400,13 +474,14 @@
             
             let starOpacity = 0;
             let starMaskY = -50;
-            if (mG >= solar.sunset - 180 && mG <= solar.sunset + 60) {
-                starOpacity = (mG - (solar.sunset - 180)) / 240; 
+            // 일몰 3시간(180분) 전부터 일몰 30분 후까지 전이
+            if (mG >= solar.sunset - 180 && mG <= solar.sunset + 30) {
+                starOpacity = (mG - (solar.sunset - 180)) / 210; 
                 starMaskY = -50 + (200 * starOpacity); 
             } else if (mG >= solar.sunrise - 60 && mG <= solar.sunrise + 180) {
                 starOpacity = 1 - (mG - (solar.sunrise - 60)) / 240;
                 starMaskY = 150 - (200 * (1 - starOpacity)); 
-            } else if (mG > solar.sunset + 60 || mG < solar.sunrise - 60) {
+            } else if (mG > solar.sunset + 30 || mG < solar.sunrise - 60) {
                 starOpacity = 1;
                 starMaskY = 150;
             }
@@ -443,4 +518,4 @@
         requestAnimationFrame(loop);
     </script>
 </body>
-</html>
+                              </html>
