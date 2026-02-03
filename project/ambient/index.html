@@ -26,7 +26,7 @@
             --moon-x: 50%; --moon-y: 110%;
             --star-opacity: 0; --star-rot: 0deg;
             --ui-color: rgba(255, 255, 255, 0.4);
-            color-scheme: only light;
+            color-scheme: only light !important;
         }
 
         html, body {
@@ -37,18 +37,56 @@
             filter: none !important; 
         }
 
-        .layer { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; }
-        .sky { background: linear-gradient(to bottom, var(--zenith) 0%, var(--horizon) 100%); z-index: 0; }
+        .layer {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+        }
+
+        .sky {
+            z-index: 0;
+            background: linear-gradient(to bottom, var(--zenith) 0%, var(--horizon) 100%) !important;
+        }
         
-        .star-field { top: 50%; left: 50%; width: 200vmax; height: 200vmax; transform: translate(-50%, -50%) rotate(var(--star-rot)); z-index: 1; opacity: var(--star-opacity); transition: opacity 3s ease-in-out; }
-        .star { position: absolute; background: white; border-radius: 50%; }
+        .star-field {
+            top: 50%; left: 50%; width: 200vmax; height: 200vmax; z-index: 1;
+            transform: translate(-50%, -50%) rotate(var(--star-rot));
+            opacity: var(--star-opacity);
+            transition: opacity 3s ease-in-out;
+        }
 
-        .satellite { position: absolute; width: 1.5px; height: 1.5px; background: #fff; border-radius: 50%; z-index: 2; box-shadow: 0 0 3px 1px rgba(255,255,255,0.7); }
+        .satellite {
+            position: absolute; width: 1.5px; height: 1.5px; z-index: 2;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 3px 1px rgba(255,255,255,0.7);
+        }
 
-        .sun-aura { position: absolute; left: var(--sun-x); top: var(--sun-y); transform: translate(-50%, -50%); width: 160vmax; height: 160vmax; background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 220, 150, 0.08) 25%, transparent 65%); mix-blend-mode: screen; z-index: 4; }
-        .sun-disk { position: absolute; left: var(--sun-x); top: var(--sun-y); transform: translate(-50%, -50%); width: 60px; height: 60px; border-radius: 50%; background: #fff; box-shadow: 0 0 50px 15px #fff, 0 0 120px 40px rgba(255, 230, 150, 0.5); z-index: 5; }
-        .moon-aura { position: absolute; left: var(--moon-x); top: var(--moon-y); transform: translate(-50%, -50%); width: 100vmax; height: 100vmax; background: radial-gradient(circle, rgba(180, 220, 255, 0.2) 0%, transparent 60%); mix-blend-mode: screen; z-index: 4; }
-        .moon-disk { position: absolute; left: var(--moon-x); top: var(--moon-y); transform: translate(-50%, -50%); width: 45px; height: 45px; border-radius: 50%; background: #e0e0e0; box-shadow: 0 0 30px 5px rgba(255, 255, 255, 0.4); z-index: 5; }
+        .sun-aura {
+            position: absolute; left: var(--sun-x); top: var(--sun-y); width: 160vmax; height: 160vmax; z-index: 4;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 220, 150, 0.08) 25%, transparent 65%) !important;
+            mix-blend-mode: screen;
+        }
+        .sun-disk {
+            position: absolute; left: var(--sun-x); top: var(--sun-y); width: 60px; height: 60px; z-index: 5;
+            transform: translate(-50%, -50%); 
+            border-radius: 50%;
+            background: #fff !important;
+            box-shadow: 0 0 50px 15px #fff, 0 0 120px 40px rgba(255, 230, 150, 0.5) !important;
+        }
+        .moon-aura {
+            position: absolute; left: var(--moon-x); top: var(--moon-y); width: 100vmax; height: 100vmax; z-index: 4;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(180, 220, 255, 0.2) 0%, transparent 60%) !important;
+            mix-blend-mode: screen;
+        }
+        .moon-disk {
+            position: absolute; left: var(--moon-x); top: var(--moon-y); width: 45px; height: 45px; z-index: 5;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: #e0e0e0 !important;
+            box-shadow: 0 0 30px 5px rgba(255, 255, 255, 0.4) !important;
+        }
 
         .viz-canvas {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 220px;
