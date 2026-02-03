@@ -3,9 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>QPI Ambient - Professional Solar Sync</title>
+    
+    <!-- PWA 관련 메타 태그 -->
+    <title>QPI Ambient</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon-192.png">
+
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap" rel="stylesheet">
     <style>
+        /* (기존 CSS 동일 - 생략 금지: 스타일 시트 전체를 그대로 유지하세요) */
         :root {
             --primary: #90caf9;
             --zenith: #000; --horizon: #000;
@@ -30,8 +40,7 @@
 
         .satellite { position: absolute; width: 1.5px; height: 1.5px; background: #fff; border-radius: 50%; z-index: 2; box-shadow: 0 0 3px 1px rgba(255,255,255,0.7); }
 
-        /* Celestial Objects */
-        .sun-aura { position: absolute; left: var(--sun-x); top: var(--sun-y); transform: translate(-50%, -50%); width: 160vmax; height: 160vmax; background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 200, 100, 0.08) 25%, transparent 65%); mix-blend-mode: screen; z-index: 4; }
+        .sun-aura { position: absolute; left: var(--sun-x); top: var(--sun-y); transform: translate(-50%, -50%); width: 160vmax; height: 160vmax; background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 220, 150, 0.08) 25%, transparent 65%); mix-blend-mode: screen; z-index: 4; }
         .sun-disk { position: absolute; left: var(--sun-x); top: var(--sun-y); transform: translate(-50%, -50%); width: 60px; height: 60px; border-radius: 50%; background: #fff; box-shadow: 0 0 50px 15px #fff, 0 0 120px 40px rgba(255, 230, 150, 0.5); z-index: 5; }
         .moon-aura { position: absolute; left: var(--moon-x); top: var(--moon-y); transform: translate(-50%, -50%); width: 100vmax; height: 100vmax; background: radial-gradient(circle, rgba(180, 220, 255, 0.2) 0%, transparent 60%); mix-blend-mode: screen; z-index: 4; }
         .moon-disk { position: absolute; left: var(--moon-x); top: var(--moon-y); transform: translate(-50%, -50%); width: 45px; height: 45px; border-radius: 50%; background: #e0e0e0; box-shadow: 0 0 30px 5px rgba(255, 255, 255, 0.4); z-index: 5; }
@@ -43,7 +52,6 @@
             -webkit-mask-image: linear-gradient(to top, black 30%, transparent 100%);
         }
 
-        /* Clickable Clock */
         .bottom-clock { 
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); 
             color: var(--ui-color); font-weight: 100; font-size: 15px; letter-spacing: 3px; z-index: 100; 
@@ -52,7 +60,6 @@
         }
         .bottom-clock:active { transform: translateX(-50%) scale(0.95); }
 
-        /* Sun Info Panel */
         .info-panel {
             position: fixed; bottom: 75px; left: 50%; transform: translateX(-50%);
             background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(15px);
@@ -66,7 +73,6 @@
         .fab { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; border-radius: 50%; background: rgba(127,127,127,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(127,127,127,0.2); cursor: pointer; z-index: 110; display: flex; justify-content: center; align-items: center; }
         .popup { position: fixed; bottom: 95px; right: 30px; width: 260px; background: rgba(10,10,10,0.95); backdrop-filter: blur(25px); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); color: #fff; z-index: 120; opacity: 0; pointer-events: none; transform: translateY(15px); transition: 0.4s cubic-bezier(0.2, 1, 0.3, 1); }
         .popup.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
-        
         .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; transition: opacity 0.3s ease; }
         .label { font-size: 11px; font-weight: 300; letter-spacing: 1px; color: #999; text-transform: uppercase; }
         .manual-ui.disabled { opacity: 0.15; pointer-events: none; filter: grayscale(1); }
@@ -84,29 +90,23 @@
     </style>
 </head>
 <body>
-
+    <!-- (기존 HTML 구조와 동일) -->
     <div class="layer sky"></div>
     <div class="layer star-field" id="starField">
         <canvas id="starfield-stars" style="width: 100%; height: 100%;"></canvas>
     </div>
     <div id="satLayer" class="layer"></div>
-    
     <div class="layer celestial">
         <div class="sun-aura"></div><div class="sun-disk"></div>
         <div class="moon-aura"></div><div class="moon-disk"></div>
     </div>
-
     <canvas id="vizCanvas" class="viz-canvas"></canvas>
-    
-    <!-- Info Panel -->
     <div class="info-panel" id="infoPanel">
         <span><b>DATE</b> <span id="infoDate">-</span></span>
         <span><b>SUNRISE</b> <span id="infoRise">-</span></span>
         <span><b>SUNSET</b> <span id="infoSet">-</span></span>
     </div>
-    
     <div class="bottom-clock" id="clock" onclick="toggleInfo()">00:00:00</div>
-
     <div class="fab" onclick="togglePopup()">
         <svg style="width:20px;height:20px;fill:var(--ui-color)" viewBox="0 0 24 24"><path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11.03L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.47,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.53,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11.03C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.53,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.47,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/></svg>
     </div>
@@ -122,7 +122,14 @@
     </div>
 
     <script>
-        // --- 1. Astronomy Logic (Lat 36.5, Lon 127.2) ---
+        // --- PWA 서비스 워커 등록 ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js');
+            });
+        }
+
+        // (이하 기존 스크립트 동일...)
         const LAT = 36.5, LON = 127.2;
         function getSunTimes(date) {
             const dayOfYear = Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 86400000);
@@ -153,7 +160,6 @@
             setTimeout(() => panel.classList.remove('active'), 6000);
         }
 
-        // --- 2. Initialize Stars & Canvas ---
         const canv = document.getElementById('starfield-stars');
         const context = canv.getContext('2d');
         canv.width = canv.height = 4000;
@@ -166,10 +172,10 @@
         }
 
         const satLayer = document.getElementById('satLayer');
-        let currentSunAlt = 1; // Start as day to prevent early spawn
+        let currentSunAlt = 1;
 
         function animateObject(isStarlink = false) {
-            if (currentSunAlt > 0.05) return; // 밤이 아니면 스폰 취소
+            if (currentSunAlt > 0.05) return; 
             const side = Math.floor(Math.random() * 4);
             let sx, sy, ex, ey;
             if(side === 0) { sx = -15; sy = Math.random()*100; ex = 115; ey = Math.random()*100; }
@@ -193,14 +199,12 @@
             }
         }
         
-        // 초기 구동 지연 후 스폰 루프 시작
         setTimeout(() => {
             const satLoop = () => { animateObject(false); setTimeout(satLoop, Math.random() * 60000 + 40000); };
             const starlinkLoop = () => { animateObject(true); setTimeout(starlinkLoop, Math.random() * 120000 + 120000); };
             satLoop(); starlinkLoop();
         }, 5000);
 
-        // --- 3. Audio & Visualizer ---
         const audioURL = 'https://assets.mixkit.co/active_storage/sfx/2453/2453-preview.mp3';
         const trackA = new Audio(audioURL), trackB = new Audio(audioURL);
         let currentTrack = trackA, isPlaying = false, cfTimeout = null;
@@ -235,7 +239,7 @@
             const bw = canvas.width / 80;
             const minFreq = 20, maxFreq = 14000, nyquist = sampleRate / 2;
             for (let i = 0; i < 80; i++) {
-                const freq = minFreq * Math.pow(maxFreq / minFreq, i / (79));
+                const freq = minFreq * Math.pow(maxFreq / minFreq, i / 79);
                 const dIdx = Math.floor((freq / nyquist) * dataArray.length);
                 let raw = dataArray[dIdx] || 0;
                 let target = (raw / 255) * canvas.height * (0.6 + (i / 80) * 0.5);
@@ -247,7 +251,6 @@
             }
         }
 
-        // --- 4. Continuous Time Engine ---
         const autoCheck = document.getElementById('autoCheck'), timeRange = document.getElementById('timeRange'), speedValDisp = document.getElementById('speedVal'), clock = document.getElementById('clock'), manualSection = document.getElementById('manualSection');
         let manualMinutes = 720, lastTimestamp = performance.now(), currentSpeed = 1, uiColorGlobal = "rgba(255,255,255,0.4)";
 
@@ -261,7 +264,6 @@
             const solar = getSunTimes(new Date());
             const dawnStart = solar.sunrise - 90, sunsetEnd = solar.sunset + 90;
             const kf = [{ m: 0, z: [5, 10, 25], hz: [10, 20, 35] }, { m: dawnStart, z: [5, 10, 25], hz: [10, 20, 35] }, { m: solar.sunrise, z: [40, 80, 140], hz: [255, 150, 100] }, { m: (solar.sunrise + solar.sunset)/2, z: [30, 100, 220], hz: [180, 230, 255] }, { m: solar.sunset, z: [30, 50, 110], hz: [255, 120, 50] }, { m: sunsetEnd, z: [5, 10, 25], hz: [10, 20, 35] }, { m: 1440, z: [5, 10, 25], hz: [10, 20, 35] }];
-
             let c = { z: 'rgb(5,10,25)', hz: 'rgb(10,20,35)' };
             for(let i=0; i<kf.length-1; i++){
                 if(mG >= kf[i].m && mG <= kf[i+1].m){
@@ -295,7 +297,6 @@
         }
 
         timeRange.addEventListener('input', () => { if(!autoCheck.checked) { manualMinutes = parseFloat(timeRange.value); lastTimestamp = performance.now(); } });
-
         function loop(now) {
             const deltaMs = now - lastTimestamp; lastTimestamp = now;
             let m;
