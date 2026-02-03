@@ -159,7 +159,7 @@
             <div class="row" style="margin-bottom:25px;"><span class="label">속도 (<span id="speedVal">1</span>배속)</span><div class="speed-ctrl"><button class="speed-btn" onclick="adjustSpeed(0.5)">x0.5</button><button class="speed-btn" onclick="adjustSpeed(2)">x2</button></div></div>
         </div>
         <div class="row"><span class="label">배경음</span><label class="switch"><input type="checkbox" id="soundToggle"><span class="slider"></span></label></div>
-        <button class="btn-action" id="btnViz">비주얼라이저 (PC - 16kHz Log)</button>
+        <button class="btn-action" id="btnViz">비주얼라이저 (PC 전용)</button>
     </div>
 
     <script>
@@ -276,14 +276,14 @@
                 analyser = aCtx.createAnalyser(); src.connect(analyser);
                 analyser.fftSize = 1024; analyser.smoothingTimeConstant = 0.92;
                 dataArray = new Uint8Array(analyser.frequencyBinCount); isVizActive = true; drawViz();
-            } catch (e) { alert("Capture failed."); }
+            } catch (e) { alert("캡처 실패 - PC 환경에서만 사용 가능합니다"); }
         });
         function drawViz() {
             if (!isVizActive) return; requestAnimationFrame(drawViz);
             analyser.getByteFrequencyData(dataArray);
             canvas.width = window.innerWidth; canvas.height = 200; ctx.clearRect(0, 0, canvas.width, canvas.height);
             const bw = canvas.width / 80;
-            const minFreq = 20, maxFreq = 14000, nyquist = sampleRate / 2;
+            const minFreq = 40, maxFreq = 14000, nyquist = sampleRate / 2;
             for (let i = 0; i < 80; i++) {
                 const freq = minFreq * Math.pow(maxFreq / minFreq, i / 79);
                 const dIdx = Math.floor((freq / nyquist) * dataArray.length);
