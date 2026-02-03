@@ -1,4 +1,4 @@
-const CACHE_NAME = 'qpi-ambient 1.04';
+const CACHE_NAME = 'qpi-ambient 1.05';
 const ASSETS = [
   './',
   './index.html',
