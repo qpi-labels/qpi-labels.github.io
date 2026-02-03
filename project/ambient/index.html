@@ -310,7 +310,7 @@
                 analyser = aCtx.createAnalyser(); src.connect(analyser);
                 analyser.fftSize = 1024; analyser.smoothingTimeConstant = 0.92;
                 dataArray = new Uint8Array(analyser.frequencyBinCount); isVizActive = true; drawViz();
-            } catch (e) { alert("Capture failed."); }
+            } catch (e) { alert(`Capture failed.\n${e}`); }
         });
         function drawViz() {
             if (!isVizActive) return; requestAnimationFrame(drawViz);
