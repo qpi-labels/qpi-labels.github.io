@@ -33,13 +33,13 @@
 
         html, body {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            overflow: hidden; background-color: #000;
+            overflow: hidden; background-color: var(--horizon);
             font-family: 'Roboto', sans-serif; user-select: none;
             position: fixed; top: 0; left: 0; overscroll-behavior: none;
             filter: none !important; 
         }
 
-        .layer { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; }
+        .layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
         .sky { z-index: 0; background: linear-gradient(to bottom, var(--zenith) 0%, var(--horizon) 100%) !important; }
         
         .atmosphere {
