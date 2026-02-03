@@ -293,7 +293,7 @@
                 analyser = aCtx.createAnalyser(); src.connect(analyser);
                 analyser.fftSize = 1024; analyser.smoothingTimeConstant = 0.92;
                 dataArray = new Uint8Array(analyser.frequencyBinCount); isVizActive = true; drawViz();
-            } catch (e) { console.log(e); alert(`캡처 실패 - 권한을 허용하거나 다른 기기를 이용하십시오\n{e}`); }
+            } catch (e) { console.log(e); alert(`캡처 실패 - 권한을 허용하거나 다른 기기를 이용하십시오\n${e}`); }
             // 아이폰 기준 http로 들어가면 getUserMedia가 안 됨
         });
         function drawViz() {
