@@ -280,13 +280,20 @@
         let analyser, dataArray, isVizActive = false, sampleRate = 48000, smoothHeights = [];
         document.getElementById('btnViz').addEventListener('click', async () => {
             try {
-                const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+                let stream = null;
+                try {
+                    stream = await navigator.mediaDevices.getDisplayMedia({ audio: true });
+                } catch (e) {
+                    if (e instanceof NotAllowedError) throw e;
+                    alert("오디오 출력을 캡처할 수 없어 기기 마이크를 사용합니다.")
+                    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                }
                 const aCtx = new AudioContext(); sampleRate = aCtx.sampleRate;
                 const src = aCtx.createMediaStreamSource(stream);
                 analyser = aCtx.createAnalyser(); src.connect(analyser);
                 analyser.fftSize = 1024; analyser.smoothingTimeConstant = 0.92;
                 dataArray = new Uint8Array(analyser.frequencyBinCount); isVizActive = true; drawViz();
-            } catch (e) { alert("Capture failed."); }
+            } catch (e) { console.log(e); alert("캡처 실패 - 권한을 허용하거나 다른 기기를 이용하십시오"); }
         });
         function drawViz() {
             if (!isVizActive) return; requestAnimationFrame(drawViz);
