@@ -176,7 +176,7 @@
 
         const canv = document.getElementById('starfield-stars');
         const context = canv.getContext('2d');
-        let seed = 0;
+        let seed = 277;
         const prand = () => {
             seed = (1664525 * seed + 1013904223) % 4294967296;
             return seed/4294967296;
