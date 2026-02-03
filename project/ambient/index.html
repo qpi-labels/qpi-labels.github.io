@@ -156,7 +156,7 @@
         <div class="row"><span class="label">Auto Sync</span><label class="switch"><input type="checkbox" id="autoCheck" checked onchange="handleSyncToggle()"><span class="slider-sw"></span></label></div>
         <div id="manualSection" class="manual-ui disabled">
             <div class="row" style="flex-direction:column; align-items:flex-start; gap:4px;"><span class="label">Time Slider</span><input type="range" id="timeRange" min="0" max="1439.99" step="0.01" value="720"></div>
-            <div class="row"><span class="label">Speed (<span id="speedVal">1</span>x)</span><div class="speed-chips"><button class="chip" onclick="adjustSpeed(0.5)">x0.5</button><button class="chip" onclick="adjustSpeed(2)">x2</button></div></div>
+            <div class="row"><span class="label">Speed (<span id="speedVal">1</span>x)</span><div class="speed-chips"><button class="chip" onclick="adjustSpeed(0.5)">x0.5</button><button class="chip" onclick="adjustSpeed(2)">x2</button><button class="chip" onclick="adjustSpeed(-1)">x-1</button></div></div>
         </div>
     </div>
 
@@ -392,8 +392,9 @@
             } 
         }
 
-        function adjustSpeed(f) { 
-            currentSpeed = Math.max(0.5, Math.min(1024, currentSpeed * f)); 
+        function adjustSpeed(f) {
+            let currentSign = ((currentSpeed * f) > 0) ? 1 : -1;
+            currentSpeed = currentSign * Math.max(0.5, Math.min(1024, Math.abs(currentSpeed * f))); 
             document.getElementById('speedVal').textContent = currentSpeed; 
         }
 
