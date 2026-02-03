@@ -13,7 +13,7 @@
     <meta property="og:title" content="QPI Ambient">
     <meta property="og:type" content="website">
     <meta property="og:image" content="logo.ico">
-    <meta name="color-scheme" content="only light">
+    <meta name="color-scheme" content="light dark">
     <link rel="apple-touch-icon" href="logo-9.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap" rel="stylesheet">
@@ -25,7 +25,7 @@
             --moon-x: 50%; --moon-y: 110%;
             --star-opacity: 0; --star-rot: 0deg;
             --ui-color: rgba(255, 255, 255, 0.4);
-            color-scheme: only light !important;
+            color-scheme: light dark;
         }
 
         html, body {
@@ -42,7 +42,7 @@
 
         .sky {
             z-index: 0;
-            background: linear-gradient(to bottom, var(--zenith) 0%, var(--horizon) 100%) !important;
+            background: linear-gradient(to bottom, var(--zenith) 0%, var(--horizon) 100%);
         }
         
         .star-field {
@@ -62,28 +62,50 @@
         .sun-aura {
             position: absolute; left: var(--sun-x); top: var(--sun-y); width: 160vmax; height: 160vmax; z-index: 4;
             transform: translate(-50%, -50%);
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 220, 150, 0.08) 25%, transparent 65%) !important;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 220, 150, 0.08) 25%, transparent 65%);
             mix-blend-mode: screen;
         }
         .sun-disk {
             position: absolute; left: var(--sun-x); top: var(--sun-y); width: 60px; height: 60px; z-index: 5;
             transform: translate(-50%, -50%); 
             border-radius: 50%;
-            background: #fff !important;
-            box-shadow: 0 0 50px 15px #fff, 0 0 120px 40px rgba(255, 230, 150, 0.5) !important;
+            background: #fff;
+            box-shadow: 0 0 50px 15px #fff, 0 0 120px 40px rgba(255, 230, 150, 0.5);
         }
         .moon-aura {
             position: absolute; left: var(--moon-x); top: var(--moon-y); width: 100vmax; height: 100vmax; z-index: 4;
             transform: translate(-50%, -50%);
-            background: radial-gradient(circle, rgba(180, 220, 255, 0.2) 0%, transparent 60%) !important;
+            background: radial-gradient(circle, rgba(180, 220, 255, 0.2) 0%, transparent 60%);
             mix-blend-mode: screen;
         }
         .moon-disk {
             position: absolute; left: var(--moon-x); top: var(--moon-y); width: 45px; height: 45px; z-index: 5;
             transform: translate(-50%, -50%);
             border-radius: 50%;
-            background: #e0e0e0 !important;
-            box-shadow: 0 0 30px 5px rgba(255, 255, 255, 0.4) !important;
+            background: #e0e0e0;
+            box-shadow: 0 0 30px 5px rgba(255, 255, 255, 0.4);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            /* prevent force dark mode */
+            .sky {
+                background: linear-gradient(to bottom, var(--zenith) 0%, var(--horizon) 100%);
+            }
+
+            .sun-aura {
+                background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 220, 150, 0.08) 25%, transparent 65%);
+            }
+            .sun-disk {
+                background: #fff;
+                box-shadow: 0 0 50px 15px #fff, 0 0 120px 40px rgba(255, 230, 150, 0.5);
+            }
+            .moon-aura {
+                background: radial-gradient(circle, rgba(180, 220, 255, 0.2) 0%, transparent 60%);
+            }
+            .moon-disk {
+                background: #e0e0e0;
+                box-shadow: 0 0 30px 5px rgba(255, 255, 255, 0.4);
+            }
         }
 
         .viz-canvas {
