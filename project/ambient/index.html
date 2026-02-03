@@ -212,14 +212,20 @@
         function updateSky(m) {
             const mG = (m % 1440 + 1440) % 1440; 
             const solar = getSunTimes(new Date());
-            const dawnStart = solar.sunrise - 180, sunsetEnd = solar.sunset + 30;
+            
+            // 수정된 부분: 여명 및 노을 시작 2시간 15분 전 (135분)
+            const dawnStart = solar.sunrise - 135;
+            const preSunset = solar.sunset - 135;
+            const sunsetEnd = solar.sunset + 30;
             
             const kf = [
                 { m: -1440, z: [5, 10, 25], hz: [10, 20, 35] },
                 { m: dawnStart, z: [5, 10, 25], hz: [10, 20, 35] }, 
                 { m: solar.sunrise, z: [40, 80, 140], hz: [255, 150, 100] }, 
-                { m: (solar.sunrise + solar.sunset)/2, z: [25, 90, 180], hz: [180, 230, 255] }, 
-                { m: solar.sunset, z: [20, 30, 80], hz: [230, 80, 40] }, 
+                { m: (solar.sunrise + solar.sunset)/2, z: [25, 90, 180], hz: [180, 230, 255] },
+                { m: preSunset, z: [25, 90, 180], hz: [180, 230, 255] },
+                // 노을 색상 유지: 너무 붉지 않은 주황빛 [245, 125, 75]
+                { m: solar.sunset, z: [20, 30, 80], hz: [245, 125, 75] }, 
                 { m: solar.sunset + 15, z: [10, 15, 40], hz: [60, 30, 60] }, 
                 { m: sunsetEnd, z: [5, 10, 25], hz: [10, 20, 35] }, 
                 { m: 1440, z: [5, 10, 25], hz: [10, 20, 35] }
