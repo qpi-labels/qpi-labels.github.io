@@ -3,7 +3,7 @@
   "short_name": "QPI Ambient",
   "start_url": "./index.html",
   "id": "qpi-ambient-simulation",
-  "display": "standalone",
+  "display": "fullscreen",
   "background_color": "#fafafa",
   "theme_color": "#fafafa",
   "icons": [
