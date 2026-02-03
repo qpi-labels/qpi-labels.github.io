@@ -26,6 +26,7 @@
             --moon-x: 50%; --moon-y: 110%;
             --star-opacity: 0; --star-rot: 0deg;
             --ui-color: rgba(255, 255, 255, 0.4);
+            color-scheme: only light;
         }
 
         html, body {
@@ -33,6 +34,7 @@
             overflow: hidden; background-color: #000;
             font-family: 'Roboto', sans-serif; user-select: none;
             position: fixed; top: 0; left: 0; overscroll-behavior: none;
+            filter: none !important; 
         }
 
         .layer { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; }
