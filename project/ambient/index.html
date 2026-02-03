@@ -464,11 +464,11 @@
             else if(side === 1) { sx = 115; sy = Math.random()*100; ex = -15; ey = Math.random()*100; }
             else if(side === 2) { sx = Math.random()*100; sy = -15; ex = Math.random()*100; ey = 115; }
             else { sx = Math.random()*100; sy = 115; ex = Math.random()*100; ey = -15; }
-            const duration = Math.random() * 20000 + 40000;
+            const duration = (Math.random() * 20000 + 40000) / ((autoCheckEl.checked)?1:Math.min(Math.abs(currentSpeed)),256);
             const count = isStarlink ? 18 : 1;
             
             for (let i = 0; i < count; i++) {
-                const delay = isStarlink ? i * (700 + Math.random() * 400) : 0; 
+                const delay = isStarlink ? i * (700 + Math.random() * 400) / ((autoCheckEl.checked)?1:Math.min(Math.abs(currentSpeed)),256) : 0; 
                 setTimeout(() => {
                     const sat = document.createElement('div'); sat.className = 'satellite';
                     sat.style.opacity = Math.random() * 0.5 + 0.3;
@@ -485,8 +485,8 @@
         }
         
         setTimeout(() => {
-            const satLoop = () => { animateObject(false); setTimeout(satLoop, Math.random() * 60000 + 40000); };
-            const starlinkLoop = () => { animateObject(true); setTimeout(starlinkLoop, Math.random() * 120000 + 120000); };
+            const satLoop = () => { animateObject(false); setTimeout(satLoop, (Math.random() * 60000 + 40000) / ((autoCheckEl.checked)?1:Math.abs(currentSpeed))); };
+            const starlinkLoop = () => { animateObject(true); setTimeout(starlinkLoop, (Math.random() * 120000 + 120000) / ((autoCheckEl.checked)?1:Math.abs(currentSpeed))); };
             satLoop(); starlinkLoop();
         }, 5000);
 
