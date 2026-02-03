@@ -176,14 +176,21 @@
 
         const canv = document.getElementById('starfield-stars');
         const context = canv.getContext('2d');
+        let seed = 0;
+        const prand = () => {
+            seed = (1664525 * seed + 1013904223) % 4294967296;
+            return seed/4294967296;
+        };
         canv.width = canv.height = 4000;
         for(let i=0; i<8000; i++){
-            const size = Math.random()*1.2 + 0.4;
-            const x = Math.random()*4000;
-            const y = Math.random()*4000;
-            context.fillStyle = `rgba(255, 255, 255, ${Math.random()})`;
+            const size = prand()*1.2 + 0.4;
+            const x = prand()*4000;
+            const y = prand()*4000;
+            context.fillStyle = `rgba(255, 255, 255, ${prand()})`;
             context.beginPath(); context.arc(x, y, size, 0, 2 * Math.PI); context.fill();
         }
+        context.fillStyle = `white`;
+            context.beginPath(); context.arc(2000, 2000, 1.6, 0, 2 * Math.PI); context.fill();
 
         const satLayer = document.getElementById('satLayer');
         let currentSunAlt = 1;
