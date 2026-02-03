@@ -284,7 +284,7 @@
                 try {
                     stream = await navigator.mediaDevices.getDisplayMedia({ audio: true });
                 } catch (e) {
-                    if (e instanceof NotAllowedError) throw e;
+                    if (e.name === "NotAllowedError") throw e;
                     alert("오디오 출력을 캡처할 수 없어 기기 마이크를 사용합니다.")
                     stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 }
