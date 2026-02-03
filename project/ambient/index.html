@@ -300,7 +300,7 @@
             analyser.getByteFrequencyData(dataArray);
             canvas.width = window.innerWidth; canvas.height = 200; ctx.clearRect(0, 0, canvas.width, canvas.height);
             const bw = canvas.width / 80;
-            const minFreq = 20, maxFreq = 14000, nyquist = sampleRate / 2;
+            const minFreq = 80, maxFreq = 14000, nyquist = sampleRate / 2;
             for (let i = 0; i < 80; i++) {
                 const freq = minFreq * Math.pow(maxFreq / minFreq, i / 79);
                 const dIdx = Math.floor((freq / nyquist) * dataArray.length);
