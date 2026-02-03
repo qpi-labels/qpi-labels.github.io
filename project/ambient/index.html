@@ -339,7 +339,7 @@
 
         function updateSky(m) {
             const mG = ((m % 1440) + 1440) % 1440;
-            const hRaw = mG / 60, s = (mG * 60) % 60;
+            const hRaw = mG / 60, s = Math.round((mG * 60) % 60);
             const solar = getSunTimes(new Date());
             const dawnStart = solar.sunrise - 90, sunsetEnd = solar.sunset + 90;
             const kf = [{ m: 0, z: [5, 10, 25], hz: [10, 20, 35] }, { m: dawnStart, z: [5, 10, 25], hz: [10, 20, 35] }, { m: solar.sunrise, z: [40, 80, 140], hz: [255, 150, 100] }, { m: (solar.sunrise + solar.sunset)/2, z: [30, 100, 220], hz: [180, 230, 255] }, { m: solar.sunset, z: [30, 50, 110], hz: [255, 120, 50] }, { m: sunsetEnd, z: [5, 10, 25], hz: [10, 20, 35] }, { m: 1440, z: [5, 10, 25], hz: [10, 20, 35] }];
