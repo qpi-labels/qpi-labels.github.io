@@ -1,11 +1,11 @@
 {
-  "name": "QPI Ambient Sky",
-  "short_name": "QPI",
+  "name": "QPI Ambient",
+  "short_name": "QPI Ambient",
   "start_url": "./index.html",
   "id": "qpi-ambient-simulation",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#000000",
+  "background_color": "#fafafa",
+  "theme_color": "#fafafa",
   "icons": [
     {
       "src": "logo-8.png",
