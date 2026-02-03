@@ -18,7 +18,6 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap" rel="stylesheet">
     <style>
-        /* (기존 CSS 동일 - 생략 금지: 스타일 시트 전체를 그대로 유지하세요) */
         :root {
             --primary: #90caf9;
             --zenith: #000; --horizon: #000;
@@ -116,6 +115,7 @@
         .fab { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; border-radius: 50%; background: rgba(127,127,127,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(127,127,127,0.2); cursor: pointer; z-index: 110; display: flex; justify-content: center; align-items: center; }
         .popup { position: fixed; bottom: 95px; right: 30px; width: 260px; background: rgba(10,10,10,0.95); backdrop-filter: blur(25px); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); color: #fff; z-index: 120; opacity: 0; pointer-events: none; transform: translateY(15px); transition: 0.4s cubic-bezier(0.2, 1, 0.3, 1); }
         .popup.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        
         .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; transition: opacity 0.3s ease; }
         .label { font-size: 11px; font-weight: 300; letter-spacing: 1px; color: #999; text-transform: uppercase; }
         .manual-ui.disabled { opacity: 0.15; pointer-events: none; filter: grayscale(1); }
@@ -133,7 +133,6 @@
     </style>
 </head>
 <body>
-    <!-- (기존 HTML 구조와 동일) -->
     <div class="layer sky"></div>
     <div class="layer star-field" id="starField">
         <canvas id="starfield-stars" style="width: 100%; height: 100%;"></canvas>
@@ -165,14 +164,13 @@
     </div>
 
     <script>
-        // --- PWA 서비스 워커 등록 ---
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js');
             });
         }
 
-        // (이하 기존 스크립트 동일...)
+        // --- 1. Astronomy Logic (Lat 36.5, Lon 127.2) ---
         const LAT = 36.5, LON = 127.2;
         function getSunTimes(date) {
             const dayOfYear = Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 86400000);
@@ -217,6 +215,7 @@
         const satLayer = document.getElementById('satLayer');
         let currentSunAlt = 1;
 
+        // --- 2. Satellite Engine (Irregular Spacing & Random Brightness) ---
         function animateObject(isStarlink = false) {
             if (currentSunAlt > 0.05) return; 
             const side = Math.floor(Math.random() * 4);
@@ -227,9 +226,14 @@
             else { sx = Math.random()*100; sy = 115; ex = Math.random()*100; ey = -15; }
             const duration = Math.random() * 20000 + 40000;
             const count = isStarlink ? 18 : 1;
+            
             for (let i = 0; i < count; i++) {
+                // 스타링크 간격 불규칙화: 고정값 850ms 대신 난수 범위 적용
+                const delay = isStarlink ? i * (700 + Math.random() * 400) : 0;
                 setTimeout(() => {
                     const sat = document.createElement('div'); sat.className = 'satellite';
+                    // 밝기 불규칙화: 0.3 ~ 0.8 사이 랜덤 투명도
+                    sat.style.opacity = Math.random() * 0.5 + 0.3;
                     satLayer.appendChild(sat);
                     const startT = performance.now();
                     const move = (now) => {
@@ -238,7 +242,7 @@
                         else { sat.remove(); }
                     };
                     requestAnimationFrame(move);
-                }, isStarlink ? i * 850 : 0);
+                }, delay);
             }
         }
         
@@ -294,10 +298,31 @@
             }
         }
 
+        // --- 3. High-Precision Engine & Transition Logic ---
         const autoCheck = document.getElementById('autoCheck'), timeRange = document.getElementById('timeRange'), speedValDisp = document.getElementById('speedVal'), clock = document.getElementById('clock'), manualSection = document.getElementById('manualSection');
         let manualMinutes = 720, lastTimestamp = performance.now(), currentSpeed = 1, uiColorGlobal = "rgba(255,255,255,0.4)";
+        
+        // 자동 전환 추격 변수
+        let isCatchingUp = false;
+        let catchUpStartMinutes = 0;
+        let catchUpStartTime = 0;
+        const CATCHUP_DURATION = 2000; // 2초 동안 따라잡기
 
-        function handleSyncToggle() { if (autoCheck.checked) { manualSection.classList.add('disabled'); } else { manualSection.classList.remove('disabled'); manualMinutes = parseFloat(timeRange.value); lastTimestamp = performance.now(); } }
+        function handleSyncToggle() { 
+            if (autoCheck.checked) { 
+                // 수동에서 자동으로 바뀔 때 추격 시작
+                isCatchingUp = true;
+                catchUpStartMinutes = manualMinutes;
+                catchUpStartTime = performance.now();
+                manualSection.classList.add('disabled'); 
+            } else { 
+                isCatchingUp = false;
+                manualSection.classList.remove('disabled'); 
+                const d = new Date();
+                manualMinutes = d.getHours()*60 + d.getMinutes() + d.getSeconds()/60;
+                lastTimestamp = performance.now(); 
+            } 
+        }
         function adjustSpeed(f) { let n = currentSpeed * f; if (n >= 1 && n <= 128) { currentSpeed = n; speedValDisp.textContent = currentSpeed; } }
         function lerpRGB(c1, c2, t) { return [Math.round(c1[0]+(c2[0]-c1[0])*t), Math.round(c1[1]+(c2[1]-c1[1])*t), Math.round(c1[2]+(c2[2]-c1[2])*t)]; }
 
@@ -340,15 +365,37 @@
         }
 
         timeRange.addEventListener('input', () => { if(!autoCheck.checked) { manualMinutes = parseFloat(timeRange.value); lastTimestamp = performance.now(); } });
+        
         function loop(now) {
             const deltaMs = now - lastTimestamp; lastTimestamp = now;
             let m;
-            if(autoCheck.checked) {
-                const d = new Date(); m = d.getHours()*60 + d.getMinutes() + d.getSeconds()/60;
-                timeRange.value = m; manualMinutes = m;
+            
+            const d = new Date();
+            const targetMinutes = d.getHours()*60 + d.getMinutes() + d.getSeconds()/60;
+
+            if (autoCheck.checked) {
+                if (isCatchingUp) {
+                    const elapsed = now - catchUpStartTime;
+                    let t = Math.min(elapsed / CATCHUP_DURATION, 1);
+                    // Ease In Out Quad
+                    const ease = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+                    
+                    // 최단 양의 방향 거리 계산
+                    let distance = (targetMinutes - catchUpStartMinutes + 1440) % 1440;
+                    m = catchUpStartMinutes + (distance * ease);
+                    
+                    if (t >= 1) isCatchingUp = false;
+                    timeRange.value = m % 1440;
+                    manualMinutes = m;
+                } else {
+                    m = targetMinutes;
+                    timeRange.value = m;
+                    manualMinutes = m;
+                }
             } else {
                 manualMinutes += (deltaMs / 60000) * currentSpeed;
-                m = manualMinutes; timeRange.value = m % 1440;
+                m = manualMinutes; 
+                timeRange.value = m % 1440;
             }
             updateSky(m); requestAnimationFrame(loop);
         }
