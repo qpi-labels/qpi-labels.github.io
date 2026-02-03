@@ -1,12 +1,21 @@
 # QPI Ambient
 
-## 웹 앱 설치 방법
+## 설치 및 업데이트 방법
 > ### IOS
 1. 안녕
 > ### Android
 1. 안녕
-> ### Windows
+> ### Windows Chrome
+1. 화면 QPI Ambient
+
+## 설치 및 업데이트 방법
+> ### IOS
 1. 안녕
+> ### Android
+1. 안녕
+> ### Windows Chrome
+1. 주소 표시줄 우측의 케밥 메뉴(⋮)를 클릭합니다.
+2. 
 > ### MacOS
 1. 안녕
 
