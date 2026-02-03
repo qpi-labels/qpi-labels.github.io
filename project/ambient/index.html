@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>QPI Ambient - Professional Edition</title>
+    <title>QPI Ambient - Professional Solar Sync</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -43,12 +43,25 @@
             -webkit-mask-image: linear-gradient(to top, black 30%, transparent 100%);
         }
 
+        /* Clickable Clock */
         .bottom-clock { 
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); 
             color: var(--ui-color); font-weight: 100; font-size: 15px; letter-spacing: 3px; z-index: 100; 
             text-shadow: 0 0 15px rgba(0,0,0,0.6), 0 0 3px rgba(0,0,0,0.9);
-            transition: color 1s ease; pointer-events: none;
+            transition: color 1s ease, transform 0.2s; cursor: pointer; pointer-events: auto;
         }
+        .bottom-clock:active { transform: translateX(-50%) scale(0.95); }
+
+        /* Sun Info Panel */
+        .info-panel {
+            position: fixed; bottom: 75px; left: 50%; transform: translateX(-50%);
+            background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(15px);
+            padding: 12px 24px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);
+            color: #fff; font-size: 11px; z-index: 105; font-weight: 300;
+            display: flex; gap: 20px; pointer-events: none; opacity: 0; transition: 0.4s;
+        }
+        .info-panel.active { opacity: 1; transform: translateX(-50%) translateY(-5px); }
+        .info-panel b { color: var(--primary); font-weight: 400; margin-right: 4px; }
 
         .fab { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; border-radius: 50%; background: rgba(127,127,127,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(127,127,127,0.2); cursor: pointer; z-index: 110; display: flex; justify-content: center; align-items: center; }
         .popup { position: fixed; bottom: 95px; right: 30px; width: 260px; background: rgba(10,10,10,0.95); backdrop-filter: blur(25px); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); color: #fff; z-index: 120; opacity: 0; pointer-events: none; transform: translateY(15px); transition: 0.4s cubic-bezier(0.2, 1, 0.3, 1); }
@@ -56,20 +69,11 @@
         
         .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; transition: opacity 0.3s ease; }
         .label { font-size: 11px; font-weight: 300; letter-spacing: 1px; color: #999; text-transform: uppercase; }
-        
-        .manual-ui.disabled { opacity: 0.2; pointer-events: none; filter: grayscale(1); }
-
+        .manual-ui.disabled { opacity: 0.15; pointer-events: none; filter: grayscale(1); }
         .speed-ctrl { display: flex; gap: 10px; align-items: center; }
-        .speed-btn {
-            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
-            color: #fff; border-radius: 6px; padding: 5px 14px; font-size: 11px; cursor: pointer;
-            transition: 0.2s; font-family: inherit;
-        }
-        .speed-btn:hover { background: rgba(255,255,255,0.15); }
-
+        .speed-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; border-radius: 6px; padding: 5px 14px; font-size: 11px; cursor: pointer; transition: 0.2s; font-family: inherit; }
         input[type=range] { width: 100%; -webkit-appearance: none; background: rgba(255,255,255,0.1); height: 2px; outline: none; }
         input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--primary); cursor: pointer; }
-        
         .switch { position: relative; width: 34px; height: 18px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #333; border-radius: 18px; transition: 0.4s; cursor: pointer; }
@@ -93,67 +97,79 @@
     </div>
 
     <canvas id="vizCanvas" class="viz-canvas"></canvas>
-    <div class="bottom-clock" id="clock">00:00:00</div>
+    
+    <!-- Info Panel -->
+    <div class="info-panel" id="infoPanel">
+        <span><b>DATE</b> <span id="infoDate">-</span></span>
+        <span><b>SUNRISE</b> <span id="infoRise">-</span></span>
+        <span><b>SUNSET</b> <span id="infoSet">-</span></span>
+    </div>
+    
+    <div class="bottom-clock" id="clock" onclick="toggleInfo()">00:00:00</div>
 
     <div class="fab" onclick="togglePopup()">
         <svg style="width:20px;height:20px;fill:var(--ui-color)" viewBox="0 0 24 24"><path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11.03L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.47,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.53,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11.03C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.53,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.47,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/></svg>
     </div>
 
     <div class="popup" id="popup">
-        <div class="row">
-            <span class="label">시간 자동 설정</span>
-            <label class="switch"><input type="checkbox" id="autoCheck" checked onchange="handleSyncToggle()"><span class="slider"></span></label>
-        </div>
-        
+        <div class="row"><span class="label">시간 자동 설정</span><label class="switch"><input type="checkbox" id="autoCheck" checked onchange="handleSyncToggle()"><span class="slider"></span></label></div>
         <div id="manualSection" class="manual-ui disabled">
-            <div class="row" style="flex-direction:column; align-items:flex-start; gap:8px;">
-                <span class="label">시간 수동 설정</span>
-                <input type="range" id="timeRange" min="0" max="1439.99" step="0.01" value="720">
-            </div>
-            <div class="row" style="margin-bottom:25px;">
-                <span class="label">속도 (<span id="speedVal">1</span>배속)</span>
-                <div class="speed-ctrl">
-                    <button class="speed-btn" onclick="adjustSpeed(0.5)">x0.5</button>
-                    <button class="speed-btn" onclick="adjustSpeed(2)">x2</button>
-                </div>
-            </div>
+            <div class="row" style="flex-direction:column; align-items:flex-start; gap:8px;"><span class="label">시간 수동 설정</span><input type="range" id="timeRange" min="0" max="1439.99" step="0.01" value="720"></div>
+            <div class="row" style="margin-bottom:25px;"><span class="label">속도 (<span id="speedVal">1</span>배속)</span><div class="speed-ctrl"><button class="speed-btn" onclick="adjustSpeed(0.5)">x0.5</button><button class="speed-btn" onclick="adjustSpeed(2)">x2</button></div></div>
         </div>
-
-        <div class="row">
-            <span class="label">배경음</span>
-            <label class="switch"><input type="checkbox" id="soundToggle"><span class="slider"></span></label>
-        </div>
-        <button class="btn-action" id="btnViz">비주얼라이저 (PC 전용)</button>
+        <div class="row"><span class="label">배경음</span><label class="switch"><input type="checkbox" id="soundToggle"><span class="slider"></span></label></div>
+        <button class="btn-action" id="btnViz">비주얼라이저 (PC - 16kHz Log)</button>
     </div>
 
     <script>
-        // 1. Stars & Satellites (Frequency 0.5x)
-        const starField = document.getElementById('starField');
+        // --- 1. Astronomy Logic (Lat 36.5, Lon 127.2) ---
+        const LAT = 36.5, LON = 127.2;
+        function getSunTimes(date) {
+            const dayOfYear = Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 86400000);
+            const rad = Math.PI / 180;
+            const gamma = 2 * Math.PI / 365 * (dayOfYear - 1 + (date.getHours() - 12) / 24);
+            const eqtime = 229.18 * (0.000075 + 0.001868 * Math.cos(gamma) - 0.032077 * Math.sin(gamma) - 0.014615 * Math.cos(2 * gamma) - 0.040849 * Math.sin(2 * gamma));
+            const decl = 0.006918 - 0.399912 * Math.cos(gamma) + 0.070257 * Math.sin(gamma) - 0.006758 * Math.cos(2 * gamma) + 0.000907 * Math.sin(2 * gamma) - 0.002697 * Math.cos(3 * gamma) + 0.00148 * Math.sin(3 * gamma);
+            const ha_rad = Math.acos(Math.cos(90.833 * rad) / (Math.cos(LAT * rad) * Math.cos(decl)) - Math.tan(LAT * rad) * Math.tan(decl));
+            const ha = ha_rad / rad;
+            const sunrise = 720 - 4 * (LON + ha) - eqtime + 540;
+            const sunset = 720 - 4 * (LON - ha) - eqtime + 540;
+            return { sunrise, sunset };
+        }
 
+        function formatMinutes(m) {
+            const h = Math.floor(m / 60) % 24;
+            const mins = Math.floor(m % 60);
+            return `${h.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}`;
+        }
+
+        function toggleInfo() {
+            const panel = document.getElementById('infoPanel');
+            const solar = getSunTimes(new Date());
+            document.getElementById('infoDate').textContent = new Date().toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', weekday: 'short' });
+            document.getElementById('infoRise').textContent = formatMinutes(solar.sunrise);
+            document.getElementById('infoSet').textContent = formatMinutes(solar.sunset);
+            panel.classList.toggle('active');
+            setTimeout(() => panel.classList.remove('active'), 6000);
+        }
+
+        // --- 2. Initialize Stars & Canvas ---
         const canv = document.getElementById('starfield-stars');
         const context = canv.getContext('2d');
-        canv.width = canv.height = 5000;
-        const drawCirc = (cx, cy, r) => {
-            context.beginPath();
-            context.arc(cx, cy, r, 0, 2 * Math.PI, false);
-            context.fill();
-        }
-
-        for(let i=0; i<15000; i++){
-            const s = document.createElement('div'); s.className = 'star';
+        canv.width = canv.height = 4000;
+        for(let i=0; i<8000; i++){
             const size = Math.random()*1.2 + 0.4;
-            const x = Math.random()*5000;
-            const y = Math.random()*5000;
+            const x = Math.random()*4000;
+            const y = Math.random()*4000;
             context.fillStyle = `rgba(255, 255, 255, ${Math.random()})`;
-            drawCirc(x, y, size);
-            //starField.appendChild(s);
+            context.beginPath(); context.arc(x, y, size, 0, 2 * Math.PI); context.fill();
         }
-        
 
         const satLayer = document.getElementById('satLayer');
-        let currentSunAlt = 0;
+        let currentSunAlt = 1; // Start as day to prevent early spawn
+
         function animateObject(isStarlink = false) {
-            if (currentSunAlt > 0.05) return; 
+            if (currentSunAlt > 0.05) return; // 밤이 아니면 스폰 취소
             const side = Math.floor(Math.random() * 4);
             let sx, sy, ex, ey;
             if(side === 0) { sx = -15; sy = Math.random()*100; ex = 115; ey = Math.random()*100; }
@@ -173,18 +189,21 @@
                         else { sat.remove(); }
                     };
                     requestAnimationFrame(move);
-                }, isStarlink ? i * (850 + Math.random() * 400) : 0);
+                }, isStarlink ? i * 850 : 0);
             }
         }
-        const satLoop = () => { animateObject(false); setTimeout(satLoop, Math.random() * 80000 + 60000); };
-        const starlinkLoop = () => { animateObject(true); setTimeout(starlinkLoop, Math.random() * 150000 + 150000); };
-        satLoop(); starlinkLoop();
+        
+        // 초기 구동 지연 후 스폰 루프 시작
+        setTimeout(() => {
+            const satLoop = () => { animateObject(false); setTimeout(satLoop, Math.random() * 60000 + 40000); };
+            const starlinkLoop = () => { animateObject(true); setTimeout(starlinkLoop, Math.random() * 120000 + 120000); };
+            satLoop(); starlinkLoop();
+        }, 5000);
 
-        // 2. Audio Engine (Crossfade)
+        // --- 3. Audio & Visualizer ---
         const audioURL = 'https://assets.mixkit.co/active_storage/sfx/2453/2453-preview.mp3';
         const trackA = new Audio(audioURL), trackB = new Audio(audioURL);
-        let currentTrack = trackA, isPlaying = false;
-        let cfTimeout = null;
+        let currentTrack = trackA, isPlaying = false, cfTimeout = null;
         function crossfadeLoop() {
             if (!isPlaying) return;
             const nextTrack = (currentTrack === trackA) ? trackB : trackA;
@@ -192,29 +211,13 @@
                 if(!isPlaying) return;
                 nextTrack.currentTime = 0; nextTrack.play(); nextTrack.volume = 0;
                 let v = 0;
-                const f = setInterval(() => {
-                    v += 0.05;
-                    if (v >= 0.4) {
-                        nextTrack.volume = 0.4;
-                        currentTrack.volume = 0;
-                        currentTrack.pause();
-                        currentTrack = nextTrack;
-                        clearInterval(f);
-                        crossfadeLoop();
-                    } else {
-                        nextTrack.volume = v;
-                        currentTrack.volume = 0.4 - v;
-                    }
-                }, 150);
+                const f = setInterval(() => { v += 0.05; if (v >= 0.4) { nextTrack.volume = 0.4; currentTrack.volume = 0; currentTrack.pause(); currentTrack = nextTrack; clearInterval(f); crossfadeLoop(); } else { nextTrack.volume = v; currentTrack.volume = 0.4 - v; } }, 150);
             }, 25000); 
         }
         document.getElementById('soundToggle').addEventListener('change', function() { isPlaying = this.checked; if (isPlaying) { trackA.volume = 0.4; trackA.play(); crossfadeLoop(); } else { trackA.pause(); trackB.pause(); clearTimeout(cfTimeout); } });
 
-        // 3. Smooth Adaptive Visualizer (PC - 16kHz Log Scale)
         const canvas = document.getElementById('vizCanvas'), ctx = canvas.getContext('2d');
         let analyser, dataArray, isVizActive = false, sampleRate = 48000, smoothHeights = [];
-        const TOTAL_BARS = 80;
-
         document.getElementById('btnViz').addEventListener('click', async () => {
             try {
                 const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
@@ -225,72 +228,46 @@
                 dataArray = new Uint8Array(analyser.frequencyBinCount); isVizActive = true; drawViz();
             } catch (e) { alert("Capture failed."); }
         });
-
         function drawViz() {
             if (!isVizActive) return; requestAnimationFrame(drawViz);
             analyser.getByteFrequencyData(dataArray);
             canvas.width = window.innerWidth; canvas.height = 200; ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            const bw = canvas.width / TOTAL_BARS;
+            const bw = canvas.width / 80;
             const minFreq = 20, maxFreq = 14000, nyquist = sampleRate / 2;
-
-            for (let i = 0; i < TOTAL_BARS; i++) {
-                const freq = minFreq * Math.pow(maxFreq / minFreq, i / (TOTAL_BARS - 1));
+            for (let i = 0; i < 80; i++) {
+                const freq = minFreq * Math.pow(maxFreq / minFreq, i / (79));
                 const dIdx = Math.floor((freq / nyquist) * dataArray.length);
-                
                 let raw = dataArray[dIdx] || 0;
-                let boost = 0.6 + (i / TOTAL_BARS) * 0.5; // 고음부 살짝 보정
-                let target = (raw / 255) * canvas.height * boost;
-                
+                let target = (raw / 255) * canvas.height * (0.6 + (i / 80) * 0.5);
                 if (!smoothHeights[i]) smoothHeights[i] = 0;
-                if (target > smoothHeights[i]) smoothHeights[i] = target; 
-                else smoothHeights[i] *= 0.94; // 부드럽게 하강
-                
+                if (target > smoothHeights[i]) smoothHeights[i] = target; else smoothHeights[i] *= 0.94;
                 const h = Math.min(smoothHeights[i], canvas.height * 0.8);
                 ctx.fillStyle = uiColorGlobal.replace(/[\d.]+\)$/g, `${Math.max(0.08, raw/255 * 0.4)})`);
                 ctx.fillRect(i * bw, canvas.height - h, bw - 1, h);
             }
         }
 
-        // 4. High-Precision Engine & Adaptive UI (Bugfix Applied)
+        // --- 4. Continuous Time Engine ---
         const autoCheck = document.getElementById('autoCheck'), timeRange = document.getElementById('timeRange'), speedValDisp = document.getElementById('speedVal'), clock = document.getElementById('clock'), manualSection = document.getElementById('manualSection');
         let manualMinutes = 720, lastTimestamp = performance.now(), currentSpeed = 1, uiColorGlobal = "rgba(255,255,255,0.4)";
 
-        function handleSyncToggle() {
-            if (autoCheck.checked) { manualSection.classList.add('disabled'); } 
-            else { manualSection.classList.remove('disabled'); manualMinutes = parseFloat(timeRange.value); lastTimestamp = performance.now(); }
-        }
-
-        function adjustSpeed(f) { 
-            let n = currentSpeed * f; 
-            if (n >= 1 && n <= 128) { currentSpeed = n; speedValDisp.textContent = currentSpeed; } 
-        }
-
-        const skyKeyframes = [
-            { h: 0,  z: [5, 10, 25], hz: [10, 20, 35] },
-            { h: 6,  z: [40, 80, 140], hz: [255, 150, 100] },
-            { h: 10, z: [30, 100, 220], hz: [180, 230, 255] },
-            { h: 16, z: [30, 100, 220], hz: [180, 230, 255] },
-            { h: 19, z: [30, 50, 110], hz: [255, 120, 50] },
-            { h: 22, z: [5, 10, 25], hz: [10, 20, 35] },
-            { h: 24, z: [5, 10, 25], hz: [10, 20, 35] }
-        ];
-
+        function handleSyncToggle() { if (autoCheck.checked) { manualSection.classList.add('disabled'); } else { manualSection.classList.remove('disabled'); manualMinutes = parseFloat(timeRange.value); lastTimestamp = performance.now(); } }
+        function adjustSpeed(f) { let n = currentSpeed * f; if (n >= 1 && n <= 128) { currentSpeed = n; speedValDisp.textContent = currentSpeed; } }
         function lerpRGB(c1, c2, t) { return [Math.round(c1[0]+(c2[0]-c1[0])*t), Math.round(c1[1]+(c2[1]-c1[1])*t), Math.round(c1[2]+(c2[2]-c1[2])*t)]; }
 
         function updateSky(m) {
-            const mG = ((m % 1440) + 1440) % 1440; // 음수 및 오버플로 방지
-            const h = mG / 60, s = (mG * 60) % 60;
-            
-            // Default color (fallback)
-            let c = { z: 'rgb(5,10,25)', hz: 'rgb(10,20,35)' };
+            const mG = ((m % 1440) + 1440) % 1440;
+            const hRaw = mG / 60, s = (mG * 60) % 60;
+            const solar = getSunTimes(new Date());
+            const dawnStart = solar.sunrise - 90, sunsetEnd = solar.sunset + 90;
+            const kf = [{ m: 0, z: [5, 10, 25], hz: [10, 20, 35] }, { m: dawnStart, z: [5, 10, 25], hz: [10, 20, 35] }, { m: solar.sunrise, z: [40, 80, 140], hz: [255, 150, 100] }, { m: (solar.sunrise + solar.sunset)/2, z: [30, 100, 220], hz: [180, 230, 255] }, { m: solar.sunset, z: [30, 50, 110], hz: [255, 120, 50] }, { m: sunsetEnd, z: [5, 10, 25], hz: [10, 20, 35] }, { m: 1440, z: [5, 10, 25], hz: [10, 20, 35] }];
 
-            for(let i=0; i<skyKeyframes.length-1; i++) {
-                const st = skyKeyframes[i], en = skyKeyframes[i+1];
-                if(h >= st.h && h <= en.h) {
-                    const t = (h - st.h) / (en.h - st.h);
-                    const zenith = lerpRGB(st.z, en.z, t); 
-                    const horizon = lerpRGB(st.hz, en.hz, t);
+            let c = { z: 'rgb(5,10,25)', hz: 'rgb(10,20,35)' };
+            for(let i=0; i<kf.length-1; i++){
+                if(mG >= kf[i].m && mG <= kf[i+1].m){
+                    const t = (mG - kf[i].m) / (kf[i+1].m - kf[i].m);
+                    const zenith = lerpRGB(kf[i].z, kf[i+1].z, t);
+                    const horizon = lerpRGB(kf[i].hz, kf[i+1].hz, t);
                     c = { z: `rgb(${zenith.join(',')})`, hz: `rgb(${horizon.join(',')})` };
                     const bright = (horizon[0] + horizon[1] + horizon[2]) / 3;
                     uiColorGlobal = (bright > 135) ? "rgba(10, 30, 60, 0.5)" : "rgba(255, 255, 255, 0.4)";
@@ -298,28 +275,29 @@
                     break;
                 }
             }
-            document.documentElement.style.setProperty('--zenith', c.z); 
-            document.documentElement.style.setProperty('--horizon', c.hz);
-            
-            const sPr = (h>=5 && h<=19) ? (h-5)/14 : -1;
-            if(sPr >= 0) { currentSunAlt = Math.sin(sPr*Math.PI); document.documentElement.style.setProperty('--sun-x', (sPr*120-10)+'%'); document.documentElement.style.setProperty('--sun-y', (100-currentSunAlt*90)+'%'); }
-            else { currentSunAlt = -1; document.documentElement.style.setProperty('--sun-y', '150%'); }
-            
-            const moonH = (h + 12) % 24; 
-            const mPr = (moonH >= 5 && moonH <= 19) ? (moonH - 5)/14 : -1;
-            if(mPr >= 0) { const alt = Math.sin(mPr*Math.PI); document.documentElement.style.setProperty('--moon-x', (mPr*120-10)+'%'); document.documentElement.style.setProperty('--moon-y', (100-alt*85)+'%'); }
-            else { document.documentElement.style.setProperty('--moon-y', '150%'); }
-            
+            document.documentElement.style.setProperty('--zenith', c.z); document.documentElement.style.setProperty('--horizon', c.hz);
+            if(mG >= solar.sunrise && mG <= solar.sunset){
+                const prog = (mG - solar.sunrise) / (solar.sunset - solar.sunrise);
+                currentSunAlt = Math.sin(prog * Math.PI);
+                document.documentElement.style.setProperty('--sun-x', (prog * 120 - 10) + '%');
+                document.documentElement.style.setProperty('--sun-y', (100 - currentSunAlt * 90) + '%');
+            } else { currentSunAlt = -1; document.documentElement.style.setProperty('--sun-y', '150%'); }
+            const moonM = (mG + 720) % 1440;
+            if(moonM >= solar.sunrise && moonM <= solar.sunset){
+                const prog = (moonM - solar.sunrise) / (solar.sunset - solar.sunrise);
+                const alt = Math.sin(prog * Math.PI);
+                document.documentElement.style.setProperty('--moon-x', (prog * 120 - 10) + '%');
+                document.documentElement.style.setProperty('--moon-y', (100 - alt * 85) + '%');
+            } else { document.documentElement.style.setProperty('--moon-y', '150%'); }
             document.documentElement.style.setProperty('--star-opacity', currentSunAlt > 0.1 ? 0 : 1);
             document.documentElement.style.setProperty('--star-rot', (mG/4)+'deg');
-            clock.textContent = `${Math.floor(h).toString().padStart(2,'0')}:${Math.floor(mG % 60).toString().padStart(2,'0')}:${Math.floor(s).toString().padStart(2,'0')}`;
+            clock.textContent = `${Math.floor(hRaw).toString().padStart(2,'0')}:${Math.floor(mG%60).toString().padStart(2,'0')}:${Math.floor(s).toString().padStart(2,'0')}`;
         }
 
         timeRange.addEventListener('input', () => { if(!autoCheck.checked) { manualMinutes = parseFloat(timeRange.value); lastTimestamp = performance.now(); } });
 
         function loop(now) {
-            const deltaMs = now - lastTimestamp; 
-            lastTimestamp = now;
+            const deltaMs = now - lastTimestamp; lastTimestamp = now;
             let m;
             if(autoCheck.checked) {
                 const d = new Date(); m = d.getHours()*60 + d.getMinutes() + d.getSeconds()/60;
@@ -328,11 +306,10 @@
                 manualMinutes += (deltaMs / 60000) * currentSpeed;
                 m = manualMinutes; timeRange.value = m % 1440;
             }
-            updateSky(m);
-            requestAnimationFrame(loop);
+            updateSky(m); requestAnimationFrame(loop);
         }
         function togglePopup() { trackA.play().then(()=> {if(!isPlaying) trackA.pause();}); document.getElementById('popup').classList.toggle('active'); }
         requestAnimationFrame(loop);
     </script>
 </body>
-</html>
+    </html>
