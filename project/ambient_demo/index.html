@@ -180,8 +180,8 @@
         const autoCheckEl = document.getElementById('autoCheck');
         
         // --- 성능 보간 변수 ---
-        const perfToggleEl = document.getElementById('perfToggle');
-        let isPerfMode = localStorage.getItem('qpi_perf_mode_v2') === 'true';
+        //const perfToggleEl = document.getElementById('perfToggle');
+        let isPerfMode = false;
         let frameCounter = -1; // 렌더링 스로틀링용, 첫 프레임은 무조건 렌더
 
         const flareEls = {
