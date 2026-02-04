@@ -1,9 +1,10 @@
-const CACHE_NAME = 'qpi-ambient 1.18';
+const CACHE_NAME = 'qpi-ambient 1.18.1';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './logo.ico'
+  './logo.ico',
+  './so_ambient.mp3'
 ];
 
 self.addEventListener('install', (e) => {
