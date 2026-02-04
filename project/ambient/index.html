@@ -189,7 +189,7 @@
         // --- 성능 보간 변수 ---
         const perfToggleEl = document.getElementById('perfToggle');
         let isPerfMode = localStorage.getItem('qpi_perf_mode_v2') === 'true';
-        let frameCounter = 0; // 렌더링 스로틀링용
+        let frameCounter = -1; // 렌더링 스로틀링용, 첫 프레임은 무조건 렌더
 
         const flareEls = {
             'h-1': document.getElementById('h-1'), 'r-1': document.getElementById('r-1'),
@@ -443,8 +443,8 @@
             const hRaw = Math.floor(mG/60), mins = Math.floor(mG%60), secs = Math.round((mG*60)%60);
             clockEl.textContent = `${hRaw.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
 
-            // 성능 모드 시 무거운 그래픽 연산 스로틀링 (2프레임당 1회)
-            if (!isPerfMode || frameCounter % 2 === 0) {
+            // 성능 모드 시 무거운 그래픽 연산 스로틀링 (30프레임당 1회)
+            if (!isPerfMode || isCatchingUp || frameCounter % 30 === 0) {
                 updateSky(m);
             }
 
@@ -593,4 +593,4 @@
         }
     </script>
 </body>
-                                                                                                                                                                      </html>
+</html>
