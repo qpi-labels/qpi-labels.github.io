@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Realistic Sky - Continuous Manual Time</title>
-    <!-- Font: local/system (offline-friendly) -->
     <style>
         :root {
             --primary: #90caf9;
@@ -24,18 +23,15 @@
         .layer { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; }
         .sky { background: linear-gradient(to bottom, var(--zenith) 0%, var(--horizon) 100%); z-index: 0; }
         
-        /* Stars */
         .star-field { top: 50%; left: 50%; width: 200vmax; height: 200vmax; transform: translate(-50%, -50%) rotate(var(--star-rot)); z-index: 1; opacity: var(--star-opacity); transition: opacity 3s ease-in-out; }
         .star { position: absolute; background: white; border-radius: 50%; }
 
-        /* Satellites */
         .satellite {
             position: absolute; width: 1.5px; height: 1.5px; background: #fff;
             border-radius: 50%; z-index: 2; box-shadow: 0 0 3px 1px rgba(255,255,255,0.7);
             will-change: transform;
         }
 
-        /* === Celestial Enhancements === */
         .sun-aura {
             position: absolute; left: var(--sun-x); top: var(--sun-y); transform: translate(-50%, -50%);
             width: 160vmax; height: 160vmax;
@@ -79,7 +75,6 @@
         input:checked + .slider { background: var(--primary); }
         input:checked + .slider:before { transform: translateX(18px); }
     
-/* === Study Tracker (열품타-style) === */
 .study-hud {
     position: fixed;
     top: 18px; left: 50%;
@@ -210,7 +205,6 @@
     border-color: rgba(144,202,249,0.35);
 }
 
-/* Modal */
 .modal-backdrop {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.55);
@@ -276,7 +270,6 @@
     color: rgba(255,255,255,0.95);
 }
 
-/* Stats sheet */
 .sheet {
     position: fixed;
     left: 50%;
@@ -366,7 +359,6 @@
     background: rgba(255,170,170,0.10);
 }
 
-/* === YPT Local Panels === */
 .panel-tabs{
     display:flex; gap:6px;
     margin: 10px 0 12px 0;
@@ -589,7 +581,6 @@
     </div>
 
 
-    <!-- === Study Tracker HUD (열품타-style) === -->
     <div class="study-hud" id="studyHud">
         <div class="study-row1">
             <div class="study-time" id="studyTime">00:00:00</div>
@@ -642,7 +633,6 @@
     </div>
 
     
-    <!-- Subject Modal (Add / Edit) -->
     <div class="modal-backdrop" id="subjectModal">
         <div class="modal" role="dialog" aria-modal="true" aria-labelledby="subjectModalTitle">
             <h3 id="subjectModalTitle">과목</h3>
@@ -663,7 +653,6 @@
 
 
     
-    <!-- YPT Panel Sheet (Stats / Calendar / Subjects / Goal) -->
     <div class="sheet" id="panelSheet" aria-hidden="true">
         <div class="sheet-header">
             <div>
@@ -694,7 +683,6 @@
         </div>
 
         <div class="panel-body">
-            <!-- Stats -->
             <section class="tab active" id="tabStats">
                 <div class="kpi-row">
                     <div class="kpi">
@@ -739,7 +727,6 @@
                 </div>
             </section>
 
-            <!-- Calendar -->
             <section class="tab" id="tabCalendar">
                 <div class="calendar">
                     <div class="cal-header">
@@ -760,7 +747,6 @@
                 </div>
             </section>
 
-            <!-- Subjects -->
             <section class="tab" id="tabSubjects">
                 <div class="item" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
                     <div>
