@@ -1,0 +1,2436 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Realistic Sky - Continuous Manual Time</title>
+    <!-- Font: local/system (offline-friendly) -->
+    <style>
+        :root {
+            --primary: #90caf9;
+            --zenith: #000; --horizon: #000;
+            --sun-x: 50%; --sun-y: 110%;
+            --moon-x: 50%; --moon-y: 110%;
+            --star-opacity: 0; --star-rot: 0deg;
+        }
+
+        html, body {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; background-color: #000;
+            font-family: 'Roboto', sans-serif; user-select: none;
+            position: fixed; top: 0; left: 0; overscroll-behavior: none;
+        }
+
+        .layer { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; }
+        .sky { background: linear-gradient(to bottom, var(--zenith) 0%, var(--horizon) 100%); z-index: 0; }
+        
+        /* Stars */
+        .star-field { top: 50%; left: 50%; width: 200vmax; height: 200vmax; transform: translate(-50%, -50%) rotate(var(--star-rot)); z-index: 1; opacity: var(--star-opacity); transition: opacity 3s ease-in-out; }
+        .star { position: absolute; background: white; border-radius: 50%; }
+
+        /* Satellites */
+        .satellite {
+            position: absolute; width: 1.5px; height: 1.5px; background: #fff;
+            border-radius: 50%; z-index: 2; box-shadow: 0 0 3px 1px rgba(255,255,255,0.7);
+            will-change: transform;
+        }
+
+        /* === Celestial Enhancements === */
+        .sun-aura {
+            position: absolute; left: var(--sun-x); top: var(--sun-y); transform: translate(-50%, -50%);
+            width: 160vmax; height: 160vmax;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.35) 0%, rgba(255, 200, 100, 0.1) 20%, rgba(255, 150, 50, 0.05) 40%, transparent 70%);
+            mix-blend-mode: screen; z-index: 4;
+        }
+        .sun-disk {
+            position: absolute; left: var(--sun-x); top: var(--sun-y); transform: translate(-50%, -50%);
+            width: 65px; height: 65px; border-radius: 50%; background: #fff;
+            box-shadow: 0 0 50px 15px #fff, 0 0 120px 40px rgba(255, 230, 150, 0.5);
+            z-index: 5;
+        }
+
+        .moon-aura {
+            position: absolute; left: var(--moon-x); top: var(--moon-y); transform: translate(-50%, -50%);
+            width: 100vmax; height: 100vmax;
+            background: radial-gradient(circle, rgba(180, 220, 255, 0.25) 0%, rgba(100, 150, 255, 0.05) 30%, transparent 60%);
+            mix-blend-mode: screen; z-index: 4;
+        }
+        .moon-disk {
+            position: absolute; left: var(--moon-x); top: var(--moon-y); transform: translate(-50%, -50%);
+            width: 50px; height: 50px; border-radius: 50%; background: #e0e0e0;
+            box-shadow: 0 0 30px 5px rgba(255, 255, 255, 0.4);
+            z-index: 5;
+        }
+
+        /* UI */
+        .bottom-clock { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); color: rgba(255, 255, 255, 0.4); font-weight: 100; font-size: 13px; letter-spacing: 2px; z-index: 50; }
+        .fab { position: fixed; bottom: 30px; right: 30px; width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.06); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; z-index: 100; display: flex; justify-content: center; align-items: center; }
+        .popup { position: fixed; bottom: 90px; right: 30px; width: 260px; background: rgba(10,10,10,0.95); backdrop-filter: blur(25px); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); color: #fff; z-index: 90; opacity: 0; pointer-events: none; transform: translateY(15px); transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1); }
+        .popup.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .label { font-size: 11px; font-weight: 300; letter-spacing: 1px; color: #aaa; }
+
+        input[type=range] { width: 100%; -webkit-appearance: none; background: rgba(255,255,255,0.1); height: 2px; outline: none; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--primary); cursor: pointer; }
+        .switch { position: relative; width: 34px; height: 16px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #333; border-radius: 18px; transition: 0.4s; cursor: pointer; }
+        .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 2px; bottom: 2px; background: white; border-radius: 50%; transition: 0.4s; }
+        input:checked + .slider { background: var(--primary); }
+        input:checked + .slider:before { transform: translateX(18px); }
+    
+/* === Study Tracker (열품타-style) === */
+.study-hud {
+    position: fixed;
+    top: 18px; left: 50%;
+    transform: translateX(-50%);
+    width: min(92vw, 560px);
+    z-index: 120;
+    pointer-events: auto;
+    background: rgba(10,10,10,0.45);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 22px;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    padding: 14px 14px 12px 14px;
+    box-shadow: 0 16px 60px rgba(0,0,0,0.45);
+}
+.study-row1 {
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+}
+.study-time {
+    font-size: 34px;
+    font-weight: 100;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.92);
+    line-height: 1;
+}
+.study-mini {
+    display:flex; align-items:center; gap:8px;
+}
+.icon-btn {
+    width: 36px; height: 36px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(255,255,255,0.06);
+    cursor: pointer;
+    display:flex; align-items:center; justify-content:center;
+    color: rgba(255,255,255,0.75);
+}
+.icon-btn:active { transform: scale(0.98); }
+.study-row2 {
+    margin-top: 12px;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+}
+.segmented {
+    display:flex; gap:6px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 999px;
+    padding: 4px;
+}
+.seg-btn {
+    border: 0;
+    background: transparent;
+    color: rgba(255,255,255,0.68);
+    font-size: 12px;
+    letter-spacing: 0.8px;
+    padding: 8px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.seg-btn.active {
+    background: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.92);
+    border: 1px solid rgba(255,255,255,0.10);
+}
+.study-select {
+    flex: 1;
+    max-width: 260px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.88);
+    padding: 9px 12px;
+    outline: none;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+.study-row3 { margin-top: 10px; display:flex; align-items:center; gap:10px; }
+.chipbar {
+    display:flex;
+    gap:8px;
+    overflow:auto;
+    padding-bottom: 2px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+.chipbar::-webkit-scrollbar { display:none; }
+.chip {
+    flex: 0 0 auto;
+    display:flex; align-items:center; gap:8px;
+    border-radius: 999px;
+    padding: 9px 12px;
+    font-size: 12px;
+    letter-spacing: 0.4px;
+    color: rgba(255,255,255,0.86);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.10);
+    cursor: pointer;
+}
+.chip.active {
+    background: rgba(144,202,249,0.16);
+    border-color: rgba(144,202,249,0.35);
+    color: rgba(255,255,255,0.95);
+}
+.chip .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+}
+.chip.active .dot {
+    background: var(--primary);
+    box-shadow: 0 0 10px rgba(144,202,249,0.8);
+}
+
+.study-toggle {
+    margin-left: auto;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.92);
+    border-radius: 16px;
+    padding: 10px 14px;
+    cursor: pointer;
+    display:flex; align-items:center; gap:10px;
+    letter-spacing: 1px;
+    font-size: 12px;
+}
+.study-toggle.running {
+    background: rgba(144,202,249,0.15);
+    border-color: rgba(144,202,249,0.35);
+}
+
+/* Modal */
+.modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(6px);
+    z-index: 200;
+    display:none;
+    pointer-events: auto;
+}
+.modal-backdrop.active { display:block; }
+.modal {
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: min(92vw, 420px);
+    background: rgba(10,10,10,0.95);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 22px;
+    padding: 18px;
+    color: #fff;
+}
+.modal h3 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.6px;
+    color: rgba(255,255,255,0.92);
+}
+.modal p {
+    margin: 0 0 14px 0;
+    font-size: 12px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.5;
+}
+.modal input {
+    width: 100%;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.92);
+    padding: 12px 12px;
+    outline: none;
+    font-size: 13px;
+    letter-spacing: 0.2px;
+}
+.modal-actions {
+    margin-top: 14px;
+    display:flex; justify-content:flex-end; gap:10px;
+}
+.btn {
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.88);
+    border-radius: 14px;
+    padding: 10px 12px;
+    cursor: pointer;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+.btn.primary {
+    background: rgba(144,202,249,0.18);
+    border-color: rgba(144,202,249,0.35);
+    color: rgba(255,255,255,0.95);
+}
+
+/* Stats sheet */
+.sheet {
+    position: fixed;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    width: min(92vw, 560px);
+    z-index: 180;
+    background: rgba(10,10,10,0.92);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 22px;
+    padding: 16px;
+    color: #fff;
+    pointer-events: auto;
+    opacity: 0;
+    transform: translateX(-50%) translateY(14px);
+    transition: 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.sheet.active {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+.sheet-header {
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom: 10px;
+}
+.sheet-title {
+    font-size: 13px;
+    letter-spacing: 0.8px;
+    color: rgba(255,255,255,0.9);
+    font-weight: 400;
+}
+.sheet-sub {
+    font-size: 11px;
+    letter-spacing: 0.4px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 2px;
+}
+.list {
+    margin-top: 10px;
+    display:flex; flex-direction:column; gap:10px;
+    max-height: 38vh;
+    overflow:auto;
+    -webkit-overflow-scrolling: touch;
+}
+.item {
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.05);
+    border-radius: 16px;
+    padding: 12px;
+}
+.item-row {
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+}
+.item-name {
+    font-size: 12px;
+    letter-spacing: 0.4px;
+    color: rgba(255,255,255,0.92);
+    font-weight: 400;
+    overflow:hidden; text-overflow: ellipsis; white-space: nowrap;
+    max-width: 65%;
+}
+.item-time {
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.85);
+    font-weight: 300;
+}
+.bar {
+    margin-top: 8px;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.08);
+    overflow:hidden;
+}
+.bar > div {
+    height: 100%;
+    width: 0%;
+    background: rgba(144,202,249,0.75);
+}
+.sheet-actions {
+    margin-top: 12px;
+    display:flex; gap:10px; justify-content:space-between; align-items:center;
+}
+.danger {
+    color: rgba(255,170,170,0.95);
+    border-color: rgba(255,170,170,0.35);
+    background: rgba(255,170,170,0.10);
+}
+
+/* === YPT Local Panels === */
+.panel-tabs{
+    display:flex; gap:6px;
+    margin: 10px 0 12px 0;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 999px;
+    padding: 4px;
+}
+.tab-btn{
+    flex:1;
+    border:0;
+    background: transparent;
+    color: rgba(255,255,255,0.60);
+    font-size: 12px;
+    letter-spacing: 0.6px;
+    padding: 9px 10px;
+    border-radius: 999px;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.tab-btn.active{
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.10);
+    color: rgba(255,255,255,0.92);
+}
+.panel-body{ margin-top: 6px; }
+.tab{ display:none; }
+.tab.active{ display:block; }
+
+.kpi-row{ display:flex; gap:10px; }
+.kpi{
+    flex:1;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.05);
+    border-radius: 18px;
+    padding: 12px;
+}
+.kpi .kpi-label{
+    font-size: 11px; letter-spacing: 0.6px;
+    color: rgba(255,255,255,0.55);
+}
+.kpi .kpi-value{
+    margin-top: 6px;
+    font-size: 16px;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.92);
+    font-weight: 300;
+}
+.kpi .kpi-sub{
+    margin-top: 4px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+}
+
+.period-row{ margin-top: 10px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.period-seg{ display:flex; gap:6px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 999px; padding: 4px; }
+.period-btn{
+    border:0; background:transparent; color: rgba(255,255,255,0.62);
+    font-size: 12px; letter-spacing: 0.6px;
+    padding: 8px 10px; border-radius: 999px; cursor:pointer;
+}
+.period-btn.active{ background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.92); border:1px solid rgba(255,255,255,0.10); }
+
+.goalbar{
+    margin-top: 10px;
+    height: 6px; border-radius: 999px;
+    background: rgba(255,255,255,0.10);
+    overflow: hidden;
+}
+.goalbar > div{
+    height:100%;
+    width:0%;
+    background: rgba(144,202,249,0.75);
+    transition: width 0.25s ease;
+}
+.study-hud.goal-hit{
+    box-shadow: 0 16px 80px rgba(144,202,249,0.22);
+    border-color: rgba(144,202,249,0.22);
+}
+
+.weekday{
+    margin-top: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.05);
+    border-radius: 18px;
+    padding: 12px;
+}
+.week-bars{ display:flex; gap:8px; align-items:flex-end; height: 86px; }
+.week-bar{
+    flex:1;
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+}
+.week-bar .barcol{
+    width: 100%;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.08);
+    overflow:hidden;
+    height: 64px;
+    display:flex; align-items:flex-end;
+}
+.week-bar .barcol > div{
+    width: 100%;
+    height: 0%;
+    background: rgba(144,202,249,0.75);
+}
+.week-bar .wlabel{
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    color: rgba(255,255,255,0.55);
+}
+.week-bar.zero .barcol{ background: rgba(255,255,255,0.04); }
+.week-bar.zero .wlabel{ opacity: 0.35; }
+
+.calendar{
+    margin-top: 8px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.05);
+    border-radius: 18px;
+    padding: 12px;
+}
+.cal-header{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    margin-bottom: 8px;
+}
+.cal-title{
+    font-size: 13px;
+    letter-spacing: 0.8px;
+    color: rgba(255,255,255,0.9);
+}
+.cal-grid{
+    display:grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+}
+.cal-dow{
+    font-size: 10px;
+    color: rgba(255,255,255,0.45);
+    text-align:center;
+    letter-spacing: 0.6px;
+    padding: 4px 0;
+}
+.cal-day{
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.04);
+    border-radius: 14px;
+    padding: 8px 8px 7px 8px;
+    min-height: 52px;
+    cursor:pointer;
+    display:flex; flex-direction:column; justify-content:space-between;
+}
+.cal-day.off{
+    opacity: 0.28;
+    cursor: default;
+}
+.cal-day .dnum{
+    font-size: 12px;
+    color: rgba(255,255,255,0.78);
+    letter-spacing: 0.6px;
+}
+.cal-day .dtime{
+    font-size: 10px;
+    color: rgba(255,255,255,0.58);
+    letter-spacing: 0.8px;
+    text-align:right;
+}
+.cal-day.today{
+    border-color: rgba(144,202,249,0.35);
+    background: rgba(144,202,249,0.10);
+}
+
+.manage-list{ margin-top: 10px; display:flex; flex-direction:column; gap:10px; max-height: 40vh; overflow:auto; -webkit-overflow-scrolling: touch; }
+.msub{
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.05);
+    border-radius: 16px;
+    padding: 12px;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+}
+.msub-left{ display:flex; align-items:center; gap:10px; min-width: 0; }
+.swatch{ width: 14px; height: 14px; border-radius: 50%; box-shadow: 0 0 0 2px rgba(255,255,255,0.10); }
+.msub-name{ font-size: 12px; color: rgba(255,255,255,0.92); letter-spacing: 0.5px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap; }
+.msub-right{ display:flex; align-items:center; gap:8px; }
+.msub-time{ font-size: 11px; color: rgba(255,255,255,0.65); letter-spacing: 0.8px; white-space: nowrap; }
+
+.color-row{ margin-top: 12px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.colors{ display:flex; gap:8px; flex-wrap: wrap; }
+.cdot{
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.14);
+    cursor:pointer;
+}
+.cdot.active{ box-shadow: 0 0 0 2px rgba(144,202,249,0.5); }
+.color-input{
+    width: 42px; height: 34px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.06);
+    padding: 0 6px;
+}
+
+@media (max-width: 420px){
+    .study-time{ font-size: 30px; }
+    .study-hud{ padding: 13px 12px 11px 12px; }
+    .sheet{ padding: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="layer sky"></div>
+    <div class="layer star-field" id="starField"></div>
+    <div id="satLayer" class="layer"></div>
+    
+    <div class="layer celestial">
+        <div class="sun-aura"></div>
+        <div class="sun-disk"></div>
+        <div class="moon-aura"></div>
+        <div class="moon-disk"></div>
+    </div>
+
+
+    <!-- === Study Tracker HUD (열품타-style) === -->
+    <div class="study-hud" id="studyHud">
+        <div class="study-row1">
+            <div class="study-time" id="studyTime">00:00:00</div>
+            <div class="study-mini">
+                <button class="icon-btn" id="openStatsBtn" aria-label="Stats">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <path d="M4 19V10" stroke="rgba(255,255,255,0.75)" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M10 19V5" stroke="rgba(255,255,255,0.75)" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M16 19V13" stroke="rgba(255,255,255,0.75)" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M22 19H2" stroke="rgba(255,255,255,0.55)" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+                <button class="icon-btn" id="addSubjectBtn" aria-label="Add Subject">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 5V19" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M5 12H19" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="goalbar"><div id="goalBarFill"></div></div>
+
+        <div class="study-row2">
+            <div class="segmented" role="tablist" aria-label="Timer View Mode">
+                <button class="seg-btn active" id="modeTotalBtn" type="button">오늘 총 공부</button>
+                <button class="seg-btn" id="modeSubjectBtn" type="button">과목</button>
+            </div>
+
+            <select class="study-select" id="subjectSelect" aria-label="Subject Select" disabled>
+                <option value="">과목 선택</option>
+            </select>
+        </div>
+
+        <div class="study-row3">
+            <div class="chipbar" id="subjectChips" aria-label="Subject Buttons"></div>
+            <button class="icon-btn" id="stopBtn" type="button" aria-label="Stop" style="display:none">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M7 7H17V17H7V7Z" fill="rgba(255,255,255,0.80)"/>
+                </svg>
+            </button>
+            <button class="study-toggle" id="studyToggleBtn" type="button" aria-label="Start/Pause">
+                <span id="studyToggleIcon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M8 5V19L19 12L8 5Z" fill="rgba(255,255,255,0.85)"/>
+                    </svg>
+                </span>
+                <span id="studyToggleText">START</span>
+            </button>
+        </div>
+    </div>
+
+    
+    <!-- Subject Modal (Add / Edit) -->
+    <div class="modal-backdrop" id="subjectModal">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="subjectModalTitle">
+            <h3 id="subjectModalTitle">과목</h3>
+            <p id="subjectModalDesc">과목을 추가/수정하면 과목별 누적 시간이 자동 기록됩니다.</p>
+            <input id="subjectNameInput" type="text" placeholder="예) 수학, 물리, 영어" maxlength="24" />
+            <div class="color-row">
+                <div class="colors" id="colorDots" aria-label="Color Presets"></div>
+                <input class="color-input" id="subjectColorInput" type="color" value="#90caf9" aria-label="Custom Color"/>
+            </div>
+            <div class="modal-actions">
+                <button class="btn danger" id="subjectDeleteBtn" type="button" style="display:none">삭제</button>
+                <div style="flex:1"></div>
+                <button class="btn" id="subjectCancelBtn" type="button">취소</button>
+                <button class="btn primary" id="subjectSaveBtn" type="button">저장</button>
+            </div>
+        </div>
+    </div>
+
+
+    
+    <!-- YPT Panel Sheet (Stats / Calendar / Subjects / Goal) -->
+    <div class="sheet" id="panelSheet" aria-hidden="true">
+        <div class="sheet-header">
+            <div>
+                <div class="sheet-title" id="panelTitle">통계</div>
+                <div class="sheet-sub" id="panelSubtitle">—</div>
+            </div>
+            <button class="icon-btn" id="closePanelBtn" aria-label="Close Panel">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 6L18 18" stroke="rgba(255,255,255,0.75)" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M18 6L6 18" stroke="rgba(255,255,255,0.75)" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="panel-tabs" role="tablist" aria-label="Panels">
+            <button class="tab-btn active" id="tabBtnStats" type="button">
+                <span>통계</span>
+            </button>
+            <button class="tab-btn" id="tabBtnCalendar" type="button">
+                <span>캘린더</span>
+            </button>
+            <button class="tab-btn" id="tabBtnSubjects" type="button">
+                <span>과목</span>
+            </button>
+            <button class="tab-btn" id="tabBtnGoal" type="button">
+                <span>목표</span>
+            </button>
+        </div>
+
+        <div class="panel-body">
+            <!-- Stats -->
+            <section class="tab active" id="tabStats">
+                <div class="kpi-row">
+                    <div class="kpi">
+                        <div class="kpi-label">오늘</div>
+                        <div class="kpi-value" id="kpiToday">00:00:00</div>
+                        <div class="kpi-sub" id="kpiTodaySub">목표 —</div>
+                    </div>
+                    <div class="kpi">
+                        <div class="kpi-label">이번 주</div>
+                        <div class="kpi-value" id="kpiWeek">00:00:00</div>
+                        <div class="kpi-sub" id="kpiWeekSub">평균 —</div>
+                    </div>
+                    <div class="kpi">
+                        <div class="kpi-label">이번 달</div>
+                        <div class="kpi-value" id="kpiMonth">00:00:00</div>
+                        <div class="kpi-sub" id="kpiMonthSub">평균 —</div>
+                    </div>
+                </div>
+
+                <div class="period-row">
+                    <div class="period-seg" role="tablist" aria-label="Stats Period">
+                        <button class="period-btn active" id="periodTodayBtn" type="button">오늘</button>
+                        <button class="period-btn" id="periodWeekBtn" type="button">주</button>
+                        <button class="period-btn" id="periodMonthBtn" type="button">달</button>
+                    </div>
+                    <button class="btn" id="exportBtn" type="button">내보내기</button>
+                </div>
+
+                <div class="list" id="breakdownList" style="max-height: 30vh;"></div>
+
+                <div class="weekday">
+                    <div class="item-row" style="margin-bottom:10px;">
+                        <div class="item-name">요일별 공부량 (이번 주)</div>
+                        <div class="item-time" id="focusInfo">최장 집중 —</div>
+                    </div>
+                    <div class="week-bars" id="weekdayBars"></div>
+                </div>
+
+                <div class="sheet-actions">
+                    <button class="btn danger" id="resetTodayBtn" type="button">오늘 초기화</button>
+                    <button class="btn" id="resetAllBtn" type="button">전체 초기화</button>
+                </div>
+            </section>
+
+            <!-- Calendar -->
+            <section class="tab" id="tabCalendar">
+                <div class="calendar">
+                    <div class="cal-header">
+                        <button class="icon-btn" id="calPrevBtn" aria-label="Prev Month">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                <path d="M15 6L9 12L15 18" stroke="rgba(255,255,255,0.75)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <div class="cal-title" id="calTitle">—</div>
+                        <button class="icon-btn" id="calNextBtn" aria-label="Next Month">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                <path d="M9 6L15 12L9 18" stroke="rgba(255,255,255,0.75)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="cal-grid" id="calDow"></div>
+                    <div class="cal-grid" id="calGrid"></div>
+                </div>
+            </section>
+
+            <!-- Subjects -->
+            <section class="tab" id="tabSubjects">
+                <div class="item" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+                    <div>
+                        <div class="item-name">과목 관리</div>
+                        <div class="sheet-sub">추가/수정/삭제 · 색상 설정</div>
+                    </div>
+                    <button class="icon-btn" id="addSubjectBtn2" aria-label="Add Subject">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 5V19" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M5 12H19" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="manage-list" id="subjectsManageList"></div>
+            </section>
+
+            <!-- Goal -->
+            <section class="tab" id="tabGoal">
+                <div class="item">
+                    <div class="item-row">
+                        <div class="item-name">하루 목표 공부 시간</div>
+                        <div class="item-time" id="goalNow">—</div>
+                    </div>
+                    <div style="margin-top:10px; display:flex; gap:10px;">
+                        <input id="goalHours" type="number" min="0" max="23" value="2" style="flex:1; border-radius:14px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.92); padding:12px; outline:none; font-size:13px;" />
+                        <input id="goalMinutes" type="number" min="0" max="59" value="0" style="flex:1; border-radius:14px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.92); padding:12px; outline:none; font-size:13px;" />
+                    </div>
+                    <div class="sheet-sub" style="margin-top:8px;">시간(왼쪽) · 분(오른쪽)</div>
+                    <div class="modal-actions" style="margin-top:12px;">
+                        <button class="btn" id="goalResetBtn" type="button">기본값</button>
+                        <button class="btn primary" id="goalSaveBtn" type="button">저장</button>
+                    </div>
+                </div>
+                <div class="item" style="margin-top:10px;">
+                    <div class="item-row">
+                        <div class="item-name">오늘 달성률</div>
+                        <div class="item-time" id="goalProgressText">—</div>
+                    </div>
+                    <div class="bar" style="margin-top:10px;"><div id="goalProgressBar" style="width:0%"></div></div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Day Detail Modal -->
+    <div class="modal-backdrop" id="dayDetailModal">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="dayDetailTitle">
+            <h3 id="dayDetailTitle">—</h3>
+            <p id="dayDetailSub">—</p>
+            <div class="list" id="dayDetailList" style="max-height: 45vh;"></div>
+            <div class="modal-actions">
+                <button class="btn" id="dayDetailCloseBtn" type="button">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div class="modal-backdrop" id="confirmModal">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+            <h3 id="confirmTitle">확인</h3>
+            <p id="confirmText">—</p>
+            <div class="modal-actions">
+                <button class="btn" id="confirmCancelBtn" type="button">취소</button>
+                <button class="btn primary" id="confirmOkBtn" type="button">확인</button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="bottom-clock" id="clock">00:00:00</div>
+
+    <div class="fab" onclick="togglePopup()">
+        <svg style="width:20px;height:20px;fill:rgba(255,255,255,0.6)" viewBox="0 0 24 24"><path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11.03L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.47,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.53,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11.03C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.53,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.47,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/></svg>
+    </div>
+
+    <div class="popup" id="popup">
+        <div class="row">
+            <span class="label">AUTO SYNC</span>
+            <label class="switch"><input type="checkbox" id="autoCheck" checked><span class="slider"></span></label>
+        </div>
+        <div class="row" style="flex-direction:column; align-items:flex-start; gap:10px; margin-bottom:25px;">
+            <span class="label">TIME SLIDER</span>
+            <input type="range" id="timeRange" min="0" max="1439" value="720">
+        </div>
+        <div class="row">
+            <span class="label">AMBIENT (NIGHT)</span>
+            <label class="switch"><input type="checkbox" id="soundToggle"><span class="slider"></span></label>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. Star Field ---
+        const starField = document.getElementById('starField');
+        for(let i=0; i<300; i++){
+            const s = document.createElement('div'); s.className = 'star';
+            const size = Math.random()*1.2 + 0.4;
+            s.style.width = s.style.height = size+'px';
+            s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%';
+            s.style.opacity = Math.random();
+            starField.appendChild(s);
+        }
+
+        // --- 2. Ultra-Slow Satellite Engine (0.5x Frequency) ---
+        const satLayer = document.getElementById('satLayer');
+        let currentSunAlt = 0;
+
+        function animateObject(isStarlink = false) {
+            if (currentSunAlt > 0.05) return; 
+
+            const side = Math.floor(Math.random() * 4);
+            let sx, sy, ex, ey;
+            if(side === 0) { sx = -15; sy = Math.random()*100; ex = 115; ey = Math.random()*100; }
+            else if(side === 1) { sx = 115; sy = Math.random()*100; ex = -15; ey = Math.random()*100; }
+            else if(side === 2) { sx = Math.random()*100; sy = -15; ex = Math.random()*100; ey = 115; }
+            else { sx = Math.random()*100; sy = 115; ex = Math.random()*100; ey = -15; }
+
+            const duration = Math.random() * 20000 + 40000; // 40~60초 동안 아주 천천히 이동
+            const count = isStarlink ? 18 : 1;
+
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const sat = document.createElement('div');
+                    sat.className = 'satellite';
+                    satLayer.appendChild(sat);
+                    const startTime = performance.now();
+
+                    const move = (now) => {
+                        const t = (now - startTime) / duration;
+                        if (t < 1) {
+                            sat.style.transform = `translate(${sx + (ex - sx) * t}vw, ${sy + (ey - sy) * t}vh)`;
+                            requestAnimationFrame(move);
+                        } else { sat.remove(); }
+                    };
+                    requestAnimationFrame(move);
+                }, isStarlink ? i * (800 + Math.random() * 400) : 0);
+            }
+        }
+
+        const satLoop = () => { animateObject(false); setTimeout(satLoop, Math.random() * 60000 + 40000); };
+        const starlinkLoop = () => { animateObject(true); setTimeout(starlinkLoop, Math.random() * 120000 + 120000); };
+        
+        satLoop();
+        starlinkLoop();
+
+                // --- 3. Ambient (offline WebAudio) ---
+        // NOTE: 네트워크 의존 제거. 브라우저 내 WebAudio로 아주 약한 앰비언트를 생성합니다.
+        const soundToggle = document.getElementById('soundToggle');
+
+        const Ambient = (() => {
+            let ctx = null;
+            let master = null;
+            let noiseSrc = null;
+            let noiseGain = null;
+            let lp = null;
+            let osc = null;
+            let oscGain = null;
+            let unlocked = false;
+            let running = false;
+
+            function ensure() {
+                if (ctx) return;
+                const AC = window.AudioContext || window.webkitAudioContext;
+                if (!AC) return;
+                ctx = new AC();
+                master = ctx.createGain();
+                master.gain.value = 0.0;
+                master.connect(ctx.destination);
+
+                // Brown-ish noise buffer
+                const bufferSize = 2 * ctx.sampleRate;
+                const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+                const data = buffer.getChannelData(0);
+                let lastOut = 0.0;
+                for (let i = 0; i < bufferSize; i++) {
+                    const white = Math.random() * 2 - 1;
+                    lastOut = (lastOut + (0.02 * white)) / 1.02;
+                    data[i] = lastOut * 3.5;
+                }
+
+                lp = ctx.createBiquadFilter();
+                lp.type = 'lowpass';
+                lp.frequency.value = 350;
+
+                noiseGain = ctx.createGain();
+                noiseGain.gain.value = 0.22;
+
+                noiseSrc = ctx.createBufferSource();
+                noiseSrc.buffer = buffer;
+                noiseSrc.loop = true;
+                noiseSrc.connect(lp);
+                lp.connect(noiseGain);
+                noiseGain.connect(master);
+
+                // Soft tone (very low)
+                osc = ctx.createOscillator();
+                osc.type = 'sine';
+                osc.frequency.value = 174; // F3-ish
+                oscGain = ctx.createGain();
+                oscGain.gain.value = 0.035;
+                osc.connect(oscGain);
+                oscGain.connect(master);
+            }
+
+            async function unlock() {
+                try {
+                    ensure();
+                    if (!ctx) return;
+                    if (ctx.state === 'suspended') await ctx.resume();
+                    if (!unlocked) {
+                        noiseSrc.start();
+                        osc.start();
+                        unlocked = true;
+                    }
+                } catch (_) {}
+            }
+
+            function start() {
+                ensure();
+                if (!ctx) return;
+                running = true;
+                const t = ctx.currentTime;
+                master.gain.cancelScheduledValues(t);
+                master.gain.setValueAtTime(master.gain.value, t);
+                master.gain.linearRampToValueAtTime(0.35, t + 0.6);
+            }
+
+            function stop() {
+                if (!ctx) return;
+                running = false;
+                const t = ctx.currentTime;
+                master.gain.cancelScheduledValues(t);
+                master.gain.setValueAtTime(master.gain.value, t);
+                master.gain.linearRampToValueAtTime(0.0, t + 0.5);
+            }
+
+            function isRunning() { return running; }
+
+            return { unlock, start, stop, isRunning };
+        })();
+
+        function unlockAudio() {
+            // 기존 UI(팝업 열기/토글) 동작 시 오디오 잠금 해제
+            Ambient.unlock();
+        }
+
+        soundToggle.addEventListener('change', function() {
+            unlockAudio();
+            if (this.checked) Ambient.start();
+            else Ambient.stop();
+        });
+
+        // --- 4. Continuous Time Engine (Manual Jump & Continue) ---
+        const autoCheck = document.getElementById('autoCheck');
+        const timeRange = document.getElementById('timeRange');
+        const clock = document.getElementById('clock');
+        
+        let manualStartMinutes = 720; // 사용자가 설정한 기준 분
+        let manualReferenceTime = Date.now(); // 설정을 변경한 실제 시간
+        let minutesGlobal = 720;
+
+        const skyKeyframes = [
+            { h: 0,  z: [5, 10, 25], hz: [10, 20, 35] },
+            { h: 6,  z: [40, 80, 140], hz: [255, 150, 100] },
+            { h: 11, z: [30, 100, 220], hz: [180, 230, 255] },
+            { h: 16, z: [30, 100, 220], hz: [180, 230, 255] },
+            { h: 19, z: [30, 50, 110], hz: [255, 120, 50] },
+            { h: 22, z: [5, 10, 25], hz: [10, 20, 35] },
+            { h: 24, z: [5, 10, 25], hz: [10, 20, 35] }
+        ];
+
+        function updateSky(m) {
+            minutesGlobal = m % 1440;
+            const h = minutesGlobal / 60;
+            const s = (minutesGlobal * 60) % 60;
+
+            let c;
+            for(let i=0; i<skyKeyframes.length-1; i++) {
+                const start = skyKeyframes[i], end = skyKeyframes[i+1];
+                if(h >= start.h && h <= end.h) {
+                    const t = (h - start.h) / (end.h - start.h);
+                    const l = (c1, c2) => Math.round(c1 + (c2 - c1) * t);
+                    c = { 
+                        z: `rgb(${l(start.z[0],end.z[0])},${l(start.z[1],end.z[1])},${l(start.z[2],end.z[2])})`,
+                        hz: `rgb(${l(start.hz[0],end.hz[0])},${l(start.hz[1],end.hz[1])},${l(start.hz[2],end.hz[2])})`
+                    };
+                    break;
+                }
+            }
+            document.documentElement.style.setProperty('--zenith', c.z);
+            document.documentElement.style.setProperty('--horizon', c.hz);
+
+            const sProg = (h>=5 && h<=19) ? (h-5)/14 : -1;
+            if(sProg >= 0) {
+                currentSunAlt = Math.sin(sProg*Math.PI);
+                document.documentElement.style.setProperty('--sun-x', (sProg*120-10)+'%');
+                document.documentElement.style.setProperty('--sun-y', (100-currentSunAlt*90)+'%');
+            } else { currentSunAlt = -1; document.documentElement.style.setProperty('--sun-y', '150%'); }
+
+            const moonH = (h + 12) % 24;
+            const mProg = (moonH >= 5 && moonH <= 19) ? (moonH - 5)/14 : -1;
+            if(mProg >= 0) {
+                const alt = Math.sin(mProg*Math.PI);
+                document.documentElement.style.setProperty('--moon-x', (mProg*120-10)+'%');
+                document.documentElement.style.setProperty('--moon-y', (100-alt*85)+'%');
+            } else { document.documentElement.style.setProperty('--moon-y', '150%'); }
+
+            document.documentElement.style.setProperty('--star-opacity', currentSunAlt > 0.1 ? 0 : 1);
+            document.documentElement.style.setProperty('--star-rot', (minutesGlobal/4)+'deg');
+            
+            const hh = Math.floor(h);
+            const mm = Math.floor(minutesGlobal % 60);
+            const ss = Math.floor(s);
+            clock.textContent = `${hh.toString().padStart(2,'0')}:${mm.toString().padStart(2,'0')}:${ss.toString().padStart(2,'0')}`;
+        }
+
+        // 슬라이더 조작 시 기준점 갱신
+        timeRange.addEventListener('input', () => {
+            if(!autoCheck.checked) {
+                manualStartMinutes = parseFloat(timeRange.value);
+                manualReferenceTime = Date.now();
+                updateSky(manualStartMinutes);
+            }
+        });
+
+        autoCheck.addEventListener('change', () => {
+            if(!autoCheck.checked) {
+                // 자동에서 수동으로 넘어갈 때 현재 시간을 기준으로 수동 시작점 설정
+                const d = new Date();
+                manualStartMinutes = d.getHours()*60 + d.getMinutes() + d.getSeconds()/60;
+                manualReferenceTime = Date.now();
+            }
+        });
+
+        function loop() {
+            let m;
+            if(autoCheck.checked) {
+                const d = new Date();
+                m = d.getHours()*60 + d.getMinutes() + d.getSeconds()/60;
+                timeRange.value = m;
+            } else {
+                // 수동 모드: (설정된 분) + (설정 이후 흐른 실제 시간)
+                const elapsedMinutes = (Date.now() - manualReferenceTime) / 60000;
+                m = manualStartMinutes + elapsedMinutes;
+                // 슬라이더도 같이 움직이게 하려면 아래 주석 해제
+                // timeRange.value = m % 1440;
+            }
+            updateSky(m);
+            requestAnimationFrame(loop);
+        }
+        loop();
+
+                // =========================
+        // 5. YPT Local Study Timer (offline, localStorage only)
+        // =========================
+        // 설계 목표:
+        // - Date.now 기반으로 오차 최소화(탭 비활성/전환에도 누적 정확)
+        // - 자정(로컬) 기준 날짜 자동 분리
+        // - 날짜 -> 과목 -> 시간(ms) 구조 유지
+        // - 기능별 모듈 분리 + 전역 상태(AppState)로 관리
+        // - 네트워크/서버/계정 기능 없음
+
+        const YPT_STORE_KEY_V2 = 'ypt_local_v2';
+        const LEGACY_STORE_KEY_V1 = 'studyTracker_v1';
+
+        // ---------- DOM ----------
+        const ui = {
+            // HUD
+            studyHud: document.getElementById('studyHud'),
+            studyTime: document.getElementById('studyTime'),
+            goalBarFill: document.getElementById('goalBarFill'),
+            modeTotalBtn: document.getElementById('modeTotalBtn'),
+            modeSubjectBtn: document.getElementById('modeSubjectBtn'),
+            subjectSelect: document.getElementById('subjectSelect'),
+            subjectChips: document.getElementById('subjectChips'),
+            addSubjectBtn: document.getElementById('addSubjectBtn'),
+            stopBtn: document.getElementById('stopBtn'),
+            toggleBtn: document.getElementById('studyToggleBtn'),
+            toggleText: document.getElementById('studyToggleText'),
+            toggleIcon: document.getElementById('studyToggleIcon'),
+            openPanelBtn: document.getElementById('openStatsBtn'),
+
+            // Subject Modal
+            subjectModal: document.getElementById('subjectModal'),
+            subjectModalTitle: document.getElementById('subjectModalTitle'),
+            subjectModalDesc: document.getElementById('subjectModalDesc'),
+            subjectNameInput: document.getElementById('subjectNameInput'),
+            colorDots: document.getElementById('colorDots'),
+            subjectColorInput: document.getElementById('subjectColorInput'),
+            subjectCancelBtn: document.getElementById('subjectCancelBtn'),
+            subjectSaveBtn: document.getElementById('subjectSaveBtn'),
+            subjectDeleteBtn: document.getElementById('subjectDeleteBtn'),
+
+            // Panel
+            panelSheet: document.getElementById('panelSheet'),
+            panelTitle: document.getElementById('panelTitle'),
+            panelSubtitle: document.getElementById('panelSubtitle'),
+            closePanelBtn: document.getElementById('closePanelBtn'),
+            tabBtnStats: document.getElementById('tabBtnStats'),
+            tabBtnCalendar: document.getElementById('tabBtnCalendar'),
+            tabBtnSubjects: document.getElementById('tabBtnSubjects'),
+            tabBtnGoal: document.getElementById('tabBtnGoal'),
+            tabStats: document.getElementById('tabStats'),
+            tabCalendar: document.getElementById('tabCalendar'),
+            tabSubjects: document.getElementById('tabSubjects'),
+            tabGoal: document.getElementById('tabGoal'),
+
+            // Stats
+            kpiToday: document.getElementById('kpiToday'),
+            kpiTodaySub: document.getElementById('kpiTodaySub'),
+            kpiWeek: document.getElementById('kpiWeek'),
+            kpiWeekSub: document.getElementById('kpiWeekSub'),
+            kpiMonth: document.getElementById('kpiMonth'),
+            kpiMonthSub: document.getElementById('kpiMonthSub'),
+            periodTodayBtn: document.getElementById('periodTodayBtn'),
+            periodWeekBtn: document.getElementById('periodWeekBtn'),
+            periodMonthBtn: document.getElementById('periodMonthBtn'),
+            breakdownList: document.getElementById('breakdownList'),
+            weekdayBars: document.getElementById('weekdayBars'),
+            focusInfo: document.getElementById('focusInfo'),
+            exportBtn: document.getElementById('exportBtn'),
+            resetTodayBtn: document.getElementById('resetTodayBtn'),
+            resetAllBtn: document.getElementById('resetAllBtn'),
+
+            // Calendar
+            calPrevBtn: document.getElementById('calPrevBtn'),
+            calNextBtn: document.getElementById('calNextBtn'),
+            calTitle: document.getElementById('calTitle'),
+            calDow: document.getElementById('calDow'),
+            calGrid: document.getElementById('calGrid'),
+
+            // Subjects panel
+            addSubjectBtn2: document.getElementById('addSubjectBtn2'),
+            subjectsManageList: document.getElementById('subjectsManageList'),
+
+            // Goal
+            goalNow: document.getElementById('goalNow'),
+            goalHours: document.getElementById('goalHours'),
+            goalMinutes: document.getElementById('goalMinutes'),
+            goalResetBtn: document.getElementById('goalResetBtn'),
+            goalSaveBtn: document.getElementById('goalSaveBtn'),
+            goalProgressText: document.getElementById('goalProgressText'),
+            goalProgressBar: document.getElementById('goalProgressBar'),
+
+            // Day detail
+            dayDetailModal: document.getElementById('dayDetailModal'),
+            dayDetailTitle: document.getElementById('dayDetailTitle'),
+            dayDetailSub: document.getElementById('dayDetailSub'),
+            dayDetailList: document.getElementById('dayDetailList'),
+            dayDetailCloseBtn: document.getElementById('dayDetailCloseBtn'),
+
+            // Confirm
+            confirmModal: document.getElementById('confirmModal'),
+            confirmTitle: document.getElementById('confirmTitle'),
+            confirmText: document.getElementById('confirmText'),
+            confirmCancelBtn: document.getElementById('confirmCancelBtn'),
+            confirmOkBtn: document.getElementById('confirmOkBtn'),
+        };
+
+        // ---------- Utils ----------
+        const pad2 = (n) => String(n).padStart(2, '0');
+        const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+        const escapeHtml = (str) => String(str)
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
+
+        function fmtHMS(ms) {
+            const sec = Math.max(0, Math.floor(ms / 1000));
+            const h = Math.floor(sec / 3600);
+            const m = Math.floor((sec % 3600) / 60);
+            const s = sec % 60;
+            return `${pad2(h)}:${pad2(m)}:${pad2(s)}`;
+        }
+
+        function dateKeyLocal(ts) {
+            const d = new Date(ts);
+            return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+        }
+
+        function startOfDayLocal(ts) {
+            const d = new Date(ts);
+            d.setHours(0, 0, 0, 0);
+            return d.getTime();
+        }
+
+        function startOfMonthLocal(ts) {
+            const d = new Date(ts);
+            d.setDate(1);
+            d.setHours(0, 0, 0, 0);
+            return d.getTime();
+        }
+
+        function endOfDayLocal(ts) {
+            return startOfDayLocal(ts) + 24 * 60 * 60 * 1000;
+        }
+
+        function startOfWeekLocal(ts) {
+            // 월요일 시작(한국에서 일반적)
+            const d = new Date(ts);
+            const day = d.getDay(); // 0=Sun
+            const diff = (day === 0 ? -6 : 1 - day); // Monday
+            d.setDate(d.getDate() + diff);
+            d.setHours(0, 0, 0, 0);
+            return d.getTime();
+        }
+
+        function daysInMonthLocal(ts) {
+            const d = new Date(ts);
+            return new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+        }
+
+        function uid(prefix='id') {
+            return `${prefix}_${Math.random().toString(16).slice(2)}_${Date.now().toString(16)}`;
+        }
+
+        // ---------- Storage ----------
+        const Storage = (() => {
+            const defaultStore = () => ({
+                version: 2,
+                subjects: [
+                    // 기본 과목은 강제하지 않음 (사용자가 +로 추가)
+                ],
+                settings: {
+                    dailyGoalMs: 2 * 60 * 60 * 1000, // 2h default
+                    lastSubjectId: '',
+                    viewMode: 'total',  // 'total' | 'subject'
+                    panelTab: 'stats',  // 'stats' | 'calendar' | 'subjects' | 'goal'
+                    statsPeriod: 'today', // 'today' | 'week' | 'month'
+                    calendarMonthTs: startOfMonthLocal(Date.now()),
+                },
+                days: {
+                    // "YYYY-MM-DD": { totalMs, subjects: {id: ms}, sessions: [{start,end,subjectId}], longestFocusMs }
+                },
+                meta: {
+                    bestFocusMs: 0,
+                }
+            });
+
+            function loadRaw(key) {
+                try {
+                    const raw = localStorage.getItem(key);
+                    return raw ? JSON.parse(raw) : null;
+                } catch { return null; }
+            }
+
+            function save(store) {
+                localStorage.setItem(YPT_STORE_KEY_V2, JSON.stringify(store));
+            }
+
+            function migrateLegacyIfNeeded() {
+                const existing = loadRaw(YPT_STORE_KEY_V2);
+                if (existing) return existing;
+
+                const legacy = loadRaw(LEGACY_STORE_KEY_V1);
+                if (!legacy) return null;
+
+                // legacy schema:
+                // { subjects:[{id,name}], days:{[date]:{totalSeconds, unclassifiedSeconds, subjectSeconds}}, meta:{mode, selectedSubjectId} }
+                const st = defaultStore();
+                try {
+                    const colorPresets = ['#90caf9','#a5d6a7','#f48fb1','#ffcc80','#ce93d8','#80cbc4','#fff59d','#b0bec5'];
+                    st.subjects = (legacy.subjects || []).map((s, i) => ({
+                        id: s.id || uid('s'),
+                        name: s.name || '과목',
+                        color: colorPresets[i % colorPresets.length],
+                        createdAt: Date.now(),
+                    }));
+                    st.settings.viewMode = legacy.meta?.mode === 'subject' ? 'subject' : 'total';
+                    st.settings.lastSubjectId = legacy.meta?.selectedSubjectId || '';
+                    const days = legacy.days || {};
+                    for (const dk of Object.keys(days)) {
+                        const d = days[dk] || {};
+                        const subjects = {};
+                        for (const sid of Object.keys(d.subjectSeconds || {})) {
+                            subjects[sid] = Math.round((d.subjectSeconds[sid] || 0) * 1000);
+                        }
+                        st.days[dk] = {
+                            totalMs: Math.round((d.totalSeconds || 0) * 1000),
+                            subjects,
+                            sessions: [],
+                            longestFocusMs: 0,
+                        };
+                    }
+                    save(st);
+                    return st;
+                } catch {
+                    return null;
+                }
+            }
+
+            function normalize(store) {
+                const base = defaultStore();
+                if (!store || typeof store !== 'object') return base;
+                if (store.version !== 2) {
+                    // 미래 버전 대비: 최소 필드만 보정
+                    store.version = 2;
+                }
+                store.subjects = Array.isArray(store.subjects) ? store.subjects : [];
+                store.settings = { ...base.settings, ...(store.settings || {}) };
+                store.days = store.days && typeof store.days === 'object' ? store.days : {};
+                store.meta = { ...base.meta, ...(store.meta || {}) };
+
+                // ensure subject structure
+                store.subjects = store.subjects.map(s => ({
+                    id: s.id || uid('s'),
+                    name: (s.name || '과목').slice(0, 24),
+                    color: s.color || '#90caf9',
+                    createdAt: s.createdAt || Date.now(),
+                }));
+
+                // ensure day structure
+                for (const dk of Object.keys(store.days)) {
+                    const d = store.days[dk];
+                    if (!d || typeof d !== 'object') continue;
+                    if (typeof d.totalMs !== 'number') d.totalMs = 0;
+                    if (!d.subjects || typeof d.subjects !== 'object') d.subjects = {};
+                    if (!Array.isArray(d.sessions)) d.sessions = [];
+                    if (typeof d.longestFocusMs !== 'number') d.longestFocusMs = 0;
+                }
+
+                return store;
+            }
+
+            function load() {
+                const migrated = migrateLegacyIfNeeded();
+                if (migrated) return normalize(migrated);
+                const raw = loadRaw(YPT_STORE_KEY_V2);
+                return normalize(raw || defaultStore());
+            }
+
+            return { load, save, defaultStore };
+        })();
+
+        // ---------- Global App State ----------
+        const App = {
+            store: Storage.load(),
+            runtime: {
+                running: false,
+                lastTs: 0,           // 마지막 tick 기준
+                activeSubjectId: '', // 현재 선택 과목(빈 문자열 = 미분류)
+                sessionStartTs: 0,   // 현재 세션 시작(과목 세그먼트 단위)
+                sessionSubjectId: '',
+                focusStartTs: 0,     // "최장 집중"용: 실행 시작 시각(중단까지)
+                rafId: 0,
+                lastUiTs: 0,
+                lastSaveTs: 0,
+                pendingPanelTab: null,
+            }
+        };
+
+        // ---------- Data helpers ----------
+        function ensureDay(dk) {
+            if (!App.store.days[dk]) {
+                App.store.days[dk] = { totalMs: 0, subjects: {}, sessions: [], longestFocusMs: 0 };
+            }
+            return App.store.days[dk];
+        }
+
+        function subjectById(id) {
+            return App.store.subjects.find(s => s.id === id) || null;
+        }
+
+        function subjectName(id) {
+            if (!id) return '미분류';
+            const s = subjectById(id);
+            return s ? s.name : '삭제된 과목';
+        }
+
+        function subjectColor(id) {
+            if (!id) return 'rgba(255,255,255,0.28)';
+            const s = subjectById(id);
+            return s ? s.color : 'rgba(255,255,255,0.28)';
+        }
+
+        function allTimeSubjectTotalMs(subjectId) {
+            let sum = 0;
+            for (const dk of Object.keys(App.store.days)) {
+                const d = App.store.days[dk];
+                sum += (d.subjects?.[subjectId] || 0);
+            }
+            return sum;
+        }
+
+        // ---------- Time allocation (handles midnight split) ----------
+        function addTimeRange(startTs, endTs, subjectId) {
+            // startTs < endTs
+            let t0 = startTs;
+            while (t0 < endTs) {
+                const dk = dateKeyLocal(t0);
+                const dayEnd = endOfDayLocal(t0);
+                const t1 = Math.min(endTs, dayEnd);
+                const ms = t1 - t0;
+
+                const day = ensureDay(dk);
+                day.totalMs += ms;
+                if (!day.subjects[subjectId]) day.subjects[subjectId] = 0;
+                day.subjects[subjectId] += ms;
+
+                t0 = t1;
+            }
+        }
+
+        function addSessionRange(startTs, endTs, subjectId) {
+            let t0 = startTs;
+            while (t0 < endTs) {
+                const dk = dateKeyLocal(t0);
+                const dayEnd = endOfDayLocal(t0);
+                const t1 = Math.min(endTs, dayEnd);
+                const day = ensureDay(dk);
+                day.sessions.push({ start: t0, end: t1, subjectId });
+                t0 = t1;
+            }
+        }
+
+        function finalizeCurrentSession(endTs) {
+            const rt = App.runtime;
+            if (!rt.sessionStartTs) return;
+            const s = rt.sessionStartTs;
+            const sid = rt.sessionSubjectId || '';
+            if (endTs > s) addSessionRange(s, endTs, sid);
+            rt.sessionStartTs = 0;
+            rt.sessionSubjectId = '';
+        }
+
+        function commitDelta(nowTs) {
+            const rt = App.runtime;
+            if (!rt.running || !rt.lastTs) return;
+            if (nowTs <= rt.lastTs) return;
+
+            const sid = rt.activeSubjectId || '';
+            addTimeRange(rt.lastTs, nowTs, sid);
+            rt.lastTs = nowTs;
+        }
+
+        function handleMidnightIfNeeded(nowTs) {
+            const rt = App.runtime;
+            if (!rt.running || !rt.sessionStartTs) return;
+            const startKey = dateKeyLocal(rt.sessionStartTs);
+            const nowKey = dateKeyLocal(nowTs);
+            if (startKey === nowKey) return;
+
+            const sid = rt.sessionSubjectId || '';
+            finalizeCurrentSession(nowTs);
+            rt.sessionStartTs = nowTs;
+            rt.sessionSubjectId = sid;
+        }
+
+        function setRunningUI(running) {
+            if (running) {
+                ui.toggleBtn.classList.add('running');
+                ui.stopBtn.style.display = 'flex';
+                ui.toggleText.textContent = 'PAUSE';
+                ui.toggleIcon.innerHTML = `
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M7 5H10V19H7V5Z" fill="rgba(255,255,255,0.85)"/>
+                        <path d="M14 5H17V19H14V5Z" fill="rgba(255,255,255,0.85)"/>
+                    </svg>`;
+            } else {
+                ui.toggleBtn.classList.remove('running');
+                ui.stopBtn.style.display = 'none';
+                ui.toggleText.textContent = 'START';
+                ui.toggleIcon.innerHTML = `
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M8 5V19L19 12L8 5Z" fill="rgba(255,255,255,0.85)"/>
+                    </svg>`;
+            }
+        }
+
+        function startTimer() {
+            const rt = App.runtime;
+            if (rt.running) return;
+
+            const nowTs = Date.now();
+            rt.running = true;
+            rt.lastTs = nowTs;
+
+            rt.focusStartTs = nowTs;
+
+            rt.sessionStartTs = nowTs;
+            rt.sessionSubjectId = rt.activeSubjectId || '';
+
+            setRunningUI(true);
+            scheduleTick();
+        }
+
+        function pauseTimer() {
+            const rt = App.runtime;
+            if (!rt.running) return;
+
+            const nowTs = Date.now();
+            commitDelta(nowTs);
+            handleMidnightIfNeeded(nowTs);
+            finalizeCurrentSession(nowTs);
+
+            if (rt.focusStartTs) {
+                const focusMs = nowTs - rt.focusStartTs;
+                const dk = dateKeyLocal(nowTs);
+                const day = ensureDay(dk);
+                day.longestFocusMs = Math.max(day.longestFocusMs || 0, focusMs);
+                App.store.meta.bestFocusMs = Math.max(App.store.meta.bestFocusMs || 0, focusMs);
+            }
+
+            rt.running = false;
+            rt.lastTs = 0;
+            rt.focusStartTs = 0;
+
+            setRunningUI(false);
+            Storage.save(App.store);
+            renderAll();
+        }
+
+        function stopTimer() {
+            pauseTimer();
+        }
+
+        function toggleTimer() {
+            if (App.runtime.running) pauseTimer();
+            else startTimer();
+        }
+
+        // ---------- Subject switching ----------
+        function setActiveSubject(subjectId) {
+            const rt = App.runtime;
+            const id = subjectId || '';
+            const prev = rt.activeSubjectId || '';
+            if (prev === id) return;
+
+            const nowTs = Date.now();
+
+            // running이면 현재까지 시간 확정 + 세션 분리
+            if (rt.running) {
+                commitDelta(nowTs);
+                handleMidnightIfNeeded(nowTs);
+                finalizeCurrentSession(nowTs);
+
+                rt.activeSubjectId = id;
+
+                // 새 세션 시작(끊김 없이)
+                rt.sessionStartTs = nowTs;
+                rt.sessionSubjectId = id;
+                rt.lastTs = nowTs;
+            } else {
+                rt.activeSubjectId = id;
+            }
+
+            App.store.settings.lastSubjectId = id;
+            Storage.save(App.store);
+            renderSubjectsUI();
+            renderHUD();
+            // mode subject일 때 표시 즉시 반영
+            if (App.store.settings.viewMode === 'subject') renderHUD();
+        }
+
+        // ---------- UI: Subjects ----------
+        const COLOR_PRESETS = [
+            '#90caf9', '#a5d6a7', '#f48fb1', '#ffcc80',
+            '#ce93d8', '#80cbc4', '#fff59d', '#b0bec5'
+        ];
+
+        let subjectModalMode = 'add'; // 'add' | 'edit'
+        let subjectModalTargetId = '';
+
+        function openSubjectModal(mode='add', subjectId='') {
+            subjectModalMode = mode;
+            subjectModalTargetId = subjectId || '';
+
+            ui.subjectModal.classList.add('active');
+
+            // build color dots
+            ui.colorDots.innerHTML = '';
+            COLOR_PRESETS.forEach(c => {
+                const dot = document.createElement('button');
+                dot.type = 'button';
+                dot.className = 'cdot';
+                dot.style.background = c;
+                dot.addEventListener('click', () => {
+                    ui.subjectColorInput.value = c;
+                    syncColorDotActive();
+                });
+                ui.colorDots.appendChild(dot);
+            });
+
+            if (mode === 'add') {
+                ui.subjectModalTitle.textContent = '과목 추가';
+                ui.subjectModalDesc.textContent = '과목명과 색상을 정하면 과목별 누적 시간이 자동 기록됩니다.';
+                ui.subjectNameInput.value = '';
+                ui.subjectColorInput.value = '#90caf9';
+                ui.subjectDeleteBtn.style.display = 'none';
+            } else {
+                const s = subjectById(subjectId);
+                ui.subjectModalTitle.textContent = '과목 수정';
+                ui.subjectModalDesc.textContent = '이름/색상을 바꿔도 누적 기록은 유지됩니다.';
+                ui.subjectNameInput.value = s ? s.name : '';
+                ui.subjectColorInput.value = s?.color || '#90caf9';
+                ui.subjectDeleteBtn.style.display = 'inline-flex';
+            }
+
+            syncColorDotActive();
+            setTimeout(() => ui.subjectNameInput.focus(), 0);
+        }
+
+        function closeSubjectModal() {
+            ui.subjectModal.classList.remove('active');
+            subjectModalTargetId = '';
+        }
+
+        function syncColorDotActive() {
+            const val = (ui.subjectColorInput.value || '').toLowerCase();
+            [...ui.colorDots.children].forEach(btn => {
+                const bg = (btn.style.background || '').toLowerCase();
+                btn.classList.toggle('active', bg === val);
+            });
+        }
+
+        function upsertSubject() {
+            const name = (ui.subjectNameInput.value || '').trim();
+            const color = (ui.subjectColorInput.value || '#90caf9').trim();
+            if (!name) return;
+
+            // name duplicate check (case-insensitive), except self
+            const dup = App.store.subjects.some(s => s.name.toLowerCase() === name.toLowerCase() && s.id !== subjectModalTargetId);
+            if (dup) return;
+
+            if (subjectModalMode === 'add') {
+                const id = uid('s');
+                App.store.subjects.push({ id, name, color, createdAt: Date.now() });
+                // auto select
+                setActiveSubject(id);
+            } else {
+                const s = subjectById(subjectModalTargetId);
+                if (s) {
+                    s.name = name;
+                    s.color = color;
+                }
+            }
+            Storage.save(App.store);
+            renderAll();
+            closeSubjectModal();
+        }
+
+        function deleteSubject(subjectId) {
+            // 과목 삭제 시: 과목 목록에서만 제거.
+            // 과거 기록(subjectId 키)은 남아 있지만 UI에서는 "삭제된 과목"으로 보이게 처리.
+            App.store.subjects = App.store.subjects.filter(s => s.id !== subjectId);
+            if (App.runtime.activeSubjectId === subjectId) setActiveSubject('');
+            if (App.store.settings.lastSubjectId === subjectId) App.store.settings.lastSubjectId = '';
+            Storage.save(App.store);
+            renderAll();
+        }
+
+        // ---------- UI: Panel ----------
+        function openPanel(tab=null) {
+            ui.panelSheet.classList.add('active');
+            ui.panelSheet.setAttribute('aria-hidden', 'false');
+            setPanelTab(tab || App.store.settings.panelTab || 'stats');
+            renderPanel();
+        }
+        function closePanel() {
+            ui.panelSheet.classList.remove('active');
+            ui.panelSheet.setAttribute('aria-hidden', 'true');
+        }
+
+        function setPanelTab(tab) {
+            const t = tab || 'stats';
+            App.store.settings.panelTab = t;
+            Storage.save(App.store);
+
+            const tabs = [
+                { key: 'stats', btn: ui.tabBtnStats, el: ui.tabStats, title: '통계' },
+                { key: 'calendar', btn: ui.tabBtnCalendar, el: ui.tabCalendar, title: '캘린더' },
+                { key: 'subjects', btn: ui.tabBtnSubjects, el: ui.tabSubjects, title: '과목' },
+                { key: 'goal', btn: ui.tabBtnGoal, el: ui.tabGoal, title: '목표' },
+            ];
+            tabs.forEach(x => {
+                x.btn.classList.toggle('active', x.key === t);
+                x.el.classList.toggle('active', x.key === t);
+            });
+            const cur = tabs.find(x => x.key === t);
+            ui.panelTitle.textContent = cur ? cur.title : '통계';
+            renderPanel();
+        }
+
+        // ---------- Confirm modal ----------
+        let confirmResolve = null;
+        function confirmDialog(title, text) {
+            ui.confirmTitle.textContent = title || '확인';
+            ui.confirmText.textContent = text || '';
+            ui.confirmModal.classList.add('active');
+            return new Promise((resolve) => { confirmResolve = resolve; });
+        }
+        function closeConfirm(result=false) {
+            ui.confirmModal.classList.remove('active');
+            if (confirmResolve) confirmResolve(result);
+            confirmResolve = null;
+        }
+
+        // ---------- Stats computations ----------
+        function getTodayKey() { return dateKeyLocal(Date.now()); }
+
+        function getDayTotalMs(dk) {
+            const d = App.store.days[dk];
+            return d ? (d.totalMs || 0) : 0;
+        }
+
+        function aggregatePeriod(period) {
+            const now = Date.now();
+            let keys = [];
+            let label = '';
+
+            if (period === 'today') {
+                const dk = getTodayKey();
+                keys = [dk];
+                label = dk;
+            } else if (period === 'week') {
+                const ws = startOfWeekLocal(now);
+                keys = Array.from({length:7}, (_,i)=> dateKeyLocal(ws + i*86400000));
+                label = `${keys[0]} ~ ${keys[6]}`;
+            } else { // month
+                const ms = startOfMonthLocal(now);
+                const dim = daysInMonthLocal(now);
+                keys = Array.from({length:dim}, (_,i)=> dateKeyLocal(ms + i*86400000));
+                const d = new Date(ms);
+                label = `${d.getFullYear()}-${pad2(d.getMonth()+1)}`;
+            }
+
+            const perSubject = {}; // id -> ms
+            let total = 0;
+            let studiedDays = 0;
+            let longest = 0;
+
+            keys.forEach(dk => {
+                const day = App.store.days[dk];
+                const t = day?.totalMs || 0;
+                total += t;
+                if (t > 0) studiedDays += 1;
+                longest = Math.max(longest, day?.longestFocusMs || 0);
+                if (day?.subjects) {
+                    for (const [sid, ms] of Object.entries(day.subjects)) {
+                        perSubject[sid] = (perSubject[sid] || 0) + (ms || 0);
+                    }
+                }
+            });
+
+            const daysCount = keys.length;
+            const avgAll = total / Math.max(1, daysCount);
+
+            return { period, label, keys, totalMs: total, perSubject, longestFocusMs: longest, avgAllMs: avgAll, studiedDays };
+        }
+
+        function renderWeekdayBars() {
+            const ws = startOfWeekLocal(Date.now());
+            const labels = ['월','화','수','목','금','토','일'];
+            const totals = Array.from({length:7}, (_,i)=> getDayTotalMs(dateKeyLocal(ws + i*86400000)));
+            const max = Math.max(1, ...totals);
+
+            ui.weekdayBars.innerHTML = '';
+            labels.forEach((lab, i) => {
+                const v = totals[i];
+                const pct = Math.round((v / max) * 100);
+                const wrap = document.createElement('div');
+                wrap.className = 'week-bar' + (v <= 0 ? ' zero' : '');
+                wrap.innerHTML = `
+                    <div class="barcol"><div style="height:${pct}%"></div></div>
+                    <div class="wlabel">${lab}</div>
+                `;
+                ui.weekdayBars.appendChild(wrap);
+            });
+        }
+
+        function renderBreakdown(periodAgg) {
+            const total = periodAgg.totalMs || 0;
+            const entries = [];
+
+            // subjects from current list first
+            App.store.subjects.forEach(s => {
+                const ms = periodAgg.perSubject[s.id] || 0;
+                entries.push({ id: s.id, name: s.name, ms, color: s.color, exists: true });
+            });
+
+            // include deleted subjects that still have time
+            for (const sid of Object.keys(periodAgg.perSubject)) {
+                if (sid === '') continue;
+                if (!App.store.subjects.some(s => s.id === sid)) {
+                    const ms = periodAgg.perSubject[sid] || 0;
+                    if (ms > 0) entries.push({ id: sid, name: '삭제된 과목', ms, color: 'rgba(255,255,255,0.25)', exists: false });
+                }
+            }
+
+            // unclassified
+            const un = periodAgg.perSubject[''] || 0;
+            if (un > 0) entries.push({ id: '', name: '미분류', ms: un, color: 'rgba(255,255,255,0.22)', exists: true });
+
+            // sort
+            entries.sort((a,b)=> b.ms - a.ms);
+
+            ui.breakdownList.innerHTML = '';
+            if (entries.every(e => e.ms <= 0)) {
+                const empty = document.createElement('div');
+                empty.className = 'item';
+                empty.innerHTML = `<div class="item-row"><div class="item-name">기록이 없어요</div><div class="item-time">00:00:00</div></div>`;
+                ui.breakdownList.appendChild(empty);
+                return;
+            }
+
+            entries.forEach(e => {
+                if (e.ms <= 0) return;
+                const pct = total > 0 ? Math.min(100, (e.ms / total) * 100) : 0;
+                const item = document.createElement('div');
+                item.className = 'item';
+                item.innerHTML = `
+                    <div class="item-row">
+                        <div class="item-name" title="${escapeHtml(e.name)}">
+                            <span style="display:inline-flex; align-items:center; gap:8px; min-width:0;">
+                                <span class="swatch" style="width:10px;height:10px; background:${e.color};"></span>
+                                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px;">${escapeHtml(e.name)}</span>
+                            </span>
+                        </div>
+                        <div class="item-time">${fmtHMS(e.ms)}</div>
+                    </div>
+                    <div class="bar"><div style="width:${pct.toFixed(1)}%; background:${e.color};"></div></div>
+                `;
+                ui.breakdownList.appendChild(item);
+            });
+        }
+
+        function renderKPIs() {
+            const todayAgg = aggregatePeriod('today');
+            const weekAgg = aggregatePeriod('week');
+            const monthAgg = aggregatePeriod('month');
+
+            const goal = App.store.settings.dailyGoalMs || 0;
+            ui.kpiToday.textContent = fmtHMS(todayAgg.totalMs);
+            ui.kpiTodaySub.textContent = goal > 0
+                ? `목표 ${fmtHMS(goal)} · ${Math.min(100, Math.floor((todayAgg.totalMs/goal)*100))}%`
+                : '목표 없음';
+
+            ui.kpiWeek.textContent = fmtHMS(weekAgg.totalMs);
+            ui.kpiWeekSub.textContent = `평균 ${fmtHMS(weekAgg.avgAllMs)}`;
+
+            ui.kpiMonth.textContent = fmtHMS(monthAgg.totalMs);
+            ui.kpiMonthSub.textContent = `평균 ${fmtHMS(monthAgg.avgAllMs)}`;
+
+            // focus info (overall best, and this week best)
+            const bestAll = App.store.meta.bestFocusMs || 0;
+            const bestWeek = weekAgg.longestFocusMs || 0;
+            ui.focusInfo.textContent = `최장 집중 ${fmtHMS(Math.max(bestWeek, bestAll))}`;
+        }
+
+        function setStatsPeriod(period) {
+            App.store.settings.statsPeriod = period;
+            Storage.save(App.store);
+            // UI button states
+            ui.periodTodayBtn.classList.toggle('active', period === 'today');
+            ui.periodWeekBtn.classList.toggle('active', period === 'week');
+            ui.periodMonthBtn.classList.toggle('active', period === 'month');
+            renderPanel();
+        }
+
+        // ---------- Calendar ----------
+        function renderCalendar() {
+            // dow header once
+            if (!ui.calDow.dataset.built) {
+                const dows = ['M','T','W','T','F','S','S'];
+                ui.calDow.innerHTML = '';
+                dows.forEach(d => {
+                    const el = document.createElement('div');
+                    el.className = 'cal-dow';
+                    el.textContent = d;
+                    ui.calDow.appendChild(el);
+                });
+                ui.calDow.dataset.built = '1';
+            }
+
+            const monthTs = App.store.settings.calendarMonthTs || startOfMonthLocal(Date.now());
+            const d = new Date(monthTs);
+            const year = d.getFullYear();
+            const month = d.getMonth(); // 0-based
+            ui.calTitle.textContent = `${year}-${pad2(month+1)}`;
+
+            const first = new Date(year, month, 1);
+            const firstDow = first.getDay(); // 0 Sun
+            const offset = (firstDow === 0 ? 6 : firstDow - 1); // Monday=0
+            const dim = new Date(year, month+1, 0).getDate();
+
+            // grid cells
+            ui.calGrid.innerHTML = '';
+            const totalCells = Math.ceil((offset + dim) / 7) * 7;
+
+            const todayKey = getTodayKey();
+
+            for (let i = 0; i < totalCells; i++) {
+                const dayNum = i - offset + 1;
+                if (dayNum < 1 || dayNum > dim) {
+                    const blank = document.createElement('div');
+                    blank.style.opacity = '0';
+                    ui.calGrid.appendChild(blank);
+                    continue;
+                }
+
+                const cellDate = new Date(year, month, dayNum);
+                cellDate.setHours(0,0,0,0);
+                const dk = dateKeyLocal(cellDate.getTime());
+                const total = getDayTotalMs(dk);
+
+                const cell = document.createElement('button');
+                cell.type = 'button';
+                cell.className = 'cal-day' + (total <= 0 ? ' off' : '') + (dk === todayKey ? ' today' : '');
+                cell.innerHTML = `
+                    <div class="dnum">${dayNum}</div>
+                    <div class="dtime">${total > 0 ? fmtHMS(total) : ''}</div>
+                `;
+                if (total > 0 || dk === todayKey) {
+                    cell.addEventListener('click', () => openDayDetail(dk));
+                } else {
+                    // off day: do nothing
+                }
+                ui.calGrid.appendChild(cell);
+            }
+        }
+
+        function openDayDetail(dk) {
+            const day = ensureDay(dk);
+            ui.dayDetailTitle.textContent = dk;
+            ui.dayDetailSub.textContent = `총 ${fmtHMS(day.totalMs || 0)}`;
+
+            // subject breakdown
+            const entries = [];
+            for (const [sid, ms] of Object.entries(day.subjects || {})) {
+                if (!ms) continue;
+                entries.push({ sid, ms });
+            }
+            entries.sort((a,b)=> b.ms - a.ms);
+
+            ui.dayDetailList.innerHTML = '';
+            if (entries.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'item';
+                empty.innerHTML = `<div class="item-row"><div class="item-name">기록 없음</div><div class="item-time">00:00:00</div></div>`;
+                ui.dayDetailList.appendChild(empty);
+            } else {
+                const total = Math.max(1, day.totalMs || 0);
+                entries.forEach(e => {
+                    const pct = Math.min(100, (e.ms / total) * 100);
+                    const item = document.createElement('div');
+                    item.className = 'item';
+                    item.innerHTML = `
+                        <div class="item-row">
+                            <div class="item-name" title="${escapeHtml(subjectName(e.sid))}">
+                                <span style="display:inline-flex; align-items:center; gap:8px; min-width:0;">
+                                    <span class="swatch" style="width:10px;height:10px; background:${subjectColor(e.sid)};"></span>
+                                    <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:240px;">${escapeHtml(subjectName(e.sid))}</span>
+                                </span>
+                            </div>
+                            <div class="item-time">${fmtHMS(e.ms)}</div>
+                        </div>
+                        <div class="bar"><div style="width:${pct.toFixed(1)}%; background:${subjectColor(e.sid)};"></div></div>
+                    `;
+                    ui.dayDetailList.appendChild(item);
+                });
+            }
+
+            ui.dayDetailModal.classList.add('active');
+        }
+
+        function closeDayDetail() {
+            ui.dayDetailModal.classList.remove('active');
+        }
+
+        // ---------- Subjects management panel ----------
+        function renderSubjectsManageList() {
+            ui.subjectsManageList.innerHTML = '';
+            if (App.store.subjects.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'item';
+                empty.innerHTML = `<div class="item-row"><div class="item-name">과목이 없어요</div><div class="item-time">+</div></div>`;
+                ui.subjectsManageList.appendChild(empty);
+                return;
+            }
+
+            App.store.subjects
+                .slice()
+                .sort((a,b)=> (a.createdAt||0) - (b.createdAt||0))
+                .forEach(s => {
+                    const total = allTimeSubjectTotalMs(s.id);
+                    const row = document.createElement('div');
+                    row.className = 'msub';
+                    row.innerHTML = `
+                        <div class="msub-left">
+                            <span class="swatch" style="background:${s.color}"></span>
+                            <div class="msub-name" title="${escapeHtml(s.name)}">${escapeHtml(s.name)}</div>
+                        </div>
+                        <div class="msub-right">
+                            <div class="msub-time">${fmtHMS(total)}</div>
+                            <button class="icon-btn" aria-label="Edit" style="width:34px;height:34px;border-radius:14px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                    <path d="M4 20H8L18.5 9.5C19.3 8.7 19.3 7.4 18.5 6.6L17.4 5.5C16.6 4.7 15.3 4.7 14.5 5.5L4 16V20Z" stroke="rgba(255,255,255,0.75)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                    `;
+                    const editBtn = row.querySelector('button[aria-label="Edit"]');
+                    editBtn.addEventListener('click', () => openSubjectModal('edit', s.id));
+                    ui.subjectsManageList.appendChild(row);
+                });
+        }
+
+        // ---------- HUD rendering ----------
+        function renderSubjectsUI() {
+            // select options
+            ui.subjectSelect.innerHTML = '<option value="">미분류</option>';
+            App.store.subjects.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.id;
+                opt.textContent = s.name;
+                ui.subjectSelect.appendChild(opt);
+            });
+
+            // selection
+            const sid = App.runtime.activeSubjectId || '';
+            ui.subjectSelect.value = sid;
+
+            // chips
+            ui.subjectChips.innerHTML = '';
+            // 미분류 chip
+            const unc = document.createElement('button');
+            unc.type = 'button';
+            unc.className = 'chip' + (sid === '' ? ' active' : '');
+            unc.innerHTML = `<span class="dot" style="background: rgba(255,255,255,0.22)"></span><span>미분류</span>`;
+            unc.addEventListener('click', () => {
+                setActiveSubject('');
+                if (!App.runtime.running) startTimer();
+            });
+            ui.subjectChips.appendChild(unc);
+
+            App.store.subjects.forEach(s => {
+                const chip = document.createElement('button');
+                chip.type = 'button';
+                chip.className = 'chip' + (s.id === sid ? ' active' : '');
+                chip.innerHTML = `<span class="dot" style="background:${s.color}"></span><span>${escapeHtml(s.name)}</span>`;
+                chip.addEventListener('click', () => {
+                    setActiveSubject(s.id);
+                    // 열품타 느낌: 과목 선택 시 바로 측정 시작(정지 상태일 때)
+                    if (!App.runtime.running) startTimer();
+                });
+                ui.subjectChips.appendChild(chip);
+            });
+
+            // mode subject select enable/disable
+            const mode = App.store.settings.viewMode || 'total';
+            ui.subjectSelect.disabled = (mode !== 'subject');
+        }
+
+        function getDisplayedMs() {
+            // HUD 표시: total/subject 모드에 따라 "오늘" 기준
+            const nowTs = Date.now();
+            const todayKey = dateKeyLocal(nowTs);
+            const day = ensureDay(todayKey);
+
+            let baseMsTotal = day.totalMs || 0;
+            let baseMsSubject = (day.subjects?.[App.runtime.activeSubjectId || ''] || 0);
+
+            // 아직 commit되지 않은 pending(현재 tick 사이) 보정
+            if (App.runtime.running && App.runtime.lastTs) {
+                const pending = nowTs - App.runtime.lastTs;
+                // pending은 현재 과목에 속함
+                baseMsTotal += pending;
+                baseMsSubject += pending;
+            }
+
+            const mode = App.store.settings.viewMode || 'total';
+            return mode === 'total' ? baseMsTotal : baseMsSubject;
+        }
+
+        function renderGoalProgress() {
+            const nowTs = Date.now();
+            const dk = dateKeyLocal(nowTs);
+            const day = ensureDay(dk);
+            const goal = App.store.settings.dailyGoalMs || 0;
+            const totalMs = (day.totalMs || 0) + (App.runtime.running && App.runtime.lastTs ? (nowTs - App.runtime.lastTs) : 0);
+
+            if (goal > 0) {
+                const pct = clamp((totalMs / goal) * 100, 0, 100);
+                ui.goalBarFill.style.width = `${pct}%`;
+                ui.goalProgressBar.style.width = `${pct}%`;
+                ui.goalProgressText.textContent = `${Math.floor(pct)}% · ${fmtHMS(totalMs)} / ${fmtHMS(goal)}`;
+                ui.kpiTodaySub.textContent = `목표 ${fmtHMS(goal)} · ${Math.min(100, Math.floor((totalMs/goal)*100))}%`;
+
+                if (totalMs >= goal) ui.studyHud.classList.add('goal-hit');
+                else ui.studyHud.classList.remove('goal-hit');
+            } else {
+                ui.goalBarFill.style.width = `0%`;
+                ui.goalProgressBar.style.width = `0%`;
+                ui.goalProgressText.textContent = '목표 없음';
+                ui.studyHud.classList.remove('goal-hit');
+            }
+
+            // goal inputs
+            ui.goalNow.textContent = goal > 0 ? fmtHMS(goal) : '목표 없음';
+        }
+
+        function renderHUD() {
+            ui.studyTime.textContent = fmtHMS(getDisplayedMs());
+            renderGoalProgress();
+        }
+
+        // ---------- Panel render ----------
+        function renderPanel() {
+            if (!ui.panelSheet.classList.contains('active')) return;
+
+            const now = Date.now();
+            ui.panelSubtitle.textContent = `${getTodayKey()} · 오프라인`;
+
+            // stats period button state
+            const _p = App.store.settings.statsPeriod || 'today';
+            ui.periodTodayBtn.classList.toggle('active', _p === 'today');
+            ui.periodWeekBtn.classList.toggle('active', _p === 'week');
+            ui.periodMonthBtn.classList.toggle('active', _p === 'month');
+
+renderKPIs();
+
+            const agg = aggregatePeriod(App.store.settings.statsPeriod || 'today');
+            renderBreakdown(agg);
+            renderWeekdayBars();
+
+            renderCalendar();
+            renderSubjectsManageList();
+
+            // goal inputs
+            const goal = App.store.settings.dailyGoalMs || (2*60*60*1000);
+            ui.goalHours.value = Math.floor(goal / 3600000);
+            ui.goalMinutes.value = Math.floor((goal % 3600000) / 60000);
+            ui.goalNow.textContent = fmtHMS(goal);
+        }
+
+        function renderAll() {
+            renderSubjectsUI();
+            renderHUD();
+            renderPanel();
+        }
+
+        // ---------- Export / Reset ----------
+        function exportJSON() {
+            // 저장 구조가 날짜 -> 과목 -> 시간(ms) 이므로, 사용 편의를 위해 "초 단위" 요약도 함께 제공
+            const payload = JSON.stringify(App.store, null, 2);
+            const filename = `ypt_${getTodayKey()}.json`;
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(payload)
+                    .then(() => {
+                        // 최소 알림 (공부 방해 최소)
+                        ui.panelSubtitle.textContent = `${getTodayKey()} · JSON 복사됨`;
+                    })
+                    .catch(() => downloadJSON(payload, filename));
+            } else {
+                downloadJSON(payload, filename);
+            }
+        }
+
+        function downloadJSON(payload, filename) {
+            const blob = new Blob([payload], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        async function resetToday() {
+            const ok = await confirmDialog('오늘 초기화', '오늘 공부 기록을 초기화할까요? (되돌릴 수 없음)');
+            if (!ok) return;
+            const dk = getTodayKey();
+            App.store.days[dk] = { totalMs: 0, subjects: {}, sessions: [], longestFocusMs: 0 };
+            Storage.save(App.store);
+            pauseTimer(); // 안전하게 중지
+            renderAll();
+        }
+
+        async function resetAll() {
+            const ok = await confirmDialog('전체 초기화', '모든 공부 기록/과목/설정을 초기화할까요? (되돌릴 수 없음)');
+            if (!ok) return;
+            App.store = Storage.defaultStore();
+            Storage.save(App.store);
+            App.runtime.running = false;
+            App.runtime.lastTs = 0;
+            App.runtime.activeSubjectId = '';
+            setRunningUI(false);
+            renderAll();
+        }
+
+        // ---------- Tick loop (requestAnimationFrame 기반) ----------
+        function scheduleTick() {
+            if (App.runtime.rafId) return;
+            const tick = () => {
+                App.runtime.rafId = requestAnimationFrame(tick);
+
+                const nowTs = Date.now();
+
+                if (App.runtime.running) {
+                    // 시간 누적
+                    // rAF가 느리거나 백그라운드 후 복귀해도 now-lastTs로 정확히 반영
+                    commitDelta(nowTs);
+                    handleMidnightIfNeeded(nowTs);
+
+                    // save throttling (every ~2s)
+                    if (nowTs - (App.runtime.lastSaveTs || 0) > 2000) {
+                        App.runtime.lastSaveTs = nowTs;
+                        Storage.save(App.store);
+                    }
+                }
+
+                // UI update throttling (~10fps)
+                if (nowTs - (App.runtime.lastUiTs || 0) > 100) {
+                    App.runtime.lastUiTs = nowTs;
+                    renderHUD();
+                    // panel이 열려 있으면 가볍게 갱신(너무 자주 X)
+                    if (ui.panelSheet.classList.contains('active')) {
+                        if (nowTs - (App.runtime.lastUiPanelTs || 0) > 500) {
+                            App.runtime.lastUiPanelTs = nowTs;
+                            renderPanel();
+                        }
+                    }
+                }
+            };
+            App.runtime.rafId = requestAnimationFrame(tick);
+        }
+
+        // ---------- Mode switching ----------
+        function setViewMode(mode) {
+            const m = (mode === 'subject') ? 'subject' : 'total';
+            App.store.settings.viewMode = m;
+            Storage.save(App.store);
+
+            ui.modeTotalBtn.classList.toggle('active', m === 'total');
+            ui.modeSubjectBtn.classList.toggle('active', m === 'subject');
+            ui.subjectSelect.disabled = (m !== 'subject');
+
+            renderHUD();
+        }
+
+        // ---------- Goal ----------
+        function saveGoalFromInputs() {
+            const h = clamp(parseInt(ui.goalHours.value || '0', 10) || 0, 0, 23);
+            const m = clamp(parseInt(ui.goalMinutes.value || '0', 10) || 0, 0, 59);
+            const goal = (h * 60 + m) * 60000;
+            App.store.settings.dailyGoalMs = goal;
+            Storage.save(App.store);
+            renderAll();
+        }
+
+        function resetGoalDefault() {
+            App.store.settings.dailyGoalMs = 2 * 60 * 60 * 1000;
+            Storage.save(App.store);
+            renderAll();
+        }
+
+        // ---------- Calendar nav ----------
+        function shiftCalendarMonth(delta) {
+            const cur = App.store.settings.calendarMonthTs || startOfMonthLocal(Date.now());
+            const d = new Date(cur);
+            d.setMonth(d.getMonth() + delta);
+            d.setDate(1);
+            d.setHours(0,0,0,0);
+            App.store.settings.calendarMonthTs = d.getTime();
+            Storage.save(App.store);
+            renderCalendar();
+        }
+
+        // ---------- Event wiring ----------
+        // HUD interactions
+        ui.modeTotalBtn.addEventListener('click', () => setViewMode('total'));
+        ui.modeSubjectBtn.addEventListener('click', () => setViewMode('subject'));
+
+        ui.subjectSelect.addEventListener('change', () => setActiveSubject(ui.subjectSelect.value));
+
+        ui.toggleBtn.addEventListener('click', toggleTimer);
+        ui.stopBtn.addEventListener('click', stopTimer);
+
+        ui.addSubjectBtn.addEventListener('click', () => openSubjectModal('add'));
+        ui.openPanelBtn.addEventListener('click', () => openPanel(App.store.settings.panelTab || 'stats'));
+
+        // Subject modal
+        ui.subjectCancelBtn.addEventListener('click', closeSubjectModal);
+        ui.subjectModal.addEventListener('click', (e) => { if (e.target === ui.subjectModal) closeSubjectModal(); });
+        ui.subjectColorInput.addEventListener('input', syncColorDotActive);
+
+        ui.subjectSaveBtn.addEventListener('click', upsertSubject);
+        ui.subjectNameInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') upsertSubject();
+            if (e.key === 'Escape') closeSubjectModal();
+        });
+
+        ui.subjectDeleteBtn.addEventListener('click', async () => {
+            const sid = subjectModalTargetId;
+            const ok = await confirmDialog('과목 삭제', '이 과목을 삭제할까요? (기록은 남지만 과목 목록에서 제거됨)');
+            closeConfirm(false);
+            if (!ok) return;
+            deleteSubject(sid);
+            closeSubjectModal();
+        });
+
+        // Panel open/close
+        ui.closePanelBtn.addEventListener('click', closePanel);
+
+        ui.tabBtnStats.addEventListener('click', () => setPanelTab('stats'));
+        ui.tabBtnCalendar.addEventListener('click', () => setPanelTab('calendar'));
+        ui.tabBtnSubjects.addEventListener('click', () => setPanelTab('subjects'));
+        ui.tabBtnGoal.addEventListener('click', () => setPanelTab('goal'));
+
+        // Stats controls
+        ui.periodTodayBtn.addEventListener('click', () => setStatsPeriod('today'));
+        ui.periodWeekBtn.addEventListener('click', () => setStatsPeriod('week'));
+        ui.periodMonthBtn.addEventListener('click', () => setStatsPeriod('month'));
+        ui.exportBtn.addEventListener('click', exportJSON);
+        ui.resetTodayBtn.addEventListener('click', resetToday);
+        ui.resetAllBtn.addEventListener('click', resetAll);
+
+        // Calendar controls
+        ui.calPrevBtn.addEventListener('click', () => shiftCalendarMonth(-1));
+        ui.calNextBtn.addEventListener('click', () => shiftCalendarMonth(1));
+
+        // Subjects panel
+        ui.addSubjectBtn2.addEventListener('click', () => openSubjectModal('add'));
+
+        // Goal panel
+        ui.goalSaveBtn.addEventListener('click', saveGoalFromInputs);
+        ui.goalResetBtn.addEventListener('click', resetGoalDefault);
+
+        // Day detail
+        ui.dayDetailCloseBtn.addEventListener('click', closeDayDetail);
+        ui.dayDetailModal.addEventListener('click', (e) => { if (e.target === ui.dayDetailModal) closeDayDetail(); });
+
+        // Confirm
+        ui.confirmCancelBtn.addEventListener('click', () => closeConfirm(false));
+        ui.confirmOkBtn.addEventListener('click', () => closeConfirm(true));
+        ui.confirmModal.addEventListener('click', (e) => { if (e.target === ui.confirmModal) closeConfirm(false); });
+
+        // Visibility: background/foreground 전환 시에도 Date.now 기반으로 정확히 누적되지만,
+        // 복귀 시 UI/자정 분리를 한 번 더 보정
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                const nowTs = Date.now();
+                if (App.runtime.running) {
+                    // long sleep 보정
+                    commitDelta(nowTs);
+                    handleMidnightIfNeeded(nowTs);
+                    Storage.save(App.store);
+                }
+                renderAll();
+            }
+        });
+
+        // ---------- Init ----------
+        // restore last subject
+        App.runtime.activeSubjectId = App.store.settings.lastSubjectId || '';
+
+        // view mode init
+        setViewMode(App.store.settings.viewMode || 'total');
+
+        // initial render
+        renderAll();
+
+        // start tick loop (always on; lightweight throttling inside)
+        scheduleTick();
+
+    </script>
+</body>
+</html>
