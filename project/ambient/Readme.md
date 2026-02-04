@@ -11,6 +11,7 @@
 
 | 기기 | SoC | GPU | 해상도 |
 | :--- | :--- | :--- | :--- |
+| Galaxy S21 | Exynos 2100 | Mali G78 | 2400x1080 |
 | Galaxy S21 Ultra | Exynos 2100 | Mali G78 | 3200x1440 |
 | Galaxy Tab S9 FE | Exynos 1380 | Mali G68 | 2304x1440 |
 
