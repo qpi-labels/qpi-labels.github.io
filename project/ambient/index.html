@@ -249,7 +249,7 @@
 
         function updateOptics(sx, sy, alt, isMoon = false) {
             const cont = isMoon ? flareEls.moonFC : flareEls.sunFC;
-            const fadeStart = -0.15; 
+            const fadeStart = 0; 
             const visibleRange = 0.3; 
             const rawOpacity = (alt - fadeStart) / visibleRange;
             const finalOpacity = Math.max(0, Math.min(1, rawOpacity));
