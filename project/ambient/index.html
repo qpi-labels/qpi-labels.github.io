@@ -603,14 +603,18 @@
             }
         }
 
-        // 1. 서비스 워커 등록 및 업데이트 감지
+        /* --- 서비스 워커 등록 및 알림 통합 로직 --- */
 if ('serviceWorker' in navigator) {
+    // 1. 서비스 워커 등록 (이게 있어야 작동함)
     navigator.serviceWorker.register('./sw.js').then((reg) => {
+        console.log("서비스 워커 등록 성공!");
+        
+        // 업데이트 감지 로직
         reg.addEventListener('updatefound', () => {
             const newWorker = reg.installing;
             newWorker.addEventListener('statechange', () => {
                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                    if (confirm("새 버전이 업데이트되었습니다. 새로고침할까요?")) {
+                    if (confirm("새로운 버전이 준비되었습니다. 지금 적용할까요?")) {
                         window.location.reload();
                     }
                 }
@@ -619,22 +623,22 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// 2. 라이브 알림(Live Notification / Now Bar) 업데이트 함수
-async function syncLiveNotify() {
-    // 권한 체크
+// 2. 통합 알림 전송 함수 (Now Bar와 알림창 동시 대응)
+async function syncLiveNotification() {
+    // 권한 확인
     if (Notification.permission !== 'granted') {
         const permission = await Notification.requestPermission();
         if (permission !== 'granted') return;
     }
 
-    // 서비스 워커 제어 확인 및 데이터 전송
     if (navigator.serviceWorker.controller) {
         const now = new Date();
         const currentMins = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
         const solar = getSunTimes(now);
 
+        // 서비스 워커로 데이터 전송
         navigator.serviceWorker.controller.postMessage({
-            type: 'UPDATE_LIVE_NOTIFY', // sw.js에 작성한 타입과 일치시킴
+            type: 'UPDATE_LIVE_NOTIFY', // sw.js의 리스너와 이름을 맞춤
             payload: {
                 sunrise: solar.sunrise,
                 sunset: solar.sunset,
@@ -646,16 +650,14 @@ async function syncLiveNotify() {
 
 // 3. 실행 타이머 설정
 window.addEventListener('load', () => {
-    // 앱 실행 2초 후 첫 업데이트
-    setTimeout(syncLiveNotify, 2000);
-    // 이후 1분마다 자동 갱신
-    setInterval(syncLiveNotify, 60000);
+    // 2초 후 첫 실행, 이후 1분마다 갱신
+    setTimeout(syncLiveNotification, 2000);
+    setInterval(syncLiveNotification, 60000);
 });
 
-// 비주얼라이저 버튼 클릭 시에도 알림 권한 요청 및 업데이트 트리거
-if(document.getElementById('btnViz')) {
-    document.getElementById('btnViz').addEventListener('click', syncLiveNotify);
-}
+// 비주얼라이저 버튼 클릭 시에도 권한 요청을 위해 연결
+document.getElementById('btnViz').addEventListener('click', syncLiveNotification);
+
 
 
 
