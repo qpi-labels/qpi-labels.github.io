@@ -28,8 +28,6 @@
 
 $$Index = \frac{\text{기기의 3DMark Wild Life 점수}}{\text{기기의 전체 픽셀 수(MP)}}$$
 
-* 예시
-
 | 제조사 | 기기 (Chipset) | GPU Score | Res | Efficiency | 결과 |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | Samsung | **Tab S9 FE (Exynos 1380)** | 2,772 | 3.3MP | **840** | **위험** |
