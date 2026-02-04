@@ -173,7 +173,7 @@
 
     <div class="popup glass-panel-base" id="popup">
         <!--<div class="row"><span class="label">Performance Mode</span><label class="switch"><input type="checkbox" id="perfToggle"><span class="slider-sw"></span></label></div>-->
-        <hr style="border: 0; border-top: 1px solid var(--glass-border); margin-bottom: 20px;">
+        <!--<hr style="border: 0; border-top: 1px solid var(--glass-border); margin-bottom: 20px;">-->
         <div class="row"><span class="label">Ambient Night</span><label class="switch"><input type="checkbox" class="soundToggle" value="0"><span class="slider-sw"></span></label></div>
         <div class="row"><span class="label">Ambient Dark</span><label class="switch"><input type="checkbox" class="soundToggle" value="1"><span class="slider-sw"></span></label></div>
         <!--<div class="row"><span class="label">Ambient Ambient</span><label class="switch"><input type="checkbox" class="soundToggle" value="2"><span class="slider-sw"></span></label></div>-->
@@ -204,15 +204,15 @@
         };
 
         // 초기 성능 설정 적용
-        perfToggleEl.checked = isPerfMode;
-        if(isPerfMode) document.body.classList.add('perf-active');
+        /*perfToggleEl.checked = isPerfMode;
+        if(isPerfMode) document.body.classList.add('perf-active');*/
 
-        perfToggleEl.onchange = (e) => {
+        /*perfToggleEl.onchange = (e) => {
             isPerfMode = e.target.checked;
             localStorage.setItem('qpi_perf_mode_v2', isPerfMode);
             if(isPerfMode) document.body.classList.add('perf-active');
             else document.body.classList.remove('perf-active');
-        };
+        };*/
 
         let manualMinutes = 720, lastTimestamp = performance.now(), currentSpeed = 1;
         let isCatchingUp = false, catchUpStartMinutes = 0, catchUpStartTime = 0;
