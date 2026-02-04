@@ -444,7 +444,7 @@
             clockEl.textContent = `${hRaw.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
 
             // 성능 모드 시 무거운 그래픽 연산 스로틀링 (30프레임당 1회)
-            if (!isPerfMode || isCatchingUp || frameCounter % 30 === 0) {
+            if (!isPerfMode || isCatchingUp || (!autoCheckEl.checked&&Math.abs(currentSpeed)>2) || frameCounter % 30 === 0) {
                 updateSky(m);
             }
 
