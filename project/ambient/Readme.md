@@ -30,6 +30,6 @@ $$Index = \frac{\text{기기의 3DMark Wild Life 점수}}{\text{기기의 전체
 * 예시
 | 기기 (Chipset) | GPU Score (A) | Res (MP) (B) | Efficiency (A/B) | 결과 |
 | :--- | :--- | :--- | :--- | :--- |
-| **Tab S9 FE (Exynos 1380)** | 2772 | 3.3MP | **840** | **위험** |
-| **Tab S11 (Dimensity 9400+)** | 22700(추정치) | 3.3 | **848** | **위험** |
+| **Tab S9 FE (Exynos 1380)** | 2,772 | 3.3MP | **840** | **위험** |
+| **Tab S11 (Dimensity 9400+)** | 22,700(추정치) | 4.1 | **5,536** | **안전** |
 | **MacBook Air (M3)** | ~40,000 | 4.1 | **9,756** | **매우 안전** |
