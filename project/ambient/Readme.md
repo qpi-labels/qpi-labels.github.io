@@ -1,5 +1,22 @@
 # QPI Ambient
 
+## 퍼포먼스 모드
+> ### 저사양 기기에서는 GPU 과부하 방지를 위해 Performance Mode를 사용하는 것을 권장합니다.
+* Performance Mode는 ```updateSky()``` 함수의 프레임레이트를 제한하여 GPU의 과부하를 막습니다.
+* 일반 사용자가 느낄 수 있는 그래픽 변화는 거의 없습니다.
+<br>
+  
+> 아래 수식을 통해 도출된 지수가 **1,000 미만인 경우, Performance Mode 사용을 권장합니다.**
+
+$$Index = \frac{\text{기기의 3DMark Wild Life 점수}}{\text{디스플레이의 전체 픽셀 수(MP)}}$$
+
+| 제조사 | 기기 (SoC) | GPU Score | Res | Efficiency | 결과 |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| Samsung | **Tab S9 FE (Exynos 1380)** | 2,772 | 3.3MP | **840** | **사용 권장** |
+| Samsung | **Tab S11 (Dimensity 9400+)** | 22,700(추정치) | 4.1MP | **5,536** | 안전 |
+| Apple | **iPad 7th Gen (A10 Fusion)** | 2,631 | 3.5MP | **752** | **사용 권장** |
+| Apple | **iPad Pro M5 (M5 4core)** | 31,500(추정치) | 4.15MP | **7,712** | 안전 |
+
 ## 설치 및 업데이트 방법
 > ### IOS Safari
 1. 앱 우하단의 미트볼 메뉴(...)를 클릭합니다.
@@ -21,17 +38,4 @@
 > ### MacOS Safari
 1. 페이지에 접속한 채로 우상단의 공유 버튼을 클릭합니다.
 2. ```Dock에 추가```를 클릭합니다.
-
-## 기기 성능 관련
-* 기기의 안정성을 확인하기 위해 아래 수식을 참고하십시오. 지수가 **1,000 미만인 경우, GPU 과부하가 발생할 가능성이 높습니다.**
-* GPU 과부하가 발생하는 경우, 일부 시간대에서 화면이 깜빡거리는 문제가 발생할 수 있습니다.
-
-$$Index = \frac{\text{기기의 3DMark Wild Life 점수}}{\text{디스플레이의 전체 픽셀 수(MP)}}$$
-
-| 제조사 | 기기 (Chipset) | GPU Score | Res | Efficiency | 결과 |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| Samsung | **Tab S9 FE (Exynos 1380)** | 2,772 | 3.3MP | **840** | **위험** |
-| Samsung | **Tab S11 (Dimensity 9400+)** | 22,700(추정치) | 4.1MP | **5,536** | **안전** |
-| Apple | **iPad 7th Gen (A10 Fusion)** | 2,631 | 3.5MP | **752** | **위험** |
-| Apple | **iPad Pro M5 (M5 4core)** | 31,500(추정치) | 4.15MP | **7,712** | **안전** |
 
