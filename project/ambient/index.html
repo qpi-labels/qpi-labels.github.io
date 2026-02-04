@@ -97,7 +97,7 @@
             transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.5s, color 0.5s; 
         }
         .info-panel.active { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
-        .info-panel b { color: var(--primary); font-weight: 500; }
+        .info-panel b { background: var(--primary); border-radius: 8px; padding-left: 0.4em; padding-right: 0.4em; color: var(--on-primary-container); font-weight: 500; transition: background 0.5s, color 0.5s; }
 
         .fab { 
             position: fixed; bottom: 30px; right: 30px; width: 56px; height: 56px; border-radius: 16px; 
@@ -118,13 +118,15 @@
         .manual-ui.disabled { opacity: 0.2; pointer-events: none; filter: grayscale(1); }
         .speed-chips { display: flex; gap: 8px; flex-wrap: wrap; }
         .chip { background: var(--chip-bg); border: 1px solid var(--glass-border); color: var(--text-main); border-radius: 8px; padding: 6px 10px; font-size: 11px; cursor: pointer; font-weight: 700; transition: background 0.5s, color 0.5s; }
-        .btn-action { width: 100%; padding: 14px; background: var(--primary); color: var(--on-primary-container); border: none; border-radius: 12px; font-size: 12px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: 0.2s; }
+        .btn-action { width: 100%; padding: 14px; background: var(--primary); color: var(--on-primary-container); border: none; border-radius: 12px; font-size: 12px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: background 0.5s, 0.2s; }
         input[type=range] { width: 100%; appearance: none; background: var(--chip-bg); height: 6px; border-radius: 3px; outline: none; margin: 10px 0; pointer-events: auto; }
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: var(--primary); cursor: pointer; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        input[type=range]::-webkit-slider-thumb { appearance: none; /* The previous iteration of you has rolled back my change from '-webkit-appearance' to 'appearance'. CSS 'appearance' property is baseline since 2022. It's 2026 now. Please catch up. */ width: 24px; height: 24px; border-radius: 50%; background: var(--primary); cursor: pointer; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: background 0.5s; }
+        input[type=range]::-moz-range-thumb { appearance: none; width: 24px; height: 24px; border-radius: 50%; background: var(--primary); cursor: pointer; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: background 0.5s; }
         .switch { position: relative; width: 44px; height: 24px; display: inline-block; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider-sw { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(100,100,100,0.5); border-radius: 24px; transition: 0.3s; cursor: pointer; }
         .slider-sw:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        input[type=checkbox] + .slider-sw { transition: background 0.5s, border 0.5s, color 0.5s; }
         input:checked + .slider-sw { background: var(--primary); }
         input:checked + .slider-sw:before { transform: translateX(20px); background: var(--on-primary-container); }
     </style>
@@ -317,25 +319,33 @@
                 }
             }
             
-            let tContrast = Math.min(1, Math.max(0, (brightness - 40) / 150));
-            const bgR = 20 + (215 * tContrast);
-            const bgG = 25 + (220 * tContrast);
-            const bgB = 35 + (220 * tContrast);
-            const bgA = 0.65 - (0.2 * tContrast);
-            const txtR = 255 - (255 * tContrast);
-            const txtG = 255 - (235 * tContrast);
-            const txtB = 255 - (215 * tContrast);
-            const subR = 255 - (255 * tContrast);
-            const subG = 255 - (235 * tContrast);
-            const subB = 255 - (205 * tContrast);
-            const bordA = 0.1 + (0.1 * tContrast); 
-            const bordRGB = 255 - (200 * tContrast); 
-
-            root.setProperty('--glass-bg', `rgba(${bgR}, ${bgG}, ${bgB}, ${bgA})`);
-            root.setProperty('--text-main', `rgb(${txtR}, ${txtG}, ${txtB})`);
-            root.setProperty('--text-sub', `rgba(${subR}, ${subG}, ${subB}, 0.7)`);
-            root.setProperty('--glass-border', `rgba(${bordRGB}, ${bordRGB}, ${bordRGB}, ${bordA})`);
-            root.setProperty('--chip-bg', `rgba(${bordRGB}, ${bordRGB}, ${bordRGB}, 0.1)`);
+            let tContrast = Math.min(1, Math.max(0, (brightness - 22) / 200));
+            if (tContrast < 0.5) tContrast *= 0.5;
+            if (tContrast > 0.5) tContrast = tContrast * 0.5 + 0.5;
+            const dark_colors = [
+                20, 25, 35, 0.65,
+                255, 255, 255,
+                255, 255, 255,
+                0x90, 0xca, 0xf9,
+                0x00, 0x33, 0x54,
+                255, 0.1
+            ]
+            const bright_colors = [
+                235, 245, 255, 0.45,
+                0, 20, 40,
+                0, 20, 50,
+                0x00, 0x7a, 0xff,
+                0xfa, 0xfa, 0xfa,
+                55, 0.2
+            ]
+            const colors = dark_colors.map((e,i) => (e*(1-tContrast) + bright_colors[i]*tContrast));
+            root.setProperty('--glass-bg', `rgba(${colors[0]}, ${colors[1]}, ${colors[2]}, ${colors[3]})`);
+            root.setProperty('--text-main', `rgb(${colors[4]}, ${colors[5]}, ${colors[6]})`);
+            root.setProperty('--text-sub', `rgba(${colors[7]}, ${colors[8]}, ${colors[9]}, 0.7)`);
+            root.setProperty('--primary', `rgb(${colors[10]}, ${colors[11]}, ${colors[12]})`);
+            root.setProperty('--on-primary-container', `rgb(${colors[13]}, ${colors[14]}, ${colors[15]})`);
+            root.setProperty('--glass-border', `rgba(${colors[16]}, ${colors[16]}, ${colors[16]}, ${colors[17]})`);
+            root.setProperty('--chip-bg', `rgba(${colors[16]}, ${colors[16]}, ${colors[16]}, 0.1)`);
 
             if (zenith !== lastZenith || horizon !== lastHorizon) {
                 skyLayer.style.background = `linear-gradient(to bottom, ${zenith} 0%, ${horizon} 100%)`;
