@@ -1432,6 +1432,60 @@
             }
             return sum;
         }
+        //중요중요
+        const GAS_URL = "여기에_구글_앱_스크립트_배포_URL_입력";
+
+        async function sendDataToSheet(targetDate) {
+            const dateKey = dateKeyLocal(targetDate);
+            const dayData = App.store.days[dateKey];
+            
+            // 데이터가 없거나 이미 보냈다면 중단
+            if (!dayData || dayData.totalMs <= 0) return;
+
+            const payload = {
+                date: dateKey,
+                userName: "사용자1", // 나중에 로그인 기능이 생기면 변수로 대체
+                totalMs: dayData.totalMs,
+                formattedTime: fmtHMS(dayData.totalMs)
+            };
+
+            try {
+                const response = await fetch(GAS_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                if(response.ok) {
+                    console.log(`${dateKey} 데이터 전송 성공`);
+                    // 전송 성공 시 마킹 (중복 전송 방지용)
+                    localStorage.setItem('last_synced_date', dateKey);
+                }
+            } catch (e) {
+                console.error("전송 실패:", e);
+            }
+        }
+
+        // 자정 체크 및 자동 전송 실행기
+        function initAutoSync() {
+            // 1. 페이지 접속 시 체크: 어제 기록을 아직 안 보냈다면 전송
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterdayKey = dateKeyLocal(yesterday.getTime());
+            
+            if (localStorage.getItem('last_synced_date') !== yesterdayKey) {
+                sendDataToSheet(yesterday.getTime());
+            }
+
+            // 2. 실시간 자정 체크 (1분마다 확인)
+            setInterval(() => {
+                const now = new Date();
+                // 00시 00분대에 진입하면 실행
+                if (now.getHours() === 0 && now.getMinutes() === 0) {
+                    const yesterdayTs = Date.now() - 60000; // 1분 전(어제) 날짜
+                    sendDataToSheet(yesterdayTs);
+                }
+            }, 60000);
+        }
+        initAutoSync();
 
         // ---------- Time allocation (handles midnight split) ----------
         function addTimeRange(startTs, endTs, subjectId) {
