@@ -602,6 +602,34 @@
                 ctx.fillRect(i * bw, canvas.height - h, bw - 1, h);
             }
         }
+
+        // index.html 내 <script> 태그 안에 추가
+
+function syncWithNowBar() {
+    if (!('serviceWorker' in navigator) || !navigator.serviceWorker.controller) return;
+
+    const now = new Date();
+    const currentMins = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
+    const solar = getSunTimes(now); // 기존에 정의된 함수 사용
+
+    navigator.serviceWorker.controller.postMessage({
+        type: 'UPDATE_NOW_BAR',
+        payload: {
+            sunrise: solar.sunrise,
+            sunset: solar.sunset,
+            current: currentMins
+        }
+    });
+}
+
+// 1분마다 Now Bar 정보 업데이트
+setInterval(syncWithNowBar, 60000);
+
+// 앱 로드 시 즉시 한 번 실행
+window.addEventListener('load', () => {
+    setTimeout(syncWithNowBar, 2000); 
+});
+
     </script>
 </body>
 </html>
