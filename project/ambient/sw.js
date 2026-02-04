@@ -32,3 +32,30 @@ self.addEventListener('fetch', (e) => {
     caches.match(e.request).then((res) => res || fetch(e.request))
   );
 });
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').then((reg) => {
+    
+    // 서비스 워커가 업데이트되었는지 감지
+    reg.addEventListener('updatefound', () => {
+      const newWorker = reg.installing;
+
+      newWorker.addEventListener('statechange', () => {
+        // 새 서비스 워커가 설치(installed)되었고, 제어 중인 서비스 워커가 있을 때 (기존 사용자)
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          showUpdatePopup();
+        }
+      });
+    });
+  });
+}
+
+// 업데이트 팝업 UI 띄우기
+function showUpdatePopup() {
+  // 간단한 confirm 창 사용 (디자인에 맞춰 커스텀 가능)
+  const userConfirmed = confirm("새로운 버전이 업데이트되었습니다. 지금 새로고침하여 적용할까요?");
+  
+  if (userConfirmed) {
+    window.location.reload(); // 새로고침하면 새 캐시가 적용됩니다.
+  }
+}
