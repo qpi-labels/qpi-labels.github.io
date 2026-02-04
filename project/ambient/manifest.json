@@ -8,14 +8,14 @@
   "theme_color": "#fafafa",
   "icons": [
     {
-      "src": "logo-8.png",
-      "sizes": "128x128",
+      "src": "apple-icon.png",
+      "sizes": "1000x1000",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "logo-9.png",
-      "sizes": "256x256",
+      "src": "apple-icon.png",
+      "sizes": "1000x1000",
       "type": "image/png",
       "purpose": "maskable"
     }
