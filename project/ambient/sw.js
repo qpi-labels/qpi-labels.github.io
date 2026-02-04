@@ -1,67 +1,53 @@
 // sw.js
-const CACHE_NAME = 'qpi-ambient-v1.22'; 
-const ASSETS = [
-  './', './index.html', './manifest.json', './logo.ico',
-  './so_ambient.mp3', './crickets.mp3', './creepy_tomb.mp3', './apple-icon.png'
-];
+const CACHE_NAME = 'qpi-ambient-v1.23'; // 버전을 올려서 브라우저가 새 파일을 읽게 하세요.
 
 self.addEventListener('install', (e) => {
-  self.skipWaiting(); 
-  e.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)));
+    self.skipWaiting();
 });
 
 self.addEventListener('activate', (e) => {
-  e.waitUntil(caches.keys().then((keys) => Promise.all(keys.map((key) => {
-    if (key !== CACHE_NAME) return caches.delete(key);
-  }))));
+    e.waitUntil(self.clients.claim());
 });
 
-self.addEventListener('fetch', (e) => {
-  e.respondWith(caches.match(e.request).then((res) => res || fetch(e.request)));
-});
-
-/* ----------------------------------------------------
-   라이브 노티피케이션 (실시간 진행바 알림) 핵심 로직
-   ---------------------------------------------------- */
 self.addEventListener('message', (event) => {
     if (event.data.type === 'UPDATE_LIVE_NOTIFY') {
         const { sunrise, sunset, current } = event.data.payload;
         
-        let title = "QPI Ambient: 일몰 추적";
+        let title = "일몰 추적 (Live)";
         let body = "";
-        let progressValue = 0;
+        let progress = 0;
 
-        // 시간 계산 로직
         if (current < sunrise) {
-            body = `일출 대기 중... (약 ${Math.round(sunrise - current)}분)`;
-            progressValue = 0;
+            body = `일출 대기 중...`;
+            progress = 0;
         } else if (current < sunset) {
             const total = sunset - sunrise;
             const elapsed = current - sunrise;
-            progressValue = Math.round((elapsed / total) * 100);
-            body = `일몰 진행률: ${progressValue}% (남은 시간: ${Math.round(sunset - current)}분)`;
+            progress = Math.round((elapsed / total) * 100);
+            body = `일몰까지 ${Math.round(sunset - current)}분 남음 (${progress}%)`;
         } else {
             body = "일몰 완료. 밤 모드 시뮬레이션 중.";
-            progressValue = 100;
+            progress = 100;
         }
 
-        // 갤럭시 알림창에 "Live"로 고정시키는 설정
+        // 갤럭시 알림창에서 "Live Notification"으로 인식시키기 위한 핵심 옵션
         self.registration.showNotification(title, {
             body: body,
-            tag: 'live-progress-notification', // 태그를 고정해야 알림이 새로 생기지 않고 갱신됨
+            tag: 'qpi-live-progress', // 알림이 쌓이지 않고 하나만 유지되게 함
             icon: 'apple-icon.png',
             badge: 'apple-icon.png',
-            ongoing: true, // 사용자가 지울 수 없게 '진행 중'으로 설정
-            silent: true,  // 갱신될 때마다 소리나지 않게 무음 처리
+            ongoing: true,            // 사용자가 지울 수 없게 '실행 중'으로 고정
+            silent: true,             // 업데이트 시 소리 안 나게 함
             
-            // 안드로이드 시스템 알림창에 진행바(Progress Bar)를 띄우는 핵심 파라미터
+            // [핵심] 안드로이드 시스템 알림창에 진행바를 그리는 데이터 구조
+            // 일부 갤럭시 기기에서는 vibration이나 renotify 옵션에 따라 다르게 보일 수 있음
+            vibrate: [], 
             data: {
-                progress: progressValue 
+                progress: progress // 진행률 (0~100)
             },
-            // 일부 안드로이드 버전에서 진행바를 명시적으로 지원하기 위한 설정
-            actions: [
-                { action: 'open', title: '앱 열기' }
-            ]
+            
+            // 알림창을 내렸을 때 '진행 중인 앱' 섹션에 확실히 들어가게 함
+            renotify: false
         });
     }
 });
