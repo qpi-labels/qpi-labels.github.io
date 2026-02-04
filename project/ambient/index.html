@@ -630,6 +630,39 @@ window.addEventListener('load', () => {
     setTimeout(syncWithNowBar, 2000); 
 });
 
+        // index.html의 스크립트 부분에 추가
+async function requestLiveNotification() {
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') {
+        updateLiveNotify();
+        // 1분마다 알림창의 진행바 갱신
+        setInterval(updateLiveNotify, 60000);
+    }
+}
+
+function updateLiveNotify() {
+    if (!navigator.serviceWorker.controller) return;
+
+    const now = new Date();
+    const currentMins = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
+    const solar = getSunTimes(now); // 기존 index.html에 정의된 함수
+
+    navigator.serviceWorker.controller.postMessage({
+        type: 'UPDATE_LIVE_NOTIFY',
+        payload: {
+            sunrise: solar.sunrise,
+            sunset: solar.sunset,
+            current: currentMins
+        }
+    });
+}
+
+// 원하는 시점(예: ENABLE VISUALIZER 버튼 클릭 시 등)에 호출
+document.getElementById('btnViz').addEventListener('click', () => {
+    requestLiveNotification();
+});
+
+
     </script>
 </body>
 </html>
