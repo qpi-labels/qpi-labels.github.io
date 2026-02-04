@@ -18,6 +18,7 @@ self.addEventListener('install', (e) => {
 });
 
 self.addEventListener('activate', (e) => {
+  e.waitUntil(self.clients.claim());
   // 활성화 단계에서 이전 버전의 낡은 캐시를 자동으로 삭제
   e.waitUntil(
     caches.keys().then((keys) => {
