@@ -7,11 +7,11 @@
 <br>
   
 > 아래 수식을 통해 도출된 지수가 **1,000 미만인 경우, Performance Mode 사용을 권장합니다.**
-* 해당 수식은 참고용입니다. 실제 사용 여부는 사용자의 환경에 따라 선택하십시외 
+* 해당 수식은 참고용입니다. 실제 사용 여부는 사용자의 환경에 따라 선택하십시오.
 
 $$Index = \frac{\text{기기의 3DMark Wild Life 점수}}{\text{디스플레이의 전체 픽셀 수(MP)}}$$
 
-| 제조사 | 기기 (SoC) | GPU Score | Res | Efficiency | 결과 |
+| 제조사 | 기기 (SoC) | GPU Score | Res | Index | 결과 |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | Samsung | **Tab S9 FE (Exynos 1380)** | 2,772 | 3.3MP | **840** | **사용 권장** |
 | Samsung | **Tab S11 (Dimensity 9400+)** | 22,700(추정치) | 4.1MP | **5,536** | 안전 |
