@@ -1,10 +1,10 @@
 # QPI Ambient
 
-## 퍼포먼스 모드
+## GPU 과부하
 
 > 저사양 기기에서는 GPU 과부하 방지를 위해 Performance Mode를 사용하는 것을 권장합니다.
 
-* Performance Mode는 ```updateSky()``` 함수의 프레임레이트를 제한하여 GPU의 과부하를 막습니다.
+* QPI Ambient의 대기, 렌즈 플레어 시뮬레이션은 높은 GPU 컴퓨팅 성능을 요구합니다.
 * 현재까지 보고된 정보에 따르면, Mali 아키텍처가 본 사이트의 GPU 과부하에 상대적으로 취약한 것으로 확인됩니다.
   
 > GPU 과부하가 보고된 기기 및 SoC
