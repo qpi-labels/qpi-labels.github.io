@@ -8,14 +8,14 @@
   "theme_color": "#fafafa",
   "icons": [
     {
-      "src": "android-icon.png",
-      "sizes": "1024x1024",
+      "src": "icon256.png",
+      "sizes": "255x256",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "android-icon.png",
-      "sizes": "1024x1024",
+      "src": "icon512.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     }
