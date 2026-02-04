@@ -1,5 +1,5 @@
 {
-  "name": "QPI Ambient 5",
+  "name": "QPI Ambient",
   "short_name": "QPI Ambient",
   "start_url": "./index.html",
   "id": "qpi-ambient-simulation",
@@ -8,14 +8,14 @@
   "theme_color": "#fafafa",
   "icons": [
     {
-      "src": "apple-icon.png",
-      "sizes": "1000x1000",
+      "src": "android.png",
+      "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "apple-icon.png",
-      "sizes": "1000x1000",
+      "src": "android.png",
+      "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "maskable"
     }
