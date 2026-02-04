@@ -15,6 +15,7 @@
 | Galaxy Tab S9 FE | Exynos 1380 | Mali G68 | 2304x1440 |
 
 > GPU 과부하가 예상되는 SoC
+
 | 제조사 | SoC |
 | :--- | :--- |
 | Qualcomm | Snapdragon 855 및 이하 SoC |
