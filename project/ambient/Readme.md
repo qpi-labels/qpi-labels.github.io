@@ -7,14 +7,12 @@
 * Performance Mode는 ```updateSky()``` 함수의 프레임레이트를 제한하여 GPU의 과부하를 막습니다.
 * 현재까지 보고된 정보에 따르면, Mali 아키텍처가 본 사이트의 GPU 과부하에 상대적으로 취약한 것으로 확인됩니다.
   
-> 아래 수식을 통해 도출된 지수가 **1,400 미만인 경우, Performance Mode 사용을 권장합니다.**
+> GPU 과부하가 보고된 기기 및 SoC
 
-| SoC | GPU | 테스트 기기 | 해상도 | 결과 |
+| 기기 | SoC | GPU | 해상도 |
 | :--- | :--- | :--- | :--- | :--- |
-| Snapdragon 865 | Adreno 650 | Galaxy S20 FE | 2400x1080 | 과부하 없음 |
-| Snapdragon 8 Gen 1 | Adreno 730 | Galaxy S22+ | 2304x1080 | 과부하 없음 |
-| Apple | **iPad 7th Gen (A10 Fusion)** | 2,631 | 3.5MP | **752** | **사용 권장** |
-| Apple | **iPad Pro M5 (M5 4core)** | 31,500(추정치) | 4.15MP | **7,712** | 안전 |
+| Galaxy S21 Ultra | Exynos 2100 | Mali G78 |  | 3200x1440 |
+| Galaxy Tab S9 FE | Exynos 1380 | Mali G68 | 2304x1440 |
 
 ## 설치 및 업데이트 방법
 
