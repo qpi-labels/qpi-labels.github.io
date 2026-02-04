@@ -281,7 +281,6 @@
         let lastZenith = "", lastHorizon = "";
 
         function updateSky(m) {
-            console.log(m);
             const mG = (m % 1440 + 1440) % 1440; 
             const solar = getSunTimes(new Date());
             
