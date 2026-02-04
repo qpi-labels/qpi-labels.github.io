@@ -14,6 +14,16 @@
 | Galaxy S21 Ultra | Exynos 2100 | Mali G78 | 3200x1440 |
 | Galaxy Tab S9 FE | Exynos 1380 | Mali G68 | 2304x1440 |
 
+> GPU 과부하가 예상되는 SoC
+| 제조사 | SoC |
+| :--- | :--- |
+| Qualcomm | Snapdragon 855 및 이하 SoC |
+| Qualcomm | Snapdragon 778G 및 이하 SoC |
+| Samsung | Exynos 2100 및 이하 SoC |
+| Samsung | Exynos 1380 및 이하 SoC |
+| MediaTek | Dimensity 8350 및 이하 SoC |
+| MediaTek | Dimensity 7300X 및 이하 SoC |
+
 ## 설치 및 업데이트 방법
 
 > ### IOS Safari
