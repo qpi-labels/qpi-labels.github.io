@@ -1,4 +1,4 @@
-const CACHE_NAME = 'qpi-ambient 5 1.18.5';
+const CACHE_NAME = 'qpi-ambient 5 1.19';
 const ASSETS = [
   './',
   './index.html',
@@ -62,3 +62,45 @@ function showUpdatePopup() {
     window.location.reload(); // 새로고침하면 새 캐시가 적용됩니다.
   }
 }
+
+// sw.js
+self.addEventListener('message', (event) => {
+    if (event.data.type === 'UPDATE_NOW_BAR') {
+        const { sunrise, sunset, current } = event.data.payload;
+        updateNowBar(sunrise, sunset, current);
+    }
+});
+
+function updateNowBar(sunrise, sunset, current) {
+    let title = "";
+    let body = "";
+    let progress = 0;
+
+    if (current < sunrise) {
+        title = "일출 대기 중";
+        body = `일출까지 약 ${Math.round(sunrise - current)}분 남음`;
+        progress = 0;
+    } else if (current < sunset) {
+        title = "일몰 진행 중";
+        const totalDaylight = sunset - sunrise;
+        const elapsed = current - sunrise;
+        progress = Math.round((elapsed / totalDaylight) * 100);
+        body = `일몰까지 ${Math.round(sunset - current)}분 (${progress}%)`;
+    } else {
+        title = "밤 (일몰 완료)";
+        body = "오늘의 태양이 졌습니다.";
+        progress = 100;
+    }
+
+    // 갤럭시 Now Bar(진행 중인 알림) 트리거
+    self.registration.showNotification('QPI Ambient', {
+        body: body,
+        tag: 'qpi-nowbar-status', // 중요: 이 태그가 같아야 Now Bar에서 교체됨
+        icon: 'apple-icon.png',
+        badge: 'apple-icon.png',
+        ongoing: true,            // 사용자가 지울 수 없게 설정
+        silent: true,             // 업데이트 시마다 소리 나지 않게
+        data: { progress: progress } 
+    });
+}
+
