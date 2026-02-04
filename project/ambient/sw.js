@@ -1,5 +1,5 @@
 // sw.js
-const CACHE_NAME = 'qpi-ambient-v1.23'; // 버전을 올려서 브라우저가 새 파일을 읽게 하세요.
+const CACHE_NAME = 'qpi-ambient-v1.23.1'; // 버전을 올려서 브라우저가 새 파일을 읽게 하세요.
 
 self.addEventListener('install', (e) => {
     self.skipWaiting();
