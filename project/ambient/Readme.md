@@ -10,7 +10,7 @@
 > GPU 과부하가 보고된 기기 및 SoC
 
 | 기기 | SoC | GPU | 해상도 |
-| :--- | :--- | :--- | :--- | :--- |
+| :--- | :--- | :--- | :--- |
 | Galaxy S21 Ultra | Exynos 2100 | Mali G78 |  | 3200x1440 |
 | Galaxy Tab S9 FE | Exynos 1380 | Mali G68 | 2304x1440 |
 
