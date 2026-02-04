@@ -94,7 +94,7 @@
             position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px); 
             width: 320px; padding: 24px; border-radius: 32px; 
             z-index: 510; opacity: 0; pointer-events: none; 
-            transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.5s, color 0.5s; 
+            transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.5s, color 0.5s; 
         }
         .info-panel.active { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
         .info-panel b { background: var(--primary); border-radius: 8px; padding-left: 0.4em; padding-right: 0.4em; color: var(--on-primary-container); font-weight: 500; transition: background 0.5s, color 0.5s; }
@@ -109,7 +109,7 @@
             position: fixed; bottom: 100px; right: 30px; width: 280px; padding: 28px; border-radius: 32px; 
             z-index: 520; opacity: 0; pointer-events: none; 
             transform: scale(0.9) translateY(20px); transform-origin: bottom right; 
-            transition: 0.4s, background 0.5s, color 0.5s; 
+            transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.5s, color 0.5s; 
         }
         .popup.active { opacity: 1; pointer-events: auto; transform: scale(1) translateY(0); }
         
