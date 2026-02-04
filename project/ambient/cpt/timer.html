@@ -1433,7 +1433,7 @@
             return sum;
         }
         //중요중요
-        const GAS_URL = "여기에_구글_앱_스크립트_배포_URL_입력";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbzh4V2v2v4mzSkQQkf49FrRjRb3pCsnx4I0T4QBgC4CA8YA9JaRJmgOYee9Tq6hCrq-/exec";
 
         async function sendDataToSheet(targetDate) {
             const dateKey = dateKeyLocal(targetDate);
@@ -1479,7 +1479,7 @@
             setInterval(() => {
                 const now = new Date();
                 // 00시 00분대에 진입하면 실행
-                if (now.getHours() === 12 && now.getMinutes() === 15) {
+                if (now.getHours() === 12 && now.getMinutes() === 20) {
                     const yesterdayTs = Date.now() - 60000; // 1분 전(어제) 날짜
                     sendDataToSheet(yesterdayTs);
                 }
