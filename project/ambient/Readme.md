@@ -16,7 +16,7 @@
 | Galaxy S21 Ultra | Exynos 2100 | Mali G78 | 3200x1440 |
 | Galaxy Tab S9 FE | Exynos 1380 | Mali G68 | 2304x1440 |
 
-### GPU 과부하가 발생할 것으로 예상되는 SoC 
+### GPU 과부하가 발생할 것으로 예상되는 SoC
 
 | 제조사 | SoC |
 | :--- | :--- |
