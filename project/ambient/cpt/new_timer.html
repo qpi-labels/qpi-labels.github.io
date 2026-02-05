@@ -54,6 +54,7 @@
         .star-container { z-index: 2; top: 50%; left: 50%; width: 200vmax; height: 200vmax; transform: translate(-50%, -50%) rotate(var(--star-rot)) translate3d(0,0,0); opacity: var(--star-opacity); mask-image: linear-gradient(to bottom, #fff calc(var(--star-mask-y) - 40%), transparent calc(var(--star-mask-y) + 40%)); -webkit-mask-image: linear-gradient(to bottom, #fff calc(var(--star-mask-y) - 40%), transparent calc(var(--star-mask-y) + 40%)); will-change: opacity, transform; }
         #starCanvas { width: 100%; height: 100%; }
         
+        #satLayer { z-index: 3; }
         .satellite { position: absolute; width: 1.5px; height: 1.5px; z-index: 3; background: #fff; border-radius: 50%; box-shadow: 0 0 3px 1px rgba(255,255,255,0.7); will-change: transform; }
 
         .celestial { z-index: 4; transform: translate3d(0,0,0); }
@@ -167,7 +168,7 @@
             top: 18px; left: 50%;
             transform: translateX(-50%);
             width: min(92vw, 560px);
-            z-index: 120;
+            z-index: 200;
             pointer-events: auto;
             border-radius: 32px;
             padding: 14px 14px 12px 14px;
@@ -282,7 +283,7 @@
         .modal-backdrop {
             position: fixed; inset: 0;
             backdrop-filter: blur(3px);
-            z-index: 200;
+            z-index: 9999;
             display:none;
             pointer-events: auto;
             transition: backdrop-filter 0.3s;
@@ -360,7 +361,7 @@
             left: 50%;
             bottom: 18px;
             width: min(92vw, 560px);
-            z-index: 180;
+            z-index: 220;
             border-radius: 36px;
             padding: 14px;
             pointer-events: auto;
@@ -543,7 +544,7 @@
     <div id="skyLayer" class="layer sky-layer"></div>
     <div class="layer atmosphere"></div>
     <div class="layer star-container"><canvas id="starCanvas"></canvas></div>
-    <div id="satLayer" class="layer" style="z-index: 3;"></div>
+    <div id="satLayer" class="layer"></div>
     <div class="layer celestial"><div class="moon-aura"></div><div class="moon-disk"></div><div class="sun-disk"></div></div>
 
     <div class="lens-flare-container" id="sunFlareCont">
