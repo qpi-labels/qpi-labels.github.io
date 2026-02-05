@@ -336,9 +336,10 @@
         }
         /* .modal-btn.primary: primary glass */
         .modal-btn.danger {
-            color: rgba(255,170,170,0.95);
-            border-color: rgba(255,170,170,0.35);
-            background: rgba(255,170,170,0.10);
+            color: hsla(from var(--primary) 0 s l / 95%);
+            border-color: hsla(from var(--primary) 0 s l / 35%);
+            background: hsla(from var(--primary) 0 s l / 18%);
+            transition: background 0.5s, border 0.5s, color 0.5s;
         }
 
         .color-row { margin-top: 12px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
