@@ -264,14 +264,31 @@
         }
         /* .seg-btn.active: glass-panel-stack */
 
-        .study-select {
+        .select-wrapper {
             flex: 1;
             max-width: 260px;
+            display: flex;
+            position: relative;
+        }
+        
+        .study-select {
+            flex: 1;
             border-radius: 20px;
             padding: 9px 12px;
             outline: none;
             font-size: 12px;
             letter-spacing: 0.5px;
+            appearance: none;
+        }
+        .study-select:disabled { opacity: 0.7; }
+
+        .select-arrow {
+            position: absolute;
+            stroke: var(--text-main); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+            fill: none;
+            right: 0; top: 0; bottom: 0; margin-top: auto; margin-bottom: auto;
+            transition: fill 0.5s;
+            pointer-events: none;
         }
 
         .chipbar {
@@ -626,9 +643,14 @@
                 <button class="seg-btn active" id="modeTotalBtn" type="button">오늘 총 공부</button>
                 <button class="seg-btn" id="modeSubjectBtn" type="button">과목</button>
             </div>
-            <select class="study-select" id="subjectSelect" aria-label="Subject Select" disabled>
-                <option value="">과목 선택</option>
-            </select>
+            <div class="select-wrapper">
+                <select class="study-select" id="subjectSelect" aria-label="Subject Select" disabled>
+                    <option value="">과목 선택</option>
+                </select>
+                <svg class="select-arrow" height='24' viewBox='0 0 24 24' width='24'>
+                    <path d='M4 10l4 4 4-4'/>
+                </svg>
+            </div>
         </div>
 
         <div class="study-row" id="study-row3">
