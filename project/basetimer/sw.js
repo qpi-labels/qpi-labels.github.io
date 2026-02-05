@@ -3,10 +3,10 @@ const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './logo.ico',
-  './so_ambient.mp3',
+  './icon.ico',
   './crickets.mp3',
   './creepy_tomb.mp3',
+  './so_ambient.mp3',
   './tinicolor.js'
 ];
 

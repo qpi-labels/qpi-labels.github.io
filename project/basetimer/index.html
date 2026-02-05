@@ -282,7 +282,9 @@
             padding-bottom: 2px;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
-            mask-image: linear-gradient(to left, transparent, black 40px 100%);
+            mask-image: linear-gradient(to right, var(--left-mask) 0, black 40px calc(100% - 40px), var(--right-mask) 100%);
+            --left-mask: transparent;
+            --right-mask: transparent;
         }
         .chipbar::-webkit-scrollbar { display:none; }
         .chip {
@@ -2339,11 +2341,23 @@
                 });
                 ui.subjectChips.appendChild(chip);
             });
+            set_scroll_mask_chipbar();
 
             // mode subject select enable/disable
             const mode = App.store.settings.viewMode || 'total';
             ui.subjectSelect.disabled = (mode !== 'subject');
         }
+
+        function set_scroll_mask_chipbar() {
+            const sw = ui.subjectChips.scrollWidth;
+            const w = ui.subjectChips.clientWidth;
+            const sl = ui.subjectChips.scrollLeft;
+            if (sl === 0) ui.subjectChips.style.setProperty('--left-mask', 'black');
+            else ui.subjectChips.style.setProperty('--left-mask', 'transparent');
+            if (sl+w >= sw-1) ui.subjectChips.style.setProperty('--right-mask', 'black');
+            else ui.subjectChips.style.setProperty('--right-mask', 'transparent');
+        }
+        ui.subjectChips.onscroll = set_scroll_mask_chipbar;
 
         function getDisplayedMs() {
             // HUD 표시: total/subject 모드에 따라 "오늘" 기준
