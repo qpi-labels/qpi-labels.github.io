@@ -37,6 +37,7 @@
             font-family: 'Roboto', sans-serif; user-select: none;
             position: fixed; top: 0; left: 0; overscroll-behavior: none;
         }
+        button { font-family: 'Roboto', sans-serif; }
 
         .layer { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; }
         
@@ -146,21 +147,11 @@
             padding: 14px 14px 12px 14px;
             box-shadow: 0 16px 60px rgba(0,0,0,0.45);
         }
-        
+
         .study-row { display:flex; align-items:center; justify-content:space-between; gap:10px; }
         #study-row2 { margin-top: 12px; }
         #study-row3 { margin-top: 10px; }
 
-        .study-time {
-            font-size: 34px;
-            font-weight: 100;
-            letter-spacing: 1.5px;
-            color: rgba(255,255,255,0.92);
-            line-height: 1;
-        }
-        .study-mini {
-            display:flex; align-items:center; gap:8px;
-        }
         .icon-btn {
             width: 36px; height: 36px;
             border-radius: 14px;
@@ -172,6 +163,32 @@
         }
         .icon-btn:active { transform: scale(0.98); }
 
+        .study-time {
+            font-size: 34px;
+            font-weight: 100;
+            letter-spacing: 1.5px;
+            color: rgba(255,255,255,0.92);
+            line-height: 1;
+        }
+        .study-mini { display:flex; align-items:center; gap:8px; }
+
+        .goalbar {
+            margin-top: 10px;
+            height: 6px; border-radius: 999px;
+            background: rgba(255,255,255,0.10);
+            overflow: hidden;
+        }
+        .goalbar > div {
+            height:100%;
+            width:0%;
+            background: rgba(144,202,249,0.75);
+            transition: width 0.25s ease;
+        }
+        .study-hud.goal-hit {
+            box-shadow: 0 16px 80px rgba(144,202,249,0.22);
+            border-color: rgba(144,202,249,0.22);
+        }
+
         .segmented {
             display:flex; gap:6px;
             background: rgba(255,255,255,0.06);
@@ -180,7 +197,7 @@
             padding: 4px;
         }
         .seg-btn {
-            border: 0;
+            border: 1px solid transparent;
             background: transparent;
             color: rgba(255,255,255,0.68);
             font-size: 12px;
@@ -295,6 +312,7 @@
         }
         .modal input {
             width: 100%;
+            box-sizing: border-box;
             border-radius: 14px;
             border: 1px solid rgba(255,255,255,0.12);
             background: rgba(255,255,255,0.06);
@@ -323,6 +341,28 @@
             border-color: rgba(144,202,249,0.35);
             color: rgba(255,255,255,0.95);
         }
+        .btn.danger {
+            color: rgba(255,170,170,0.95);
+            border-color: rgba(255,170,170,0.35);
+            background: rgba(255,170,170,0.10);
+        }
+
+        .color-row { margin-top: 12px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+        .colors { display:flex; gap:8px; flex-wrap: wrap; }
+        .cdot {
+            width: 22px; height: 22px; border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.14);
+            cursor:pointer;
+        }
+        .cdot.active { box-shadow: 0 0 0 2px rgba(144,202,249,0.5); }
+        .color-input.color-input {
+            width: 42px; height: 34px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.06);
+            padding: 0 6px;
+        }
+
 
         .sheet {
             position: fixed;
@@ -341,10 +381,7 @@
             transform: translateX(-50%) translateY(14px);
             transition: 0.35s cubic-bezier(0.23, 1, 0.32, 1);
         }
-        .sheet.active {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
+        .sheet.active { opacity: 1; transform: translateX(-50%) translateY(0); }
         .sheet-header {
             display:flex; align-items:center; justify-content:space-between;
             margin-bottom: 10px;
@@ -361,6 +398,7 @@
             color: rgba(255,255,255,0.55);
             margin-top: 2px;
         }
+        
         .list {
             margin-top: 10px;
             display:flex; flex-direction:column; gap:10px;
@@ -406,11 +444,6 @@
         .sheet-actions {
             margin-top: 12px;
             display:flex; gap:10px; justify-content:space-between; align-items:center;
-        }
-        .danger {
-            color: rgba(255,170,170,0.95);
-            border-color: rgba(255,170,170,0.35);
-            background: rgba(255,170,170,0.10);
         }
 
         .panel-tabs{
@@ -475,23 +508,6 @@
             padding: 8px 10px; border-radius: 999px; cursor:pointer;
         }
         .period-btn.active{ background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.92); border:1px solid rgba(255,255,255,0.10); }
-
-        .goalbar{
-            margin-top: 10px;
-            height: 6px; border-radius: 999px;
-            background: rgba(255,255,255,0.10);
-            overflow: hidden;
-        }
-        .goalbar > div{
-            height:100%;
-            width:0%;
-            background: rgba(144,202,249,0.75);
-            transition: width 0.25s ease;
-        }
-        .study-hud.goal-hit{
-            box-shadow: 0 16px 80px rgba(144,202,249,0.22);
-            border-color: rgba(144,202,249,0.22);
-        }
 
         .weekday{
             margin-top: 10px;
@@ -597,22 +613,6 @@
         .msub-right{ display:flex; align-items:center; gap:8px; }
         .msub-time{ font-size: 11px; color: rgba(255,255,255,0.65); letter-spacing: 0.8px; white-space: nowrap; }
 
-        .color-row{ margin-top: 12px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
-        .colors{ display:flex; gap:8px; flex-wrap: wrap; }
-        .cdot{
-            width: 22px; height: 22px; border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.14);
-            cursor:pointer;
-        }
-        .cdot.active{ box-shadow: 0 0 0 2px rgba(144,202,249,0.5); }
-        .color-input{
-            width: 42px; height: 34px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.12);
-            background: rgba(255,255,255,0.06);
-            padding: 0 6px;
-        }
-
         @media (max-width: 420px){
             .study-time{ font-size: 30px; }
             .study-hud{ padding: 13px 12px 11px 12px; }
@@ -662,6 +662,7 @@
                 </button>
             </div>
         </div>
+
         <div class="goalbar"><div id="goalBarFill"></div></div>
 
         <div class="study-row" id="study-row2">
@@ -669,7 +670,6 @@
                 <button class="seg-btn active" id="modeTotalBtn" type="button">오늘 총 공부</button>
                 <button class="seg-btn" id="modeSubjectBtn" type="button">과목</button>
             </div>
-
             <select class="study-select" id="subjectSelect" aria-label="Subject Select" disabled>
                 <option value="">과목 선택</option>
             </select>
@@ -692,7 +692,6 @@
             </button>
         </div>
     </div>
-
     
     <div class="modal-backdrop" id="subjectModal">
         <div class="modal" role="dialog" aria-modal="true" aria-labelledby="subjectModalTitle">
@@ -711,8 +710,6 @@
             </div>
         </div>
     </div>
-
-
     
     <div class="sheet" id="panelSheet" aria-hidden="true">
         <div class="sheet-header">
@@ -729,18 +726,10 @@
         </div>
 
         <div class="panel-tabs" role="tablist" aria-label="Panels">
-            <button class="tab-btn active" id="tabBtnStats" type="button">
-                <span>통계</span>
-            </button>
-            <button class="tab-btn" id="tabBtnCalendar" type="button">
-                <span>캘린더</span>
-            </button>
-            <button class="tab-btn" id="tabBtnSubjects" type="button">
-                <span>과목</span>
-            </button>
-            <button class="tab-btn" id="tabBtnGoal" type="button">
-                <span>목표</span>
-            </button>
+            <button class="tab-btn active" id="tabBtnStats" type="button">통계</button>
+            <button class="tab-btn" id="tabBtnCalendar" type="button">캘린더</button>
+            <button class="tab-btn" id="tabBtnSubjects" type="button">과목</button>
+            <button class="tab-btn" id="tabBtnGoal" type="button">목표</button>
         </div>
 
         <div class="panel-body">
