@@ -37,10 +37,13 @@
 | MediaTek | Dimensity 8350 및 이하 SoC |
 | MediaTek | Dimensity 7300X 및 이하 SoC |
 
-### Performance Mode
+<br><br>
+## Performance Mode
 
 * GPU 과부하 방지를 위해 ```Performance Mode```를 사용할 수 있습니다.
 * ```Performance Mode```는 ```updateSky()```함수를 조정하여 그래픽 저하 없이 GPU 부하를 줄입니다.
+![퍼포먼스모드 동작](PerformanceMode.gif)
+
 
 <br><br>
 
