@@ -6,7 +6,7 @@
     <title>기준타 by QPI</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="icon.ico">
-    <meta property="og:title" content="기준타 bt QPI">
+    <meta property="og:title" content="기준타 by QPI">
     <meta property="og:type" content="website">
     <meta property="og:image" content="og.png"> 
     <meta property="og:description" content="기쁨을 준비하는 타이머">
@@ -83,7 +83,7 @@
             color: var(--text-main);
             box-shadow: 0 10px 40px rgba(0,0,0,0.25);
             transition: background 0.5s, border 0.5s, color 0.5s;
-            :not(path) {
+            h3, p, span, button {
                 transition: color 0.5s;
             }
         }
@@ -93,7 +93,7 @@
             border: 1px solid var(--glass-border);
             color: var(--text-main);
             transition: background 0.5s, border 0.5s, color 0.5s;
-            :not(path) {
+            h3, p, span, button {
                 transition: color 0.5s;
             }
         }
@@ -105,8 +105,9 @@
         }
 
         .bottom-clock { 
-            position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%); 
-            color: var(--text-main); 
+            position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%);
+            padding: 0;
+            background: none; border: 0; color: var(--text-main);
             font-weight: 300; font-size: 16px; letter-spacing: 4px; z-index: 500; 
             text-shadow: 0 2px 10px rgba(0,0,0,0.3); 
             cursor: pointer; pointer-events: auto; 
@@ -114,12 +115,16 @@
         }
 
         .info-panel { 
-            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px); 
-            width: 320px; padding: 24px; border-radius: 36px; 
-            z-index: 510; opacity: 0; pointer-events: none; 
+            position: fixed; bottom: 90px; left: 50%; right: auto; top: auto;
+            width: 320px; padding: 24px; margin: 0; border-radius: 36px;
             transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.5s, color 0.5s; 
         }
-        .info-panel.active { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+        .info-panel:popover-open {
+            opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0);
+            @starting-style {
+                opacity: 0; transform: translateX(-50%) translateY(20px);
+            }
+        }
         .info-panel b { background: var(--primary); border-radius: 8px; padding-left: 0.4em; padding-right: 0.4em; color: var(--on-primary-container); font-weight: 500; transition: background 0.5s, color 0.5s; }
 
         .fab { 
@@ -129,12 +134,18 @@
         }
         
         .popup { 
-            position: fixed; bottom: 100px; right: 30px; width: 280px; padding: 28px; border-radius: 36px; 
-            z-index: 520; opacity: 0; pointer-events: none; 
-            transform: scale(0.9) translateY(20px); transform-origin: bottom right; 
+            position: fixed; 
+            bottom: 100px; right: 30px; left: auto; top: auto;
+            width: 280px; padding: 28px; margin: 0; border-radius: 36px; 
+            transform-origin: bottom right; 
             transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.5s, color 0.5s; 
         }
-        .popup.active { opacity: 1; pointer-events: auto; transform: scale(1) translateY(0); }
+        .popup:popover-open {
+            opacity: 1; transform: scale(1) translateY(0);
+            @starting-style {
+                opacity: 0; transform: scale(0.9) translateY(20px);
+            }
+        }
         
         .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
         .label { font-size: 11px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; }
@@ -152,6 +163,7 @@
         input[type=checkbox] + .slider-sw { transition: background 0.5s, border 0.5s, color 0.5s; }
         input:checked + .slider-sw { background: var(--primary); }
         input:checked + .slider-sw:before { transform: translateX(20px); background: var(--on-primary-container); }
+        hr { border: 0; border-top: 1px solid var(--glass-border); margin-top: 20px; margin-bottom: 20px; }
         
         /* glass */
         .icon-btn,
@@ -169,7 +181,7 @@
         }
 
         /* primary glass */
-        .study-hud.goal-hit, .chip.active, .study-toggle.running, .modal-btn.primary, .cal-day.today{
+        .study-hud.goal-hit, .chip.active, .study-toggle.running, .modal-btn.primary, .cal-day.today {
             background: color-mix(in srgb, var(--primary) 18%, transparent);
             border-color: color-mix(in srgb, var(--primary) 35%, transparent);
             color: var(--text-main);
@@ -185,6 +197,8 @@
             pointer-events: auto;
             border-radius: 32px;
             padding: 14px 14px 12px 14px;
+            transition: background 0.5s, border 0.5s, color 0.5s, height 0.5s;
+            interpolate-size: allow-keywords;
         }
 
         .study-row { display:flex; align-items:center; justify-content:space-between; gap:10px; }
@@ -216,7 +230,7 @@
             line-height: 1;
         }
         .study-mini { display:flex; align-items:center; gap:8px; }
-
+        
         .goalbar {
             margin-top: 10px;
             height: 6px; border-radius: 999px;
@@ -302,22 +316,14 @@
         }
         /* .study-toggle.running: primary glass */
 
-        .modal-backdrop {
-            position: fixed; inset: 0;
+        .modal::backdrop {
             backdrop-filter: blur(3px);
-            z-index: 9999;
-            display:none;
-            pointer-events: auto;
             transition: backdrop-filter 0.3s;
             @starting-style {
                 backdrop-filter: blur(0);
             }
         }
-        .modal-backdrop.active { display:block; }
         .modal {
-            position: absolute;
-            left: 50%; top: 50%;
-            transform: translate(-50%, -50%);
             width: min(92vw, 420px);
             border-radius: 36px;
             padding: 18px;
@@ -381,18 +387,18 @@
 
         .sheet {
             position: fixed;
-            left: 50%;
-            bottom: 18px;
+            left: 50%; right: auto; bottom: 90px; top: auto;
             width: min(92vw, 560px);
-            z-index: 220;
             border-radius: 36px;
             padding: 14px;
-            pointer-events: auto;
-            opacity: 0;
-            transform: translateX(-50%) translateY(14px);
-            transition: background 0.5s, border 0.5s, color 0.5s, transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: background 0.5s, border 0.5s, color 0.5s, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-        .sheet.active { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .sheet:popover-open {
+            opacity: 1; transform: translateX(-50%) translateY(0);
+            @starting-style {
+                opacity: 0; transform: translateX(-50%) translateY(14px);
+            }
+        }
         .sheet-header {
             display:flex; align-items:center; justify-content:space-between;
             margin-bottom: 10px;
@@ -453,33 +459,34 @@
         }
         .bar > div { height: 100%; width: 0%; background: var(--primary) 75%; transition: background 0.5s; }
         .sheet-actions {
+            bottom: 0;
             margin-top: 12px;
             display:flex; gap:10px; justify-content:space-between; align-items:center;
         }
 
-        .panel-tabs{ margin: 10px 0 12px 0; }
-        .tab-btn{ flex: 1; }
+        .panel-tabs { margin: 10px 0 12px 0; }
+        .tab-btn { flex: 1; }
 
-        .tab{ display: none; }
-        .tab.active{ display: block; }
+        .tab { display: none; }
+        .tab.active { display: block; }
 
-        .kpi{
+        .kpi {
             flex:1;
             border-radius: 22px;
             padding: 12px;
         }
-        .kpi .kpi-label{
+        .kpi .kpi-label {
             font-size: 11px; letter-spacing: 0.6px;
             color: var(--text-sub);
         }
-        .kpi .kpi-value{
+        .kpi .kpi-value {
             margin-top: 6px;
             font-size: 16px;
             letter-spacing: 1px;
             color: var(--text-main);
             font-weight: 300;
         }
-        .kpi .kpi-sub{
+        .kpi .kpi-sub {
             margin-top: 4px;
             font-size: 11px;
             color: var(--text-sub);
@@ -487,7 +494,7 @@
 
         .period-row { margin-top: 10px; }
 
-        .weekday{
+        .weekday {
             margin-top: 10px;
             border-radius: 22px;
             padding: 12px;
@@ -556,10 +563,9 @@
         .msub-name { font-size: 12px; color: var(--text-main); letter-spacing: 0.5px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap; }
         .msub-time { font-size: 11px; color: var(--text-sub); letter-spacing: 0.8px; white-space: nowrap; }
 
-        @media (max-width: 420px){
-            .study-time{ font-size: 30px; }
-            .study-hud{ padding: 13px 12px 11px 12px; }
-            .sheet{ padding: 14px; }
+        @media (max-width: 420px) {
+            .study-time { font-size: 30px; }
+            .study-hud { padding: 13px 12px 11px 12px; }
         }
     </style>
     <script src="./tinicolor.js" type="text/javascript"></script>
@@ -590,7 +596,7 @@
         <div class="study-row" id="study-row1">
             <div class="study-time" id="studyTime">00:00:00</div>
             <div class="study-mini">
-                <button class="icon-btn" id="openStatsBtn" aria-label="Stats">
+                <button popovertarget="panelSheet" class="icon-btn" id="openStatsBtn" aria-label="Stats">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                         <path d="M4 19V10"/><path d="M10 19V5"/><path d="M16 19V13"/><path d="M22 19H2"/>
                     </svg>
@@ -627,8 +633,8 @@
             </button>
         </div>
     </div>
-    
-    <div class="glass-panel-base sheet" id="panelSheet" aria-hidden="true">
+
+    <div popover="manual" class="glass-panel-base sheet" id="panelSheet">
         <div class="sheet-header">
             <div>
                 <div class="sheet-title" id="panelTitle">통계</div>
@@ -754,70 +760,64 @@
     </div>
 
     <!-- Subject Modal -->
-    <div class="modal-backdrop" id="subjectModal">
-        <div class="glass-panel-base modal" role="dialog" aria-modal="true" aria-labelledby="subjectModalTitle">
-            <h3 id="subjectModalTitle">과목</h3>
-            <p id="subjectModalDesc">과목을 추가/수정하면 과목별 누적 시간이 자동 기록됩니다.</p>
-            <input id="subjectNameInput" type="text" placeholder="예) 수학, 물리, 영어" maxlength="24" />
-            <div class="color-row">
-                <div class="colors" id="colorDots" aria-label="Color Presets"></div>
-                <input class="color-input" id="subjectColorInput" type="color" value="#90caf9" aria-label="Custom Color"/>
-            </div>
-            <div class="modal-actions">
-                <button class="modal-btn danger" id="subjectDeleteBtn" type="button" style="display:none">삭제</button>
-                <div style="flex:1"></div>
-                <button class="modal-btn" id="subjectCancelBtn" type="button">취소</button>
-                <button class="modal-btn primary" id="subjectSaveBtn" type="button">저장</button>
-            </div>
+    <dialog id="subjectModal" class="glass-panel-base modal" role="dialog" aria-modal="true" aria-labelledby="subjectModalTitle">
+        <h3 id="subjectModalTitle">과목</h3>
+        <p id="subjectModalDesc">과목을 추가/수정하면 과목별 누적 시간이 자동 기록됩니다.</p>
+        <input id="subjectNameInput" type="text" placeholder="예) 수학, 물리, 영어" maxlength="24" />
+        <div class="color-row">
+            <div class="colors" id="colorDots" aria-label="Color Presets"></div>
+            <input class="color-input" id="subjectColorInput" type="color" value="#90caf9" aria-label="Custom Color"/>
         </div>
-    </div>
+        <div class="modal-actions">
+            <button class="modal-btn danger" id="subjectDeleteBtn" type="button" style="display:none">삭제</button>
+            <div style="flex:1"></div>
+            <button class="modal-btn" id="subjectCancelBtn" type="button">취소</button>
+            <button class="modal-btn primary" id="subjectSaveBtn" type="button">저장</button>
+        </div>
+    </dialog>
 
     <!-- Day Detail Modal -->
-    <div class="modal-backdrop" id="dayDetailModal">
-        <div class="glass-panel-base modal" role="dialog" aria-modal="true" aria-labelledby="dayDetailTitle">
-            <h3 id="dayDetailTitle">—</h3>
-            <p id="dayDetailSub">—</p>
-            <div class="list" id="dayDetailList"></div>
-            <div class="modal-actions">
-                <button class="modal-btn" id="dayDetailCloseBtn" type="button">닫기</button>
-            </div>
+    <dialog id="dayDetailModal" class="glass-panel-base modal" role="dialog" aria-modal="true" aria-labelledby="dayDetailTitle">
+        <h3 id="dayDetailTitle">—</h3>
+        <p id="dayDetailSub">—</p>
+        <div class="list" id="dayDetailList"></div>
+        <div class="modal-actions">
+            <button class="modal-btn" id="dayDetailCloseBtn" type="button">닫기</button>
         </div>
-    </div>
+    </dialog>
 
     <!-- Confirm Modal -->
-    <div class="modal-backdrop" id="confirmModal">
-        <div class="glass-panel-base modal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
-            <h3 id="confirmTitle">확인</h3>
-            <p id="confirmText">—</p>
-            <div class="modal-actions">
-                <button class="modal-btn" id="confirmCancelBtn" type="button">취소</button>
-                <button class="modal-btn danger" id="confirmOkBtn" type="button">확인</button>
-            </div>
+    <dialog id="confirmModal" class="glass-panel-base modal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+        <h3 id="confirmTitle">확인</h3>
+        <p id="confirmText">—</p>
+        <div class="modal-actions">
+            <button class="modal-btn" id="confirmCancelBtn" type="button">취소</button>
+            <button class="modal-btn danger" id="confirmOkBtn" type="button">확인</button>
         </div>
-    </div>
+    </dialog>
 
-    <div class="bottom-clock" id="clock" onclick="toggleInfo()"><span id="clockT">00:00:00</span><span style="position: absolute; inset: 0;"></span></div>
-    <div class="info-panel glass-panel-base" id="infoPanel">
+    <button class="bottom-clock" id="clock" popovertarget="infoPanel" onclick="toggleInfo()"><span id="clockT">00:00:00</span><span style="position: absolute; inset: 0;"></span></button>
+    <dialog popover="auto" class="info-panel glass-panel-base" id="infoPanel">
         <div class="row"><span><b>DATE</b> <span id="infoDate">-</span></span></div>
         <div class="row" style="font-size: 10px;"><span><b>RISE</b> <span id="infoRise">-</span></span><span><b>SET</b> <span id="infoSet">-</span></span></div>
-        <hr style="border: 0; border-top: 1px solid var(--glass-border); margin-bottom: 20px;">
+        <hr>
         <div class="row"><span class="label">Auto Sync</span><label class="switch"><input type="checkbox" id="autoCheck" checked onchange="handleSyncToggle()"><span class="slider-sw"></span></label></div>
         <div id="manualSection" class="manual-ui disabled">
             <div class="row" style="flex-direction:column; align-items:flex-start; gap:4px;"><span class="label">Time Slider</span><input type="range" id="timeRange" min="0" max="1439.99" step="0.01" value="720"></div>
             <div class="row"><span class="label">Speed (<span id="speedVal">1</span>x)</span><div class="speed-chips"><button class="oldchip" onclick="adjustSpeed(0.5)">x0.5</button><button class="oldchip" onclick="adjustSpeed(2)">x2</button><button class="oldchip" onclick="adjustSpeed(-1)">x-1</button></div></div>
         </div>
-    </div>
+    </dialog>
     
-    <div class="fab glass-panel-base" onclick="togglePopup()"><svg style="width:24px;height:24px;fill:var(--text-main); transition:fill 0.5s" viewBox="0 0 24 24"><path d="M 12 15.5 A 3.5 3.5 0 0 1 8.5 12 A 3.5 3.5 0 0 1 12 8.5 A 3.5 3.5 0 0 1 15.5 12 A 3.5 3.5 0 0 1 12 15.5 M 19.43 12.97 C 19.47 12.65 19.5 12.33 19.5 12 C 19.5 11.67 19.47 11.34 19.43 11.03 L 21.54 9.37 C 21.73 9.22 21.78 8.95 21.66 8.73 L 19.66 5.27 C 19.54 5.05 19.27 4.96 19.05 5.05 L 16.56 6.05 C 16.04 5.66 15.47 5.32 14.87 5.07 L 14.5 2.42 C 14.46 2.18 14.25 2 14 2 H 10 C 9.75 2 9.54 2.18 9.5 2.42 L 9.13 5.07 C 8.53 5.32 7.96 5.66 7.44 6.05 L 4.95 5.05 C 4.73 4.96 4.46 5.05 4.34 5.27 L 2.34 8.73 C 2.21 8.95 2.27 9.22 2.46 9.37 L 4.57 11.03 C 4.53 11.34 4.5 12 4.57 11.03 C 4.5 12.33 4.53 12.65 4.57 12.97 L 2.46 14.63 C 2.27 14.78 2.21 15.05 2.34 15.27 L 4.34 18.73 C 4.46 18.95 4.73 19.03 4.95 18.95 L 7.44 17.94 C 7.96 18.34 8.53 18.68 9.13 18.93 L 9.5 21.58 C 9.54 21.82 9.75 22 10 22 H 14 C 14.25 22 14.46 21.82 14.5 21.58 L 14.87 18.93 C 15.47 18.67 16.04 18.34 16.56 17.94 L 19.05 18.95 C 19.27 19.03 19.54 18.95 19.66 18.73 L 21.66 15.27 C 21.78 15.05 21.73 14.78 21.54 14.63 L 19.43 12.97 Z"/></svg></div>
-    <div class="popup glass-panel-base" id="popup">
+    <button class="fab glass-panel-base" popovertarget="popup"><svg style="width:24px;height:24px;fill:var(--text-main); transition:fill 0.5s" viewBox="0 0 24 24"><path d="M 12 15.5 A 3.5 3.5 0 0 1 8.5 12 A 3.5 3.5 0 0 1 12 8.5 A 3.5 3.5 0 0 1 15.5 12 A 3.5 3.5 0 0 1 12 15.5 M 19.43 12.97 C 19.47 12.65 19.5 12.33 19.5 12 C 19.5 11.67 19.47 11.34 19.43 11.03 L 21.54 9.37 C 21.73 9.22 21.78 8.95 21.66 8.73 L 19.66 5.27 C 19.54 5.05 19.27 4.96 19.05 5.05 L 16.56 6.05 C 16.04 5.66 15.47 5.32 14.87 5.07 L 14.5 2.42 C 14.46 2.18 14.25 2 14 2 H 10 C 9.75 2 9.54 2.18 9.5 2.42 L 9.13 5.07 C 8.53 5.32 7.96 5.66 7.44 6.05 L 4.95 5.05 C 4.73 4.96 4.46 5.05 4.34 5.27 L 2.34 8.73 C 2.21 8.95 2.27 9.22 2.46 9.37 L 4.57 11.03 C 4.53 11.34 4.5 12 4.57 11.03 C 4.5 12.33 4.53 12.65 4.57 12.97 L 2.46 14.63 C 2.27 14.78 2.21 15.05 2.34 15.27 L 4.34 18.73 C 4.46 18.95 4.73 19.03 4.95 18.95 L 7.44 17.94 C 7.96 18.34 8.53 18.68 9.13 18.93 L 9.5 21.58 C 9.54 21.82 9.75 22 10 22 H 14 C 14.25 22 14.46 21.82 14.5 21.58 L 14.87 18.93 C 15.47 18.67 16.04 18.34 16.56 17.94 L 19.05 18.95 C 19.27 19.03 19.54 18.95 19.66 18.73 L 21.66 15.27 C 21.78 15.05 21.73 14.78 21.54 14.63 L 19.43 12.97 Z"/></svg></button>
+    <dialog popover="auto" class="popup glass-panel-base" id="popup">
         <div class="row"><span class="label">Performance Mode</span><label class="switch"><input type="checkbox" id="perfToggle"><span class="slider-sw"></span></label></div>
-        <hr style="border: 0; border-top: 1px solid var(--glass-border); margin-bottom: 20px;">
+        <hr>
         <div class="row"><span class="label">Ambient Night</span><label class="switch"><input type="checkbox" class="soundToggle" value="0"><span class="slider-sw"></span></label></div>
         <div class="row"><span class="label">Ambient Dark</span><label class="switch"><input type="checkbox" class="soundToggle" value="1"><span class="slider-sw"></span></label></div>
         <div class="row"><span class="label">Ambient Ambient</span><label class="switch"><input type="checkbox" class="soundToggle" value="2"><span class="slider-sw"></span></label></div>
         <div class="row" style="flex-direction:column; align-items:flex-start; gap:4px;"><span class="label">Volume</span><input type="range" id="volumeRange" min="0" max="100" step="1" value="50"></div>
         <button class="btn-action" id="btnViz">ENABLE VISUALIZER</button>
-    </div>
+    </dialog>
     <canvas id="vizCanvas" class="viz-canvas"></canvas>
 
     <script>
@@ -904,7 +904,7 @@
             const dx = 50 - sx, dy = 50 - sy;
             const setFP = (id, s) => { 
                 const el = flareEls[id];
-                if(el){ 
+                if(el){
                     el.style.left = (sx + dx * s) + '%'; 
                     el.style.top = (sy + dy * s) + '%'; 
                 }
@@ -1054,9 +1054,7 @@
             document.getElementById('speedVal').textContent = currentSpeed; 
         }
 
-        function togglePopup() { document.getElementById('popup').classList.toggle('active'); }
         function toggleInfo() { 
-            document.getElementById('infoPanel').classList.toggle('active'); 
             const s = getSunTimes(new Date()); 
             document.getElementById('infoRise').textContent = formatMinutes(s.sunrise); 
             document.getElementById('infoSet').textContent = formatMinutes(s.sunset); 
@@ -1414,6 +1412,17 @@
 
         function uid(prefix='id') {
             return `${prefix}_${Math.random().toString(16).slice(2)}_${Date.now().toString(16)}`;
+        }
+
+        function should_dismiss_dialog(el, e) {
+            if (e.target !== el) return false;
+            const rect = el.getBoundingClientRect();
+            const clickedInDialog = rect.top <= event.clientY &&
+            event.clientY <= rect.top + rect.height &&
+            rect.left <= event.clientX &&
+            event.clientX <= rect.left + rect.width;
+            if (clickedInDialog) return false;
+            return true;
         }
 
         // ---------- Storage ----------
@@ -1815,7 +1824,7 @@
             subjectModalMode = mode;
             subjectModalTargetId = subjectId || '';
 
-            ui.subjectModal.classList.add('active');
+            ui.subjectModal.showModal();
 
             // build color dots
             ui.colorDots.innerHTML = '';
@@ -1851,7 +1860,7 @@
         }
 
         function closeSubjectModal() {
-            ui.subjectModal.classList.remove('active');
+            ui.subjectModal.close();
             subjectModalTargetId = '';
         }
 
@@ -1901,14 +1910,11 @@
 
         // ---------- UI: Panel ----------
         function openPanel(tab=null) {
-            ui.panelSheet.classList.add('active');
-            ui.panelSheet.setAttribute('aria-hidden', 'false');
             setPanelTab(tab || App.store.settings.panelTab || 'stats');
             renderPanel();
         }
         function closePanel() {
-            ui.panelSheet.classList.remove('active');
-            ui.panelSheet.setAttribute('aria-hidden', 'true');
+            ui.panelSheet.hidePopover();
         }
 
         function setPanelTab(tab) {
@@ -1936,11 +1942,11 @@
         function confirmDialog(title, text) {
             ui.confirmTitle.textContent = title || '확인';
             ui.confirmText.textContent = text || '';
-            ui.confirmModal.classList.add('active');
+            ui.confirmModal.showModal();
             return new Promise((resolve) => { confirmResolve = resolve; });
         }
         function closeConfirm(result=false) {
-            ui.confirmModal.classList.remove('active');
+            ui.confirmModal.close();
             if (confirmResolve) confirmResolve(result);
             confirmResolve = null;
         }
@@ -2218,11 +2224,11 @@
                 });
             }
 
-            ui.dayDetailModal.classList.add('active');
+            ui.dayDetailModal.showModal();
         }
 
         function closeDayDetail() {
-            ui.dayDetailModal.classList.remove('active');
+            ui.dayDetailModal.close();
         }
 
         // ---------- Subjects management panel ----------
@@ -2374,8 +2380,6 @@
         function renderPanel() {
             // console.log("renderPanel");
 
-            if (!ui.panelSheet.classList.contains('active')) return;
-
             const now = Date.now();
             ui.panelSubtitle.textContent = `${getTodayKey()} · 오프라인`;
 
@@ -2487,7 +2491,7 @@
                     App.runtime.lastUiTs = nowTs;
                     renderHUD();
                     // panel이 열려 있으면 가볍게 갱신(너무 자주 X)
-                    if (ui.panelSheet.classList.contains('active')) {
+                    if (ui.panelSheet.matches(':popover-open')) {
                         if (nowTs - (App.runtime.lastUiPanelTs || 0) > 500) {
                             App.runtime.lastUiPanelTs = nowTs;
                             renderPanel();
@@ -2553,7 +2557,10 @@
 
         // Subject modal
         ui.subjectCancelBtn.addEventListener('click', closeSubjectModal);
-        ui.subjectModal.addEventListener('click', (e) => { if (e.target === ui.subjectModal) closeSubjectModal(); });
+        ui.subjectModal.addEventListener('click', (e) => {
+            if (!should_dismiss_dialog(ui.subjectModal, e)) return;
+            closeSubjectModal();
+        });
         ui.subjectColorInput.addEventListener('input', syncColorDotActive);
 
         ui.subjectSaveBtn.addEventListener('click', upsertSubject);
@@ -2600,12 +2607,14 @@
 
         // Day detail
         ui.dayDetailCloseBtn.addEventListener('click', closeDayDetail);
-        ui.dayDetailModal.addEventListener('click', (e) => { if (e.target === ui.dayDetailModal) closeDayDetail(); });
+        ui.dayDetailModal.addEventListener('click', (e) => {
+            if (!should_dismiss_dialog(ui.dayDetailModal, e)) return;
+            closeDayDetail();
+        });
 
         // Confirm
         ui.confirmCancelBtn.addEventListener('click', () => closeConfirm(false));
         ui.confirmOkBtn.addEventListener('click', () => closeConfirm(true));
-        ui.confirmModal.addEventListener('click', (e) => { if (e.target === ui.confirmModal) closeConfirm(false); });
 
         // Visibility: background/foreground 전환 시에도 Date.now 기반으로 정확히 누적되지만,
         // 복귀 시 UI/자정 분리를 한 번 더 보정
