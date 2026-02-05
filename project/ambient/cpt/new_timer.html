@@ -613,11 +613,6 @@
 
         <div class="study-row" id="study-row3">
             <div class="chipbar" id="subjectChips" aria-label="Subject Buttons"></div>
-            <button class="icon-btn" id="stopBtn" type="button" aria-label="Stop" style="display:none">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                    <path d="M7 7H17V17H7V7Z" fill="var(--text-main)" style="transition: stroke 0.5s, fill 0.5s;"/>
-                </svg>
-            </button>
             <button class="study-toggle" id="studyToggleBtn" type="button" aria-label="Start/Pause">
                 <span id="studyToggleIcon" style="display: flex;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -1276,7 +1271,6 @@
             subjectSelect: document.getElementById('subjectSelect'),
             subjectChips: document.getElementById('subjectChips'),
             addSubjectBtn: document.getElementById('addSubjectBtn'),
-            stopBtn: document.getElementById('stopBtn'),
             toggleBtn: document.getElementById('studyToggleBtn'),
             toggleText: document.getElementById('studyToggleText'),
             toggleIcon: document.getElementById('studyToggleIcon'),
@@ -1707,7 +1701,6 @@
         function setRunningUI(running) {
             if (running) {
                 ui.toggleBtn.classList.add('running');
-                ui.stopBtn.style.display = 'flex';
                 ui.toggleText.textContent = 'PAUSE';
                 ui.toggleIcon.innerHTML = `
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -1716,7 +1709,6 @@
                     </svg>`;
             } else {
                 ui.toggleBtn.classList.remove('running');
-                ui.stopBtn.style.display = 'none';
                 ui.toggleText.textContent = 'START';
                 ui.toggleIcon.innerHTML = `
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -1766,10 +1758,6 @@
             setRunningUI(false);
             Storage.save(App.store);
             renderAll();
-        }
-
-        function stopTimer() {
-            pauseTimer();
         }
 
         function toggleTimer() {
