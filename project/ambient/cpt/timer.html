@@ -1498,7 +1498,7 @@
         initAutoSync();
 
         function testSpecificTimeSync(targetHour, targetMinute) {
-            console.log(`테스트 설정: ${targetHour}시 ${targetMinute}분에 전송됩니다.`);
+            console.log(`테스트 설정: ${targetHour}시 ${targetMinute}분`);
             
             const testInterval = setInterval(() => {
                 const now = new Date();
@@ -1506,7 +1506,7 @@
                 const currentM = now.getMinutes();
         
                 if (currentH === targetHour && currentM === targetMinute) {
-                    console.log("보냅니다");
+                    console.log("완");
                     
                     sendDataToSheet(Date.now());
                     
@@ -1517,7 +1517,7 @@
         }
 
         //테스트 끝나면 주석 처리 잊지 않기
-        testSpecificTimeSync(20, 25);
+        testSpecificTimeSync(21, 00);
         
         
         
