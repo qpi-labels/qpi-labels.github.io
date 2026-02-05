@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>QPI Ambient</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="logo.ico">
+    <meta name="theme-color" content="#000000">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="apple-icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            background-color: #000;
+            --primary: #90caf9;
+            --on-primary-container: #003354;
+            --sun-x: 50%; --sun-y: 110%;
+            --moon-x: 50%; --moon-y: 110%;
+            --star-opacity: 0; --star-rot: 0deg;
+            --star-mask-y: -50%;
+            --atm-opacity: 0;
+            
+            /* 동적 글래스모피즘 변수 초기값 */
+            --glass-bg: rgba(20, 25, 35, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: rgba(255, 255, 255, 0.95);
+            --text-sub: rgba(255, 255, 255, 0.6);
+            --ui-color: rgba(255, 255, 255, 0.4);
+            --chip-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        html, body {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: 'Roboto', sans-serif; user-select: none;
+            position: fixed; top: 0; left: 0; overscroll-behavior: none;
+        }
+
+        .layer { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; }
+        
+        .sky-base { z-index: -2; background: #050a19; }
+        .sky-layer { 
+            position: absolute; inset: 0;
+            will-change: background; 
+        }
+
+        .atmosphere { z-index: 1; background: radial-gradient(circle at var(--sun-x) var(--sun-y), rgba(255, 240, 200, 0.45) 0%, rgba(255, 180, 100, 0.2) 15%, transparent 70%); mix-blend-mode: screen; opacity: var(--atm-opacity); will-change: opacity; transform: translate3d(0,0,0); }
+        .star-container { z-index: 2; top: 50%; left: 50%; width: 200vmax; height: 200vmax; transform: translate(-50%, -50%) rotate(var(--star-rot)) translate3d(0,0,0); opacity: var(--star-opacity); mask-image: linear-gradient(to bottom, #fff calc(var(--star-mask-y) - 40%), transparent calc(var(--star-mask-y) + 40%)); -webkit-mask-image: linear-gradient(to bottom, #fff calc(var(--star-mask-y) - 40%), transparent calc(var(--star-mask-y) + 40%)); will-change: opacity, transform; }
+        #starCanvas { width: 100%; height: 100%; }
+        
+        .satellite { position: absolute; width: 1.5px; height: 1.5px; z-index: 3; background: #fff; border-radius: 50%; box-shadow: 0 0 3px 1px rgba(255,255,255,0.7); will-change: transform; }
+
+        .celestial { z-index: 4; transform: translate3d(0,0,0); }
+        .sun-disk { position: absolute; left: var(--sun-x); top: var(--sun-y); width: 60px; height: 60px; z-index: 100; transform: translate(-50%, -50%); border-radius: 50%; background: #fff; box-shadow: 0 0 60px 20px #fff, 0 0 140px 50px rgba(255, 230, 150, 0.7), 0 0 200px 80px rgba(255, 200, 100, 0.4); will-change: left, top; }
+        .moon-disk { position: absolute; left: var(--moon-x); top: var(--moon-y); width: 42px; height: 42px; z-index: 101; transform: translate(-50%, -50%); border-radius: 50%; background: #fff; box-shadow: 0 0 35px 12px #fff, 0 0 80px 25px rgba(200, 230, 255, 0.4); will-change: left, top; }
+        .moon-aura { position: absolute; left: var(--moon-x); top: var(--moon-y); width: 100vmax; height: 100vmax; z-index: 90; transform: translate(-50%, -50%); background: radial-gradient(circle, rgba(180, 220, 255, 0.2) 0%, transparent 50%); mix-blend-mode: screen; will-change: left, top; }
+
+        .lens-flare-container, .moon-flare-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 150; pointer-events: none; mix-blend-mode: screen; will-change: opacity; }
+        .flare-ghost { position: absolute; transform: translate(-50%, -50%); border-radius: 50%; will-change: left, top; }
+        .flare-halo { background: radial-gradient(circle, transparent 65%, rgba(255, 120, 60, 0.18) 68%, rgba(255, 200, 100, 0.12) 70%, rgba(120, 200, 255, 0.08) 72%, transparent 75%); filter: blur(12px); }
+        .ghost-hex { width: 80px; height: 80px; background: rgba(255, 255, 255, 0.09); clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); filter: blur(3px); }
+        .ghost-rainbow { background: radial-gradient(circle, transparent 35%, rgba(255, 80, 80, 0.09) 42%, rgba(255, 200, 50, 0.07) 47%, rgba(80, 255, 120, 0.06) 52%, rgba(80, 150, 255, 0.08) 57%, transparent 63%); filter: blur(16px); }
+        .sun-streak { position: absolute; left: var(--sun-x); top: var(--sun-y); width: 200vw; height: 3px; transform: translate(-50%, -50%) rotate(-3deg); background: linear-gradient(90deg, transparent, rgba(255, 230, 180, 0.5), rgba(255, 255, 255, 0.9), rgba(255, 230, 180, 0.5), transparent); filter: blur(5px); will-change: left, top; }
+
+        .viz-canvas { position: fixed; bottom: 0; left: 0; width: 100%; height: 200px; z-index: 10; pointer-events: none; mask-image: linear-gradient(to top, black 30%, transparent 100%); -webkit-mask-image: linear-gradient(to top, black 30%, transparent 100%); }
+        
+        .glass-panel-base {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+            transition: background 0.5s, border 0.5s, color 0.5s;
+        }
+
+        /* 성능 모드 시 블러 부하 감소 (가시성은 유지) */
+        body.perf-active .glass-panel-base {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .bottom-clock { 
+            position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%); 
+            color: var(--text-main); 
+            font-weight: 300; font-size: 16px; letter-spacing: 4px; z-index: 500; 
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3); 
+            cursor: pointer; pointer-events: auto; 
+            transition: color 0.5s;
+        }
+
+        .info-panel { 
+            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px); 
+            width: 320px; padding: 24px; border-radius: 32px; 
+            z-index: 510; opacity: 0; pointer-events: none; 
+            transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.5s, color 0.5s; 
+        }
+        .info-panel.active { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+        .info-panel b { background: var(--primary); border-radius: 8px; padding-left: 0.4em; padding-right: 0.4em; color: var(--on-primary-container); font-weight: 500; transition: background 0.5s, color 0.5s; }
+
+        .fab { 
+            position: fixed; bottom: 30px; right: 30px; width: 56px; height: 56px; border-radius: 16px; 
+            cursor: pointer; z-index: 500; display: flex; justify-content: center; align-items: center; 
+            transition: background 0.5s, border 0.5s;
+        }
+        
+        .popup { 
+            position: fixed; bottom: 100px; right: 30px; width: 280px; padding: 28px; border-radius: 32px; 
+            z-index: 520; opacity: 0; pointer-events: none; 
+            transform: scale(0.9) translateY(20px); transform-origin: bottom right; 
+            transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.5s, color 0.5s; 
+        }
+        .popup.active { opacity: 1; pointer-events: auto; transform: scale(1) translateY(0); }
+        
+        .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
+        .label { font-size: 11px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; transition: color 0.5s; }
+        .manual-ui.disabled { opacity: 0.2; pointer-events: none; filter: grayscale(1); }
+        .speed-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+        .chip { background: var(--chip-bg); border: 1px solid var(--glass-border); color: var(--text-main); border-radius: 8px; padding: 6px 10px; font-size: 11px; cursor: pointer; font-weight: 700; transition: background 0.5s, color 0.5s; }
+        .btn-action { width: 100%; padding: 14px; background: var(--primary); color: var(--on-primary-container); border: none; border-radius: 12px; font-size: 12px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: background 0.5s, 0.2s; }
+        input[type=range] { width: 100%; appearance: none; background: var(--chip-bg); height: 6px; border-radius: 3px; outline: none; margin: 10px 0; pointer-events: auto; }
+        input[type=range]::-webkit-slider-thumb { appearance: none; /* The previous iteration of you has rolled back my change from '-webkit-appearance' to 'appearance'. CSS 'appearance' property is baseline since 2022. It's 2026 now. Please catch up. */ width: 24px; height: 24px; border-radius: 50%; background: var(--primary); cursor: pointer; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: background 0.5s; }
+        input[type=range]::-moz-range-thumb { appearance: none; width: 24px; height: 24px; border-radius: 50%; background: var(--primary); cursor: pointer; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: background 0.5s; }
+        .switch { position: relative; width: 44px; height: 24px; display: inline-block; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider-sw { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(100,100,100,0.5); border-radius: 24px; transition: 0.3s; cursor: pointer; }
+        .slider-sw:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        input[type=checkbox] + .slider-sw { transition: background 0.5s, border 0.5s, color 0.5s; }
+        input:checked + .slider-sw { background: var(--primary); }
+        input:checked + .slider-sw:before { transform: translateX(20px); background: var(--on-primary-container); }
+    </style>
+</head>
+<body>
+    <div class="layer sky-base"></div>
+    <div id="skyLayer" class="layer sky-layer"></div>
+    <div class="layer atmosphere"></div>
+    <div class="layer star-container"><canvas id="starCanvas"></canvas></div>
+    <div id="satLayer" class="layer" style="z-index: 3;"></div>
+    <div class="layer celestial"><div class="moon-aura"></div><div class="moon-disk"></div><div class="sun-disk"></div></div>
+
+    <div class="lens-flare-container" id="sunFlareCont">
+        <div class="sun-streak"></div>
+        <div class="flare-ghost flare-halo" id="h-1" style="width: 60vmax; height: 60vmax;"></div>
+        <div class="flare-ghost ghost-rainbow" id="r-1" style="width: 500px; height: 500px;"></div>
+        <div class="flare-ghost ghost-hex" id="g-1" style="width: 100px; height: 100px;"></div>
+        <div class="flare-ghost ghost-hex" id="g-2" style="width: 50px; height: 50px; background: rgba(150, 255, 200, 0.12);"></div>
+        <div class="flare-ghost ghost-tiny" id="t-1" style="width: 10px; height: 10px; background: #fff; box-shadow: 0 0 10px #fff;"></div>
+    </div>
+
+    <div class="moon-flare-container" id="moonFlareCont">
+        <div class="flare-ghost ghost-hex" id="mg-1" style="width: 40px; height: 40px; background: rgba(200, 230, 255, 0.1);"></div>
+        <div class="flare-ghost flare-halo" id="mh-1" style="width: 20vmax; height: 20vmax; opacity: 0.2;"></div>
+    </div>
+
+    <canvas id="vizCanvas" class="viz-canvas"></canvas>
+
+    <div class="info-panel glass-panel-base" id="infoPanel">
+        <div class="row"><span><b>DATE</b> <span id="infoDate">-</span></span></div>
+        <div class="row" style="font-size: 10px;"><span><b>RISE</b> <span id="infoRise">-</span></span><span><b>SET</b> <span id="infoSet">-</span></span></div>
+        <hr style="border: 0; border-top: 1px solid var(--glass-border); margin-bottom: 20px;">
+        <div class="row"><span class="label">Auto Sync</span><label class="switch"><input type="checkbox" id="autoCheck" checked onchange="handleSyncToggle()"><span class="slider-sw"></span></label></div>
+        <div id="manualSection" class="manual-ui disabled">
+            <div class="row" style="flex-direction:column; align-items:flex-start; gap:4px;"><span class="label">Time Slider</span><input type="range" id="timeRange" min="0" max="1439.99" step="0.01" value="720"></div>
+            <div class="row"><span class="label">Speed (<span id="speedVal">1</span>x)</span><div class="speed-chips"><button class="chip" onclick="adjustSpeed(0.5)">x0.5</button><button class="chip" onclick="adjustSpeed(2)">x2</button><button class="chip" onclick="adjustSpeed(-1)">x-1</button></div></div>
+        </div>
+    </div>
+
+    <div class="bottom-clock" id="clock" onclick="toggleInfo()"><span id="clockT">00:00:00</span><span style="position: absolute; inset: 0;"></span></div>
+    
+    <div class="fab glass-panel-base" onclick="togglePopup()"><svg style="width:24px;height:24px;fill:var(--text-main); transition:fill 0.5s" viewBox="0 0 24 24"><path d="M 12 15.5 A 3.5 3.5 0 0 1 8.5 12 A 3.5 3.5 0 0 1 12 8.5 A 3.5 3.5 0 0 1 15.5 12 A 3.5 3.5 0 0 1 12 15.5 M 19.43 12.97 C 19.47 12.65 19.5 12.33 19.5 12 C 19.5 11.67 19.47 11.34 19.43 11.03 L 21.54 9.37 C 21.73 9.22 21.78 8.95 21.66 8.73 L 19.66 5.27 C 19.54 5.05 19.27 4.96 19.05 5.05 L 16.56 6.05 C 16.04 5.66 15.47 5.32 14.87 5.07 L 14.5 2.42 C 14.46 2.18 14.25 2 14 2 H 10 C 9.75 2 9.54 2.18 9.5 2.42 L 9.13 5.07 C 8.53 5.32 7.96 5.66 7.44 6.05 L 4.95 5.05 C 4.73 4.96 4.46 5.05 4.34 5.27 L 2.34 8.73 C 2.21 8.95 2.27 9.22 2.46 9.37 L 4.57 11.03 C 4.53 11.34 4.5 12 4.57 11.03 C 4.5 12.33 4.53 12.65 4.57 12.97 L 2.46 14.63 C 2.27 14.78 2.21 15.05 2.34 15.27 L 4.34 18.73 C 4.46 18.95 4.73 19.03 4.95 18.95 L 7.44 17.94 C 7.96 18.34 8.53 18.68 9.13 18.93 L 9.5 21.58 C 9.54 21.82 9.75 22 10 22 H 14 C 14.25 22 14.46 21.82 14.5 21.58 L 14.87 18.93 C 15.47 18.67 16.04 18.34 16.56 17.94 L 19.05 18.95 C 19.27 19.03 19.54 18.95 19.66 18.73 L 21.66 15.27 C 21.78 15.05 21.73 14.78 21.54 14.63 L 19.43 12.97 Z"/></svg></div>
+
+    <div class="popup glass-panel-base" id="popup">
+        <div class="row"><span class="label">Performance Mode</span><label class="switch"><input type="checkbox" id="perfToggle"><span class="slider-sw"></span></label></div>
+        <hr style="border: 0; border-top: 1px solid var(--glass-border); margin-bottom: 20px;">
+        <div class="row"><span class="label">Ambient Night</span><label class="switch"><input type="checkbox" class="soundToggle" value="0"><span class="slider-sw"></span></label></div>
+        <div class="row"><span class="label">Ambient Dark</span><label class="switch"><input type="checkbox" class="soundToggle" value="1"><span class="slider-sw"></span></label></div>
+        <div class="row"><span class="label">Ambient Ambient</span><label class="switch"><input type="checkbox" class="soundToggle" value="2"><span class="slider-sw"></span></label></div>
+        <div class="row" style="flex-direction:column; align-items:flex-start; gap:4px;"><span class="label">Volume</span><input type="range" id="volumeRange" min="0" max="100" step="1" value="50"></div>
+        <button class="btn-action" id="btnViz">ENABLE VISUALIZER</button>
+    </div>
+
+    <script>
+        const LAT = 36.5, LON = 127.2;
+        const root = document.documentElement.style;
+        const skyLayer = document.getElementById('skyLayer');
+        const clockEl = document.getElementById('clockT');
+        const timeRangeEl = document.getElementById('timeRange');
+        const autoCheckEl = document.getElementById('autoCheck');
+        
+        // --- 성능 보간 변수 ---
+        const perfToggleEl = document.getElementById('perfToggle');
+        let isPerfMode = localStorage.getItem('qpi_perf_mode_v2') === 'true';
+        let frameCounter = -1; // 렌더링 스로틀링용, 첫 프레임은 무조건 렌더
+
+        const flareEls = {
+            'h-1': document.getElementById('h-1'), 'r-1': document.getElementById('r-1'),
+            'g-1': document.getElementById('g-1'), 'g-2': document.getElementById('g-2'),
+            't-1': document.getElementById('t-1'), 'mg-1': document.getElementById('mg-1'),
+            'mh-1': document.getElementById('mh-1'),
+            'sunFC': document.getElementById('sunFlareCont'),
+            'moonFC': document.getElementById('moonFlareCont')
+        };
+
+        // 초기 성능 설정 적용
+        perfToggleEl.checked = isPerfMode;
+        if(isPerfMode) document.body.classList.add('perf-active');
+
+        perfToggleEl.onchange = (e) => {
+            isPerfMode = e.target.checked;
+            localStorage.setItem('qpi_perf_mode_v2', isPerfMode);
+            if(isPerfMode) document.body.classList.add('perf-active');
+            else document.body.classList.remove('perf-active');
+        };
+
+        let manualMinutes = 720, lastTimestamp = performance.now(), currentSpeed = 1;
+        let isCatchingUp = false, catchUpStartMinutes = 0, catchUpStartTime = 0;
+        const CATCHUP_DURATION = 2000;
+
+        let cachedSunTimes = null, lastCachedDateStr = "";
+
+        function getSunTimes(date) {
+            const dateStr = date.toDateString();
+            if (cachedSunTimes && lastCachedDateStr === dateStr) return cachedSunTimes;
+            const dayOfYear = Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 86400000);
+            const rad = Math.PI / 180;
+            const gamma = 2 * Math.PI / 365 * (dayOfYear - 1);
+            const eqtime = 229.18 * (0.000075 + 0.001868 * Math.cos(gamma) - 0.032077 * Math.sin(gamma) - 0.014615 * Math.cos(2*gamma) - 0.040849 * Math.sin(2*gamma));
+            const decl = 0.006918 - 0.399912 * Math.cos(gamma) + 0.070257 * Math.sin(gamma);
+            const ha_rad = Math.acos(Math.cos(90.833 * rad) / (Math.cos(LAT * rad) * Math.cos(decl)) - Math.tan(LAT * rad) * Math.tan(decl));
+            const ha = ha_rad / rad;
+            lastCachedDateStr = dateStr;
+            cachedSunTimes = { sunrise: 720 - 4 * (LON + ha) - eqtime + 540, sunset: 720 - 4 * (LON - ha) - eqtime + 540 };
+            return cachedSunTimes;
+        }
+
+        const starCanvas = document.getElementById('starCanvas'), sCtx = starCanvas.getContext('2d');
+        function initStars() {
+            let seed = 277;
+            const random = () => { seed = (1664525 * seed + 1013904223) % 4294967296; return seed / 4294967296; };
+            starCanvas.width = 4000; starCanvas.height = 4000;
+            sCtx.fillStyle = "#fff";
+            for(let i=0; i<8000; i++){
+                sCtx.globalAlpha = Math.random(); 
+                sCtx.beginPath(); sCtx.arc(random()*4000, random()*4000, random()*1.3+0.3, 0, Math.PI*2); sCtx.fill();
+            }
+            sCtx.globalAlpha = 1.0;
+            sCtx.beginPath(); sCtx.arc(2000, 2000, 1.6, 0, Math.PI*2); sCtx.fill(); 
+        }
+        initStars();
+
+        function updateOptics(sx, sy, alt, isMoon = false) {
+            const cont = isMoon ? flareEls.moonFC : flareEls.sunFC;
+            const fadeStart = 0; 
+            const visibleRange = 0.3; 
+            const rawOpacity = (alt - fadeStart) / visibleRange;
+            const finalOpacity = Math.max(0, Math.min(1, rawOpacity));
+            
+            const maxOpacity = isMoon ? 0.4 : 0.95;
+            cont.style.opacity = finalOpacity * maxOpacity;
+            
+            if (finalOpacity <= 0) return;
+
+            const dx = 50 - sx, dy = 50 - sy;
+            const setFP = (id, s) => { 
+                const el = flareEls[id];
+                if(el){ 
+                    el.style.left = (sx + dx * s) + '%'; 
+                    el.style.top = (sy + dy * s) + '%'; 
+                }
+            };
+
+            if(!isMoon) {
+                setFP('h-1', 0.5); setFP('r-1', 1.3); setFP('g-1', 1.6); setFP('g-2', 1.1); setFP('t-1', 0.25);
+            } else {
+                setFP('mg-1', 1.2); setFP('mh-1', 0.5);
+            }
+        }
+
+        let lastZenith = "", lastHorizon = "";
+
+        function updateSky(m) {
+            const mG = (m % 1440 + 1440) % 1440; 
+            const solar = getSunTimes(new Date());
+            
+            const dawnStart = solar.sunrise - 135;
+            const preSunset = solar.sunset - 135;
+            const sunsetEnd = solar.sunset + 30;
+            
+            const kf = [
+                { m: -1440, z: [5, 10, 25], hz: [10, 20, 35] },
+                { m: dawnStart, z: [5, 10, 25], hz: [10, 20, 35] }, 
+                { m: solar.sunrise, z: [40, 80, 140], hz: [255, 150, 100] }, 
+                { m: (solar.sunrise + solar.sunset)/2, z: [25, 90, 180], hz: [180, 230, 255] },
+                { m: preSunset, z: [25, 90, 180], hz: [180, 230, 255] },
+                { m: solar.sunset, z: [20, 30, 80], hz: [245, 125, 75] }, 
+                { m: solar.sunset + 15, z: [10, 15, 40], hz: [60, 30, 60] }, 
+                { m: sunsetEnd, z: [5, 10, 25], hz: [10, 20, 35] }, 
+                { m: 1440, z: [5, 10, 25], hz: [10, 20, 35] }
+            ];
+            
+            let zenith = 'rgb(5, 10, 25)', horizon = 'rgb(10, 20, 35)';
+            let brightness = 15;
+
+            for(let i=0; i<kf.length-1; i++){
+                if(mG >= kf[i].m && mG < kf[i+1].m){
+                    const t = (mG - kf[i].m) / (kf[i+1].m - kf[i].m);
+                    const l = (c1, c2) => c1 + (c2-c1)*t;
+                    const r = Math.round(l(kf[i].hz[0], kf[i+1].hz[0]));
+                    const g = Math.round(l(kf[i].hz[1], kf[i+1].hz[1]));
+                    const b = Math.round(l(kf[i].hz[2], kf[i+1].hz[2]));
+                    const zr = Math.round(l(kf[i].z[0], kf[i+1].z[0]));
+                    const zg = Math.round(l(kf[i].z[1], kf[i+1].z[1]));
+                    const zb = Math.round(l(kf[i].z[2], kf[i+1].z[2]));
+                    zenith = `rgb(${zr}, ${zg}, ${zb})`;
+                    horizon = `rgb(${r}, ${g}, ${b})`;
+                    brightness = (r + g + b) / 3;
+                    break;
+                }
+            }
+            
+            let tContrast = Math.min(1, Math.max(0, (brightness - 22) / 200));
+            if (tContrast < 0.5) tContrast *= 0.5;
+            if (tContrast > 0.5) tContrast = tContrast * 0.5 + 0.5;
+            const dark_colors = [
+                20, 25, 35, 0.65,
+                255, 255, 255,
+                255, 255, 255,
+                0x90, 0xca, 0xf9,
+                0x00, 0x33, 0x54,
+                255, 0.1
+            ]
+            const bright_colors = [
+                235, 245, 255, 0.45,
+                0, 20, 40,
+                0, 20, 50,
+                0x00, 0x7a, 0xff,
+                0xfa, 0xfa, 0xfa,
+                55, 0.2
+            ]
+            const colors = dark_colors.map((e,i) => (e*(1-tContrast) + bright_colors[i]*tContrast));
+            root.setProperty('--glass-bg', `rgba(${colors[0]}, ${colors[1]}, ${colors[2]}, ${colors[3]})`);
+            root.setProperty('--text-main', `rgb(${colors[4]}, ${colors[5]}, ${colors[6]})`);
+            root.setProperty('--text-sub', `rgba(${colors[7]}, ${colors[8]}, ${colors[9]}, 0.7)`);
+            root.setProperty('--primary', `rgb(${colors[10]}, ${colors[11]}, ${colors[12]})`);
+            root.setProperty('--on-primary-container', `rgb(${colors[13]}, ${colors[14]}, ${colors[15]})`);
+            root.setProperty('--glass-border', `rgba(${colors[16]}, ${colors[16]}, ${colors[16]}, ${colors[17]})`);
+            root.setProperty('--chip-bg', `rgba(${colors[16]}, ${colors[16]}, ${colors[16]}, 0.1)`);
+
+            if (zenith !== lastZenith || horizon !== lastHorizon) {
+                skyLayer.style.background = `linear-gradient(to bottom, ${zenith} 0%, ${horizon} 100%)`;
+                lastZenith = zenith; lastHorizon = horizon;
+            }
+            
+            const sunMargin = 20;
+            if(mG >= solar.sunrise - sunMargin && mG <= solar.sunset + sunMargin){
+                const prog = (mG - solar.sunrise) / (solar.sunset - solar.sunrise);
+                const sunAlt = Math.sin(prog * Math.PI); 
+                const sx = prog * 120 - 10;
+                const sy = 100 - sunAlt * 90;
+                root.setProperty('--sun-x', sx + '%'); 
+                root.setProperty('--sun-y', sy + '%');
+                root.setProperty('--atm-opacity', Math.max(0, Math.min(0.85, sunAlt * 1.2)));
+                updateOptics(sx, sy, sunAlt, false);
+            } else { 
+                root.setProperty('--sun-y', '150%'); 
+                root.setProperty('--atm-opacity', 0); 
+                flareEls.sunFC.style.opacity = 0;
+            }
+            
+            const moonM = (mG + 720) % 1440;
+            if(moonM >= solar.sunrise - 140 && moonM <= solar.sunset + 140){
+                const prog = (moonM - (solar.sunrise - 120)) / ((solar.sunset + 120) - (solar.sunrise - 120));
+                const alt = Math.sin(prog * Math.PI); 
+                const mx = prog * 120 - 10;
+                const my = 100 - alt * 90;
+                root.setProperty('--moon-x', mx + '%'); 
+                root.setProperty('--moon-y', my + '%');
+                updateOptics(mx, my, alt, true);
+            } else { 
+                root.setProperty('--moon-y', '150%'); 
+                flareEls.moonFC.style.opacity = 0;
+            }
+            
+            let sOp = 0, sMaskY = -50;
+            if (mG >= solar.sunset - 180 && mG <= solar.sunset + 30) { sOp = (mG - (solar.sunset - 180)) / 210; sMaskY = -50 + (200 * sOp); } 
+            else if (mG >= solar.sunrise - 60 && mG <= solar.sunrise + 180) { sOp = 1 - (mG - (solar.sunrise - 60)) / 240; sMaskY = 150 - (200 * (1 - sOp)); } 
+            else if (mG > solar.sunset + 30 || mG < solar.sunrise - 60) { sOp = 1; sMaskY = 150; }
+            root.setProperty('--star-opacity', Math.max(0, Math.min(1, sOp))); 
+            root.setProperty('--star-mask-y', sMaskY + '%');
+            root.setProperty('--star-rot', (mG/4)+'deg');
+            
+            const hRaw = Math.floor(mG/60), mins = Math.floor(mG%60), secs = Math.round((mG*60)%60);
+            const newText = `${hRaw.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+            clockEl.textContent = newText;
+        }
+
+        function handleSyncToggle() { 
+            if (autoCheckEl.checked) { 
+                isCatchingUp = true; catchUpStartTime = performance.now(); catchUpStartMinutes = manualMinutes; 
+                document.getElementById('manualSection').classList.add('disabled'); 
+            } else { 
+                isCatchingUp = false; document.getElementById('manualSection').classList.remove('disabled'); 
+                const d = new Date(); manualMinutes = d.getHours()*60 + d.getMinutes() + d.getSeconds()/60; 
+            } 
+        }
+
+        function adjustSpeed(f) {
+            let currentSign = ((currentSpeed * f) > 0) ? 1 : -1;
+            currentSpeed = currentSign * Math.max(0.5, Math.min(1024, Math.abs(currentSpeed * f))); 
+            document.getElementById('speedVal').textContent = currentSpeed; 
+        }
+
+        function togglePopup() { document.getElementById('popup').classList.toggle('active'); }
+        function toggleInfo() { 
+            document.getElementById('infoPanel').classList.toggle('active'); 
+            const s = getSunTimes(new Date()); 
+            document.getElementById('infoRise').textContent = formatMinutes(s.sunrise); 
+            document.getElementById('infoSet').textContent = formatMinutes(s.sunset); 
+            document.getElementById('infoDate').textContent = new Date().toLocaleDateString('ko-KR', {month:'short', day:'numeric', weekday:'short'}); 
+        }
+        function formatMinutes(minutes) { const mSafe = (minutes + 1440) % 1440; return `${Math.floor(mSafe/60).toString().padStart(2,'0')}:${Math.floor(mSafe%60).toString().padStart(2,'0')}`; }
+
+        timeRangeEl.oninput = function() { if (!autoCheckEl.checked) { manualMinutes = parseFloat(this.value); updateSky(manualMinutes); } };
+
+        function loop(now) {
+            const dt = now - lastTimestamp; 
+            lastTimestamp = now;
+            frameCounter++;
+
+            let m; 
+            const d = new Date();
+            const target = d.getHours()*60 + d.getMinutes() + d.getSeconds()/60;
+            
+            if (autoCheckEl.checked) {
+                if (isCatchingUp) {
+                    let t = Math.min((now - catchUpStartTime) / CATCHUP_DURATION, 1);
+                    let ease = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+                    let dist = (target - catchUpStartMinutes + 1440) % 1440; 
+                    if(dist > 720) dist -= 1440;
+                    m = catchUpStartMinutes + (dist * ease); 
+                    if (t >= 1) isCatchingUp = false; 
+                    manualMinutes = m;
+                } else { m = target; manualMinutes = m; }
+            } else { 
+                manualMinutes += (dt / 60000) * currentSpeed; 
+                m = manualMinutes; 
+            }
+
+            // 시계와 슬라이더는 부드러움을 위해 매 프레임 업데이트
+            const mG = ((m % 1440) + 1440) % 1440;
+            timeRangeEl.value = mG;
+            const hRaw = Math.floor(mG/60), mins = Math.floor(mG%60), secs = Math.round((mG*60)%60);
+            clockEl.textContent = `${hRaw.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+
+            requestAnimationFrame(loop);
+
+            // 성능 모드 시 무거운 그래픽 연산 스로틀링 (30프레임당 1회)
+            if (isPerfMode) {
+                if (isCatchingUp || (!autoCheckEl.checked&&Math.abs(currentSpeed)>2)) {
+                    if (frameCounter % 2 !== 0) return;
+                } else {
+                    if (frameCounter % 30 !== 0) return;
+                }
+            }
+            updateSky(m);
+        }
+        requestAnimationFrame(loop);
+
+        /* ----------------------------------------------------
+           1. 인공위성 / 스타링크 기능
+           ---------------------------------------------------- */
+        const satLayer = document.getElementById('satLayer');
+
+        function animateObject(isStarlink = false) {
+            const solar = getSunTimes(new Date());
+            const mG = (manualMinutes % 1440 + 1440) % 1440;
+            let tempSunAlt = -1;
+            if (mG >= solar.sunrise && mG <= solar.sunset) {
+                const prog = (mG - solar.sunrise) / (solar.sunset - solar.sunrise);
+                tempSunAlt = Math.sin(prog * Math.PI);
+            }
+            if (tempSunAlt > 0.05) return; 
+
+            const side = Math.floor(Math.random() * 4);
+            let sx, sy, ex, ey;
+            if(side === 0) { sx = -15; sy = Math.random()*100; ex = 115; ey = Math.random()*100; }
+            else if(side === 1) { sx = 115; sy = Math.random()*100; ex = -15; ey = Math.random()*100; }
+            else if(side === 2) { sx = Math.random()*100; sy = -15; ex = Math.random()*100; ey = 115; }
+            else { sx = Math.random()*100; sy = 115; ex = Math.random()*100; ey = -15; }
+            const duration = (Math.random() * 20000 + 40000) / ((autoCheckEl.checked)?1:Math.min(Math.abs(currentSpeed),256));
+            
+            // 성능 모드 시 객체 수 최적화
+            const count = isStarlink ? (isPerfMode ? 8 : 18) : 1;
+            
+            for (let i = 0; i < count; i++) {
+                const delay = isStarlink ? i * (700 + Math.random() * 400) / ((autoCheckEl.checked)?1:Math.min(Math.abs(currentSpeed),256)) : 0; 
+                setTimeout(() => {
+                    const sat = document.createElement('div'); sat.className = 'satellite';
+                    sat.style.opacity = Math.random() * 0.5 + 0.3;
+                    satLayer.appendChild(sat);
+                    const startT = performance.now();
+                    const move = (now) => {
+                        const t = (now - startT) / duration;
+                        if (t < 1) { sat.style.transform = `translate(${sx + (ex - sx) * t}vw, ${sy + (ey - sy) * t}vh)`; requestAnimationFrame(move); }
+                        else { sat.remove(); }
+                    };
+                    requestAnimationFrame(move);
+                }, delay);
+            }
+        }
+        
+        setTimeout(() => {
+            const satLoop = () => { animateObject(false); setTimeout(satLoop, (Math.random() * 60000 + 40000) / ((autoCheckEl.checked)?1:Math.abs(currentSpeed))); };
+            const starlinkLoop = () => { animateObject(true); setTimeout(starlinkLoop, (Math.random() * 120000 + 120000) / ((autoCheckEl.checked)?1:Math.abs(currentSpeed))); };
+            satLoop(); starlinkLoop();
+        }, 5000);
+
+        /* ----------------------------------------------------
+           2. 오디오 비주얼라이저 기능
+           ---------------------------------------------------- */
+        let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let gainNode = audioCtx.createGain(); gainNode.connect(audioCtx.destination);
+        gainNode.gain.value = 0.25;
+        const links = [
+            './crickets.mp3',
+            './creepy_tomb.mp3',
+            './so_ambient.mp3'
+        ];
+        let buffers = null;
+        (async () => {
+            let promises = [];
+            for (let e of links) {
+                promises.push((async (e) => {
+                    try { return audioCtx.decodeAudioData(await (await fetch(e)).arrayBuffer()); } catch(err) { return null; }
+                })(e));
+            }
+            buffers = await Promise.all(promises);
+        })();
+        let curAudio = -1;
+        let curSource = null;
+        async function setAudio(newAudio) {
+            if (curAudio === newAudio) return;
+            if (curAudio !== -1) {
+                try {
+                    curSource.stop();
+                    curSource.disconnect();
+                } catch (e) {}
+            }
+            curAudio = newAudio;
+            if (newAudio === -1 || !buffers || !buffers[newAudio]) return;
+            try {
+                const source = new AudioBufferSourceNode(audioCtx, {buffer: buffers[newAudio], loop: true});
+                source.connect(gainNode); source.start();
+                curSource = source;
+            } catch(e) {}
+        }
+        Array.from(document.getElementsByClassName('soundToggle')).forEach((e) => {
+            e.onchange = function() {
+                if(this.checked) {
+                    Array.from(document.getElementsByClassName('soundToggle')).forEach((e)=>{e.checked = false});
+                    this.checked = true;
+                    setAudio(e.value);
+                } else setAudio(-1);
+            };
+        });
+        document.getElementById('volumeRange').oninput = (e) => { if(gainNode) gainNode.gain.value = (e.target.value/100)**2; };
+        
+        const canvas = document.getElementById('vizCanvas'), ctx = canvas.getContext('2d');
+        let analyser, dataArray, isVizActive = false, sampleRate = 48000, smoothHeights = [];
+        
+        document.getElementById('btnViz').onclick = async () => {
+            try {
+                let stream = null;
+                try {
+                    stream = await navigator.mediaDevices.getDisplayMedia({ audio: true });
+                } catch (e) {
+                    alert("오디오 출력을 캡처할 수 없어 기기 마이크를 사용합니다.")
+                    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                }
+                const aCtx = new AudioContext(); sampleRate = aCtx.sampleRate;
+                const src = aCtx.createMediaStreamSource(stream);
+                analyser = aCtx.createAnalyser(); src.connect(analyser);
+                analyser.fftSize = 1024; analyser.smoothingTimeConstant = 0.92;
+                dataArray = new Uint8Array(analyser.frequencyBinCount); isVizActive = true; drawViz();
+            } catch (e) { alert(`Capture failed.\n${e}`); }
+        };
+
+        function drawViz() {
+            if (!isVizActive) return; requestAnimationFrame(drawViz);
+            analyser.getByteFrequencyData(dataArray);
+            canvas.width = window.innerWidth; canvas.height = 200; ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const bw = canvas.width / 80;
+            const minFreq = 80, maxFreq = 14000, nyquist = sampleRate / 2;
+            const tColor = getComputedStyle(document.documentElement).getPropertyValue('--text-main').trim();
+
+            for (let i = 0; i < 80; i++) {
+                const freq = minFreq * Math.pow(maxFreq / minFreq, i / 79);
+                const dIdx = Math.floor((freq / nyquist) * dataArray.length);
+                let raw = dataArray[dIdx] || 0;
+                let target = (raw / 255) * canvas.height * (0.6 + (i / 80) * 0.5);
+                if (!smoothHeights[i]) smoothHeights[i] = 0;
+                if (target > smoothHeights[i]) smoothHeights[i] = target; else smoothHeights[i] *= 0.94;
+                const h = Math.min(smoothHeights[i], canvas.height * 0.8);
+                ctx.fillStyle = tColor.replace('rgb', 'rgba').replace(')', `, ${Math.max(0.08, raw/255 * 0.4)})`);
+                ctx.fillRect(i * bw, canvas.height - h, bw - 1, h);
+            }
+        }
+    </script>
+</body>
+</html>
