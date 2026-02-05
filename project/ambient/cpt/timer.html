@@ -1479,7 +1479,7 @@
             setInterval(() => {
                 const now = new Date();
                 // 00시 00분대에 진입하면 실행
-                if (now.getHours() === 00 && now.getMinutes() === 50) {
+                if (now.getHours() === 05 && now.getMinutes() === 30) {
                     const yesterdayTs = Date.now() - 60000; // 1분 전(어제) 날짜
                     sendDataToSheet(yesterdayTs);
                 }
