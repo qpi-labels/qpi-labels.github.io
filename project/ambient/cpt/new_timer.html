@@ -26,9 +26,9 @@
             /* 동적 글래스모피즘 변수 초기값 */
             --glass-bg: rgba(20, 25, 35, 0.6);
             --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-stack: rgba(255, 255, 255, 0.1);
             --text-main: rgba(255, 255, 255, 0.95);
             --text-sub: rgba(255, 255, 255, 0.6);
-            --ui-color: rgba(255, 255, 255, 0.4);
             --chip-bg: rgba(255, 255, 255, 0.1);
         }
 
@@ -77,6 +77,13 @@
             transition: background 0.5s, border 0.5s, color 0.5s;
         }
 
+        .glass-panel-stack {
+            background: var(--glass-stack);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            transition: background 0.5s, border 0.5s, color 0.5s;
+        }
+
         /* 성능 모드 시 블러 부하 감소 (가시성은 유지) */
         body.perf-active .glass-panel-base {
             backdrop-filter: blur(8px);
@@ -119,7 +126,7 @@
         .label { font-size: 11px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; transition: color 0.5s; }
         .manual-ui.disabled { opacity: 0.2; pointer-events: none; filter: grayscale(1); }
         .speed-chips { display: flex; gap: 8px; flex-wrap: wrap; }
-        .chip { background: var(--chip-bg); border: 1px solid var(--glass-border); color: var(--text-main); border-radius: 8px; padding: 6px 10px; font-size: 11px; cursor: pointer; font-weight: 700; transition: background 0.5s, color 0.5s; }
+        .oldchip { background: var(--chip-bg); border: 1px solid var(--glass-border); color: var(--text-main); border-radius: 8px; padding: 6px 10px; font-size: 11px; cursor: pointer; font-weight: 700; transition: background 0.5s, color 0.5s; }
         .btn-action { width: 100%; padding: 14px; background: var(--primary); color: var(--on-primary-container); border: none; border-radius: 12px; font-size: 12px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: background 0.5s, 0.2s; }
         input[type=range] { width: 100%; appearance: none; background: var(--chip-bg); height: 6px; border-radius: 3px; outline: none; margin: 10px 0; }
         input[type=range]::-webkit-slider-thumb { appearance: none; /* The previous iteration of you has rolled back my change from '-webkit-appearance' to 'appearance'. CSS 'appearance' property is baseline since 2022. It's 2026 now. Please catch up. */ width: 24px; height: 24px; border-radius: 50%; background: var(--primary); cursor: pointer; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: background 0.5s; }
@@ -131,7 +138,27 @@
         input[type=checkbox] + .slider-sw { transition: background 0.5s, border 0.5s, color 0.5s; }
         input:checked + .slider-sw { background: var(--primary); }
         input:checked + .slider-sw:before { transform: translateX(20px); background: var(--on-primary-container); }
-    
+        
+        /* glass */
+        .icon-btn,
+        .segmented, .seg-btn.active,
+        .study-select, .study-toggle,
+        .modal input, .modal-btn, .modal .color-input,
+        .item, .kpi, .weekday, .calendar, .cal-day, .msub {
+            background: var(--glass-stack);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            transition: background 0.5s, border 0.5s, color 0.5s;
+        }
+
+        /* primary glass */
+        .study-hud.goal-hit, .chip.active, .study-toggle.running, .modal-btn.primary, .cal-day.today{
+            background: color-mix(in srgb, var(--primary) 18%, transparent);
+            border-color: color-mix(in srgb, var(--primary) 35%, transparent);
+            color: var(--text-main);
+            transition: background 0.5s cubic-bezier(0.15,1,0,1), border 0.5s cubic-bezier(0.15,1,0,1), color 0.5s cubic-bezier(0.15,1,0,1);
+        }
+
         .study-hud {
             position: fixed;
             top: 18px; left: 50%;
@@ -139,13 +166,8 @@
             width: min(92vw, 560px);
             z-index: 120;
             pointer-events: auto;
-            background: rgba(10,10,10,0.45);
-            border: 1px solid rgba(255,255,255,0.10);
             border-radius: 32px;
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
             padding: 14px 14px 12px 14px;
-            box-shadow: 0 16px 60px rgba(0,0,0,0.45);
         }
 
         .study-row { display:flex; align-items:center; justify-content:space-between; gap:10px; }
@@ -155,11 +177,9 @@
         .icon-btn {
             width: 36px; height: 36px;
             border-radius: 14px;
-            border: 1px solid rgba(255,255,255,0.10);
-            background: rgba(255,255,255,0.06);
             cursor: pointer;
             display:flex; align-items:center; justify-content:center;
-            color: rgba(255,255,255,0.75);
+            color: var(--text-sub);
         }
         .icon-btn:active { transform: scale(0.98); }
 
@@ -167,7 +187,7 @@
             font-size: 34px;
             font-weight: 100;
             letter-spacing: 1.5px;
-            color: rgba(255,255,255,0.92);
+            color: var(--text-main);
             line-height: 1;
         }
         .study-mini { display:flex; align-items:center; gap:8px; }
@@ -175,31 +195,26 @@
         .goalbar {
             margin-top: 10px;
             height: 6px; border-radius: 999px;
-            background: rgba(255,255,255,0.10);
+            background: var(--glass-stack);
             overflow: hidden;
         }
         .goalbar > div {
             height:100%;
             width:0%;
-            background: rgba(144,202,249,0.75);
+            background: var(--primary);
             transition: width 0.25s ease;
         }
-        .study-hud.goal-hit {
-            box-shadow: 0 16px 80px rgba(144,202,249,0.22);
-            border-color: rgba(144,202,249,0.22);
-        }
+        /* .study-hud.goal-hit: primary glass */
 
         .segmented {
             display:flex; gap:6px;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.08);
             border-radius: 999px;
             padding: 4px;
         }
         .seg-btn {
             border: 1px solid transparent;
             background: transparent;
-            color: rgba(255,255,255,0.68);
+            color: var(--text-sub);
             font-size: 12px;
             letter-spacing: 0.8px;
             padding: 8px 10px;
@@ -207,18 +222,12 @@
             cursor: pointer;
             white-space: nowrap;
         }
-        .seg-btn.active {
-            background: rgba(255,255,255,0.12);
-            color: rgba(255,255,255,0.92);
-            border: 1px solid rgba(255,255,255,0.10);
-        }
+        /* .seg-btn.active: glass-panel-stack */
+
         .study-select {
             flex: 1;
             max-width: 260px;
             border-radius: 14px;
-            border: 1px solid rgba(255,255,255,0.10);
-            background: rgba(255,255,255,0.06);
-            color: rgba(255,255,255,0.88);
             padding: 9px 12px;
             outline: none;
             font-size: 12px;
@@ -241,29 +250,23 @@
             padding: 9px 12px;
             font-size: 12px;
             letter-spacing: 0.4px;
-            color: rgba(255,255,255,0.86);
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.10);
+            color: var(--text-sub);
+            background: var(--chip-bg);
+            border: 1px solid var(--glass-border);
+            transition: background 0.5s, border 0.5s, color 0.5s;
             cursor: pointer;
         }
-        .chip.active {
-            background: rgba(144,202,249,0.16);
-            border-color: rgba(144,202,249,0.35);
-            color: rgba(255,255,255,0.95);
-        }
+        /* .chip.active: primary glass */
         .chip .dot {
             width: 8px; height: 8px; border-radius: 50%;
-            background: rgba(255,255,255,0.25);
+            background: var(--chip-bg);
         }
         .chip.active .dot {
             background: var(--primary);
-            box-shadow: 0 0 10px rgba(144,202,249,0.8);
+            box-shadow: 0 0 10px var(--primary);
         }
         .study-toggle {
             margin-left: auto;
-            border: 1px solid rgba(255,255,255,0.10);
-            background: rgba(255,255,255,0.06);
-            color: rgba(255,255,255,0.92);
             border-radius: 16px;
             padding: 10px 14px;
             cursor: pointer;
@@ -271,18 +274,18 @@
             letter-spacing: 1px;
             font-size: 12px;
         }
-        .study-toggle.running {
-            background: rgba(144,202,249,0.15);
-            border-color: rgba(144,202,249,0.35);
-        }
+        /* .study-toggle.running: primary glass */
 
         .modal-backdrop {
             position: fixed; inset: 0;
-            background: rgba(0,0,0,0.55);
-            backdrop-filter: blur(6px);
+            backdrop-filter: blur(3px);
             z-index: 200;
             display:none;
             pointer-events: auto;
+            transition: backdrop-filter 0.3s;
+            @starting-style {
+                backdrop-filter: blur(0);
+            }
         }
         .modal-backdrop.active { display:block; }
         .modal {
@@ -290,33 +293,26 @@
             left: 50%; top: 50%;
             transform: translate(-50%, -50%);
             width: min(92vw, 420px);
-            background: rgba(10,10,10,0.95);
-            border: 1px solid rgba(255,255,255,0.10);
             border-radius: 22px;
             padding: 18px;
-            color: #fff;
         }
         .modal h3 {
             margin: 0 0 10px 0;
             font-size: 14px;
             font-weight: 400;
             letter-spacing: 0.6px;
-            color: rgba(255,255,255,0.92);
         }
         .modal p {
             margin: 0 0 14px 0;
             font-size: 12px;
             font-weight: 300;
-            color: rgba(255,255,255,0.65);
+            color: var(--text-sub);
             line-height: 1.5;
         }
         .modal input {
             width: 100%;
             box-sizing: border-box;
             border-radius: 14px;
-            border: 1px solid rgba(255,255,255,0.12);
-            background: rgba(255,255,255,0.06);
-            color: rgba(255,255,255,0.92);
             padding: 12px 12px;
             outline: none;
             font-size: 13px;
@@ -326,22 +322,16 @@
             margin-top: 14px;
             display:flex; justify-content:flex-end; gap:10px;
         }
-        .btn {
-            border: 1px solid rgba(255,255,255,0.10);
-            background: rgba(255,255,255,0.06);
-            color: rgba(255,255,255,0.88);
+        .modal-btn {
+            color: var(--text-sub);
             border-radius: 14px;
             padding: 10px 12px;
             cursor: pointer;
             font-size: 12px;
             letter-spacing: 0.5px;
         }
-        .btn.primary {
-            background: rgba(144,202,249,0.18);
-            border-color: rgba(144,202,249,0.35);
-            color: rgba(255,255,255,0.95);
-        }
-        .btn.danger {
+        /* .modal-btn.primary: primary glass */
+        .modal-btn.danger {
             color: rgba(255,170,170,0.95);
             border-color: rgba(255,170,170,0.35);
             background: rgba(255,170,170,0.10);
@@ -351,15 +341,13 @@
         .colors { display:flex; gap:8px; flex-wrap: wrap; }
         .cdot {
             width: 22px; height: 22px; border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.14);
+            border: 1px solid var(--glass-border);
             cursor:pointer;
         }
-        .cdot.active { box-shadow: 0 0 0 2px rgba(144,202,249,0.5); }
-        .color-input.color-input {
+        .cdot.active { box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 50%, transparent); }
+        .modal .color-input {
             width: 42px; height: 34px;
             border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.12);
-            background: rgba(255,255,255,0.06);
             padding: 0 6px;
         }
 
@@ -368,18 +356,14 @@
             position: fixed;
             left: 50%;
             bottom: 18px;
-            transform: translateX(-50%);
             width: min(92vw, 560px);
             z-index: 180;
-            background: rgba(10,10,10,0.92);
-            border: 1px solid rgba(255,255,255,0.10);
             border-radius: 22px;
             padding: 16px;
-            color: #fff;
             pointer-events: auto;
             opacity: 0;
             transform: translateX(-50%) translateY(14px);
-            transition: 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: background 0.5s, border 0.5s, color 0.5s, transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
         }
         .sheet.active { opacity: 1; transform: translateX(-50%) translateY(0); }
         .sheet-header {
@@ -389,13 +373,13 @@
         .sheet-title {
             font-size: 13px;
             letter-spacing: 0.8px;
-            color: rgba(255,255,255,0.9);
+            color: var(--text-main);
             font-weight: 400;
         }
         .sheet-sub {
             font-size: 11px;
             letter-spacing: 0.4px;
-            color: rgba(255,255,255,0.55);
+            color: var(--text-sub);
             margin-top: 2px;
         }
         
@@ -411,8 +395,6 @@
         .list#subjectsManageList { max-height: 40vh; }
 
         .item {
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.05);
             border-radius: 16px;
             padding: 12px;
         }
@@ -420,7 +402,7 @@
         .item-name {
             font-size: 12px;
             letter-spacing: 0.4px;
-            color: rgba(255,255,255,0.92);
+            color: var(--text-main);
             font-weight: 400;
             overflow:hidden; text-overflow: ellipsis; white-space: nowrap;
             max-width: 65%;
@@ -428,17 +410,17 @@
         .item-time {
             font-size: 12px;
             letter-spacing: 1px;
-            color: rgba(255,255,255,0.85);
+            color: var(--text-sub);
             font-weight: 300;
         }
         .bar {
             margin-top: 8px;
             height: 6px;
             border-radius: 999px;
-            background: rgba(255,255,255,0.08);
+            background: var(--glass-stack);
             overflow:hidden;
         }
-        .bar > div { height: 100%; width: 0%; background: rgba(144,202,249,0.75); }
+        .bar > div { height: 100%; width: 0%; background: color-mix(in srgb, var(--primary) 75%, transparent); }
         .sheet-actions {
             margin-top: 12px;
             display:flex; gap:10px; justify-content:space-between; align-items:center;
@@ -452,34 +434,30 @@
 
         .kpi{
             flex:1;
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.05);
             border-radius: 18px;
             padding: 12px;
         }
         .kpi .kpi-label{
             font-size: 11px; letter-spacing: 0.6px;
-            color: rgba(255,255,255,0.55);
+            color: var(--text-sub);
         }
         .kpi .kpi-value{
             margin-top: 6px;
             font-size: 16px;
             letter-spacing: 1px;
-            color: rgba(255,255,255,0.92);
+            color: var(--text-main);
             font-weight: 300;
         }
         .kpi .kpi-sub{
             margin-top: 4px;
             font-size: 11px;
-            color: rgba(255,255,255,0.55);
+            color: var(--text-sub);
         }
 
         .period-row { margin-top: 10px; }
 
         .weekday{
             margin-top: 10px;
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.05);
             border-radius: 18px;
             padding: 12px;
         }
@@ -488,7 +466,7 @@
         .week-bar .barcol {
             width: 100%;
             border-radius: 10px;
-            background: rgba(255,255,255,0.08);
+            background: var(--glass-stack);
             overflow:hidden;
             height: 64px;
             display:flex; align-items:flex-end;
@@ -496,25 +474,23 @@
         .week-bar .barcol > div {
             width: 100%;
             height: 0%;
-            background: rgba(144,202,249,0.75);
+            background: color-mix(in srgb, var(--primary) 75%, transparent);
         }
-        .week-bar.zero .barcol { background: rgba(255,255,255,0.04); }
+        .week-bar.zero .barcol { background: color-mix(in srgb, var(--glass-stack) 50%, transparent); }
         .week-bar .wlabel {
             font-size: 10px;
             letter-spacing: 0.5px;
-            color: rgba(255,255,255,0.55);
+            color: var(--text-sub);
         }
         .week-bar.zero .wlabel { opacity: 0.35; }
 
         .calendar {
             margin-top: 8px;
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.05);
             border-radius: 18px;
             padding: 12px;
         }
         .cal-header{ margin-bottom: 8px; }
-        .cal-title{ font-size: 13px; letter-spacing: 0.8px; color: rgba(255,255,255,0.9); }
+        .cal-title{ font-size: 13px; letter-spacing: 0.8px; color: var(--text-main); }
         .cal-grid{
             display:grid;
             grid-template-columns: repeat(7, 1fr);
@@ -522,35 +498,31 @@
         }
         .cal-dow{
             font-size: 10px;
-            color: rgba(255,255,255,0.45);
+            color: var(--text-sub);
             text-align:center;
             letter-spacing: 0.6px;
             padding: 4px 0;
         }
         .cal-day{
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.04);
             border-radius: 14px;
             padding: 8px 8px 7px 8px;
             min-height: 52px;
             cursor:pointer;
             display:flex; flex-direction:column; justify-content:space-between;
         }
-        .cal-day.off{ opacity: 0.28; cursor: default; }
-        .cal-day.today{ border-color: rgba(144,202,249,0.35); background: rgba(144,202,249,0.10); }
-        .cal-day .dnum{ font-size: 12px; color: rgba(255,255,255,0.78); letter-spacing: 0.6px; }
-        .cal-day .dtime{ font-size: 10px; color: rgba(255,255,255,0.58); letter-spacing: 0.8px; }
+        .cal-day.off{ opacity: 0.3; cursor: default; }
+        /* .cal-day.today: primary glass */
+        .cal-day .dnum{ font-size: 12px; color: var(--text-main); letter-spacing: 0.6px; }
+        .cal-day .dtime{ font-size: 10px; color: var(--text-sub); letter-spacing: 0.8px; }
 
         .msub{
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.05);
             border-radius: 16px;
             padding: 12px;
             display:flex; align-items:center; justify-content:space-between; gap:10px;
         }
-        .swatch{ width: 14px; height: 14px; border-radius: 50%; box-shadow: 0 0 0 2px rgba(255,255,255,0.10); }
-        .msub-name{ font-size: 12px; color: rgba(255,255,255,0.92); letter-spacing: 0.5px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .msub-time{ font-size: 11px; color: rgba(255,255,255,0.65); letter-spacing: 0.8px; white-space: nowrap; }
+        .swatch{ width: 14px; height: 14px; border-radius: 50%; box-shadow: 0 0 0 2px var(--glass-stack); }
+        .msub-name{ font-size: 12px; color: var(--text-main); letter-spacing: 0.5px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .msub-time{ font-size: 11px; color: var(--text-sub); letter-spacing: 0.8px; white-space: nowrap; }
 
         @media (max-width: 420px){
             .study-time{ font-size: 30px; }
@@ -582,7 +554,7 @@
         <div class="flare-ghost flare-halo" id="mh-1" style="width: 20vmax; height: 20vmax; opacity: 0.2;"></div>
     </div>
 
-    <div class="study-hud" id="studyHud">
+    <div class="glass-panel-base study-hud" id="studyHud">
         <div class="study-row" id="study-row1">
             <div class="study-time" id="studyTime">00:00:00</div>
             <div class="study-mini">
@@ -633,7 +605,7 @@
         </div>
     </div>
     
-    <div class="sheet" id="panelSheet" aria-hidden="true">
+    <div class="glass-panel-base sheet" id="panelSheet" aria-hidden="true">
         <div class="sheet-header">
             <div>
                 <div class="sheet-title" id="panelTitle">통계</div>
@@ -679,7 +651,7 @@
                     <button class="seg-btn" id="periodWeekBtn" type="button">주</button>
                     <button class="seg-btn" id="periodMonthBtn" type="button">달</button>
                 </div>
-                <button class="btn" id="exportBtn" type="button">내보내기</button>
+                <button class="modal-btn" id="exportBtn" type="button">내보내기</button>
             </div>
 
             <div class="list" id="breakdownList"></div>
@@ -693,8 +665,8 @@
             </div>
 
             <div class="sheet-actions">
-                <button class="btn danger" id="resetTodayBtn" type="button">오늘 초기화</button>
-                <button class="btn danger" id="resetAllBtn" type="button">전체 초기화</button>
+                <button class="modal-btn danger" id="resetTodayBtn" type="button">오늘 초기화</button>
+                <button class="modal-btn danger" id="resetAllBtn" type="button">전체 초기화</button>
             </div>
         </section>
 
@@ -746,8 +718,8 @@
                 </div>
                 <div class="sheet-sub" style="margin-top:8px;">시간(왼쪽) · 분(오른쪽)</div>
                 <div class="modal-actions" style="margin-top:12px;">
-                    <button class="btn" id="goalResetBtn" type="button">기본값</button>
-                    <button class="btn primary" id="goalSaveBtn" type="button">저장</button>
+                    <button class="modal-btn" id="goalResetBtn" type="button">기본값</button>
+                    <button class="modal-btn primary" id="goalSaveBtn" type="button">저장</button>
                 </div>
             </div>
             <div class="item" style="margin-top:10px;">
@@ -762,7 +734,7 @@
 
     <!-- Subject Modal -->
     <div class="modal-backdrop" id="subjectModal">
-        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="subjectModalTitle">
+        <div class="glass-panel-base modal" role="dialog" aria-modal="true" aria-labelledby="subjectModalTitle">
             <h3 id="subjectModalTitle">과목</h3>
             <p id="subjectModalDesc">과목을 추가/수정하면 과목별 누적 시간이 자동 기록됩니다.</p>
             <input id="subjectNameInput" type="text" placeholder="예) 수학, 물리, 영어" maxlength="24" />
@@ -771,34 +743,34 @@
                 <input class="color-input" id="subjectColorInput" type="color" value="#90caf9" aria-label="Custom Color"/>
             </div>
             <div class="modal-actions">
-                <button class="btn danger" id="subjectDeleteBtn" type="button" style="display:none">삭제</button>
+                <button class="modal-btn danger" id="subjectDeleteBtn" type="button" style="display:none">삭제</button>
                 <div style="flex:1"></div>
-                <button class="btn" id="subjectCancelBtn" type="button">취소</button>
-                <button class="btn primary" id="subjectSaveBtn" type="button">저장</button>
+                <button class="modal-btn" id="subjectCancelBtn" type="button">취소</button>
+                <button class="modal-btn primary" id="subjectSaveBtn" type="button">저장</button>
             </div>
         </div>
     </div>
 
     <!-- Day Detail Modal -->
     <div class="modal-backdrop" id="dayDetailModal">
-        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="dayDetailTitle">
+        <div class="glass-panel-base modal" role="dialog" aria-modal="true" aria-labelledby="dayDetailTitle">
             <h3 id="dayDetailTitle">—</h3>
             <p id="dayDetailSub">—</p>
             <div class="list" id="dayDetailList"></div>
             <div class="modal-actions">
-                <button class="btn" id="dayDetailCloseBtn" type="button">닫기</button>
+                <button class="modal-btn" id="dayDetailCloseBtn" type="button">닫기</button>
             </div>
         </div>
     </div>
 
     <!-- Confirm Modal -->
     <div class="modal-backdrop" id="confirmModal">
-        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+        <div class="glass-panel-base modal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
             <h3 id="confirmTitle">확인</h3>
             <p id="confirmText">—</p>
             <div class="modal-actions">
-                <button class="btn" id="confirmCancelBtn" type="button">취소</button>
-                <button class="btn danger" id="confirmOkBtn" type="button">확인</button>
+                <button class="modal-btn" id="confirmCancelBtn" type="button">취소</button>
+                <button class="modal-btn danger" id="confirmOkBtn" type="button">확인</button>
             </div>
         </div>
     </div>
@@ -811,7 +783,7 @@
         <div class="row"><span class="label">Auto Sync</span><label class="switch"><input type="checkbox" id="autoCheck" checked onchange="handleSyncToggle()"><span class="slider-sw"></span></label></div>
         <div id="manualSection" class="manual-ui disabled">
             <div class="row" style="flex-direction:column; align-items:flex-start; gap:4px;"><span class="label">Time Slider</span><input type="range" id="timeRange" min="0" max="1439.99" step="0.01" value="720"></div>
-            <div class="row"><span class="label">Speed (<span id="speedVal">1</span>x)</span><div class="speed-chips"><button class="chip" onclick="adjustSpeed(0.5)">x0.5</button><button class="chip" onclick="adjustSpeed(2)">x2</button><button class="chip" onclick="adjustSpeed(-1)">x-1</button></div></div>
+            <div class="row"><span class="label">Speed (<span id="speedVal">1</span>x)</span><div class="speed-chips"><button class="oldchip" onclick="adjustSpeed(0.5)">x0.5</button><button class="oldchip" onclick="adjustSpeed(2)">x2</button><button class="oldchip" onclick="adjustSpeed(-1)">x-1</button></div></div>
         </div>
     </div>
     
@@ -975,7 +947,8 @@
                 255, 255, 255,
                 0x90, 0xca, 0xf9,
                 0x00, 0x33, 0x54,
-                255, 0.1
+                255, 0.1,
+                255, 255, 255, 0.08
             ]
             const bright_colors = [
                 235, 245, 255, 0.45,
@@ -983,7 +956,8 @@
                 0, 20, 50,
                 0x00, 0x7a, 0xff,
                 0xfa, 0xfa, 0xfa,
-                55, 0.2
+                55, 0.2,
+                235, 245, 255, 0.16
             ]
             const colors = dark_colors.map((e,i) => (e*(1-tContrast) + bright_colors[i]*tContrast));
             root.setProperty('--glass-bg', `rgba(${colors[0]}, ${colors[1]}, ${colors[2]}, ${colors[3]})`);
@@ -992,6 +966,7 @@
             root.setProperty('--primary', `rgb(${colors[10]}, ${colors[11]}, ${colors[12]})`);
             root.setProperty('--on-primary-container', `rgb(${colors[13]}, ${colors[14]}, ${colors[15]})`);
             root.setProperty('--glass-border', `rgba(${colors[16]}, ${colors[16]}, ${colors[16]}, ${colors[17]})`);
+            root.setProperty('--glass-stack', `rgba(${colors[18]}, ${colors[19]}, ${colors[20]}, ${colors[21]})`);
             root.setProperty('--chip-bg', `rgba(${colors[16]}, ${colors[16]}, ${colors[16]}, 0.1)`);
 
             if (zenith !== lastZenith || horizon !== lastHorizon) {
