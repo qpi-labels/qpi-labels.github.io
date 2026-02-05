@@ -385,17 +385,10 @@
             padding: 0 6px;
         }
 
-        #panelHR {
-            visibility: hidden;
-            margin: 0; border: 0;
-            transition: margin 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0.2s;
-            transition-behavior: allow-discrete;
-        }
-        #panelHR:has( + .sheet.active) { visibility: visible; border: 1px solid var(--glass-border); margin-top: 15px; margin-bottom: 15px; }
-
         .sheet {
-            overflow-y: scroll;
-            scrollbar-width: none;
+            display: flex;
+            flex-direction: column;
+            overflow-y: hidden;
             visibility: hidden;
             max-height: 0;
             transition: max-height 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0.2s;
@@ -404,9 +397,9 @@
         .sheet.active {
             visibility: visible;
             max-height: min(490px, 100vh - 260px);
-            mask-image: linear-gradient(to top, transparent, black 15px calc(100% - 15px), transparent 100%);
             margin-bottom: 2px;
         }
+        #panelHR { margin-top: 15px; margin-bottom: 15px; width: 100%; }
         .sheet-header {
             display:flex; align-items:center; justify-content:space-between;
             margin-bottom: 10px;
@@ -426,7 +419,14 @@
             margin-top: 2px;
             margin-left: 11px
         }
-        
+        .sheet-scroll {
+            scrollbar-width: none;
+            overflow-y: scroll;
+            mask-image: linear-gradient(to bottom, var(--top-mask), black 15px calc(100% - 15px), var(--bottom-mask) 100%);
+            --top-mask: transparent;
+            --bottom-mask: transparent;
+        }
+
         .list {
             margin-top: 10px;
             display:flex; flex-direction:column; gap:10px;
@@ -640,8 +640,8 @@
                 <span id="studyToggleText">START</span>
             </button>
         </div>
-        <hr id="panelHR">
         <div class="sheet" id="panelSheet">
+            <hr id="panelHR">
             <div class="sheet-header">
                 <div>
                     <div class="sheet-title" id="panelTitle">통계</div>
@@ -653,7 +653,6 @@
                     </svg>
                 </button>
             </div>
-
             <div class="segmented panel-tabs" role="tablist" aria-label="Panels">
                 <button class="seg-btn tab-btn active" id="tabBtnStats" type="button">통계</button>
                 <button class="seg-btn tab-btn" id="tabBtnCalendar" type="button">캘린더</button>
@@ -661,109 +660,111 @@
                 <button class="seg-btn tab-btn" id="tabBtnGoal" type="button">목표</button>
             </div>
 
-            <section class="tab active" id="tabStats">
-                <div class="item-row">
-                    <div class="kpi">
-                        <div class="kpi-label">오늘</div>
-                        <div class="kpi-value" id="kpiToday">00:00:00</div>
-                        <div class="kpi-sub" id="kpiTodaySub">목표 —</div>
+            <div class="sheet-scroll" id="panelScroll">
+                <section class="tab active" id="tabStats">
+                    <div class="item-row">
+                        <div class="kpi">
+                            <div class="kpi-label">오늘</div>
+                            <div class="kpi-value" id="kpiToday">00:00:00</div>
+                            <div class="kpi-sub" id="kpiTodaySub">목표 —</div>
+                        </div>
+                        <div class="kpi">
+                            <div class="kpi-label">이번 주</div>
+                            <div class="kpi-value" id="kpiWeek">00:00:00</div>
+                            <div class="kpi-sub" id="kpiWeekSub">평균 —</div>
+                        </div>
+                        <div class="kpi">
+                            <div class="kpi-label">이번 달</div>
+                            <div class="kpi-value" id="kpiMonth">00:00:00</div>
+                            <div class="kpi-sub" id="kpiMonthSub">평균 —</div>
+                        </div>
                     </div>
-                    <div class="kpi">
-                        <div class="kpi-label">이번 주</div>
-                        <div class="kpi-value" id="kpiWeek">00:00:00</div>
-                        <div class="kpi-sub" id="kpiWeekSub">평균 —</div>
+
+                    <div class="item-row period-row">
+                        <div class="segmented" role="tablist" aria-label="Stats Period">
+                            <button class="seg-btn active" id="periodTodayBtn" type="button">오늘</button>
+                            <button class="seg-btn" id="periodWeekBtn" type="button">주</button>
+                            <button class="seg-btn" id="periodMonthBtn" type="button">달</button>
+                        </div>
+                        <button class="modal-btn" id="exportBtn" type="button">내보내기</button>
                     </div>
-                    <div class="kpi">
-                        <div class="kpi-label">이번 달</div>
-                        <div class="kpi-value" id="kpiMonth">00:00:00</div>
-                        <div class="kpi-sub" id="kpiMonthSub">평균 —</div>
+
+                    <div class="list" id="breakdownList"></div>
+
+                    <div class="weekday">
+                        <div class="item-row" style="margin-bottom:10px;">
+                            <div class="item-name">요일별 공부량 (이번 주)</div>
+                            <div class="item-time" id="focusInfo">최장 집중 —</div>
+                        </div>
+                        <div class="week-bars" id="weekdayBars"></div>
                     </div>
-                </div>
 
-                <div class="item-row period-row">
-                    <div class="segmented" role="tablist" aria-label="Stats Period">
-                        <button class="seg-btn active" id="periodTodayBtn" type="button">오늘</button>
-                        <button class="seg-btn" id="periodWeekBtn" type="button">주</button>
-                        <button class="seg-btn" id="periodMonthBtn" type="button">달</button>
+                    <div class="sheet-actions">
+                        <button class="modal-btn danger" id="resetTodayBtn" type="button">오늘 초기화</button>
+                        <button class="modal-btn danger" id="resetAllBtn" type="button">전체 초기화</button>
                     </div>
-                    <button class="modal-btn" id="exportBtn" type="button">내보내기</button>
-                </div>
+                </section>
 
-                <div class="list" id="breakdownList"></div>
-
-                <div class="weekday">
-                    <div class="item-row" style="margin-bottom:10px;">
-                        <div class="item-name">요일별 공부량 (이번 주)</div>
-                        <div class="item-time" id="focusInfo">최장 집중 —</div>
+                <section class="tab" id="tabCalendar">
+                    <div class="calendar">
+                        <div class="item-row cal-header">
+                            <button class="icon-btn" id="calPrevBtn" aria-label="Prev Month">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                    <path d="M15 6L9 12L15 18"/>
+                                </svg>
+                            </button>
+                            <div class="cal-title" id="calTitle">—</div>
+                            <button class="icon-btn" id="calNextBtn" aria-label="Next Month">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 6L15 12L9 18"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="cal-grid" id="calDow"></div>
+                        <div class="cal-grid" id="calGrid"></div>
                     </div>
-                    <div class="week-bars" id="weekdayBars"></div>
-                </div>
+                </section>
 
-                <div class="sheet-actions">
-                    <button class="modal-btn danger" id="resetTodayBtn" type="button">오늘 초기화</button>
-                    <button class="modal-btn danger" id="resetAllBtn" type="button">전체 초기화</button>
-                </div>
-            </section>
-
-            <section class="tab" id="tabCalendar">
-                <div class="calendar">
-                    <div class="item-row cal-header">
-                        <button class="icon-btn" id="calPrevBtn" aria-label="Prev Month">
+                <section class="tab" id="tabSubjects">
+                    <div class="item" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+                        <div>
+                            <div class="item-name">과목 관리</div>
+                            <div class="sheet-sub">추가/수정/삭제 · 색상 설정</div>
+                        </div>
+                        <button class="icon-btn" id="addSubjectBtn2" aria-label="Add Subject">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                                <path d="M15 6L9 12L15 18"/>
+                                <path d="M12 5V19"/><path d="M5 12H19"/>
                             </svg>
                         </button>
-                        <div class="cal-title" id="calTitle">—</div>
-                        <button class="icon-btn" id="calNextBtn" aria-label="Next Month">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                                <path d="M9 6L15 12L9 18"/>
-                            </svg>
-                        </button>
                     </div>
-                    <div class="cal-grid" id="calDow"></div>
-                    <div class="cal-grid" id="calGrid"></div>
-                </div>
-            </section>
+                    <div class="list" id="subjectsManageList"></div>
+                </section>
 
-            <section class="tab" id="tabSubjects">
-                <div class="item" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
-                    <div>
-                        <div class="item-name">과목 관리</div>
-                        <div class="sheet-sub">추가/수정/삭제 · 색상 설정</div>
+                <section class="tab" id="tabGoal">
+                    <div class="item">
+                        <div class="item-row">
+                            <div class="item-name">하루 목표 공부 시간</div>
+                            <div class="item-time" id="goalNow">—</div>
+                        </div>
+                        <div style="margin-top:10px; display:flex; gap:10px;">
+                            <input id="goalHours" type="number" min="0" max="23" value="2" style="flex:1; border-radius:14px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.92); padding:12px; outline:none; font-size:13px;" />
+                            <input id="goalMinutes" type="number" min="0" max="59" value="0" style="flex:1; border-radius:14px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.92); padding:12px; outline:none; font-size:13px;" />
+                        </div>
+                        <div class="sheet-sub" style="margin-top:8px;">시간(왼쪽) · 분(오른쪽)</div>
+                        <div class="modal-actions" style="margin-top:12px;">
+                            <button class="modal-btn" id="goalResetBtn" type="button">기본값</button>
+                            <button class="modal-btn primary" id="goalSaveBtn" type="button">저장</button>
+                        </div>
                     </div>
-                    <button class="icon-btn" id="addSubjectBtn2" aria-label="Add Subject">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                            <path d="M12 5V19"/><path d="M5 12H19"/>
-                        </svg>
-                    </button>
-                </div>
-                <div class="list" id="subjectsManageList"></div>
-            </section>
-
-            <section class="tab" id="tabGoal">
-                <div class="item">
-                    <div class="item-row">
-                        <div class="item-name">하루 목표 공부 시간</div>
-                        <div class="item-time" id="goalNow">—</div>
+                    <div class="item" style="margin-top:10px;">
+                        <div class="item-row">
+                            <div class="item-name">오늘 달성률</div>
+                            <div class="item-time" id="goalProgressText">—</div>
+                        </div>
+                        <div class="bar" style="margin-top:10px;"><div id="goalProgressBar" style="width:0%"></div></div>
                     </div>
-                    <div style="margin-top:10px; display:flex; gap:10px;">
-                        <input id="goalHours" type="number" min="0" max="23" value="2" style="flex:1; border-radius:14px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.92); padding:12px; outline:none; font-size:13px;" />
-                        <input id="goalMinutes" type="number" min="0" max="59" value="0" style="flex:1; border-radius:14px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.92); padding:12px; outline:none; font-size:13px;" />
-                    </div>
-                    <div class="sheet-sub" style="margin-top:8px;">시간(왼쪽) · 분(오른쪽)</div>
-                    <div class="modal-actions" style="margin-top:12px;">
-                        <button class="modal-btn" id="goalResetBtn" type="button">기본값</button>
-                        <button class="modal-btn primary" id="goalSaveBtn" type="button">저장</button>
-                    </div>
-                </div>
-                <div class="item" style="margin-top:10px;">
-                    <div class="item-row">
-                        <div class="item-name">오늘 달성률</div>
-                        <div class="item-time" id="goalProgressText">—</div>
-                    </div>
-                    <div class="bar" style="margin-top:10px;"><div id="goalProgressBar" style="width:0%"></div></div>
-                </div>
-            </section>
+                </section>
+            </div>
         </div>
     </div>
 
@@ -1301,6 +1302,7 @@
             panelSheet: document.getElementById('panelSheet'),
             panelTitle: document.getElementById('panelTitle'),
             panelSubtitle: document.getElementById('panelSubtitle'),
+            panelScroll: document.getElementById('panelScroll'),
             closePanelBtn: document.getElementById('closePanelBtn'),
             tabBtnStats: document.getElementById('tabBtnStats'),
             tabBtnCalendar: document.getElementById('tabBtnCalendar'),
@@ -1929,6 +1931,17 @@
             ui.panelSheet.classList.remove('active');
         }
 
+        function set_scroll_mask() {
+            const sh = ui.panelScroll.scrollHeight;
+            const h = ui.panelScroll.clientHeight;
+            const st = ui.panelScroll.scrollTop;
+            if (st === 0) ui.panelScroll.style.setProperty('--top-mask', 'black');
+            else ui.panelScroll.style.setProperty('--top-mask', 'transparent');
+            if (st+h >= sh-1) ui.panelScroll.style.setProperty('--bottom-mask', 'black');
+            else ui.panelScroll.style.setProperty('--bottom-mask', 'transparent');
+        }
+        ui.panelScroll.onscroll = set_scroll_mask;
+
         function setPanelTab(tab) {
             const t = tab || 'stats';
             App.store.settings.panelTab = t;
@@ -1946,6 +1959,7 @@
             });
             const cur = tabs.find(x => x.key === t);
             ui.panelTitle.textContent = cur ? cur.title : '통계';
+            set_scroll_mask();
             renderPanel();
         }
 
