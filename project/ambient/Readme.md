@@ -12,7 +12,7 @@
 
 ## **GPU 과부하**
 
-> 저사양 기기에서는 GPU 과부하 방지를 위해 [Performance Mode](# Performance Mode)를 사용하는 것을 권장합니다.
+> 저사양 기기에서는 GPU 과부하 방지를 위해 ```[Performance Mode](#Performance-Mode)```를 사용하는 것을 권장합니다.
 
 * QPI Ambient의 대기, 렌즈 플레어 시뮬레이션은 **높은 GPU 컴퓨팅 성능을 요구**합니다.
 * 일부 저사양 기기에서는 GPU 과부하로 인한 화면 깜빡임 등의 문제가 보고되고 있습니다.
