@@ -2543,7 +2543,6 @@
         ui.subjectSelect.addEventListener('change', () => setActiveSubject(ui.subjectSelect.value));
 
         ui.toggleBtn.addEventListener('click', toggleTimer);
-        ui.stopBtn.addEventListener('click', stopTimer);
 
         ui.addSubjectBtn.addEventListener('click', () => openSubjectModal('add'));
         ui.openPanelBtn.addEventListener('click', () => openPanel(App.store.settings.panelTab || 'stats'));
