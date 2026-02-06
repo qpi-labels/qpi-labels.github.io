@@ -7,7 +7,7 @@ const ASSETS = [
   './crickets.mp3',
   './creepy_tomb.mp3',
   './so_ambient.mp3',
-  './tinicolor.js'
+  './tinycolor.js'
 ];
 
 self.addEventListener('install', (e) => {

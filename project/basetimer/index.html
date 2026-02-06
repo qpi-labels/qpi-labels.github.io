@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>기준타</title>
+    <meta name="description" content="기쁨을 준비하는 타이머">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="icon.ico">
     <meta property="og:title" content="기준타 by QPI">
@@ -15,14 +16,14 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="apple-icon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <style>
         :root {
             background-color: #000;
             --primary: #90caf9;
             --on-primary-container: #003354;
-            --sun-x: 50%; --sun-y: 110%;
-            --moon-x: 50%; --moon-y: 110%;
+            --sun-x: 50vw; --sun-y: 110vh;
+            --moon-x: 50vw; --moon-y: 110vh;
             --star-opacity: 0; --star-rot: 0deg;
             --star-mask-y: -50%;
             --atm-opacity: 0;
@@ -62,12 +63,12 @@
         .satellite { position: absolute; width: 1.5px; height: 1.5px; z-index: 3; background: #fff; border-radius: 50%; box-shadow: 0 0 3px 1px rgba(255,255,255,0.7); will-change: transform; }
 
         .celestial { z-index: 4; transform: translate3d(0,0,0); }
-        .sun-disk { position: absolute; left: var(--sun-x); top: var(--sun-y); width: 60px; height: 60px; z-index: 100; transform: translate(-50%, -50%); border-radius: 50%; background: #fff; box-shadow: 0 0 60px 20px #fff, 0 0 140px 50px rgba(255, 230, 150, 0.7), 0 0 200px 80px rgba(255, 200, 100, 0.4); will-change: left, top; }
-        .moon-disk { position: absolute; left: var(--moon-x); top: var(--moon-y); width: 42px; height: 42px; z-index: 101; transform: translate(-50%, -50%); border-radius: 50%; background: #fff; box-shadow: 0 0 35px 12px #fff, 0 0 80px 25px rgba(200, 230, 255, 0.4); will-change: left, top; }
-        .moon-aura { position: absolute; left: var(--moon-x); top: var(--moon-y); width: 100vmax; height: 100vmax; z-index: 90; transform: translate(-50%, -50%); background: radial-gradient(circle, rgba(180, 220, 255, 0.2) 0%, transparent 50%); mix-blend-mode: screen; will-change: left, top; }
+        .sun-disk { position: absolute; left: 0; top: 0; width: 60px; height: 60px; z-index: 100; transform: translate(-50%, -50%) translate(var(--sun-x), var(--sun-y)); border-radius: 50%; background: #fff; box-shadow: 0 0 60px 20px #fff, 0 0 140px 50px rgba(255, 230, 150, 0.7), 0 0 200px 80px rgba(255, 200, 100, 0.4); will-change: left, top; }
+        .moon-disk { position: absolute; left: 0; top: 0; width: 42px; height: 42px; z-index: 101; transform: translate(-50%, -50%) translate(var(--moon-x), var(--moon-y)); border-radius: 50%; background: #fff; box-shadow: 0 0 35px 12px #fff, 0 0 80px 25px rgba(200, 230, 255, 0.4); will-change: left, top; }
+        .moon-aura { position: absolute; left: 0; top: 0; width: 100vmax; height: 100vmax; z-index: 90; transform: translate(-50%, -50%) translate(var(--moon-x), var(--moon-y)); background: radial-gradient(circle, rgba(180, 220, 255, 0.2) 0%, transparent 50%); mix-blend-mode: screen; will-change: left, top; }
 
         .lens-flare-container, .moon-flare-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 150; pointer-events: none; mix-blend-mode: screen; will-change: opacity; }
-        .flare-ghost { position: absolute; transform: translate(-50%, -50%); border-radius: 50%; will-change: left, top; }
+        .flare-ghost { position: absolute; left: 0%; top: 0%; transform: translate(-50%, -50%); border-radius: 50%; will-change: left, top; }
         .flare-halo { background: radial-gradient(circle, transparent 65%, rgba(255, 120, 60, 0.18) 68%, rgba(255, 200, 100, 0.12) 70%, rgba(120, 200, 255, 0.08) 72%, transparent 75%); filter: blur(12px); }
         .ghost-hex { width: 80px; height: 80px; background: rgba(255, 255, 255, 0.09); clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); filter: blur(3px); }
         .ghost-rainbow { background: radial-gradient(circle, transparent 35%, rgba(255, 80, 80, 0.09) 42%, rgba(255, 200, 50, 0.07) 47%, rgba(80, 255, 120, 0.06) 52%, rgba(80, 150, 255, 0.08) 57%, transparent 63%); filter: blur(16px); }
@@ -170,7 +171,7 @@
         .segmented, .seg-btn.active,
         .study-select, .study-toggle,
         .modal input, .modal-btn, .modal .color-input,
-        .item, .kpi, .weekday, .calendar, .cal-day, .msub {
+        .item, .kpi, .weekday, .calendar, .cal-day, .msub, .goalinput {
             background: var(--glass-stack);
             border: 1px solid var(--glass-border);
             color: var(--text-main);
@@ -242,7 +243,7 @@
             height:100%;
             width:0%;
             background: var(--primary);
-            transition: background 0.5s, width 0.25s ease;
+            transition: background 0.5s, width 0.5s linear;
         }
         /* .study-hud.goal-hit: primary glass */
 
@@ -484,7 +485,7 @@
             transition: background 0.5s;
             overflow:hidden;
         }
-        .bar > div { height: 100%; width: 0%; background: var(--primary) 75%; transition: background 0.5s; }
+        .bar > div { height: 100%; width: 0%; background: var(--primary); transition: width 0.5s linear, background 0.5s; }
         .sheet-actions {
             bottom: 0;
             margin-top: 12px;
@@ -541,6 +542,7 @@
             width: 100%;
             height: 0%;
             background: var(--primary);
+            transition: height 0.5s linear;
         }
         .week-bar.zero .barcol { background: color-mix(in srgb, var(--glass-stack) 50%, transparent); }
         .week-bar .wlabel {
@@ -590,12 +592,19 @@
         .msub-name { font-size: 12px; color: var(--text-main); letter-spacing: 0.5px; overflow:hidden; text-overflow: ellipsis; white-space: nowrap; }
         .msub-time { font-size: 11px; color: var(--text-sub); letter-spacing: 0.8px; white-space: nowrap; }
 
+        .goalinput {
+            flex:1;
+            border-radius:14px; padding:12px;
+            outline:none;
+            font-size:13px;
+        }
+
         @media (max-width: 420px) {
             .study-time { font-size: 30px; }
             .study-hud { padding: 13px 12px 11px 12px; }
         }
     </style>
-    <script src="./tinicolor.js" type="text/javascript"></script>
+    <script src="./tinycolor.js" type="text/javascript" defer></script>
 </head>
 <body>
     <div class="layer sky-base"></div>
@@ -664,7 +673,7 @@
                 <span id="studyToggleText">START</span>
             </button>
         </div>
-        <div class="sheet" id="panelSheet">
+        <div class="sheet" id="panelSheet" ontransitionend="if (event.propertyName === 'max-height') set_scroll_mask();">
             <hr id="panelHR">
             <div class="sheet-header">
                 <div>
@@ -771,8 +780,8 @@
                             <div class="item-time" id="goalNow">—</div>
                         </div>
                         <div style="margin-top:10px; display:flex; gap:10px;">
-                            <input id="goalHours" type="number" min="0" max="23" value="2" style="flex:1; border-radius:14px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.92); padding:12px; outline:none; font-size:13px;" />
-                            <input id="goalMinutes" type="number" min="0" max="59" value="0" style="flex:1; border-radius:14px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.92); padding:12px; outline:none; font-size:13px;" />
+                            <input id="goalHours" class="goalinput" type="number" min="0" max="23" value="2"/>
+                            <input id="goalMinutes" class="goalinput" type="number" min="0" max="59" value="0"/>
                         </div>
                         <div class="sheet-sub" style="margin-top:8px;">시간(왼쪽) · 분(오른쪽)</div>
                         <div class="modal-actions" style="margin-top:12px;">
@@ -938,8 +947,7 @@
             const setFP = (id, s) => { 
                 const el = flareEls[id];
                 if(el){
-                    el.style.left = (sx + dx * s) + '%'; 
-                    el.style.top = (sy + dy * s) + '%'; 
+                    el.style.transform = `translate(-50%, -50%) translate(${sx + dx * s}vw, ${sy + dy * s}vh)`;
                 }
             };
 
@@ -1034,12 +1042,12 @@
                 const sunAlt = Math.sin(prog * Math.PI); 
                 const sx = prog * 120 - 10;
                 const sy = 100 - sunAlt * 90;
-                root.setProperty('--sun-x', sx + '%'); 
-                root.setProperty('--sun-y', sy + '%');
+                root.setProperty('--sun-x', sx + 'vw'); 
+                root.setProperty('--sun-y', sy + 'vh');
                 root.setProperty('--atm-opacity', Math.max(0, Math.min(0.85, sunAlt * 1.2)));
                 updateOptics(sx, sy, sunAlt, false);
             } else { 
-                root.setProperty('--sun-y', '150%'); 
+                root.setProperty('--sun-y', '150vh'); 
                 root.setProperty('--atm-opacity', 0); 
                 flareEls.sunFC.style.opacity = 0;
             }
@@ -1050,11 +1058,11 @@
                 const alt = Math.sin(prog * Math.PI); 
                 const mx = prog * 120 - 10;
                 const my = 100 - alt * 90;
-                root.setProperty('--moon-x', mx + '%'); 
-                root.setProperty('--moon-y', my + '%');
+                root.setProperty('--moon-x', mx + 'vw'); 
+                root.setProperty('--moon-y', my + 'vh');
                 updateOptics(mx, my, alt, true);
             } else { 
-                root.setProperty('--moon-y', '150%'); 
+                root.setProperty('--moon-y', '150vh'); 
                 flareEls.moonFC.style.opacity = 0;
             }
             
@@ -1201,16 +1209,12 @@
             './creepy_tomb.mp3',
             './so_ambient.mp3'
         ];
-        let buffers = null;
-        (async () => {
-            let promises = [];
-            for (let e of links) {
-                promises.push((async (e) => {
-                    try { return audioCtx.decodeAudioData(await (await fetch(e)).arrayBuffer()); } catch(err) { return null; }
-                })(e));
-            }
-            buffers = await Promise.all(promises);
-        })();
+        let buffers = [];
+        for (let e of links) {
+            buffers.push(async () => {
+                try { return audioCtx.decodeAudioData(await (await fetch(e)).arrayBuffer()); } catch(err) { return null; }
+            });
+        }
         let curAudio = -1;
         let curSource = null;
         async function setAudio(newAudio) {
@@ -1223,6 +1227,7 @@
             }
             curAudio = newAudio;
             if (newAudio === -1 || !buffers || !buffers[newAudio]) return;
+            if (buffers[newAudio] instanceof Function) buffers[newAudio] = await buffers[newAudio]();
             try {
                 const source = new AudioBufferSourceNode(audioCtx, {buffer: buffers[newAudio], loop: true});
                 source.connect(gainNode); source.start();
@@ -2091,111 +2096,6 @@
             return { period, label, keys, totalMs: total, perSubject, longestFocusMs: longest, avgAllMs: avgAll, studiedDays };
         }
 
-        function renderWeekdayBars() {
-            // console.log("renderWeekdayBars");
-
-            const ws = startOfWeekLocal(Date.now());
-            const labels = ['월','화','수','목','금','토','일'];
-            const totals = Array.from({length:7}, (_,i)=> getDayTotalMs(dateKeyLocal(ws + i*86400000)));
-            const max = Math.max(1, ...totals);
-
-            ui.weekdayBars.innerHTML = '';
-            labels.forEach((lab, i) => {
-                const v = totals[i];
-                const pct = Math.round((v / max) * 100);
-                const wrap = document.createElement('div');
-                wrap.className = 'week-bar' + (v <= 0 ? ' zero' : '');
-                wrap.innerHTML = `
-                    <div class="barcol"><div style="height:${pct}%"></div></div>
-                    <div class="wlabel">${lab}</div>
-                `;
-                ui.weekdayBars.appendChild(wrap);
-            });
-        }
-
-        function renderBreakdown(periodAgg) {
-            // console.log("renderBreakdown");
-
-            const total = periodAgg.totalMs || 0;
-            const entries = [];
-
-            // subjects from current list first
-            App.store.subjects.forEach(s => {
-                const ms = periodAgg.perSubject[s.id] || 0;
-                entries.push({ id: s.id, name: s.name, ms, color: s.color, exists: true });
-            });
-
-            // include deleted subjects that still have time
-            for (const sid of Object.keys(periodAgg.perSubject)) {
-                if (sid === '') continue;
-                if (!App.store.subjects.some(s => s.id === sid)) {
-                    const ms = periodAgg.perSubject[sid] || 0;
-                    if (ms > 0) entries.push({ id: sid, name: '삭제된 과목', ms, color: 'rgba(255,255,255,0.25)', exists: false });
-                }
-            }
-
-            // unclassified
-            const un = periodAgg.perSubject[''] || 0;
-            if (un > 0) entries.push({ id: '', name: '미분류', ms: un, color: 'rgba(255,255,255,0.22)', exists: true });
-
-            // sort
-            entries.sort((a,b)=> b.ms - a.ms);
-
-            ui.breakdownList.innerHTML = '';
-            if (entries.every(e => e.ms <= 0)) {
-                const empty = document.createElement('div');
-                empty.className = 'item';
-                empty.innerHTML = `<div class="item-row"><div class="item-name">기록이 없어요</div><div class="item-time">00:00:00</div></div>`;
-                ui.breakdownList.appendChild(empty);
-                return;
-            }
-
-            entries.forEach(e => {
-                if (e.ms <= 0) return;
-                const pct = total > 0 ? Math.min(100, (e.ms / total) * 100) : 0;
-                const item = document.createElement('div');
-                item.className = 'item';
-                item.innerHTML = `
-                    <div class="item-row">
-                        <div class="item-name" title="${escapeHtml(e.name)}">
-                            <span style="display:inline-flex; align-items:center; gap:8px; min-width:0;">
-                                <span class="swatch" style="width:10px;height:10px; background:${e.color};"></span>
-                                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px;">${escapeHtml(e.name)}</span>
-                            </span>
-                        </div>
-                        <div class="item-time">${fmtHMS(e.ms)}</div>
-                    </div>
-                    <div class="bar"><div style="width:${pct.toFixed(1)}%; background:${e.color};"></div></div>
-                `;
-                ui.breakdownList.appendChild(item);
-            });
-        }
-
-        function renderKPIs() {
-            // console.log("renderKPIs");
-
-            const todayAgg = aggregatePeriod('today');
-            const weekAgg = aggregatePeriod('week');
-            const monthAgg = aggregatePeriod('month');
-
-            const goal = App.store.settings.dailyGoalMs || 0;
-            ui.kpiToday.textContent = fmtHMS(todayAgg.totalMs);
-            ui.kpiTodaySub.textContent = goal > 0
-                ? `목표 ${fmtHMS(goal)} · ${Math.min(100, Math.floor((todayAgg.totalMs/goal)*100))}%`
-                : '목표 없음';
-
-            ui.kpiWeek.textContent = fmtHMS(weekAgg.totalMs);
-            ui.kpiWeekSub.textContent = `평균 ${fmtHMS(weekAgg.avgAllMs)}`;
-
-            ui.kpiMonth.textContent = fmtHMS(monthAgg.totalMs);
-            ui.kpiMonthSub.textContent = `평균 ${fmtHMS(monthAgg.avgAllMs)}`;
-
-            // focus info (overall best, and this week best)
-            const bestAll = App.store.meta.bestFocusMs || 0;
-            const bestWeek = weekAgg.longestFocusMs || 0;
-            ui.focusInfo.textContent = `최장 집중 ${fmtHMS(Math.max(bestWeek, bestAll))}`;
-        }
-
         function setStatsPeriod(period) {
             App.store.settings.statsPeriod = period;
             Storage.save(App.store);
@@ -2208,7 +2108,7 @@
 
         // ---------- Calendar ----------
         function renderCalendar() {
-            // console.log("renderCalendar");
+            console.log("renderCalendar");
 
             // dow header once
             if (!ui.calDow.dataset.built) {
@@ -2318,49 +2218,9 @@
             ui.dayDetailModal.close();
         }
 
-        // ---------- Subjects management panel ----------
-        function renderSubjectsManageList() {
-            // console.log("renderSubjectsManageList");
-
-            ui.subjectsManageList.innerHTML = '';
-            if (App.store.subjects.length === 0) {
-                const empty = document.createElement('div');
-                empty.className = 'item';
-                empty.innerHTML = `<div class="item-row"><div class="item-name">과목이 없어요</div><div class="item-time">+</div></div>`;
-                ui.subjectsManageList.appendChild(empty);
-                return;
-            }
-
-            App.store.subjects
-                .slice()
-                .sort((a,b)=> (a.createdAt||0) - (b.createdAt||0))
-                .forEach(s => {
-                    const total = allTimeSubjectTotalMs(s.id);
-                    const row = document.createElement('div');
-                    row.className = 'msub';
-                    row.innerHTML = `
-                        <div class="item-row">
-                            <span class="swatch" style="background:${s.color}"></span>
-                            <div class="msub-name" title="${escapeHtml(s.name)}">${escapeHtml(s.name)}</div>
-                        </div>
-                        <div class="item-row">
-                            <div class="msub-time">${fmtHMS(total)}</div>
-                            <button class="icon-btn" aria-label="Edit" style="width:34px;height:34px;border-radius:14px;">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                    <path d="M4 20H8L18.5 9.5C19.3 8.7 19.3 7.4 18.5 6.6L17.4 5.5C16.6 4.7 15.3 4.7 14.5 5.5L4 16V20Z"/>
-                                </svg>
-                            </button>
-                        </div>
-                    `;
-                    const editBtn = row.querySelector('button[aria-label="Edit"]');
-                    editBtn.addEventListener('click', () => openSubjectModal('edit', s.id));
-                    ui.subjectsManageList.appendChild(row);
-                });
-        }
-
         // ---------- HUD rendering ----------
         function renderSubjectsUI() {
-            // console.log("renderSubjectsUI");
+            console.log("renderSubjectsUI");
 
             // select options
             ui.subjectSelect.innerHTML = '<option value="">미분류</option>';
@@ -2439,8 +2299,12 @@
             return mode === 'total' ? baseMsTotal : baseMsSubject;
         }
 
-        function renderGoalProgress() {
-            // console.log("renderGoalProgress");
+        function renderHUD() {
+            console.log("renderHUD");
+
+            ui.studyTime.textContent = fmtHMS(getDisplayedMs());
+            
+            // goal progress
 
             const nowTs = Date.now();
             const dk = dateKeyLocal(nowTs);
@@ -2468,44 +2332,170 @@
             ui.goalNow.textContent = goal > 0 ? fmtHMS(goal) : '목표 없음';
         }
 
-        function renderHUD() {
-            // console.log("renderHUD");
-
-            ui.studyTime.textContent = fmtHMS(getDisplayedMs());
-            renderGoalProgress();
-        }
-
         // ---------- Panel render ----------
         function renderPanel() {
-            // console.log("renderPanel");
+            console.log("renderPanel");
 
             const now = Date.now();
             ui.panelSubtitle.textContent = `${getTodayKey()} · 오프라인`;
 
-            // stats period button state
-            const _p = App.store.settings.statsPeriod || 'today';
-            ui.periodTodayBtn.classList.toggle('active', _p === 'today');
-            ui.periodWeekBtn.classList.toggle('active', _p === 'week');
-            ui.periodMonthBtn.classList.toggle('active', _p === 'month');
+            const goal = App.store.settings.dailyGoalMs || 0;
+            switch (App.store.settings.panelTab) {
+                case 'stats':
+                const _p = App.store.settings.statsPeriod || 'today';
+                ui.periodTodayBtn.classList.toggle('active', _p === 'today');
+                ui.periodWeekBtn.classList.toggle('active', _p === 'week');
+                ui.periodMonthBtn.classList.toggle('active', _p === 'month');
+                
+                /* kpi */
+                const todayAgg = aggregatePeriod('today');
+                const weekAgg = aggregatePeriod('week');
+                const monthAgg = aggregatePeriod('month');
 
-            renderKPIs();
+                ui.kpiToday.textContent = fmtHMS(todayAgg.totalMs);
+                ui.kpiTodaySub.textContent = goal > 0
+                    ? `목표 ${fmtHMS(goal)} · ${Math.min(100, Math.floor((todayAgg.totalMs/goal)*100))}%`
+                    : '목표 없음';
 
-            const agg = aggregatePeriod(App.store.settings.statsPeriod || 'today');
-            renderBreakdown(agg);
-            renderWeekdayBars();
+                ui.kpiWeek.textContent = fmtHMS(weekAgg.totalMs);
+                ui.kpiWeekSub.textContent = `평균 ${fmtHMS(weekAgg.avgAllMs)}`;
 
-            renderCalendar();
-            renderSubjectsManageList();
+                ui.kpiMonth.textContent = fmtHMS(monthAgg.totalMs);
+                ui.kpiMonthSub.textContent = `평균 ${fmtHMS(monthAgg.avgAllMs)}`;
 
-            // goal inputs
-            const goal = App.store.settings.dailyGoalMs || (2*60*60*1000);
-            ui.goalHours.value = Math.floor(goal / 3600000);
-            ui.goalMinutes.value = Math.floor((goal % 3600000) / 60000);
-            ui.goalNow.textContent = fmtHMS(goal);
+                // focus info (overall best, and this week best)
+                const bestAll = App.store.meta.bestFocusMs || 0;
+                const bestWeek = weekAgg.longestFocusMs || 0;
+                ui.focusInfo.textContent = `최장 집중 ${fmtHMS(Math.max(bestWeek, bestAll))}`;
+
+                /* breakdown */
+                const agg = aggregatePeriod(App.store.settings.statsPeriod || 'today');
+                const total = agg.totalMs || 0;
+                const entries = [];
+
+                // subjects from current list first
+                App.store.subjects.forEach(s => {
+                    const ms = agg.perSubject[s.id] || 0;
+                    entries.push({ id: s.id, name: s.name, ms, color: s.color, exists: true });
+                });
+
+                // include deleted subjects that still have time
+                for (const sid of Object.keys(agg.perSubject)) {
+                    if (sid === '') continue;
+                    if (!App.store.subjects.some(s => s.id === sid)) {
+                        const ms = agg.perSubject[sid] || 0;
+                        if (ms > 0) entries.push({ id: sid, name: '삭제된 과목', ms, color: 'rgba(255,255,255,0.25)', exists: false });
+                    }
+                }
+
+                // unclassified
+                const un = agg.perSubject[''] || 0;
+                if (un > 0) entries.push({ id: '', name: '미분류', ms: un, color: 'rgba(255,255,255,0.22)', exists: true });
+
+                // sort
+                entries.sort((a,b)=> b.ms - a.ms);
+
+                ui.breakdownList.innerHTML = '';
+                if (entries.every(e => e.ms <= 0)) {
+                    const empty = document.createElement('div');
+                    empty.className = 'item';
+                    empty.innerHTML = `<div class="item-row"><div class="item-name">기록이 없어요</div><div class="item-time">00:00:00</div></div>`;
+                    ui.breakdownList.appendChild(empty);
+                    return;
+                }
+
+                entries.forEach(e => {
+                    if (e.ms <= 0) return;
+                    const pct = total > 0 ? Math.min(100, (e.ms / total) * 100) : 0;
+                    const item = document.createElement('div');
+                    item.className = 'item';
+                    item.innerHTML = `
+                        <div class="item-row">
+                            <div class="item-name" title="${escapeHtml(e.name)}">
+                                <span style="display:inline-flex; align-items:center; gap:8px; min-width:0;">
+                                    <span class="swatch" style="width:10px;height:10px; background:${e.color};"></span>
+                                    <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px;">${escapeHtml(e.name)}</span>
+                                </span>
+                            </div>
+                            <div class="item-time">${fmtHMS(e.ms)}</div>
+                        </div>
+                        <div class="bar"><div style="width:${pct.toFixed(1)}%; background:${e.color};"></div></div>
+                    `;
+                    ui.breakdownList.appendChild(item);
+                });
+
+                /* weekday bars */
+                const ws = startOfWeekLocal(Date.now());
+                const labels = ['월','화','수','목','금','토','일'];
+                const totals = Array.from({length:7}, (_,i)=> getDayTotalMs(dateKeyLocal(ws + i*86400000)));
+                const max = Math.max(1, ...totals);
+
+                ui.weekdayBars.innerHTML = '';
+                labels.forEach((lab, i) => {
+                    const v = totals[i];
+                    const pct = Math.round((v / max) * 100);
+                    const wrap = document.createElement('div');
+                    wrap.className = 'week-bar' + (v <= 0 ? ' zero' : '');
+                    wrap.innerHTML = `
+                        <div class="barcol"><div style="height:${pct}%"></div></div>
+                        <div class="wlabel">${lab}</div>
+                    `;
+                    ui.weekdayBars.appendChild(wrap);
+                });
+                break;
+
+
+                case 'calendar': renderCalendar(); break;
+
+
+                case 'subjects':
+                ui.subjectsManageList.innerHTML = '';
+                if (App.store.subjects.length === 0) {
+                    const empty = document.createElement('div');
+                    empty.className = 'item';
+                    empty.innerHTML = `<div class="item-row"><div class="item-name">과목이 없어요</div><div class="item-time">+</div></div>`;
+                    ui.subjectsManageList.appendChild(empty);
+                    return;
+                }
+
+                App.store.subjects
+                    .slice()
+                    .sort((a,b)=> (a.createdAt||0) - (b.createdAt||0))
+                    .forEach(s => {
+                        const total = allTimeSubjectTotalMs(s.id);
+                        const row = document.createElement('div');
+                        row.className = 'msub';
+                        row.innerHTML = `
+                            <div class="item-row">
+                                <span class="swatch" style="background:${s.color}"></span>
+                                <div class="msub-name" title="${escapeHtml(s.name)}">${escapeHtml(s.name)}</div>
+                            </div>
+                            <div class="item-row">
+                                <div class="msub-time">${fmtHMS(total)}</div>
+                                <button class="icon-btn" aria-label="Edit" style="width:34px;height:34px;border-radius:14px;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                        <path d="M4 20H8L18.5 9.5C19.3 8.7 19.3 7.4 18.5 6.6L17.4 5.5C16.6 4.7 15.3 4.7 14.5 5.5L4 16V20Z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        `;
+                        const editBtn = row.querySelector('button[aria-label="Edit"]');
+                        editBtn.addEventListener('click', () => openSubjectModal('edit', s.id));
+                        ui.subjectsManageList.appendChild(row);
+                    });
+                break;
+
+
+                case 'goal':
+                // goal inputs
+                ui.goalHours.value = Math.floor(goal / 3600000);
+                ui.goalMinutes.value = Math.floor((goal % 3600000) / 60000);
+                ui.goalNow.textContent = goal > 0 ? fmtHMS(goal) : '목표 없음';
+            }
         }
 
         function renderAll() {
-            // console.log("renderAll");
+            console.log("renderAll");
 
             renderSubjectsUI();
             renderHUD();
@@ -2585,16 +2575,17 @@
                     }
                 }
 
-                // UI update throttling (~10fps)
-                if (nowTs - (App.runtime.lastUiTs || 0) > 100) {
+                // UI update throttling (~2fps)
+                if (nowTs - (App.runtime.lastUiTs || 0) > 500) {
                     App.runtime.lastUiTs = nowTs;
                     renderHUD();
-                    // panel이 열려 있으면 가볍게 갱신(너무 자주 X)
-                    if (ui.panelSheet.matches(':popover-open')) {
-                        if (nowTs - (App.runtime.lastUiPanelTs || 0) > 500) {
-                            App.runtime.lastUiPanelTs = nowTs;
-                            renderPanel();
-                        }
+                }
+                
+                // panel이 열려 있고 공부 중이면 가볍게 갱신(너무 자주 X)
+                if (App.runtime.running && ui.panelSheet.classList.contains('active')) {
+                    if (nowTs - (App.runtime.lastUiPanelTs || 0) > 500) {
+                        App.runtime.lastUiPanelTs = nowTs;
+                        renderPanel();
                     }
                 }
             };
