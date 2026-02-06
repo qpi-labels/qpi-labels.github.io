@@ -8,16 +8,16 @@
   "theme_color": "#fafafa",
   "icons": [
     {
-      "src": "icon512.png",
-      "sizes": "512x512",
+      "src": "basetimer-icon.png",
+      "sizes": "1024x1024",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any"
     },
     {
-      "src": "icon512.png",
-      "sizes": "512x512",
+      "src": "basetimer-icon.png",
+      "sizes": "1024x1024",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any"
     }
   ]
 }
