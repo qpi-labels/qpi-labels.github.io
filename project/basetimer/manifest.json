@@ -8,16 +8,16 @@
   "theme_color": "#fafafa",
   "icons": [
     {
-      "src": "icon256.png",
-      "sizes": "256x256",
+      "src": "icon512.png",
+      "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "maskable"
     },
     {
       "src": "icon512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "maskable"
     }
   ]
 }
