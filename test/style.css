@@ -114,10 +114,9 @@ body {
 }
 
 .stripe { width: 100%; }
-.s-4 { height: 32px; background: var(--red-main); }
-.s-3 { height: 24px; background: var(--orange); }
-.s-2 { height: 16px; background: var(--yellow); }
-.s-1 { height: 8px; border-top: 2.5px solid var(--yellow); } /* 1x 비율을 선으로 처리 */
+.s-4 { height: 24px; background: var(--red-main); }
+.s-3 { height: 16px; background: var(--orange); }
+.s-2 { height: 8px; background: var(--yellow); }
 
 /* Metadata Footer */
 .metadata-footer {
