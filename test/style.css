@@ -23,7 +23,7 @@ body {
 .vhs-label-bar {
     background: var(--red-dark);
     color: var(--bg);
-    padding: 6px 12px;
+    padding: 10px 12px;
     display: flex;
     justify-content: space-between;
     font-family: var(--font-serif);
@@ -32,9 +32,9 @@ body {
 }
 .vhs-stripes { display: flex; flex-direction: column; gap: 5px; margin-top: 5px; }
 .stripe { width: 100%; }
-.s-3 { height: 16px; background: var(--red-main); }
-.s-2 { height: 8px; background: var(--orange); }
-.s-1 { height: 4px; background: var(--yellow); }
+.s-3 { height: 24px; background: var(--red-main); }
+.s-2 { height: 16px; background: var(--orange); }
+.s-1 { height: 8px; background: var(--yellow); }
 
 
 @media (min-width: 1025px) {
