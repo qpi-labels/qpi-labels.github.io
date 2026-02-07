@@ -140,8 +140,8 @@ body {
     text-decoration: none;
     font-size: 0.9rem;
 }
-.btn-filled { background: var(--red-main); color: var(--bg); }
-.btn-outline { border: 1.5px solid var(--red-main); color: var(--red-main); }
+.btn-filled { background: var(--red-dark); color: var(--bg); }
+.btn-outline { border: 1.5px solid var(--red-dark); color: var(--red-dark); }
 
 .content-wrapper { max-width: 680px; margin: 0 auto; }
 .content-section { margin-bottom: 100px; }
