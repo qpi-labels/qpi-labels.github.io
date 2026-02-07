@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>쿼터파이</title>
+    <title>쿼터파이(QPI) Archive</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <link rel="stylesheet" href="style.css">
@@ -12,69 +12,75 @@
     <div class="paper-grain"></div>
     
     <div class="layout-container">
-        <!-- 사이드바 (모바일에서는 상단/하단으로 분리됨) -->
-        <aside class="sidebar">
-            <div class="sidebar-top">
-                <h1 class="main-slogan">세상을 바꾸는<br>작은 움직임.</h1>
-                
-                <nav class="nav-buttons">
-                    <a href="#" class="btn btn-filled">프로젝트 보기</a>
-                    <a href="#" class="btn btn-outline">쿼터파이 설계</a>
-                </nav>
+        <!-- 1. 상단/좌측 정보 영역 -->
+        <header class="sidebar-info">
+            <h1 class="main-slogan">세상을 바꾸는<br>작은 움직임.</h1>
+            <nav class="nav-buttons">
+                <a href="#" class="btn btn-filled">프로젝트 보기</a>
+                <a href="#" class="btn btn-outline">쿼터파이 설계</a>
+            </nav>
 
-                <!-- Sticky가 될 스트라이프 모듈 -->
-                <div class="vhs-design-module">
-                    <div class="vhs-label-bar">
-                        <span class="url">qpi.kro.kr</span>
-                        <span class="brand-name">쿼터파이</span>
-                    </div>
-                    <div class="vhs-stripes">
-                        <div class="stripe s-4"></div>
-                        <div class="stripe s-3"></div>
-                        <div class="stripe s-2"></div>
-                    </div>
+            <!-- 모바일에서 헤더가 될 스트라이프 모듈 -->
+            <div class="vhs-sticky-module">
+                <div class="vhs-label-bar">
+                    <span class="url">qpi.kro.kr</span>
+                    <span class="brand-name">쿼터파이</span>
+                </div>
+                <div class="vhs-stripes">
+                    <div class="stripe s-4"></div>
+                    <div class="stripe s-3"></div>
+                    <div class="stripe s-2"></div>
+                    <div class="stripe s-1"></div>
                 </div>
             </div>
+        </header>
 
-            <!-- 모바일에서는 메인 콘텐츠 뒤로 이동함 -->
-            <div class="sidebar-bottom">
-                <footer class="metadata-footer">
-                    <div class="meta-item-group">
-                        <span class="meta-label">쿼터파이</span>
-                        <span class="meta-value">SINCE 2024</span>
-                    </div>
-                    <div class="meta-item">
-                        <span class="meta-name">황석현</span>
-                        <span class="meta-email">cnsh32_nnnn@cnsh.kr</span>
-                    </div>
-                    <div class="meta-item">
-                        <span class="meta-address">충청남도 공주시 반포면 마암리 1351-15</span>
-                        <span class="meta-zip">32620</span>
-                    </div>
-                </footer>
-            </div>
-        </aside>
-
-        <div class="center-divider"></div>
-
+        <!-- 2. 메인 콘텐츠 영역 -->
         <main class="main-content">
             <div class="content-wrapper">
-                <!-- 로렘입숨 섹션들 -->
                 <article class="content-section">
                     <h2 class="section-title">01. 기록의 시작: 왜 쿼터파이인가</h2>
-                    <p class="section-body">우리는 완벽한 원주율인 파이(&pi;)의 거대함보다는, 그 4분의 1조각인 45도에 집중합니다. 기술은 때로 너무 거대하고 차갑게 느껴지지만, 우리가 만들어내는 45도의 작은 틈은 사람이 숨 쉬고 거주할 수 있는 온기를 만들어냅니다...</p>
+                    <p class="section-body">우리는 완벽한 원주율인 파이(&pi;)의 거대함보다는, 그 4분의 1조각인 45도에 집중합니다. 기술은 때로 너무 거대하고 차갑게 느껴지지만, 우리가 만들어내는 45도의 작은 틈은 사람이 숨 쉬고 거주할 수 있는 온기를 만들어냅니다. 동아리 창립 1년 차를 맞아, 우리는 그동안 중구난방으로 흩어져 있던 코드의 파편들을 모아 하나의 정갈한 아카이브로 구축하기 시작했습니다. 이것은 단순한 포트폴리오가 아니라, 우리가 세상을 바라보는 정직한 기록입니다.</p>
                 </article>
                 <article class="content-section">
                     <h2 class="section-title">02. 세상을 이롭게 하는 작은 움직임</h2>
-                    <p class="section-body">거창한 혁신이나 유니콘 기업을 꿈꾸기보다, 우리는 당장 내 곁에 있는 사람의 불편함을 해결하는 '작은 움직임'의 가치를 믿습니다. 한 줄의 코드가 노인들의 접근성을 개선하고, 한 번의 클릭이 소외된 이들의 목소리를 대변할 수 있다면...</p>
+                    <p class="section-body">거창한 혁신이나 유니콘 기업을 꿈꾸기보다, 우리는 당장 내 곁에 있는 사람의 불편함을 해결하는 '작은 움직임'의 가치를 믿습니다. 한 줄의 코드가 노인들의 접근성을 개선하고, 한 번의 클릭이 소외된 이들의 목소리를 대변할 수 있다면 그것이 바로 우리가 지향하는 기술의 본질입니다. 우리는 유행하는 기술 스택을 쫓기보다, 그 기술이 담아낼 '인간적인 세상'의 모습을 먼저 설계합니다.</p>
+                </article>
+                <!-- 스크롤 테스트용 추가 섹션 -->
+                <article class="content-section">
+                    <h2 class="section-title">03. 소니 T-120과 아카이브의 물성</h2>
+                    <p class="section-body">디지털은 영원할 것 같지만 때로는 종이보다 더 쉽게 휘발됩니다. 소니 T-120 VHS 테이프가 물리적인 자기 테이프 위에 소중한 기억을 새겼듯, 우리도 웹이라는 대지 위에 묵직한 기록을 남기고자 합니다. 채도를 낮춘 4색 스트라이프는 우리가 보낸 시간의 층위를 상징하며, 1px의 정교한 선들은 우리가 지키고자 하는 기술자로서의 최소한의 질서입니다.</p>
                 </article>
                 <article class="content-section">
                     <h2 class="section-title">03. 소니 T-120과 아카이브의 물성</h2>
-                    <p class="section-body">디지털은 영원할 것 같지만 때로는 종이보다 더 쉽게 휘발됩니다. 소니 T-120 VHS 테이프가 물리적인 자기 테이프 위에 소중한 기억을 새겼듯, 우리도 웹이라는 대지 위에 묵직한 기록을 남기고자 합니다...</p>
+                    <p class="section-body">디지털은 영원할 것 같지만 때로는 종이보다 더 쉽게 휘발됩니다. 소니 T-120 VHS 테이프가 물리적인 자기 테이프 위에 소중한 기억을 새겼듯, 우리도 웹이라는 대지 위에 묵직한 기록을 남기고자 합니다. 채도를 낮춘 4색 스트라이프는 우리가 보낸 시간의 층위를 상징하며, 1px의 정교한 선들은 우리가 지키고자 하는 기술자로서의 최소한의 질서입니다.</p>
                 </article>
-                <!-- 추가 섹션들... -->
+                <article class="content-section">
+                    <h2 class="section-title">03. 소니 T-120과 아카이브의 물성</h2>
+                    <p class="section-body">디지털은 영원할 것 같지만 때로는 종이보다 더 쉽게 휘발됩니다. 소니 T-120 VHS 테이프가 물리적인 자기 테이프 위에 소중한 기억을 새겼듯, 우리도 웹이라는 대지 위에 묵직한 기록을 남기고자 합니다. 채도를 낮춘 4색 스트라이프는 우리가 보낸 시간의 층위를 상징하며, 1px의 정교한 선들은 우리가 지키고자 하는 기술자로서의 최소한의 질서입니다.</p>
+                </article>
+                <article class="content-section">
+                    <h2 class="section-title">03. 소니 T-120과 아카이브의 물성</h2>
+                    <p class="section-body">디지털은 영원할 것 같지만 때로는 종이보다 더 쉽게 휘발됩니다. 소니 T-120 VHS 테이프가 물리적인 자기 테이프 위에 소중한 기억을 새겼듯, 우리도 웹이라는 대지 위에 묵직한 기록을 남기고자 합니다. 채도를 낮춘 4색 스트라이프는 우리가 보낸 시간의 층위를 상징하며, 1px의 정교한 선들은 우리가 지키고자 하는 기술자로서의 최소한의 질서입니다.</p>
+                </article>
             </div>
         </main>
+
+        <!-- 3. 하단/사이드바 하단 메타데이터 -->
+        <footer class="metadata-footer">
+            <div class="meta-item-group">
+                <span class="meta-label">쿼터파이</span>
+                <span class="meta-value">SINCE 2024</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-name">황석현</span>
+                <span class="meta-email">cnsh32_nnnn@cnsh.kr</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-address">충청남도 공주시 반포면 마암리 1351-15</span>
+                <span class="meta-zip">32620</span>
+            </div>
+        </footer>
     </div>
 </body>
 </html>
