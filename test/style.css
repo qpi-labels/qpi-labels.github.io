@@ -149,6 +149,6 @@ body {
 .section-body { font-size: 1.1rem; line-height: 1.9; text-align: justify; word-break: keep-all; }
 
 .metadata-footer { font-size: 0.85rem; line-height: 1.8; }
-.meta-item-group { display: flex; justify-content: space-between; font-weight: 700; border-bottom: 1.5px solid var(--text); margin-bottom: 10px; padding-bottom: 5px; }
-.meta-item { display: flex; justify-content: space-between; opacity: 0.75; }
+.meta-item-group { display: flex; justify-content: space-between; font-weight: 700; border-bottom: 1.5px solid var(--text); margin-bottom: 10px; padding-bottom: 5px; text-decoration: none; }
+.meta-item { display: flex; justify-content: space-between; opacity: 0.75; text-decoration: none; }
 
