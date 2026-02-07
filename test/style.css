@@ -98,7 +98,7 @@ body {
 .vhs-label-bar {
     background: var(--red-dark);
     color: var(--bg-paper);
-    padding: 6px 12px;
+    padding: 8px 12px;
     display: flex;
     justify-content: space-between;
     font-family: var(--font-serif);
@@ -114,8 +114,8 @@ body {
 }
 
 .stripe { width: 100%; }
-.s-4 { height: 20px; background: var(--red-main); }
-.s-3 { height: 12px; background: var(--orange); }
+.s-4 { height: 16px; background: var(--red-main); }
+.s-3 { height: 8px; background: var(--orange); }
 .s-2 { height: 4px; background: var(--yellow); }
 
 /* Metadata Footer */
