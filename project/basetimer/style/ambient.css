@@ -1,0 +1,146 @@
+:root {
+	background-color: #000;
+	--primary: #90caf9;
+	--on-primary-container: #003354;
+	--sun-x: 50vw; --sun-y: 110vh;
+	--moon-x: 50vw; --moon-y: 110vh;
+	--star-opacity: 0; --star-rot: 0deg;
+	--star-mask-y: -50%;
+	--atm-opacity: 0;
+	
+	/* 동적 글래스모피즘 변수 초기값 */
+	--glass-bg: rgba(20, 25, 35, 0.6);
+	--glass-border: rgba(255, 255, 255, 0.1);
+	--glass-stack: rgba(255, 255, 255, 0.1);
+	--text-main: rgba(255, 255, 255, 0.95);
+	--text-sub: rgba(255, 255, 255, 0.6);
+	--chip-bg: rgba(255, 255, 255, 0.1);
+}
+
+html, body {
+	margin: 0; padding: 0; width: 100%; height: 100%;
+	font-family: 'Roboto', sans-serif; user-select: none;
+	position: fixed; top: 0; left: 0; overscroll-behavior: none;
+}
+
+* { -webkit-tap-highlight-color: transparent; outline: none; }
+
+button { font-family: 'Roboto', sans-serif; }
+
+.layer { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; }
+
+.sky-base { z-index: -2; background-color: #050a19; }
+.sky-layer { position: absolute; inset: 0; }
+
+.atmosphere { z-index: 1; width: 100vmax; height: 100vmax; background: radial-gradient(circle at 50% 50%, rgba(255, 240, 200, 0.45) 0%, rgba(255, 180, 100, 0.2) 15%, transparent 70%); mix-blend-mode: screen; opacity: var(--atm-opacity); transform: translate(-50%, -50%) translate(var(--sun-x), var(--sun-y)); will-change: opacity, transform; }
+.star-container { z-index: 2; top: 50%; left: 50%; width: 200vmax; height: 200vmax; transform: translate(-50%, -50%) rotate(var(--star-rot)); opacity: var(--star-opacity); mask-image: linear-gradient(to bottom, #fff calc(var(--star-mask-y) - 40%), transparent calc(var(--star-mask-y) + 40%)); -webkit-mask-image: linear-gradient(to bottom, #fff calc(var(--star-mask-y) - 40%), transparent calc(var(--star-mask-y) + 40%)); will-change: opacity, transform; }
+#starCanvas { width: 100%; height: 100%; }
+
+#satLayer { z-index: 3; }
+.satellite { position: absolute; width: 1.5px; height: 1.5px; z-index: 3; background: #fff; border-radius: 50%; box-shadow: 0 0 3px 1px rgba(255,255,255,0.7); will-change: transform; }
+
+.celestial { z-index: 4; }
+.sun-disk { position: absolute; left: 0; top: 0; width: 60px; height: 60px; z-index: 100; transform: translate(-50%, -50%) translate(var(--sun-x), var(--sun-y)); border-radius: 50%; background: #fff; box-shadow: 0 0 60px 20px #fff, 0 0 140px 50px rgba(255, 230, 150, 0.7), 0 0 200px 80px rgba(255, 200, 100, 0.4); will-change: transform; }
+.moon-disk { position: absolute; left: 0; top: 0; width: 42px; height: 42px; z-index: 101; transform: translate(-50%, -50%) translate(var(--moon-x), var(--moon-y)); border-radius: 50%; background: #fff; box-shadow: 0 0 35px 12px #fff, 0 0 80px 25px rgba(200, 230, 255, 0.4); will-change: transform; }
+.moon-aura { position: absolute; left: 0; top: 0; width: 100vmax; height: 100vmax; z-index: 90; transform: translate(-50%, -50%) translate(var(--moon-x), var(--moon-y)); background: radial-gradient(circle, rgba(180, 220, 255, 0.2) 0%, transparent 50%); mix-blend-mode: screen; will-change: transform; }
+
+.lens-flare-container, .moon-flare-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 150; pointer-events: none; mix-blend-mode: screen; will-change: opacity; }
+.flare-ghost { position: absolute; left: 0%; top: 0%; transform: translate(-50%, -50%); border-radius: 50%; will-change: transform; }
+.flare-halo { background: radial-gradient(circle, transparent 65%, rgba(255, 120, 60, 0.18) 68%, rgba(255, 200, 100, 0.12) 70%, rgba(120, 200, 255, 0.08) 72%, transparent 75%); filter: blur(12px); }
+.ghost-hex { width: 80px; height: 80px; background: rgba(255, 255, 255, 0.09); clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); filter: blur(3px); }
+.ghost-rainbow { background: radial-gradient(circle, transparent 35%, rgba(255, 80, 80, 0.09) 42%, rgba(255, 200, 50, 0.07) 47%, rgba(80, 255, 120, 0.06) 52%, rgba(80, 150, 255, 0.08) 57%, transparent 63%); filter: blur(16px); }
+.sun-streak { position: absolute; left: 0; top: 0; width: 200vw; height: 3px; transform: translate(-50%, -50%) translate(var(--sun-x), var(--sun-y)) rotate(-3deg); background: linear-gradient(90deg, transparent, rgba(255, 230, 180, 0.5), rgba(255, 255, 255, 0.9), rgba(255, 230, 180, 0.5), transparent); filter: blur(5px); will-change: transform; }
+
+.viz-canvas { position: fixed; bottom: 0; left: 0; width: 100%; height: 200px; z-index: 10; pointer-events: none; mask-image: linear-gradient(to top, black 30%, transparent 100%); -webkit-mask-image: linear-gradient(to top, black 30%, transparent 100%); }
+
+.glass-panel-base {
+	background: var(--glass-bg);
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+	border: 1px solid var(--glass-border);
+	color: var(--text-main);
+	box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+	transition: background 0.5s, border 0.5s, color 0.5s;
+	h3, p, span, button {
+		transition: color 0.5s;
+	}
+}
+
+.glass-panel-stack {
+	background: var(--glass-stack);
+	border: 1px solid var(--glass-border);
+	color: var(--text-main);
+	transition: background 0.5s, border 0.5s, color 0.5s;
+	h3, p, span, button {
+		transition: color 0.5s;
+	}
+}
+
+/* 성능 모드 시 블러 부하 감소 (가시성은 유지) */
+body.perf-active .glass-panel-base {
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+}
+
+.bottom-clock { 
+	position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%);
+	padding: 0;
+	background: none; border: 0; color: var(--text-main);
+	font-weight: 300; font-size: 16px; letter-spacing: 4px; z-index: 500; 
+	text-shadow: 0 2px 10px rgba(0,0,0,0.3); 
+	cursor: pointer; pointer-events: auto; 
+	transition: color 0.5s;
+}
+
+.info-panel { 
+	position: fixed; bottom: 90px; left: 50%; right: auto; top: auto;
+	width: 320px; padding: 24px; margin: 0; border-radius: 36px;
+	transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.5s, color 0.5s; 
+}
+.info-panel:popover-open {
+	opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0);
+	@starting-style {
+		opacity: 0; transform: translateX(-50%) translateY(20px);
+	}
+}
+.info-panel b { background: var(--primary); border-radius: 8px; padding-left: 0.4em; padding-right: 0.4em; color: var(--on-primary-container); font-weight: 500; transition: background 0.5s, color 0.5s; }
+
+.fab { 
+	position: fixed; bottom: 30px; right: 30px; width: 56px; height: 56px; border-radius: 36px; 
+	cursor: pointer; z-index: 500; display: flex; justify-content: center; align-items: center; 
+	transition: background 0.5s, border 0.5s;
+}
+
+.popup { 
+	position: fixed; 
+	bottom: 100px; right: 30px; left: auto; top: auto;
+	width: 280px; padding: 28px; margin: 0; border-radius: 36px; 
+	transform-origin: bottom right; 
+	transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.5s, color 0.5s; 
+}
+.popup:popover-open {
+	opacity: 1; transform: scale(1) translateY(0);
+	@starting-style {
+		opacity: 0; transform: scale(0.9) translateY(20px);
+	}
+}
+
+.row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
+.label { font-size: 11px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; }
+.manual-ui.disabled { opacity: 0.2; pointer-events: none; filter: grayscale(1); }
+.speed-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.oldchip { background: var(--chip-bg); border: 1px solid var(--glass-border); color: var(--text-main); border-radius: 8px; padding: 6px 10px; font-size: 11px; cursor: pointer; font-weight: 700; transition: background 0.5s, color 0.5s; }
+.btn-action { width: 100%; padding: 14px; background: var(--primary); color: var(--on-primary-container); border: none; border-radius: 12px; font-size: 12px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: background 0.5s, 0.2s; }
+input[type=range] { width: 100%; appearance: none; background: var(--chip-bg); height: 6px; border-radius: 3px; outline: none; margin: 10px 0; }
+input[type=range]::-webkit-slider-thumb { appearance: none; /* The previous iteration of you has rolled back my change from '-webkit-appearance' to 'appearance'. CSS 'appearance' property is baseline since 2022. It's 2026 now. Please catch up. */ width: 24px; height: 24px; border-radius: 50%; background: var(--primary); cursor: pointer; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: background 0.5s; }
+input[type=range]::-moz-range-thumb { appearance: none; width: 24px; height: 24px; border-radius: 50%; background: var(--primary); cursor: pointer; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: background 0.5s; }
+.switch { position: relative; width: 44px; height: 24px; display: inline-block; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider-sw { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(100,100,100,0.5); border-radius: 24px; transition: 0.3s; cursor: pointer; }
+.slider-sw:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+input[type=checkbox] + .slider-sw { transition: background 0.5s, border 0.5s, color 0.5s; }
+input:checked + .slider-sw { background: var(--primary); }
+input:checked + .slider-sw:before { transform: translateX(20px); background: var(--on-primary-container); }
+hr { border: 0; border-top: 1px solid var(--glass-border); margin-top: 20px; margin-bottom: 20px; }
+
+.study-hud { display: none; }

@@ -2,8 +2,19 @@ const CACHE_NAME = '기준타 1.0.7';
 const ASSETS = [
   './',
   './index.html',
-  './tinycolor.js',
   './manifest.json',
+
+  './style/ambient.css',
+  './style/timer.css',
+
+  './js/ambient.js',
+  './js/tinycolor.js',
+  './js/timer.js',
+  './js/util.js',
+  './js/data.js',
+  './js/ui.js',
+  './js/render.js',
+  
   './img/icon.ico',
   './sound/crickets.mp3',
   './sound/creepy_tomb.mp3',
