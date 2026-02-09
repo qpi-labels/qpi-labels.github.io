@@ -1,4 +1,4 @@
-/* import "../style/ambient.css"; */
+/* 주석 해제: import "../style/ambient.css"; */
 
 const LAT = 36.5, LON = 127.2;
 let multiverse = 0;
