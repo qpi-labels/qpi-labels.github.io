@@ -6,6 +6,7 @@ const ASSETS = [
 
   './style/ambient.css',
   './style/timer.css',
+  /* 위를 다음으로 교체: './style.css', */
 
   './js/ambient.js',
   './js/tinycolor.js',
@@ -14,6 +15,7 @@ const ASSETS = [
   './js/data.js',
   './js/ui.js',
   './js/render.js',
+  /* 위를 다음으로 교체: './main.js', */
   
   './img/icon.ico',
   './sound/crickets.mp3',
