@@ -1,4 +1,5 @@
 const LAT = 36.5, LON = 127.2;
+let multiverse = 0;
 const root = document.documentElement.style;
 const skyLayer = document.getElementById('skyLayer');
 const clockEl = document.getElementById('clockT');
@@ -31,7 +32,7 @@ perfToggleEl.onchange = (e) => {
 };
 
 let manualMinutes = 720, lastTimestamp = performance.now(), currentSpeed = 1;
-let isCatchingUp = false, catchUpStartMinutes = 0, catchUpStartTime = 0;
+let isCatchingUp = false, catchUpStartMinutes = 0, catchUpStartTime = 0, catchUpStartMultiverse = 0;
 const CATCHUP_DURATION = 2000;
 
 let cachedSunTimes = null, lastCachedDateStr = "";
@@ -130,6 +131,10 @@ function updateSky(m) {
 			const zb = Math.round(l(kf[i].z[2], kf[i+1].z[2]));
 			zenith = `rgb(${zr}, ${zg}, ${zb})`;
 			horizon = `rgb(${r}, ${g}, ${b})`;
+			if (multiverse) {
+				zenith = `oklch(from ${zenith} l c calc(h + ${multiverse}))`;
+				horizon = `oklch(from ${horizon} l c calc(h + ${multiverse}))`;
+			}
 			brightness = (r + g + b) / 3;
 			break;
 		}
@@ -160,8 +165,13 @@ function updateSky(m) {
 	root.setProperty('--glass-bg', `rgba(${colors[0]}, ${colors[1]}, ${colors[2]}, ${colors[3]})`);
 	root.setProperty('--text-main', `rgb(${colors[4]}, ${colors[5]}, ${colors[6]})`);
 	root.setProperty('--text-sub', `rgba(${colors[7]}, ${colors[8]}, ${colors[9]}, 0.7)`);
-	root.setProperty('--primary', `rgb(${colors[10]}, ${colors[11]}, ${colors[12]})`);
-	root.setProperty('--on-primary-container', `rgb(${colors[13]}, ${colors[14]}, ${colors[15]})`);
+	if (!multiverse) {
+		root.setProperty('--primary', `rgb(${colors[10]}, ${colors[11]}, ${colors[12]})`)
+		root.setProperty('--on-primary-container', `rgb(${colors[13]}, ${colors[14]}, ${colors[15]})`)
+	} else {
+		root.setProperty('--primary', `oklch(from rgb(${colors[10]}, ${colors[11]}, ${colors[12]}) l c calc(h + ${multiverse}))`);
+		root.setProperty('--on-primary-container', `oklch(from rgb(${colors[13]}, ${colors[14]}, ${colors[15]}) l c calc(h + ${multiverse}))`);
+	}
 	root.setProperty('--glass-border', `rgba(${colors[16]}, ${colors[16]}, ${colors[16]}, ${colors[17]})`);
 	root.setProperty('--glass-stack', `rgba(${colors[18]}, ${colors[19]}, ${colors[20]}, ${colors[21]})`);
 	root.setProperty('--chip-bg', `rgba(${colors[16]}, ${colors[16]}, ${colors[16]}, 0.1)`);
@@ -216,7 +226,7 @@ function updateSky(m) {
 
 function handleSyncToggle() { 
 	if (autoCheckEl.checked) { 
-		isCatchingUp = true; catchUpStartTime = performance.now(); catchUpStartMinutes = manualMinutes; 
+		isCatchingUp = true; catchUpStartTime = performance.now(); catchUpStartMinutes = manualMinutes; catchUpStartMultiverse = multiverse;
 		document.getElementById('manualSection').classList.add('disabled'); 
 	} else { 
 		isCatchingUp = false; document.getElementById('manualSection').classList.remove('disabled'); 
@@ -244,6 +254,7 @@ document.getElementById('clock').addEventListener('click', toggleInfo);
 function formatMinutes(minutes) { const mSafe = (minutes + 1440) % 1440; return `${Math.floor(mSafe/60).toString().padStart(2,'0')}:${Math.floor(mSafe%60).toString().padStart(2,'0')}`; }
 
 timeRangeEl.oninput = function() { if (!autoCheckEl.checked) { manualMinutes = parseFloat(this.value); updateSky(manualMinutes); } };
+document.getElementById("multiverseRange").oninput = function() { if (!autoCheckEl.checked) { multiverse = parseFloat(this.value); updateSky(manualMinutes); } };
 
 function loop(now) {
 	const dt = now - lastTimestamp; 
@@ -260,9 +271,13 @@ function loop(now) {
 			let ease = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 			let dist = (target - catchUpStartMinutes + 1440) % 1440; 
 			if(dist > 720) dist -= 1440;
+			let distm = (0 - catchUpStartMultiverse + 360) % 360;
+			if (distm > 180) distm -= 360;
 			m = catchUpStartMinutes + (dist * ease); 
 			if (t >= 1) isCatchingUp = false; 
 			manualMinutes = m;
+			let mm = catchUpStartMultiverse + (distm * ease);
+			multiverse = mm;
 		} else { m = target; manualMinutes = m; }
 	} else { 
 		manualMinutes += (dt / 60000) * currentSpeed; 
@@ -272,6 +287,7 @@ function loop(now) {
 	// 시계와 슬라이더는 부드러움을 위해 매 프레임 업데이트
 	const mG = ((m % 1440) + 1440) % 1440;
 	timeRangeEl.value = mG;
+	document.getElementById("multiverseRange").value = multiverse;
 	const hRaw = Math.floor(mG/60), mins = Math.floor(mG%60), secs = Math.round((mG*60)%60);
 	clockEl.textContent = `${hRaw.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
 

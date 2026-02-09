@@ -19,7 +19,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="style/ambient.css">
     <link rel="stylesheet" href="style/timer.css" media="print" onload="this.media='all'">
-    <script src="js/ambient.js" type="module"></script>
+    <script src="js/ambient.js" type="text/javascript" defer></script>
     <script src="js/timer.js" type="module"></script>
 </head>
 <body>
@@ -261,6 +261,7 @@
         <hr>
         <div class="row"><span class="label">Auto Sync</span><label class="switch"><input type="checkbox" id="autoCheck" checked><span class="slider-sw"></span></label></div>
         <div id="manualSection" class="manual-ui disabled">
+            <div class="row secret" style="flex-direction:column; align-items:flex-start; gap:4px;"><span class="label">Multiverse</span><input type="range" id="multiverseRange" min="-180" max="179.99" step="0.01" value="0"></div>
             <div class="row" style="flex-direction:column; align-items:flex-start; gap:4px;"><span class="label">Time Slider</span><input type="range" id="timeRange" min="0" max="1439.99" step="0.01" value="720"></div>
             <div class="row"><span class="label">Speed (<span id="speedVal">1</span>x)</span><div class="speed-chips"><button class="oldchip" id="manualSlower">x0.5</button><button class="oldchip" id="manualFaster">x2</button><button class="oldchip" id="manualReverse">x-1</button></div></div>
         </div>
@@ -272,7 +273,7 @@
         <hr>
         <div class="row"><span class="label">Ambient Night</span><label class="switch"><input type="checkbox" class="soundToggle" value="0"><span class="slider-sw"></span></label></div>
         <div class="row"><span class="label">Ambient Dark</span><label class="switch"><input type="checkbox" class="soundToggle" value="1"><span class="slider-sw"></span></label></div>
-        <div class="row"><span class="label">Ambient Ambient</span><label class="switch"><input type="checkbox" class="soundToggle" value="2"><span class="slider-sw"></span></label></div>
+        <div class="row secret"><span class="label">Ambient Ambient</span><label class="switch"><input type="checkbox" class="soundToggle" value="2"><span class="slider-sw"></span></label></div>
         <div class="row" style="flex-direction:column; align-items:flex-start; gap:4px;"><span class="label">Volume</span><input type="range" id="volumeRange" min="0" max="100" step="1" value="50"></div>
         <button class="btn-action" id="btnViz">ENABLE VISUALIZER</button>
     </dialog>

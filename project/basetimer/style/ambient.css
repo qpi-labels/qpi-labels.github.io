@@ -144,3 +144,4 @@ input:checked + .slider-sw:before { transform: translateX(20px); background: var
 hr { border: 0; border-top: 1px solid var(--glass-border); margin-top: 20px; margin-bottom: 20px; }
 
 .study-hud { display: none; }
+.secret { display: none; }
