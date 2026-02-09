@@ -1,13 +1,13 @@
-const CACHE_NAME = '기준타 1.0.6';
+const CACHE_NAME = '기준타 1.0.7';
 const ASSETS = [
   './',
   './index.html',
+  './tinycolor.js',
   './manifest.json',
-  './icon.ico',
-  './crickets.mp3',
-  './creepy_tomb.mp3',
-  './so_ambient.mp3',
-  './tinycolor.js'
+  './img/icon.ico',
+  './sound/crickets.mp3',
+  './sound/creepy_tomb.mp3',
+  './sound/so_ambient.mp3',
 ];
 
 self.addEventListener('install', (e) => {

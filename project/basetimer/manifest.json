@@ -8,13 +8,7 @@
   "theme_color": "#fafafa",
   "icons": [
     {
-      "src": "basetimer-icon.png",
-      "sizes": "1024x1024",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "basetimer-icon.png",
+      "src": "./img/basetimer-icon.png",
       "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "any"
