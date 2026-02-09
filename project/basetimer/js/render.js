@@ -56,8 +56,6 @@ export function renderHUDSubjects() {
 }
 
 export function renderHUD() {
-	console.log("renderHUD");
-	
 	// goal progress
 
 	const nowTs = Date.now();
@@ -92,8 +90,6 @@ export function renderHUD() {
 
 // ---------- Panel render ----------
 export function renderPanel() {
-	console.log("renderPanel");
-
 	ui.panelSubtitle.textContent = `${dateKey()} · 오프라인`;
 
 	switch (App.store.settings.panelTab) {
@@ -258,8 +254,6 @@ function aggregatePeriod(period) {
 }
 
 function renderCalendar() {
-	console.log("renderCalendar");
-
 	// dow header once
 	if (!ui.calDow.dataset.built) {
 		const dows = ['M','T','W','T','F','S','S'];
@@ -369,8 +363,6 @@ function renderGoal() {
 }
 
 export function renderAll() {
-	console.log("renderAll");
-
 	renderHUDSubjects();
 	renderHUD();
 	renderPanel();
