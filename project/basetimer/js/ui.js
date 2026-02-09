@@ -1,102 +1,55 @@
 import tinycolor from "./tinycolor.js";
-import { renderSubjectsUI, renderHUD, renderAll, renderPanel } from "./render.js";
-import { commitDelta, finalizeCurrentSession } from "./timer.js";
-import { clamp, dateKeyLocal, ensureDay, escapeHtml, fmtHMS, should_dismiss_dialog, startOfMonthLocal, subjectById, uid } from "./util.js";
+import { renderHUDSubjects, renderHUD, renderAll, renderPanel } from "./render.js";
+import { commitDelta, endSession } from "./timer.js";
+import { clamp, dateKey, ensureDay, escapeHtml, fmtHMS, checkDialogDismiss, startOfMonth, subjectById, uid } from "./util.js";
 import { App } from "./data.js";
 
 // ---------- DOM ----------
-export const ui = {
+const ui_els = [
 	// HUD
-	studyHud: document.getElementById('studyHud'),
-	studyTime: document.getElementById('studyTime'),
-	goalBarFill: document.getElementById('goalBarFill'),
-	modeTotalBtn: document.getElementById('modeTotalBtn'),
-	modeSubjectBtn: document.getElementById('modeSubjectBtn'),
-	subjectSelect: document.getElementById('subjectSelect'),
-	subjectChips: document.getElementById('subjectChips'),
-	addSubjectBtn: document.getElementById('addSubjectBtn'),
-	toggleBtn: document.getElementById('studyToggleBtn'),
-	toggleText: document.getElementById('studyToggleText'),
-	toggleIcon: document.getElementById('studyToggleIcon'),
-	openPanelBtn: document.getElementById('openStatsBtn'),
+	'studyHud',
+	'studyTime', 'goalBarFill', 'modeTotalBtn', 'modeSubjectBtn',
+	'subjectSelect', 'subjectChips', 'addSubjectBtn',
+	'studyToggleBtn', 'studyToggleText', 'studyToggleIcon',
+	'openPanelBtn',
 
 	// Panel
-	panelSheet: document.getElementById('panelSheet'),
-	panelTitle: document.getElementById('panelTitle'),
-	panelSubtitle: document.getElementById('panelSubtitle'),
-	panelScroll: document.getElementById('panelScroll'),
-	closePanelBtn: document.getElementById('closePanelBtn'),
-	tabBtnStats: document.getElementById('tabBtnStats'),
-	tabBtnCalendar: document.getElementById('tabBtnCalendar'),
-	tabBtnSubjects: document.getElementById('tabBtnSubjects'),
-	tabBtnGoal: document.getElementById('tabBtnGoal'),
-	tabStats: document.getElementById('tabStats'),
-	tabCalendar: document.getElementById('tabCalendar'),
-	tabSubjects: document.getElementById('tabSubjects'),
-	tabGoal: document.getElementById('tabGoal'),
+	'panelSheet',
+	'panelTitle', 'panelSubtitle', 'panelScroll', 'closePanelBtn',
+	'tabBtnStats', 'tabBtnCalendar', 'tabBtnSubjects', 'tabBtnGoal',
+	'tabStats', 'tabCalendar', 'tabSubjects', 'tabGoal',
 
 	// Stats
-	kpiToday: document.getElementById('kpiToday'),
-	kpiTodaySub: document.getElementById('kpiTodaySub'),
-	kpiWeek: document.getElementById('kpiWeek'),
-	kpiWeekSub: document.getElementById('kpiWeekSub'),
-	kpiMonth: document.getElementById('kpiMonth'),
-	kpiMonthSub: document.getElementById('kpiMonthSub'),
-	periodTodayBtn: document.getElementById('periodTodayBtn'),
-	periodWeekBtn: document.getElementById('periodWeekBtn'),
-	periodMonthBtn: document.getElementById('periodMonthBtn'),
-	breakdownList: document.getElementById('breakdownList'),
-	weekdayBars: document.getElementById('weekdayBars'),
-	focusInfo: document.getElementById('focusInfo'),
-	exportBtn: document.getElementById('exportBtn'),
-	resetTodayBtn: document.getElementById('resetTodayBtn'),
-	resetAllBtn: document.getElementById('resetAllBtn'),
+	'kpiToday', 'kpiTodaySub', 'kpiWeek', 'kpiWeekSub', 'kpiMonth', 'kpiMonthSub',
+	'periodTodayBtn', 'periodWeekBtn', 'periodMonthBtn',
+	'breakdownList', 'weekdayBars', 'focusInfo', 'exportBtn',
+	'resetTodayBtn', 'resetAllBtn',
 
 	// Calendar
-	calPrevBtn: document.getElementById('calPrevBtn'),
-	calNextBtn: document.getElementById('calNextBtn'),
-	calTitle: document.getElementById('calTitle'),
-	calDow: document.getElementById('calDow'),
-	calGrid: document.getElementById('calGrid'),
+	'calPrevBtn', 'calNextBtn', 'calTitle', 'calDow', 'calGrid',
 
-	// Subjects panel
-	addSubjectBtn2: document.getElementById('addSubjectBtn2'),
-	subjectsManageList: document.getElementById('subjectsManageList'),
+	// Subjects Panel
+	'addSubjectBtn2', 'subjectsManageList',
 
 	// Goal
-	goalNow: document.getElementById('goalNow'),
-	goalHours: document.getElementById('goalHours'),
-	goalMinutes: document.getElementById('goalMinutes'),
-	goalResetBtn: document.getElementById('goalResetBtn'),
-	goalSaveBtn: document.getElementById('goalSaveBtn'),
-	goalProgressText: document.getElementById('goalProgressText'),
-	goalProgressBar: document.getElementById('goalProgressBar'),
+	'goalNow', 'goalHours', 'goalMinutes',
+	'goalResetBtn', 'goalSaveBtn', 'goalProgressText', 'goalProgressBar',
 
 	// Subject modal
-	subjectModal: document.getElementById('subjectModal'),
-	subjectModalTitle: document.getElementById('subjectModalTitle'),
-	subjectModalDesc: document.getElementById('subjectModalDesc'),
-	subjectNameInput: document.getElementById('subjectNameInput'),
-	colorDots: document.getElementById('colorDots'),
-	subjectColorInput: document.getElementById('subjectColorInput'),
-	subjectCancelBtn: document.getElementById('subjectCancelBtn'),
-	subjectSaveBtn: document.getElementById('subjectSaveBtn'),
-	subjectDeleteBtn: document.getElementById('subjectDeleteBtn'),
+	'subjectModal', 'subjectModalTitle', 'subjectModalDesc',
+	'subjectNameInput', 'colorDots', 'subjectColorInput',
+	'subjectCancelBtn', 'subjectSaveBtn', 'subjectDeleteBtn',
 
 	// Day detail modal
-	dayDetailModal: document.getElementById('dayDetailModal'),
-	dayDetailTitle: document.getElementById('dayDetailTitle'),
-	dayDetailSub: document.getElementById('dayDetailSub'),
-	dayDetailList: document.getElementById('dayDetailList'),
-	dayDetailCloseBtn: document.getElementById('dayDetailCloseBtn'),
+	'dayDetailModal', 'dayDetailTitle', 'dayDetailSub', 'dayDetailList', 'dayDetailCloseBtn',
 
 	// Confirm modal
-	confirmModal: document.getElementById('confirmModal'),
-	confirmTitle: document.getElementById('confirmTitle'),
-	confirmText: document.getElementById('confirmText'),
-	confirmCancelBtn: document.getElementById('confirmCancelBtn'),
-	confirmOkBtn: document.getElementById('confirmOkBtn'),
-};
+	'confirmModal', 'confirmTitle', 'confirmText', 'confirmCancelBtn', 'confirmOkBtn'
+]
+
+let _ui = {}
+ui_els.forEach((e) => {_ui[`${e}`] = document.getElementById(e)});
+export const ui = _ui;
 
 // ---------- Event wiring ----------
 // HUD interactions
@@ -105,7 +58,7 @@ ui.modeSubjectBtn.addEventListener('click', () => setViewMode('subject'));
 ui.addSubjectBtn.addEventListener('click', () => openSubjectModal('add'));
 ui.subjectSelect.addEventListener('change', () => setActiveSubject(ui.subjectSelect.value));
 ui.subjectChips.addEventListener('scroll', maskChipbar);
-ui.toggleBtn.addEventListener('click', toggleTimer);
+ui.studyToggleBtn.addEventListener('click', toggleTimer);
 
 // Panel open/close
 ui.openPanelBtn.addEventListener('click', () => openPanel(App.store.settings.panelTab || 'stats'));
@@ -136,13 +89,13 @@ ui.calNextBtn.addEventListener('click', () => shiftCalendarMonth(1));
 ui.addSubjectBtn2.addEventListener('click', () => openSubjectModal('add'));
 
 // Goal panel
-ui.goalSaveBtn.addEventListener('click', saveGoalFromInputs);
-ui.goalResetBtn.addEventListener('click', resetGoalDefault);
+ui.goalSaveBtn.addEventListener('click', setGoal);
+ui.goalResetBtn.addEventListener('click', resetGoal);
 
 
 // Subject modal
 ui.subjectModal.addEventListener('click', (e) => {
-	if (!should_dismiss_dialog(ui.subjectModal, e)) return;
+	if (!checkDialogDismiss(ui.subjectModal, e)) return;
 	closeSubjectModal();
 });
 ui.subjectCancelBtn.addEventListener('click', closeSubjectModal);
@@ -153,7 +106,7 @@ ui.subjectNameInput.addEventListener('keydown', (e) => {
 });
 ui.subjectSaveBtn.addEventListener('click', upsertSubject);
 ui.subjectDeleteBtn.addEventListener('click', async () => {
-	const sid = subjectModalTargetId;
+	const sid = subjectModalTarget;
 	const ok = await confirmDialog('과목 삭제', '이 과목을 삭제할까요? (기록은 남지만 과목 목록에서 제거됨)');
 	closeConfirm(false);
 	if (!ok) return;
@@ -163,7 +116,7 @@ ui.subjectDeleteBtn.addEventListener('click', async () => {
 
 // Day detail modal
 ui.dayDetailModal.addEventListener('click', (e) => {
-	if (!should_dismiss_dialog(ui.dayDetailModal, e)) return;
+	if (!checkDialogDismiss(ui.dayDetailModal, e)) return;
 	closeDayDetail();
 });
 ui.dayDetailCloseBtn.addEventListener('click', closeDayDetail);
@@ -197,7 +150,7 @@ export function setActiveSubject(subjectId) {
 	// running이면 현재까지 시간 확정 + 세션 분리
 	if (rt.running) {
 		commitDelta(nowTs);
-		finalizeCurrentSession(nowTs);
+		endSession(nowTs);
 
 		rt.activeSubjectId = id;
 
@@ -211,7 +164,7 @@ export function setActiveSubject(subjectId) {
 
 	App.store.settings.lastSubjectId = id;
 	App.save();
-	renderSubjectsUI();
+	renderHUDSubjects();
 	renderHUD();
 }
 
@@ -252,11 +205,11 @@ function pauseTimer() {
 
 	const nowTs = Date.now();
 	commitDelta(nowTs);
-	finalizeCurrentSession(nowTs);
+	endSession(nowTs);
 
 	if (rt.focusStartTs) {
 		const focusMs = nowTs - rt.focusStartTs;
-		const dk = dateKeyLocal(nowTs);
+		const dk = dateKey(nowTs);
 		const day = ensureDay(dk);
 		day.longestFocusMs = Math.max(day.longestFocusMs || 0, focusMs);
 		App.store.meta.bestFocusMs = Math.max(App.store.meta.bestFocusMs || 0, focusMs);
@@ -273,16 +226,16 @@ function pauseTimer() {
 
 function setRunningUI(running) {
 	if (running) {
-		ui.toggleBtn.classList.add('running');
-		ui.toggleText.textContent = 'PAUSE';
-		ui.toggleIcon.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+		ui.studyToggleBtn.classList.add('running');
+		ui.studyToggleText.textContent = 'PAUSE';
+		ui.studyToggleIcon.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none">
 			<path d="M7 5H10V19H7V5Z" fill="var(--text-main)" style="transition: fill 0.5s;"/>
 			<path d="M14 5H17V19H14V5Z" fill="var(--text-main)" style="transition: fill 0.5s;"/>
 		</svg>`;
 	} else {
-		ui.toggleBtn.classList.remove('running');
-		ui.toggleText.textContent = 'START';
-		ui.toggleIcon.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+		ui.studyToggleBtn.classList.remove('running');
+		ui.studyToggleText.textContent = 'START';
+		ui.studyToggleIcon.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none">
 			<path d="M8 5V19L19 12L8 5Z" fill="var(--text-main)" style="transition: fill 0.5s;"/>
 		</svg>`;
 	}
@@ -349,13 +302,13 @@ function setStatsPeriod(period) {
 function exportJSON() {
 	// 저장 구조가 날짜 -> 과목 -> 시간(ms) 이므로, 사용 편의를 위해 "초 단위" 요약도 함께 제공
 	const payload = JSON.stringify(App.store, null, 2);
-	const filename = `ypt_${dateKeyLocal()}.json`;
+	const filename = `ypt_${dateKey()}.json`;
 
 	if (navigator.clipboard && navigator.clipboard.writeText) {
 		navigator.clipboard.writeText(payload)
 			.then(() => {
 				// 최소 알림 (공부 방해 최소)
-				ui.panelSubtitle.textContent = `${dateKeyLocal()} · JSON 복사됨`;
+				ui.panelSubtitle.textContent = `${dateKey()} · JSON 복사됨`;
 			})
 			.catch(() => downloadJSON(payload, filename));
 	} else {
@@ -378,7 +331,7 @@ function downloadJSON(payload, filename) {
 async function resetToday() {
 	const ok = await confirmDialog('오늘 초기화', '오늘 공부 기록을 초기화할까요? (되돌릴 수 없음)');
 	if (!ok) return;
-	const dk = dateKeyLocal();
+	const dk = dateKey();
 	App.store.days[dk] = { totalMs: 0, subjects: {}, sessions: [], longestFocusMs: 0 };
 	App.save();
 	pauseTimer(); // 안전하게 중지
@@ -398,7 +351,7 @@ async function resetAll() {
 
 // ---------- Calendar nav ----------
 function shiftCalendarMonth(delta) {
-	const cur = App.store.settings.calendarMonthTs || startOfMonthLocal(Date.now());
+	const cur = App.store.settings.calendarMonthTs || startOfMonth(Date.now());
 	const d = new Date(cur);
 	d.setMonth(d.getMonth() + delta);
 	d.setDate(1);
@@ -409,7 +362,7 @@ function shiftCalendarMonth(delta) {
 }
 
 // ---------- Goal ----------
-function saveGoalFromInputs() {
+function setGoal() {
 	const h = clamp(parseInt(ui.goalHours.value || '0', 10) || 0, 0, 23);
 	const m = clamp(parseInt(ui.goalMinutes.value || '0', 10) || 0, 0, 59);
 	const goal = (h * 60 + m) * 60000;
@@ -418,7 +371,7 @@ function saveGoalFromInputs() {
 	renderAll();
 }
 
-function resetGoalDefault() {
+function resetGoal() {
 	App.store.settings.dailyGoalMs = 2 * 60 * 60 * 1000;
 	App.save();
 	renderAll();
@@ -432,11 +385,11 @@ const COLOR_PRESETS = [
 ];
 
 let subjectModalMode = 'add'; // 'add' | 'edit'
-let subjectModalTargetId = '';
+let subjectModalTarget = '';
 
 export function openSubjectModal(mode='add', subjectId='') {
 	subjectModalMode = mode;
-	subjectModalTargetId = subjectId || '';
+	subjectModalTarget = subjectId || '';
 
 	ui.subjectModal.showModal();
 
@@ -475,7 +428,7 @@ export function openSubjectModal(mode='add', subjectId='') {
 
 function closeSubjectModal() {
 	ui.subjectModal.close();
-	subjectModalTargetId = '';
+	subjectModalTarget = '';
 }
 
 function syncColorDotActive() {
@@ -492,7 +445,7 @@ function upsertSubject() {
 	if (!name) return;
 
 	// name duplicate check (case-insensitive), except self
-	const dup = App.store.subjects.some(s => s.name.toLowerCase() === name.toLowerCase() && s.id !== subjectModalTargetId);
+	const dup = App.store.subjects.some(s => s.name.toLowerCase() === name.toLowerCase() && s.id !== subjectModalTarget);
 	if (dup) return;
 
 	if (subjectModalMode === 'add') {
@@ -501,7 +454,7 @@ function upsertSubject() {
 		// auto select
 		setActiveSubject(id);
 	} else {
-		const s = subjectById(subjectModalTargetId);
+		const s = subjectById(subjectModalTarget);
 		if (s) {
 			s.name = name;
 			s.color = color;

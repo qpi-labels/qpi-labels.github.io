@@ -1,4 +1,4 @@
-import { startOfMonthLocal, dateKeyLocal, fmtHMS } from './util.js';
+import { startOfMonth, dateKey, fmtHMS } from './util.js';
 
 const YPT_STORE_KEY_V2 = 'ypt_local_v2';
 const LEGACY_STORE_KEY_V1 = 'studyTracker_v1';
@@ -16,7 +16,7 @@ const AppStorage = (() => {
 			viewMode: 'total',  // 'total' | 'subject'
 			panelTab: 'stats',  // 'stats' | 'calendar' | 'subjects' | 'goal'
 			statsPeriod: 'today', // 'today' | 'week' | 'month'
-			calendarMonthTs: startOfMonthLocal(Date.now()),
+			calendarMonthTs: startOfMonth(Date.now()),
 		},
 		days: {
 			// "YYYY-MM-DD": { totalMs, subjects: {id: ms}, sessions: [{start,end,subjectId}], longestFocusMs }
@@ -160,7 +160,7 @@ if (!userName) {
 
 
 async function sendDataToSheet(targetDateTs) {
-	const dateKey = dateKeyLocal(targetDateTs);
+	const dateKey = dateKey(targetDateTs);
 	const dayData = App.store.days[dateKey];
 	
 	// 데이터가 없거나 이미 보냈다면 중단
@@ -190,7 +190,7 @@ async function sendDataToSheet(targetDateTs) {
 //이동
 export async function initAutoSync() {
 	const allDays = Object.keys(App.store.days);
-	const todayKey = dateKeyLocal(Date.now());
+	const todayKey = dateKey(Date.now());
 	
 	for (const dk of allDays) {
 		if (dk < todayKey && localStorage.getItem(`synced_${dk}`) !== "true") {
@@ -203,7 +203,7 @@ export async function initAutoSync() {
 		const now = new Date();
 		if (now.getHours() === 0 && now.getMinutes() === 0) {
 			const yesterdayTs = Date.now() - 120000; 
-			const yesterdayKey = dateKeyLocal(yesterdayTs);
+			const yesterdayKey = dateKey(yesterdayTs);
 			
 			if (localStorage.getItem(`synced_${yesterdayKey}`) !== "true") {
 				sendDataToSheet(yesterdayTs);

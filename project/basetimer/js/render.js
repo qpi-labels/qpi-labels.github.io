@@ -1,5 +1,5 @@
 import { ui, openSubjectModal, setActiveSubject, startTimer, maskChipbar, openDayDetail } from "./ui.js";
-import { fmtHMS, escapeHtml, startOfWeekLocal, dateKeyLocal, startOfMonthLocal, daysInMonthLocal, pad2, clamp, ensureDay } from "./util.js";
+import { fmtHMS, escapeHtml, startOfWeek, dateKey, startOfMonth, daysInMonth, pad2, clamp, ensureDay } from "./util.js";
 import { App } from "./data.js";
 
 
@@ -9,9 +9,7 @@ function getDayTotalMs(dk) {
 	return d ? (d.totalMs || 0) : 0;
 }
 
-export function renderSubjectsUI() {
-	console.log("renderSubjectsUI");
-
+export function renderHUDSubjects() {
 	// select options
 	ui.subjectSelect.innerHTML = '<option value="">미분류</option>';
 	App.store.subjects.forEach(s => {
@@ -63,7 +61,7 @@ export function renderHUD() {
 	// goal progress
 
 	const nowTs = Date.now();
-	const dk = dateKeyLocal(nowTs);
+	const dk = dateKey(nowTs);
 	const day = ensureDay(dk);
 	const goal = App.store.settings.dailyGoalMs || 0;
 	const totalMs = (day.totalMs || 0) + (App.runtime.running && App.runtime.lastTs ? (nowTs - App.runtime.lastTs) : 0);
@@ -96,7 +94,7 @@ export function renderHUD() {
 export function renderPanel() {
 	console.log("renderPanel");
 
-	ui.panelSubtitle.textContent = `${dateKeyLocal()} · 오프라인`;
+	ui.panelSubtitle.textContent = `${dateKey()} · 오프라인`;
 
 	switch (App.store.settings.panelTab) {
 		case 'stats':
@@ -195,9 +193,9 @@ function renderStats() {
 	});
 
 	/* weekday bars */
-	const ws = startOfWeekLocal(Date.now());
+	const ws = startOfWeek(Date.now());
 	const labels = ['월','화','수','목','금','토','일'];
-	const totals = Array.from({length:7}, (_,i)=> getDayTotalMs(dateKeyLocal(ws + i*86400000)));
+	const totals = Array.from({length:7}, (_,i)=> getDayTotalMs(dateKey(ws + i*86400000)));
 	const max = Math.max(1, ...totals);
 
 	ui.weekdayBars.innerHTML = '';
@@ -220,17 +218,17 @@ function aggregatePeriod(period) {
 	let label;
 
 	if (period === 'today') {
-		const dk = dateKeyLocal();
+		const dk = dateKey();
 		keys = [dk];
 		label = dk;
 	} else if (period === 'week') {
-		const ws = startOfWeekLocal(now);
-		keys = Array.from({length:7}, (_,i)=> dateKeyLocal(ws + i*86400000));
+		const ws = startOfWeek(now);
+		keys = Array.from({length:7}, (_,i)=> dateKey(ws + i*86400000));
 		label = `${keys[0]} ~ ${keys[6]}`;
 	} else { // month
-		const ms = startOfMonthLocal(now);
-		const dim = daysInMonthLocal(now);
-		keys = Array.from({length:dim}, (_,i)=> dateKeyLocal(ms + i*86400000));
+		const ms = startOfMonth(now);
+		const dim = daysInMonth(now);
+		keys = Array.from({length:dim}, (_,i)=> dateKey(ms + i*86400000));
 		const d = new Date(ms);
 		label = `${d.getFullYear()}-${pad2(d.getMonth()+1)}`;
 	}
@@ -275,7 +273,7 @@ function renderCalendar() {
 		ui.calDow.dataset.built = '1';
 	}
 
-	const monthTs = App.store.settings.calendarMonthTs || startOfMonthLocal(Date.now());
+	const monthTs = App.store.settings.calendarMonthTs || startOfMonth(Date.now());
 	const d = new Date(monthTs);
 	const year = d.getFullYear();
 	const month = d.getMonth(); // 0-based
@@ -290,7 +288,7 @@ function renderCalendar() {
 	ui.calGrid.innerHTML = '';
 	const totalCells = Math.ceil((offset + dim) / 7) * 7;
 
-	const todayKey = dateKeyLocal();
+	const todayKey = dateKey();
 
 	for (let i = 0; i < totalCells; i++) {
 		const dayNum = i - offset + 1;
@@ -303,7 +301,7 @@ function renderCalendar() {
 
 		const cellDate = new Date(year, month, dayNum);
 		cellDate.setHours(0,0,0,0);
-		const dk = dateKeyLocal(cellDate.getTime());
+		const dk = dateKey(cellDate.getTime());
 		const total = getDayTotalMs(dk);
 
 		const cell = document.createElement('button');
@@ -373,7 +371,7 @@ function renderGoal() {
 export function renderAll() {
 	console.log("renderAll");
 
-	renderSubjectsUI();
+	renderHUDSubjects();
 	renderHUD();
 	renderPanel();
 }

@@ -1,4 +1,4 @@
-import { dateKeyLocal, endOfDayLocal, ensureDay, startOfDayLocal } from "./util.js";
+import { dateKey, endOfDay, ensureDay, startOfDay } from "./util.js";
 import { renderHUD, renderPanel, renderAll } from "./render.js";
 import { App, initAutoSync, testSpecificTimeSync } from "./data.js";
 
@@ -22,8 +22,8 @@ export function commitDelta(nowTs) {
 		const sid = rt.activeSubjectId || '';
 		let t0 = rt.lastTs;
 		while (t0 < nowTs) {
-			const dk = dateKeyLocal(t0);
-			const dayEnd = endOfDayLocal(t0);
+			const dk = dateKey(t0);
+			const dayEnd = endOfDay(t0);
 			const t1 = Math.min(nowTs, dayEnd);
 			const ms = t1 - t0;
 
@@ -38,18 +38,18 @@ export function commitDelta(nowTs) {
 	}
 
 	if (!rt.running || !rt.sessionStartTs) return;
-	const startKey = dateKeyLocal(rt.sessionStartTs);
-	const nowKey = dateKeyLocal(nowTs);
+	const startKey = dateKey(rt.sessionStartTs);
+	const nowKey = dateKey(nowTs);
 	if (startKey === nowKey) return;
 
 	// handle midnight
 	const sid = rt.sessionSubjectId || '';
-	finalizeCurrentSession(nowTs);
-	rt.sessionStartTs = startOfDayLocal(nowTs);
+	endSession(nowTs);
+	rt.sessionStartTs = startOfDay(nowTs);
 	rt.sessionSubjectId = sid;
 }
 
-export function finalizeCurrentSession(endTs) {
+export function endSession(endTs) {
 	const rt = App.runtime;
 	if (!rt.sessionStartTs) return;
 	const s = rt.sessionStartTs;
@@ -59,8 +59,8 @@ export function finalizeCurrentSession(endTs) {
 	if (endTs <= s) return;
 	let t0 = s;
 	while (t0 < endTs) {
-		const dk = dateKeyLocal(t0);
-		const dayEnd = endOfDayLocal(t0);
+		const dk = dateKey(t0);
+		const dayEnd = endOfDay(t0);
 		const t1 = Math.min(endTs, dayEnd);
 		const day = ensureDay(dk);
 		day.sessions.push({ start: t0, end: t1, sid });
