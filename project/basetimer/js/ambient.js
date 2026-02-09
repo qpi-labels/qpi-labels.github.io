@@ -1,3 +1,5 @@
+/* import "../style/ambient.css"; */
+
 const LAT = 36.5, LON = 127.2;
 let multiverse = 0;
 const root = document.documentElement.style;
