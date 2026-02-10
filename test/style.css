@@ -151,4 +151,50 @@ body {
 .metadata-footer { font-size: 0.85rem; line-height: 1.8; }
 .meta-item-group { display: flex; justify-content: space-between; font-weight: 700; border-bottom: 1.5px solid var(--text); margin-bottom: 10px; padding-bottom: 5px; text-decoration: none; }
 .meta-item { display: flex; justify-content: space-between; opacity: 0.75; text-decoration: none; }
+/* --- 본문 분할 레이아웃 (제목 제외) --- */
 
+.split-body {
+    display: flex;
+    gap: 25px;              /* 사진과 글 사이 간격 */
+    align-items: flex-start; /* 상단 정렬 */
+    margin-top: 10px;       /* 제목과 본문 사이 간격 미세 조정 */
+}
+
+/* 왼쪽: 이미지 영역 */
+.split-image {
+    flex: 0 0 45%;          /* 이미지 너비 45% (조절 가능) */
+    max-width: 45%;
+}
+
+.split-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;     /* 모서리 살짝 둥글게 */
+    object-fit: cover;
+}
+
+/* 오른쪽: 글 영역 */
+.split-desc {
+    flex: 1;                /* 남은 공간 다 차지 */
+}
+
+/* 글자 위쪽 여백 제거 (Flex 정렬 맞춤) */
+.split-desc .section-body {
+    margin-top: 0;
+}
+
+/* --- 모바일 반응형 (768px 이하) --- */
+@media (max-width: 768px) {
+    .split-body {
+        flex-direction: column; /* 모바일에서는 위아래로 배치 */
+        gap: 20px;
+    }
+
+    .split-image, 
+    .split-desc {
+        width: 100%;
+        max-width: 100%;
+        flex: none;
+    }
+}
