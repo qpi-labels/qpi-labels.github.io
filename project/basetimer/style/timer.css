@@ -109,7 +109,6 @@
 	flex: 1;
 	border-radius: 20px;
 	padding: 9px 12px;
-	outline: none;
 	font-size: 12px;
 	letter-spacing: 0.5px;
 	appearance: none;
@@ -131,7 +130,8 @@
 	flex: 1;
 	gap:8px;
 	overflow:auto;
-	padding-bottom: 2px;
+	padding-top: 1px;
+	padding-bottom: 1px;
 	-webkit-overflow-scrolling: touch;
 	scrollbar-width: none;
 	mask-image: linear-gradient(to right, var(--left-mask) 0, black 40px calc(100% - 40px), var(--right-mask) 100%);
@@ -201,7 +201,6 @@
 	box-sizing: border-box;
 	border-radius: 14px;
 	padding: 12px 12px;
-	outline: none;
 	font-size: 13px;
 	letter-spacing: 0.2px;
 }
@@ -429,7 +428,6 @@
 .goalinput {
 	flex:1;
 	border-radius:14px; padding:12px;
-	outline:none;
 	font-size:13px;
 }
 

@@ -305,6 +305,7 @@ function renderCalendar() {
 			<div class="dnum">${dayNum}</div>
 			<div class="dtime">${total > 0 ? fmtHMS(total) : ''}</div>
 		`;
+		if (total <= 0) cell.setAttribute('tabindex', '-1');
 		if (total > 0 || dk === todayKey) {
 			cell.addEventListener('click', () => openDayDetail(dk));
 		} else {

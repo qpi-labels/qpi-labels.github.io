@@ -69,7 +69,7 @@
         <div class="goalbar"><div id="goalBarFill"></div></div>
 
         <div class="study-row" id="study-row2">
-            <div class="segmented" role="tablist" aria-label="Timer View Mode">
+            <div class="segmented" aria-label="Timer View Mode">
                 <button class="seg-btn active" id="modeTotalBtn" type="button">오늘 총 공부</button>
                 <button class="seg-btn" id="modeSubjectBtn" type="button">과목</button>
             </div>
@@ -259,26 +259,26 @@
         </div>
     </dialog>
 
-    <button class="bottom-clock" id="clock" popovertarget="infoPanel"><span id="clockT">00:00:00</span><span style="position: absolute; inset: 0;"></span></button>
+    <button class="glass-panel-base bottom-clock" id="clock" popovertarget="infoPanel" aria-label="Time Settings"><span id="clockT">00:00:00</span><span style="position: absolute; inset: 0;"></span></button>
     <dialog popover="auto" class="info-panel glass-panel-base" id="infoPanel">
         <div class="row"><span><b>DATE</b> <span id="infoDate">-</span></span></div>
         <div class="row" style="font-size: 10px;"><span><b>RISE</b> <span id="infoRise">-</span></span><span><b>SET</b> <span id="infoSet">-</span></span></div>
         <hr>
-        <div class="row"><span class="label">Auto Sync</span><label class="switch"><input type="checkbox" id="autoCheck" checked><span class="slider-sw"></span></label></div>
+        <div class="row"><span class="label">Auto Sync</span><label class="switch"><input type="checkbox" id="autoCheck" checked></label></div>
         <div id="manualSection" class="manual-ui disabled">
-            <div class="row secret" style="flex-direction:column; align-items:flex-start; gap:4px;"><span class="label">Multiverse</span><input type="range" id="multiverseRange" min="-180" max="179.99" step="0.01" value="0"></div>
-            <div class="row" style="flex-direction:column; align-items:flex-start; gap:4px;"><span class="label">Time Slider</span><input type="range" id="timeRange" min="0" max="1439.99" step="0.01" value="720"></div>
-            <div class="row"><span class="label">Speed (<span id="speedVal">1</span>x)</span><div class="speed-chips"><button class="oldchip" id="manualSlower">x0.5</button><button class="oldchip" id="manualFaster">x2</button><button class="oldchip" id="manualReverse">x-1</button></div></div>
+            <div class="row secret" style="flex-direction:column; align-items:flex-start; gap:4px;"><span class="label">Multiverse</span><input type="range" id="multiverseRange" min="-180" max="179.99" step="0.01" value="0" disabled></div>
+            <div class="row" style="flex-direction:column; align-items:flex-start; gap:4px;"><span class="label">Time Slider</span><input type="range" id="timeRange" min="0" max="1439.99" step="0.01" value="720" disabled></div>
+            <div class="row"><span class="label">Speed (<span id="speedVal">1</span>x)</span><div class="speed-chips"><button class="oldchip" id="manualSlower" disabled>x0.5</button><button class="oldchip" id="manualFaster" disabled>x2</button><button class="oldchip" id="manualReverse" disabled>x-1</button></div></div>
         </div>
     </dialog>
     
-    <button class="fab glass-panel-base" popovertarget="popup"><svg style="width:24px;height:24px;fill:var(--text-main); transition:fill 0.5s" viewBox="0 0 24 24"><path d="M 12 15.5 A 3.5 3.5 0 0 1 8.5 12 A 3.5 3.5 0 0 1 12 8.5 A 3.5 3.5 0 0 1 15.5 12 A 3.5 3.5 0 0 1 12 15.5 M 19.43 12.97 C 19.47 12.65 19.5 12.33 19.5 12 C 19.5 11.67 19.47 11.34 19.43 11.03 L 21.54 9.37 C 21.73 9.22 21.78 8.95 21.66 8.73 L 19.66 5.27 C 19.54 5.05 19.27 4.96 19.05 5.05 L 16.56 6.05 C 16.04 5.66 15.47 5.32 14.87 5.07 L 14.5 2.42 C 14.46 2.18 14.25 2 14 2 H 10 C 9.75 2 9.54 2.18 9.5 2.42 L 9.13 5.07 C 8.53 5.32 7.96 5.66 7.44 6.05 L 4.95 5.05 C 4.73 4.96 4.46 5.05 4.34 5.27 L 2.34 8.73 C 2.21 8.95 2.27 9.22 2.46 9.37 L 4.57 11.03 C 4.53 11.34 4.5 12 4.57 11.03 C 4.5 12.33 4.53 12.65 4.57 12.97 L 2.46 14.63 C 2.27 14.78 2.21 15.05 2.34 15.27 L 4.34 18.73 C 4.46 18.95 4.73 19.03 4.95 18.95 L 7.44 17.94 C 7.96 18.34 8.53 18.68 9.13 18.93 L 9.5 21.58 C 9.54 21.82 9.75 22 10 22 H 14 C 14.25 22 14.46 21.82 14.5 21.58 L 14.87 18.93 C 15.47 18.67 16.04 18.34 16.56 17.94 L 19.05 18.95 C 19.27 19.03 19.54 18.95 19.66 18.73 L 21.66 15.27 C 21.78 15.05 21.73 14.78 21.54 14.63 L 19.43 12.97 Z"/></svg></button>
+    <button class="fab glass-panel-base" popovertarget="popup" aria-label="Ambience Settings"><svg style="width:24px;height:24px;fill:var(--text-main); transition:fill 0.5s" viewBox="0 0 24 24"><path d="M 12 15.5 A 3.5 3.5 0 0 1 8.5 12 A 3.5 3.5 0 0 1 12 8.5 A 3.5 3.5 0 0 1 15.5 12 A 3.5 3.5 0 0 1 12 15.5 M 19.43 12.97 C 19.47 12.65 19.5 12.33 19.5 12 C 19.5 11.67 19.47 11.34 19.43 11.03 L 21.54 9.37 C 21.73 9.22 21.78 8.95 21.66 8.73 L 19.66 5.27 C 19.54 5.05 19.27 4.96 19.05 5.05 L 16.56 6.05 C 16.04 5.66 15.47 5.32 14.87 5.07 L 14.5 2.42 C 14.46 2.18 14.25 2 14 2 H 10 C 9.75 2 9.54 2.18 9.5 2.42 L 9.13 5.07 C 8.53 5.32 7.96 5.66 7.44 6.05 L 4.95 5.05 C 4.73 4.96 4.46 5.05 4.34 5.27 L 2.34 8.73 C 2.21 8.95 2.27 9.22 2.46 9.37 L 4.57 11.03 C 4.53 11.34 4.5 12 4.57 11.03 C 4.5 12.33 4.53 12.65 4.57 12.97 L 2.46 14.63 C 2.27 14.78 2.21 15.05 2.34 15.27 L 4.34 18.73 C 4.46 18.95 4.73 19.03 4.95 18.95 L 7.44 17.94 C 7.96 18.34 8.53 18.68 9.13 18.93 L 9.5 21.58 C 9.54 21.82 9.75 22 10 22 H 14 C 14.25 22 14.46 21.82 14.5 21.58 L 14.87 18.93 C 15.47 18.67 16.04 18.34 16.56 17.94 L 19.05 18.95 C 19.27 19.03 19.54 18.95 19.66 18.73 L 21.66 15.27 C 21.78 15.05 21.73 14.78 21.54 14.63 L 19.43 12.97 Z"/></svg></button>
     <dialog popover="auto" class="popup glass-panel-base" id="popup">
-        <div class="row"><span class="label">Performance Mode</span><label class="switch"><input type="checkbox" id="perfToggle"><span class="slider-sw"></span></label></div>
+        <div class="row"><span class="label">Performance Mode</span><label class="switch"><input type="checkbox" id="perfToggle"></label></div>
         <hr>
-        <div class="row"><span class="label">Ambient Night</span><label class="switch"><input type="checkbox" class="soundToggle" value="0"><span class="slider-sw"></span></label></div>
-        <div class="row"><span class="label">Ambient Dark</span><label class="switch"><input type="checkbox" class="soundToggle" value="1"><span class="slider-sw"></span></label></div>
-        <div class="row secret"><span class="label">Ambient Ambient</span><label class="switch"><input type="checkbox" class="soundToggle" value="2"><span class="slider-sw"></span></label></div>
+        <div class="row"><span class="label">Ambient Night</span><label class="switch"><input type="checkbox" class="soundToggle" value="0"></label></div>
+        <div class="row"><span class="label">Ambient Dark</span><label class="switch"><input type="checkbox" class="soundToggle" value="1"></label></div>
+        <div class="row secret"><span class="label">Ambient Ambient</span><label class="switch"><input type="checkbox" class="soundToggle" value=</span></label></div>
         <div class="row" style="flex-direction:column; align-items:flex-start; gap:4px;"><span class="label">Volume</span><input type="range" id="volumeRange" min="0" max="100" step="1" value="50"></div>
         <button class="btn-action" id="btnViz">ENABLE VISUALIZER</button>
     </dialog>

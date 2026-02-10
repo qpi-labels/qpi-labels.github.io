@@ -245,6 +245,7 @@ function setRunningUI(running) {
 function openPanel(tab=null) {
 	if (App.runtime.panelOpen) { closePanel(); return; }
 	ui.panelSheet.classList.add('active');
+	window.setTimeout(() => { ui.closePanelBtn.focus(); }, 300);
 	App.runtime.panelOpen = true;
 	setPanelTab(tab || App.store.settings.panelTab || 'stats');
 	renderPanel();
@@ -252,6 +253,7 @@ function openPanel(tab=null) {
 
 function closePanel() {
 	ui.panelSheet.classList.remove('active');
+	ui.openPanelBtn.focus();
 	App.runtime.panelOpen = false;
 }
 
@@ -392,6 +394,7 @@ export function openSubjectModal(mode='add', subjectId='') {
 	subjectModalTarget = subjectId || '';
 
 	ui.subjectModal.showModal();
+	ui.subjectCancelBtn.focus();
 
 	// build color dots
 	ui.colorDots.innerHTML = '';
@@ -423,7 +426,6 @@ export function openSubjectModal(mode='add', subjectId='') {
 	}
 
 	syncColorDotActive();
-	setTimeout(() => ui.subjectNameInput.focus(), 0);
 }
 
 function closeSubjectModal() {
