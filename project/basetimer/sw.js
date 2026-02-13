@@ -1,4 +1,4 @@
-const CACHE_NAME = '기준타 1.0.7';
+const CACHE_NAME = '기준타 1.0.8';
 const ASSETS = [
   './',
   './index.html',

@@ -160,14 +160,14 @@ if (!userName) {
 
 
 async function sendDataToSheet(targetDateTs) {
-	const dateKey = dateKey(targetDateTs);
-	const dayData = App.store.days[dateKey];
+	const key = dateKey(targetDateTs);
+	const dayData = App.store.days[key];
 	
 	// 데이터가 없거나 이미 보냈다면 중단
 	if (!dayData || dayData.totalMs <= 0) return;
 
 	const payload = {
-		date: dateKey,
+		date: key,
 		userName: userName,
 		totalMs: dayData.totalMs,
 		formattedTime: fmtHMS(dayData.totalMs)
@@ -179,8 +179,8 @@ async function sendDataToSheet(targetDateTs) {
 			body: JSON.stringify(payload)
 		});
 		if (response.ok) {
-			console.log(`${dateKey} 데이터 전송 성공: ${userName}`);
-			localStorage.setItem(`synced_${dateKey}`, "true");
+			console.log(`${key} 데이터 전송 성공: ${userName}`);
+			localStorage.setItem(`synced_${key}`, "true");
 		}
 	} catch (e) {
 		console.error("전송 오류:", e);
