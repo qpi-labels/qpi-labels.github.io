@@ -228,16 +228,11 @@ function setRunningUI(running) {
 	if (running) {
 		ui.studyToggleBtn.classList.add('running');
 		ui.studyToggleText.textContent = 'PAUSE';
-		ui.studyToggleIcon.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-			<path d="M7 5H10V19H7V5Z" fill="var(--text-main)" style="transition: fill 0.5s;"/>
-			<path d="M14 5H17V19H14V5Z" fill="var(--text-main)" style="transition: fill 0.5s;"/>
-		</svg>`;
+		ui.studyToggleIcon.innerHTML = `<path d="M7 5H10V19H7V5Z"/><path d="M14 5H17V19H14V5Z"/>`;
 	} else {
 		ui.studyToggleBtn.classList.remove('running');
 		ui.studyToggleText.textContent = 'START';
-		ui.studyToggleIcon.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-			<path d="M8 5V19L19 12L8 5Z" fill="var(--text-main)" style="transition: fill 0.5s;"/>
-		</svg>`;
+		ui.studyToggleIcon.innerHTML = `<path d="M8 5V19L19 12L8 5Z"/>`;
 	}
 }
 
@@ -494,7 +489,7 @@ export function openDayDetail(dk) {
 	if (entries.length === 0) {
 		const empty = document.createElement('div');
 		empty.className = 'item';
-		empty.innerHTML = `<div class="item-row"><div class="item-name">기록 없음</div><div class="item-time">00:00:00</div></div>`;
+		empty.innerHTML = `<div class="flex-row"><div class="item-name">기록 없음</div><div class="item-time">00:00:00</div></div>`;
 		ui.dayDetailList.appendChild(empty);
 	} else {
 		const total = Math.max(1, day.totalMs || 0);
@@ -506,16 +501,16 @@ export function openDayDetail(dk) {
 			let color = s?.color ?? 'rgba(255,255,255,0.28)';
 			item.className = 'item';
 			item.innerHTML = `
-				<div class="item-row">
-					<div class="item-name" title="${name}">
-						<span style="display:inline-flex; align-items:center; gap:8px; min-width:0;">
-							<span class="swatch" style="width:10px;height:10px; background:${color};"></span>
-							<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:240px;">${name}</span>
-						</span>
-					</div>
-					<div class="item-time">${fmtHMS(e.ms)}</div>
-				</div>
-				<div class="bar"><div style="width:${pct.toFixed(1)}%; background:${color};"></div></div>
+<div class="flex-row">
+	<div class="item-name" title="${name}">
+		<span style="display:inline-flex; align-items:center; gap:8px; min-width:0;">
+			<span class="small-swatch" style="background:${color};"></span>
+			<span class="item-actual-name">${name}</span>
+		</span>
+	</div>
+	<div class="item-time">${fmtHMS(e.ms)}</div>
+</div>
+<div class="bar"><div style="width:${pct.toFixed(1)}%; background:${color};"></div></div>
 			`;
 			ui.dayDetailList.appendChild(item);
 		});

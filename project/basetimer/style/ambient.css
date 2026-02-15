@@ -44,10 +44,11 @@ button { font-family: 'Roboto', sans-serif; }
 .moon-disk { position: absolute; left: 0; top: 0; width: 42px; height: 42px; z-index: 101; transform: translate(-50%, -50%) translate(var(--moon-x), var(--moon-y)); border-radius: 50%; background: #fff; box-shadow: 0 0 35px 12px #fff, 0 0 80px 25px rgba(200, 230, 255, 0.4); will-change: transform; }
 .moon-aura { position: absolute; left: 0; top: 0; width: 100vmax; height: 100vmax; z-index: 90; transform: translate(-50%, -50%) translate(var(--moon-x), var(--moon-y)); background: radial-gradient(circle, rgba(180, 220, 255, 0.2) 0%, transparent 50%); mix-blend-mode: screen; will-change: transform; }
 
-.lens-flare-container, .moon-flare-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 150; pointer-events: none; mix-blend-mode: screen; will-change: opacity; }
+.flare-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 150; pointer-events: none; mix-blend-mode: screen; will-change: opacity; }
 .flare-ghost { position: absolute; left: 0%; top: 0%; transform: translate(-50%, -50%); border-radius: 50%; will-change: transform; }
 .flare-halo { background: radial-gradient(circle, transparent 65%, rgba(255, 120, 60, 0.18) 68%, rgba(255, 200, 100, 0.12) 70%, rgba(120, 200, 255, 0.08) 72%, transparent 75%); filter: blur(12px); }
 .ghost-hex { width: 80px; height: 80px; background: rgba(255, 255, 255, 0.09); clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); filter: blur(3px); }
+.ghost-tiny { width: 10px; height: 10px; background: #fff; box-shadow: 0 0 10px #fff; }
 .ghost-rainbow { background: radial-gradient(circle, transparent 35%, rgba(255, 80, 80, 0.09) 42%, rgba(255, 200, 50, 0.07) 47%, rgba(80, 255, 120, 0.06) 52%, rgba(80, 150, 255, 0.08) 57%, transparent 63%); filter: blur(16px); }
 .sun-streak { position: absolute; left: 0; top: 0; width: 200vw; height: 3px; transform: translate(-50%, -50%) translate(var(--sun-x), var(--sun-y)) rotate(-3deg); background: linear-gradient(90deg, transparent, rgba(255, 230, 180, 0.5), rgba(255, 255, 255, 0.9), rgba(255, 230, 180, 0.5), transparent); filter: blur(5px); will-change: transform; }
 
@@ -91,6 +92,7 @@ body.perf-active .glass-panel-base {
 	cursor: pointer;
 	transition: color 0.5s;
 }
+.bottom-clock::after { content: ''; position: absolute; inset: 0; }
 
 .info-panel { 
 	position: fixed; bottom: 90px; left: 50%; right: auto; top: auto;
@@ -111,6 +113,8 @@ body.perf-active .glass-panel-base {
 	transition: background 0.5s, border 0.5s;
 }
 
+.fab-icon { width: 24px; height: 24px; fill :var(--text-main); transition: fill 0.5s; }
+
 .popup { 
 	position: fixed; 
 	bottom: 100px; right: 30px; left: auto; top: auto;
@@ -126,6 +130,7 @@ body.perf-active .glass-panel-base {
 }
 
 .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
+.row.slider-row { flex-direction:column; align-items:flex-start; gap:4px; }
 .label { font-size: 11px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; }
 .manual-ui.disabled { opacity: 0.2; filter: grayscale(1); }
 .speed-chips { display: flex; gap: 8px; flex-wrap: wrap; }

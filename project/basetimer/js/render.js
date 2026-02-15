@@ -163,7 +163,7 @@ function renderStats() {
 	if (entries.every(e => e.ms <= 0)) {
 		const empty = document.createElement('div');
 		empty.className = 'item';
-		empty.innerHTML = `<div class="item-row"><div class="item-name">기록이 없어요</div><div class="item-time">00:00:00</div></div>`;
+		empty.innerHTML = `<div class="flex-row"><div class="item-name">기록이 없어요</div><div class="item-time">00:00:00</div></div>`;
 		ui.breakdownList.appendChild(empty);
 		return;
 	}
@@ -174,16 +174,16 @@ function renderStats() {
 		const item = document.createElement('div');
 		item.className = 'item';
 		item.innerHTML = `
-			<div class="item-row">
-				<div class="item-name" title="${escapeHtml(e.name)}">
-					<span style="display:inline-flex; align-items:center; gap:8px; min-width:0;">
-						<span class="swatch" style="width:10px;height:10px; background:${e.color};"></span>
-						<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px;">${escapeHtml(e.name)}</span>
-					</span>
-				</div>
-				<div class="item-time">${fmtHMS(e.ms)}</div>
-			</div>
-			<div class="bar"><div style="width:${pct.toFixed(1)}%; background:${e.color};"></div></div>
+<div class="flex-row">
+	<div class="item-name" title="${escapeHtml(e.name)}">
+		<span style="display:inline-flex; align-items:center; gap:8px; min-width:0;">
+			<span class="small-swatch" style="background:${e.color};"></span>
+			<span class="item-actual-name">${escapeHtml(e.name)}</span>
+		</span>
+	</div>
+	<div class="item-time">${fmtHMS(e.ms)}</div>
+</div>
+<div class="bar"><div style="width:${pct.toFixed(1)}%; background:${e.color};"></div></div>
 		`;
 		ui.breakdownList.appendChild(item);
 	});
@@ -200,10 +200,7 @@ function renderStats() {
 		const pct = Math.round((v / max) * 100);
 		const wrap = document.createElement('div');
 		wrap.className = 'week-bar' + (v <= 0 ? ' zero' : '');
-		wrap.innerHTML = `
-			<div class="barcol"><div style="height:${pct}%"></div></div>
-			<div class="wlabel">${lab}</div>
-		`;
+		wrap.innerHTML = `<div class="barcol"><div style="height:${pct}%"></div></div><div class="wlabel">${lab}</div>`;
 		ui.weekdayBars.appendChild(wrap);
 	});
 }
@@ -301,10 +298,7 @@ function renderCalendar() {
 		const cell = document.createElement('button');
 		cell.type = 'button';
 		cell.className = 'cal-day' + (total <= 0 ? ' off' : '') + (dk === todayKey ? ' today' : '');
-		cell.innerHTML = `
-			<div class="dnum">${dayNum}</div>
-			<div class="dtime">${total > 0 ? fmtHMS(total) : ''}</div>
-		`;
+		cell.innerHTML = `<div class="dnum">${dayNum}</div><div class="dtime">${total > 0 ? fmtHMS(total) : ''}</div>`;
 		if (total <= 0) cell.setAttribute('tabindex', '-1');
 		if (total > 0 || dk === todayKey) {
 			cell.addEventListener('click', () => openDayDetail(dk));
@@ -320,7 +314,7 @@ function renderSubjects() {
 	if (App.store.subjects.length === 0) {
 		const empty = document.createElement('div');
 		empty.className = 'item';
-		empty.innerHTML = `<div class="item-row"><div class="item-name">과목이 없어요</div><div class="item-time">^v^</div></div>`;
+		empty.innerHTML = `<div class="flex-row"><div class="item-name">과목이 없어요</div><div class="item-time">^v^</div></div>`;
 		ui.subjectsManageList.appendChild(empty);
 		return;
 	}
@@ -335,20 +329,20 @@ function renderSubjects() {
 				total += (d.subjects?.[s.id] || 0);
 			}
 			const row = document.createElement('div');
-			row.className = 'msub';
+			row.className = 'flex-row msub';
 			row.innerHTML = `
-				<div class="item-row">
-					<span class="swatch" style="background:${s.color}"></span>
-					<div class="msub-name" title="${escapeHtml(s.name)}">${escapeHtml(s.name)}</div>
-				</div>
-				<div class="item-row">
-					<div class="msub-time">${fmtHMS(total)}</div>
-					<button class="icon-btn" aria-label="Edit" style="width:34px;height:34px;border-radius:14px;">
-						<svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-							<path d="M4 20H8L18.5 9.5C19.3 8.7 19.3 7.4 18.5 6.6L17.4 5.5C16.6 4.7 15.3 4.7 14.5 5.5L4 16V20Z"/>
-						</svg>
-					</button>
-				</div>
+<div class="flex-row">
+	<span class="swatch" style="background:${s.color}"></span>
+	<div class="msub-name" title="${escapeHtml(s.name)}">${escapeHtml(s.name)}</div>
+</div>
+<div class="flex-row">
+	<div class="msub-time">${fmtHMS(total)}</div>
+	<button class="icon-btn" aria-label="Edit" style="width:34px;height:34px;border-radius:14px;">
+		<svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+			<path d="M4 20H8L18.5 9.5C19.3 8.7 19.3 7.4 18.5 6.6L17.4 5.5C16.6 4.7 15.3 4.7 14.5 5.5L4 16V20Z"/>
+		</svg>
+	</button>
+</div>
 			`;
 			const editBtn = row.querySelector('button[aria-label="Edit"]');
 			editBtn.addEventListener('click', () => openSubjectModal('edit', s.id));
