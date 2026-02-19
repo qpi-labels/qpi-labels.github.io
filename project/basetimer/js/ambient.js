@@ -229,9 +229,13 @@ function updateSky(m) {
 function handleSyncToggle() { 
 	if (autoCheckEl.checked) { 
 		isCatchingUp = true; catchUpStartTime = performance.now(); catchUpStartMinutes = manualMinutes; catchUpStartMultiverse = multiverse;
-		document.getElementById('manualSection').classList.add('disabled'); 
+		document.getElementById('manualSection').classList.add('disabled');
+		Array.from(document.getElementById('manualSection').querySelectorAll("input, button"))
+			.forEach((e) => { e.setAttribute('disabled', '') });
 	} else { 
 		isCatchingUp = false; document.getElementById('manualSection').classList.remove('disabled'); 
+		Array.from(document.getElementById('manualSection').querySelectorAll("input, button"))
+			.forEach((e) => { e.removeAttribute('disabled') });
 		const d = new Date(); manualMinutes = d.getHours()*60 + d.getMinutes() + d.getSeconds()/60; 
 	} 
 }
