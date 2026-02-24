@@ -5,7 +5,10 @@
     --red-main: #BC1F1F;
     --orange: #CC5419;
     --yellow: #D4A829;
-    --font-serif: "Playfair Display", serif; 
+    
+    /* 폰트 분리 */
+    --font-serif-en: "Playfair Display", serif; 
+    --font-serif-kr: "Noto Serif KR", serif;
     --font-sans: "Pretendard", sans-serif;
 }
 
@@ -50,7 +53,7 @@ body {
 }
 
 .main-title {
-    font-family: var(--font-serif);
+    font-family: var(--font-serif-en); /* 영문 로고 */
     font-size: clamp(3rem, 5vw, 5rem);
     font-weight: 900;
     color: var(--text);
@@ -77,7 +80,7 @@ body {
 }
 
 .intro-heading {
-    font-family: var(--font-serif);
+    font-family: var(--font-serif-en); /* 영문 제목 */
     font-size: clamp(2.5rem, 4vw, 3.5rem);
     color: var(--red-dark);
     margin-bottom: 1.5rem;
@@ -223,7 +226,8 @@ input.gsc-input:focus { box-shadow: 0 0 0 3px rgba(139, 31, 40, 0.1) !important;
 .gs-title { display: block !important; margin-bottom: 12px !important; }
 .gs-title a, .gs-title a b {
     color: var(--text) !important; text-decoration: none !important;
-    font-family: var(--font-serif) !important; font-size: 1.3rem !important; font-weight: 700 !important;
+    font-family: var(--font-serif-kr) !important; /* 한글 세리프체 적용 */
+    font-size: 1.3rem !important; font-weight: 700 !important;
     word-break: break-word;
 }
 .gs-title a:hover { text-decoration: underline !important; }
@@ -257,7 +261,9 @@ input.gsc-input:focus { box-shadow: 0 0 0 3px rgba(139, 31, 40, 0.1) !important;
 }
 .since-btn {
     background: transparent; border: none; color: var(--bg);
-    font-family: var(--font-serif); font-size: 0.85rem; cursor: pointer; display: flex; align-items: center;
+    font-family: var(--font-serif-kr); /* 한글 세리프체 적용 */
+    font-weight: 700;
+    font-size: 0.85rem; cursor: pointer; display: flex; align-items: center;
 }
 .since-btn:hover { opacity: 0.8; }
 .vhs-stripes { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
@@ -333,10 +339,7 @@ input.gsc-input:focus { box-shadow: 0 0 0 3px rgba(139, 31, 40, 0.1) !important;
 
     .gsc-control-wrapper-cse, .gsc-results-wrapper-nooverlay {
         width: 100% !important;
-    }
-
-    .gsc-wrapper {
-        max-width: 100% !important;
+        overflow-x: hidden !important;
     }
 
     .vhs-footer {
