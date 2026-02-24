@@ -2,27 +2,23 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <!-- 모바일 및 PWA 웹앱 대응 메타 태그 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#000000">
     <link rel="manifest" href="manifest.json">
     <link rel="shortcut icon" type="image/x-icon" href="./logo.ico">
     
-    <!-- 타이틀 변경 -->
     <title>Dasein;</title>
     
-    <!-- 폰트 로드 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     
-    <!-- 외부 라이브러리 (구글 검색, 마크다운 파서) -->
     <script async src="https://cse.google.com/cse.js?cx=b794e851ac2524ee7"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
     
-    <!-- 캐시 무력화를 위한 버전 쿼리 파라미터 추가 -->
-    <link rel="stylesheet" href="style.css?v=1.1">
+    <!-- 캐시 갱신을 위해 버전 업그레이드 -->
+    <link rel="stylesheet" href="style.css?v=1.2">
 </head>
 <body>
     <div class="paper-grain"></div>
@@ -32,7 +28,6 @@
         
         <!-- 왼쪽 패널 -->
         <aside class="left-panel">
-            <!-- 메인 타이틀 변경 -->
             <h1 class="main-title">Dasein;</h1>
             
             <div class="search-container">
@@ -42,7 +37,7 @@
             <!-- AI 요약 컨테이너 -->
             <div id="ai-summary-container" style="display: none;">
                 <div class="ai-summary-box">
-                    <button id="btn-generate-summary" class="summary-badge" onclick="triggerSummary()">summary</button>
+                    <button id="btn-generate-summary" class="summary-badge" onclick="triggerSummary()">연구 주제 추천받기</button>
                     <!-- 스크롤 및 블러 효과 래퍼 -->
                     <div class="ai-summary-scroll-area">
                         <div id="ai-summary-content"></div>
@@ -54,7 +49,6 @@
             <div class="vhs-footer">
                 <div class="vhs-label-bar">
                     <span class="brand-name">쿼터파이</span>
-                    <!-- 버튼 텍스트 'API'로 변경 -->
                     <button class="since-btn" onclick="openApiModal()">
                         API <span id="api-status-indicator" style="margin-left:5px; font-size:10px;"></span>
                     </button>
@@ -80,7 +74,7 @@
             <div class="modal-header">API Key 설정</div>
             <div class="modal-body">
                 <p style="margin-bottom: 15px; font-size: 0.95rem; line-height: 1.5;">
-                    AI 요약 기능을 사용하려면 Groq API 키가 필요합니다.<br>
+                    AI 연구 주제 추천 기능을 사용하려면 Groq API 키가 필요합니다.<br>
                     입력하신 키는 브라우저에만 저장됩니다.
                 </p>
                 <div class="api-input-group">
@@ -94,7 +88,6 @@
         </div>
     </div>
 
-    <!-- PWA 서비스 워커 등록 스크립트 -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -105,20 +98,17 @@
         }
     </script>
 
-    <!-- 핵심 기능 스크립트 -->
     <script>
         marked.setOptions({ breaks: true, gfm: true });
         const GROQ_MODEL = 'meta-llama/llama-4-maverick-17b-128e-instruct'; 
         let currentQuery = '';
         let currentResults = [];
 
-        // API 상태 인디케이터 관리
         function updateApiStatus() {
             const apiKey = localStorage.getItem('GROQ_API_KEY');
             document.getElementById('api-status-indicator').innerText = apiKey ? '🟢' : '⚙️';
         }
 
-        // 모달창 열기
         function openApiModal() {
             const modal = document.getElementById('api-modal');
             const savedKey = localStorage.getItem('GROQ_API_KEY');
@@ -130,7 +120,6 @@
             document.getElementById('api-modal').style.display = 'none'; 
         }
 
-        // API 키 로컬 스토리지에 저장
         function saveApiKey() {
             const apiKey = document.getElementById('api-key-input').value.trim();
             if (apiKey) {
@@ -142,27 +131,26 @@
             }
         }
 
-        // AI 요약 버튼 클릭 시
         function triggerSummary() {
             if (currentQuery && currentResults.length > 0) {
                 generateSummary(currentQuery, currentResults);
             }
         }
 
-        // AI 요약 생성 로직
+        // AI 연구 주제 추천 생성 로직
         async function generateSummary(query, searchResults) {
             const GROQ_API_KEY = localStorage.getItem('GROQ_API_KEY');
             const summaryContent = document.getElementById('ai-summary-content');
             const summaryBtn = document.getElementById('btn-generate-summary');
 
             if (!GROQ_API_KEY) {
-                summaryContent.innerHTML = '<p>AI 요약을 사용하려면 좌측 하단의 <strong>API</strong> 버튼을 눌러 키를 설정해주세요.</p>';
+                summaryContent.innerHTML = '<p>AI 추천을 사용하려면 좌측 하단의 <strong>API</strong> 버튼을 눌러 키를 설정해주세요.</p>';
                 return;
             }
 
-            summaryBtn.innerText = '생성 중...';
+            summaryBtn.innerText = '분석 중...';
             summaryBtn.disabled = true;
-            summaryContent.innerHTML = '<div class="loading-spinner"></div><p style="display:inline-block; margin:0;">AI가 문맥을 파악하고 있습니다...</p>';
+            summaryContent.innerHTML = '<div class="loading-spinner"></div><p style="display:inline-block; margin:0;">AI가 연구 동향을 파악하고 있습니다...</p>';
             
             try {
                 let resultsContext = `검색어: ${query}\n\n`;
@@ -170,6 +158,13 @@
                     resultsContext += `${i + 1}. ${res.title}\n${res.snippet}\n\n`; 
                 });
                 
+                // 프롬프트 전면 수정 (연구 조언가 컨셉)
+                const systemPrompt = `당신은 뛰어난 학술 연구 조언가입니다. 제공된 검색 결과와 데이터를 바탕으로 다음 두 가지를 작성하세요:
+1. 해당 주제의 핵심 개념 및 현재 학술적 동향에 대한 간략한 소개 (3~4문장 내외)
+2. 고등학생이나 대학생이 소논문, 탐구보고서 등으로 진행하기 좋은 창의적이고 심도 있는 구체적인 [연구 주제 3~5가지] 추천
+
+각 연구 주제에는 추천하는 이유와 구체적인 탐구 방향(어떤 지표를 볼 것인지 등)을 간략히 포함해주세요. 마크다운 문법을 사용하되, 불필요한 서론이나 인사말 없이 바로 본론으로 시작하세요.`;
+
                 const response = await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
                     method: 'POST',
                     headers: { 
@@ -179,11 +174,11 @@
                     body: JSON.stringify({
                         model: GROQ_MODEL, 
                         messages: [
-                            { role: 'system', content: `당신은 간결하고 전문적인 학술 요약가입니다. 검색 결과를 종합하여 사용자가 알고 싶어하는 핵심 정보를 설명하세요. 마크다운을 사용하되, 서론 없이 바로 본론부터 답변하세요.` },
-                            { role: 'user', content: `검색어 "${query}"에 대한 결과:\n${resultsContext}` }
+                            { role: 'system', content: systemPrompt },
+                            { role: 'user', content: `검색어 "${query}"에 대한 학술 검색 결과들입니다:\n${resultsContext}` }
                         ],
-                        temperature: 0.5, 
-                        max_tokens: 1024,
+                        temperature: 0.6, 
+                        max_tokens: 2048, // 답변이 잘리지 않도록 토큰 확장
                     })
                 });
 
@@ -194,36 +189,36 @@
             } catch (error) {
                 summaryContent.innerHTML = `<p>오류가 발생했습니다: ${error.message}</p>`;
             } finally {
-                summaryBtn.innerText = '다시 생성';
+                summaryBtn.innerText = '다시 추천받기';
                 summaryBtn.disabled = false;
             }
         }
 
-        // 구글 검색 결과 변화 감지 및 데이터 추출
+        // 검색 결과 감지 및 데이터 추출량 증가
         const resultsObserver = new MutationObserver(() => {
             const results = document.querySelectorAll('.gsc-webResult.gsc-result');
             const searchInput = document.querySelector('input.gsc-input');
             const query = searchInput ? searchInput.value.trim() : '';
 
-            // 새로운 검색어에 대한 결과가 로드되었을 때
             if (results.length > 0 && query && query !== currentQuery) {
                 currentQuery = query;
+                
+                // 상위 5개가 아닌 페이지 전체 검색 결과(보통 10개)를 모두 AI에게 전달하도록 변경
                 currentResults = Array.from(results).map(el => ({
                     title: el.querySelector('.gs-title')?.textContent.trim() || '',
                     snippet: el.querySelector('.gs-snippet')?.textContent.trim() || ''
-                })).slice(0, 5);
+                })).slice(0, 10);
 
                 const container = document.getElementById('ai-summary-container');
                 container.style.display = 'block';
-                document.getElementById('ai-summary-content').innerHTML = '<p style="padding: 10px 0;">우측 상단 <strong>summary</strong> 버튼을 눌러 AI 요약을 생성하세요.</p>';
-                document.getElementById('btn-generate-summary').innerText = 'summary';
+                document.getElementById('ai-summary-content').innerHTML = '<p style="padding: 10px 0;">위쪽 <strong>연구 주제 추천받기</strong> 버튼을 눌러보세요.</p>';
+                document.getElementById('btn-generate-summary').innerText = '연구 주제 추천받기';
             }
         });
         resultsObserver.observe(document.body, { childList: true, subtree: true });
 
-        // 구글 CSE 불필요한 UI 제거 및 디자인 강제 주입
+        // 불필요한 구글 UI 및 로고 제거 등
         const uiCleanerObserver = new MutationObserver(() => {
-            // 1. 불필요한 클래스들 DOM에서 제거
             const junkSelectors = ['.gsc-branding', '.gcsc-branding', '.gsc-watermark', '.gsc-tabsArea', '.gsc-above-wrapper-area', '.gsc-adBlock', '.gsc-orderby-container'];
             junkSelectors.forEach(sel => {
                 document.querySelectorAll(sel).forEach(el => {
@@ -232,17 +227,15 @@
                 });
             });
 
-            // 2. 구글 인풋창 워터마크 이미지 강제 삭제
             const searchInput = document.querySelector('input.gsc-input');
             if(searchInput) searchInput.style.setProperty('background-image', 'none', 'important');
 
-            // 3. 검색 결과 카드 전체 클릭 가능하게 설정
             document.querySelectorAll('.gsc-webResult.gsc-result').forEach(card => {
                 if (!card.dataset.clickable) {
                     card.dataset.clickable = "true";
                     card.style.cursor = 'pointer';
                     card.addEventListener('click', function(e) {
-                        if(window.getSelection().toString().length > 0) return; // 드래그 시 무시
+                        if(window.getSelection().toString().length > 0) return;
                         if(e.target.tagName !== 'A') {
                             const link = this.querySelector('.gs-title a');
                             if(link) link.click();
@@ -251,7 +244,6 @@
                 }
             });
 
-            // 4. 각 검색 결과 제목 앞에 파비콘 추가
             document.querySelectorAll('.gsc-webResult.gsc-result .gs-title a').forEach(link => {
                 if (!link.querySelector('.custom-favicon')) {
                     try {
@@ -266,7 +258,6 @@
         });
         uiCleanerObserver.observe(document.body, { childList: true, subtree: true });
 
-        // 페이지 로드 시 API 설정 상태 확인
         window.addEventListener('DOMContentLoaded', updateApiStatus);
     </script>
 </body>
