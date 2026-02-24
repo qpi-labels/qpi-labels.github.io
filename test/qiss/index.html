@@ -2,9 +2,9 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="shortcut icon" type="image/x-icon" href="./logo.ico">
-    <title>Dasein; - 학술 검색 엔진</title>
+    <title>Dasein.</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,7 +24,7 @@
         
         <!-- 왼쪽 패널 -->
         <aside class="left-panel">
-            <h1 class="main-title">Dasein;</h1>
+            <h1 class="main-title">Dasein.</h1>
             
             <div class="search-container">
                 <div class="gcse-searchbox"></div>
@@ -34,11 +34,8 @@
             <div id="ai-summary-container" style="display: none;">
                 <div class="ai-summary-box">
                     <button id="btn-generate-summary" class="summary-badge" onclick="triggerSummary()">summary</button>
-                    <!-- 스크롤 및 블러 효과를 위한 래퍼 추가 -->
                     <div class="ai-summary-scroll-area">
-                        <div id="ai-summary-content">
-                            <!-- 마크다운 텍스트 렌더링 영역 -->
-                        </div>
+                        <div id="ai-summary-content"></div>
                     </div>
                 </div>
             </div>
@@ -48,7 +45,7 @@
                 <div class="vhs-label-bar">
                     <span class="brand-name">쿼터파이</span>
                     <button class="since-btn" onclick="openApiModal()">
-                        API <span id="api-status-indicator" style="margin-left:5px; font-size:10px;"></span>
+                        SINCE 2024 <span id="api-status-indicator" style="margin-left:5px; font-size:10px;"></span>
                     </button>
                 </div>
                 <div class="vhs-stripes">
@@ -88,44 +85,34 @@
 
     <script>
         marked.setOptions({ breaks: true, gfm: true });
-
         const GROQ_MODEL = 'meta-llama/llama-4-maverick-17b-128e-instruct'; 
         let currentQuery = '';
         let currentResults = [];
 
         function updateApiStatus() {
             const apiKey = localStorage.getItem('GROQ_API_KEY');
-            const indicator = document.getElementById('api-status-indicator');
-            indicator.innerText = apiKey ? '🟢' : '⚙️';
+            document.getElementById('api-status-indicator').innerText = apiKey ? '🟢' : '⚙️';
         }
 
         function openApiModal() {
             const modal = document.getElementById('api-modal');
-            const input = document.getElementById('api-key-input');
             const savedKey = localStorage.getItem('GROQ_API_KEY');
-            if (savedKey) input.value = savedKey;
+            if (savedKey) document.getElementById('api-key-input').value = savedKey;
             modal.style.display = 'flex';
         }
 
-        function closeApiModal() {
-            document.getElementById('api-modal').style.display = 'none';
-        }
+        function closeApiModal() { document.getElementById('api-modal').style.display = 'none'; }
 
         function saveApiKey() {
             const apiKey = document.getElementById('api-key-input').value.trim();
             if (apiKey) {
                 localStorage.setItem('GROQ_API_KEY', apiKey);
-                closeApiModal();
-                updateApiStatus();
-            } else {
-                alert('API 키를 입력해주세요.');
-            }
+                closeApiModal(); updateApiStatus();
+            } else { alert('API 키를 입력해주세요.'); }
         }
 
         function triggerSummary() {
-            if (currentQuery && currentResults.length > 0) {
-                generateSummary(currentQuery, currentResults);
-            }
+            if (currentQuery && currentResults.length > 0) generateSummary(currentQuery, currentResults);
         }
 
         async function generateSummary(query, searchResults) {
@@ -134,7 +121,7 @@
             const summaryBtn = document.getElementById('btn-generate-summary');
 
             if (!GROQ_API_KEY) {
-                summaryContent.innerHTML = '<p>AI 요약을 사용하려면 <strong>API</strong> 버튼을 눌러 API 키를 설정해주세요.</p>';
+                summaryContent.innerHTML = '<p>AI 요약을 사용하려면 <strong>SINCE 2024</strong> 버튼을 눌러 API 키를 설정해주세요.</p>';
                 return;
             }
 
@@ -144,32 +131,22 @@
             
             try {
                 let resultsContext = `검색어: ${query}\n\n`;
-                searchResults.forEach((res, i) => {
-                    resultsContext += `${i + 1}. ${res.title}\n${res.snippet}\n\n`;
-                });
+                searchResults.forEach((res, i) => { resultsContext += `${i + 1}. ${res.title}\n${res.snippet}\n\n`; });
                 
-                const systemPrompt = `당신은 간결하고 전문적인 학술 요약가입니다. 검색 결과를 종합하여 사용자가 알고 싶어하는 핵심 정보를 설명하세요. 마크다운을 사용하되, 서론 없이 바로 본론부터 답변하세요.`;
-                const userPrompt = `검색어 "${query}"에 대한 결과:\n${resultsContext}`;
-
                 const response = await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${GROQ_API_KEY}`,
-                    },
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
                     body: JSON.stringify({
                         model: GROQ_MODEL, 
                         messages: [
-                            { role: 'system', content: systemPrompt },
-                            { role: 'user', content: userPrompt }
+                            { role: 'system', content: `당신은 간결하고 전문적인 학술 요약가입니다. 검색 결과를 종합하여 사용자가 알고 싶어하는 핵심 정보를 설명하세요. 마크다운을 사용하되, 서론 없이 바로 본론부터 답변하세요.` },
+                            { role: 'user', content: `검색어 "${query}"에 대한 결과:\n${resultsContext}` }
                         ],
-                        temperature: 0.5,
-                        max_tokens: 1024,
+                        temperature: 0.5, max_tokens: 1024,
                     })
                 });
 
                 if (!response.ok) throw new Error('API 요청 실패');
-                
                 const data = await response.json();
                 summaryContent.innerHTML = marked.parse(data.choices[0].message.content);
 
@@ -195,27 +172,30 @@
 
                 const container = document.getElementById('ai-summary-container');
                 container.style.display = 'block';
-                document.getElementById('ai-summary-content').innerHTML = '<p style="padding: 10px 0;"><strong>summary</strong> 버튼을 눌러 AI 요약을 생성하세요.</p>';
+                document.getElementById('ai-summary-content').innerHTML = '<p style="padding: 10px 0;">위쪽 <strong>summary</strong> 버튼을 눌러 AI 요약을 생성하세요.</p>';
                 document.getElementById('btn-generate-summary').innerText = 'summary';
             }
         });
-
         resultsObserver.observe(document.body, { childList: true, subtree: true });
 
         const uiCleanerObserver = new MutationObserver(() => {
-            // 구글 불필요 UI 숨기기
-            const junkSelectors = ['.gsc-branding', '.gsc-watermark', '.gsc-tabsArea', '.gsc-above-wrapper-area', '.gsc-adBlock', '.gsc-orderby-container'];
+            // 구글 모바일 UI 쓰레기, 워터마크, 배경 이미지 강제 제거
+            const junkSelectors = ['.gsc-branding', '.gcsc-branding', '.gsc-watermark', '.gsc-tabsArea', '.gsc-above-wrapper-area', '.gsc-adBlock', '.gsc-orderby-container'];
             junkSelectors.forEach(sel => {
-                document.querySelectorAll(sel).forEach(el => el.style.setProperty('display', 'none', 'important'));
+                document.querySelectorAll(sel).forEach(el => {
+                    el.style.setProperty('display', 'none', 'important');
+                    if(el.parentNode) el.parentNode.removeChild(el); 
+                });
             });
 
-            // 검색 카드 전체 클릭 기능 활성화
+            const searchInput = document.querySelector('input.gsc-input');
+            if(searchInput) searchInput.style.setProperty('background-image', 'none', 'important');
+
             document.querySelectorAll('.gsc-webResult.gsc-result').forEach(card => {
                 if (!card.dataset.clickable) {
                     card.dataset.clickable = "true";
                     card.style.cursor = 'pointer';
                     card.addEventListener('click', function(e) {
-                        // 사용자가 텍스트를 드래그 중이거나 직접 링크를 클릭한 경우는 예외
                         if(window.getSelection().toString().length > 0) return;
                         if(e.target.tagName !== 'A') {
                             const link = this.querySelector('.gs-title a');
@@ -225,7 +205,6 @@
                 }
             });
 
-            // 파비콘 추가
             document.querySelectorAll('.gsc-webResult.gsc-result .gs-title a').forEach(link => {
                 if (!link.querySelector('.custom-favicon')) {
                     try {
