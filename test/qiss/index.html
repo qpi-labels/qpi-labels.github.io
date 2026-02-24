@@ -2,6 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <!-- 화면 배치는 모바일에 맞게 유지 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#000000">
     <link rel="manifest" href="manifest.json">
@@ -17,8 +18,8 @@
     <script async src="https://cse.google.com/cse.js?cx=b794e851ac2524ee7"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
     
-    <!-- 캐시 갱신을 위해 버전 업그레이드 -->
-    <link rel="stylesheet" href="style.css?v=1.2">
+    <!-- 캐시 무력화 버전 1.3 -->
+    <link rel="stylesheet" href="style.css?v=1.3">
 </head>
 <body>
     <div class="paper-grain"></div>
@@ -31,14 +32,14 @@
             <h1 class="main-title">Dasein;</h1>
             
             <div class="search-container">
-                <div class="gcse-searchbox"></div>
+                <!-- 핵심 해결책: 구글의 강제 모바일 UI 주입을 차단합니다 -->
+                <div class="gcse-searchbox" data-mobileLayout="disabled"></div>
             </div>
 
             <!-- AI 요약 컨테이너 -->
             <div id="ai-summary-container" style="display: none;">
                 <div class="ai-summary-box">
                     <button id="btn-generate-summary" class="summary-badge" onclick="triggerSummary()">연구 주제 추천받기</button>
-                    <!-- 스크롤 및 블러 효과 래퍼 -->
                     <div class="ai-summary-scroll-area">
                         <div id="ai-summary-content"></div>
                     </div>
@@ -63,7 +64,8 @@
 
         <!-- 오른쪽 패널 (검색 결과) -->
         <main class="right-panel">
-            <div class="gcse-searchresults"></div>
+            <!-- 핵심 해결책: 검색 결과도 데스크탑 뼈대로 강제 출력 -->
+            <div class="gcse-searchresults" data-mobileLayout="disabled"></div>
         </main>
 
     </div>
@@ -137,7 +139,6 @@
             }
         }
 
-        // AI 연구 주제 추천 생성 로직
         async function generateSummary(query, searchResults) {
             const GROQ_API_KEY = localStorage.getItem('GROQ_API_KEY');
             const summaryContent = document.getElementById('ai-summary-content');
@@ -158,7 +159,6 @@
                     resultsContext += `${i + 1}. ${res.title}\n${res.snippet}\n\n`; 
                 });
                 
-                // 프롬프트 전면 수정 (연구 조언가 컨셉)
                 const systemPrompt = `당신은 뛰어난 학술 연구 조언가입니다. 제공된 검색 결과와 데이터를 바탕으로 다음 두 가지를 작성하세요:
 1. 해당 주제의 핵심 개념 및 현재 학술적 동향에 대한 간략한 소개 (3~4문장 내외)
 2. 고등학생이나 대학생이 소논문, 탐구보고서 등으로 진행하기 좋은 창의적이고 심도 있는 구체적인 [연구 주제 3~5가지] 추천
@@ -178,7 +178,7 @@
                             { role: 'user', content: `검색어 "${query}"에 대한 학술 검색 결과들입니다:\n${resultsContext}` }
                         ],
                         temperature: 0.6, 
-                        max_tokens: 2048, // 답변이 잘리지 않도록 토큰 확장
+                        max_tokens: 2048,
                     })
                 });
 
@@ -194,7 +194,6 @@
             }
         }
 
-        // 검색 결과 감지 및 데이터 추출량 증가
         const resultsObserver = new MutationObserver(() => {
             const results = document.querySelectorAll('.gsc-webResult.gsc-result');
             const searchInput = document.querySelector('input.gsc-input');
@@ -203,7 +202,6 @@
             if (results.length > 0 && query && query !== currentQuery) {
                 currentQuery = query;
                 
-                // 상위 5개가 아닌 페이지 전체 검색 결과(보통 10개)를 모두 AI에게 전달하도록 변경
                 currentResults = Array.from(results).map(el => ({
                     title: el.querySelector('.gs-title')?.textContent.trim() || '',
                     snippet: el.querySelector('.gs-snippet')?.textContent.trim() || ''
@@ -217,7 +215,6 @@
         });
         resultsObserver.observe(document.body, { childList: true, subtree: true });
 
-        // 불필요한 구글 UI 및 로고 제거 등
         const uiCleanerObserver = new MutationObserver(() => {
             const junkSelectors = ['.gsc-branding', '.gcsc-branding', '.gsc-watermark', '.gsc-tabsArea', '.gsc-above-wrapper-area', '.gsc-adBlock', '.gsc-orderby-container'];
             junkSelectors.forEach(sel => {
