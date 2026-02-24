@@ -16,12 +16,13 @@ body {
     color: var(--text);
     font-family: var(--font-sans);
     overflow-x: hidden;
+    width: 100vw;
 }
 
 /* 레이아웃 분할 */
 .layout-grid {
     display: flex;
-    width: 100vw;
+    width: 100%;
     min-height: 100vh;
 }
 
@@ -50,7 +51,7 @@ body {
 
 .main-title {
     font-family: var(--font-serif);
-    font-size: clamp(2.5rem, 5vw, 3rem);
+    font-size: clamp(3rem, 5vw, 5rem);
     font-weight: 900;
     color: var(--text);
     margin-bottom: 2.5rem;
@@ -66,38 +67,29 @@ body {
 }
 
 /* ----------------------------------
-   검색창 커스텀 
+   검색창 커스텀 & 구글 쓰레기 클래스 완전 초기화
 ----------------------------------- */
 .search-container {
     width: 100%;
     margin-bottom: 30px;
 }
 
-/* 기본 테이블 및 컨테이너 리셋 */
 .gsc-control-cse, .gsc-search-box, .gsc-search-box-tools table {
     border: none !important;
     background: transparent !important;
     margin: 0 !important;
     padding: 0 !important;
-    width: 100% !important; /* 전체 너비 차지 */
+    width: 100% !important;
 }
 
-/* 검색 아이콘 및 X 버튼 완전히 숨기기 */
-.gsc-search-button, .gsc-clear-button {
-    display: none !important;
-}
+.gsc-search-button, .gsc-clear-button { display: none !important; }
+.gsc-input-box { border: none !important; background: transparent !important; width: 100% !important; }
 
-.gsc-input-box {
-    border: none !important;
-    background: transparent !important;
-    width: 100% !important; /* X버튼이 사라진 공간 차지 */
-}
-
-/* 입력창 형태 잡기 */
 input.gsc-input {
     border: 1.5px solid var(--red-dark) !important;
     border-radius: 30px !important;
     background-color: var(--bg) !important;
+    background-image: none !important; /* 구글 워터마크 강제 삭제 */
     color: var(--text) !important;
     font-size: 1rem !important;
     height: 48px !important;
@@ -107,10 +99,7 @@ input.gsc-input {
     width: 100% !important;
     box-sizing: border-box !important;
 }
-
-input.gsc-input:focus {
-    box-shadow: 0 0 0 3px rgba(139, 31, 40, 0.1) !important;
-}
+input.gsc-input:focus { box-shadow: 0 0 0 3px rgba(139, 31, 40, 0.1) !important; }
 
 /* ----------------------------------
    AI 요약창
@@ -119,18 +108,16 @@ input.gsc-input:focus {
 
 .ai-summary-box {
     border: 1.5px solid var(--red-dark);
-    border-radius: 12px; /* R값 맞춤 */
+    border-radius: 12px;
     position: relative;
     background-color: transparent;
     padding-top: 20px;
 }
 
-/* 버튼 기능이 포함된 배지 */
 .summary-badge {
     position: absolute;
-    top: 0;
-    right: 20px;
-    transform: translateY(-50%); /* 정확히 상단 선 중앙에 걸치게 수정 */
+    top: 0; right: 20px;
+    transform: translateY(-50%);
     background-color: var(--red-dark);
     color: var(--bg);
     padding: 6px 18px;
@@ -138,151 +125,100 @@ input.gsc-input:focus {
     font-size: 0.85rem;
     font-weight: 600;
     letter-spacing: 0.05em;
-    border: none;
-    cursor: pointer;
+    border: none; cursor: pointer;
     font-family: var(--font-sans);
     transition: background-color 0.2s ease;
-    z-index: 10; /* 선 위로 확실히 올라오도록 */
+    z-index: 10;
 }
-
-.summary-badge:hover {
-    background-color: var(--red-main);
-}
+.summary-badge:hover { background-color: var(--red-main); }
 .summary-badge:disabled { opacity: 0.7; cursor: wait; }
 
-/* 요약 스크롤 영역 & 블러 처리 */
 .ai-summary-scroll-area {
-    max-height: 40vh; /* 길어지면 내부 스크롤 발생 */
+    max-height: 40vh;
     overflow-y: auto;
     padding: 10px 24px 20px 24px;
-    
-    /* 상하단 페이드아웃 효과 */
     mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
 }
-
-/* 스크롤바 디자인 */
 .ai-summary-scroll-area::-webkit-scrollbar { width: 6px; }
 .ai-summary-scroll-area::-webkit-scrollbar-thumb { background-color: rgba(139, 31, 40, 0.3); border-radius: 10px; }
 
-#ai-summary-content {
-    font-size: 0.95rem;
-    line-height: 1.7;
-    color: var(--text);
-    padding: 10px 0;
-}
+#ai-summary-content { font-size: 0.95rem; line-height: 1.7; color: var(--text); padding: 10px 0; }
 #ai-summary-content p { margin-bottom: 10px; }
 #ai-summary-content h1, #ai-summary-content h2, #ai-summary-content h3 { font-size: 1.1rem; color: var(--red-dark); margin: 15px 0 10px 0; }
 #ai-summary-content ul { padding-left: 20px; margin: 10px 0; }
-#ai-summary-content li { margin-bottom: 5px; }
 #ai-summary-content strong { color: var(--text); font-weight: 700; }
 
 /* ----------------------------------
-   검색 결과 커스텀 (제목 복구 & 카드 클릭)
+   검색 결과 커스텀 (모바일 선 파괴 포함)
 ----------------------------------- */
 .gsc-results-wrapper-overlay, 
 .gsc-results-wrapper-visible, 
 .gsc-resultsbox-visible, 
-.gsc-webResult.gsc-result {
+.gsc-webResult.gsc-result, 
+.gsc-control-wrapper-cse {
     background: transparent !important; 
     background-color: transparent !important;
-    border: none !important;
     box-shadow: none !important;
     padding: 0 !important;
 }
 
+/* 모바일 구글 강제 흰 선, 회색 선 완전 박멸 */
+.gsc-results .gsc-cursor-box { border: none !important; background: transparent !important; margin: 20px 0 !important; }
 .gsc-webResult.gsc-result {
+    /* 기존에 구글이 넣는 상하 구분선 모두 초기화 후 내 테두리 덮어씌우기 */
+    border-top: none !important;
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
     border: 1.5px solid var(--red-dark) !important;
     border-radius: 12px !important;
     padding: 24px !important;
-    margin-bottom: 24px !important;
+    margin-bottom: 20px !important;
     transition: transform 0.2s ease, background-color 0.2s ease;
 }
+.gsc-webResult.gsc-result:hover { background-color: rgba(139, 31, 40, 0.03) !important; transform: translateY(-2px); }
 
-.gsc-webResult.gsc-result:hover {
-    background-color: rgba(139, 31, 40, 0.03) !important;
-    transform: translateY(-2px);
-}
-
-/* 검색결과 제목 복구 및 스타일링 */
-.gs-title {
-    display: block !important;
-    margin-bottom: 12px !important;
-}
-
+.gs-title { display: block !important; margin-bottom: 12px !important; }
 .gs-title a, .gs-title a b {
-    color: var(--text) !important; 
-    text-decoration: none !important;
-    font-family: var(--font-serif) !important; /* 제목은 Serif로 우아하게 */
-    font-size: 1.3rem !important;
-    font-weight: 700 !important;
+    color: var(--text) !important; text-decoration: none !important;
+    font-family: var(--font-serif) !important; font-size: 1.3rem !important; font-weight: 700 !important;
+    word-break: break-word; /* 모바일에서 텍스트 삐져나감 방지 */
 }
 .gs-title a:hover { text-decoration: underline !important; }
 
-/* 파비콘 스타일 */
-.custom-favicon {
-    width: 16px; 
-    height: 16px; 
-    margin-right: 8px; 
-    vertical-align: text-bottom; 
-    border-radius: 2px;
-}
+.custom-favicon { width: 16px; height: 16px; margin-right: 8px; vertical-align: text-bottom; border-radius: 2px; }
 
-/* 내용(스니펫) */
 .gs-snippet {
-    display: block !important;
-    font-family: var(--font-sans) !important;
-    color: #444 !important;
-    line-height: 1.6 !important;
-    font-size: 0.95rem !important;
+    display: block !important; font-family: var(--font-sans) !important; color: #444 !important;
+    line-height: 1.6 !important; font-size: 0.95rem !important; word-break: break-word;
 }
 .gs-snippet b { color: var(--text) !important; font-weight: 700 !important; }
 
-/* 썸네일 숨김 처리 (글자만 깔끔하게 보이게) */
-.gsc-thumbnail-inside, .gs-image-box { display: none !important; }
-.gsc-url-top { display: none !important; } 
+.gsc-thumbnail-inside, .gs-image-box, .gsc-url-top { display: none !important; } 
 
-/* 페이지네이션 */
 .gsc-cursor-page { color: var(--text) !important; background: transparent !important; border: 1px solid var(--text) !important; border-radius: 8px !important; padding: 4px 8px !important;}
 .gsc-cursor-current-page { background: var(--text) !important; color: var(--bg) !important; }
 
-/* 자동완성 팝업 */
 .gsc-completion-container { background-color: var(--bg) !important; border: 1.5px solid var(--red-dark) !important; border-radius: 12px !important; font-family: var(--font-sans) !important;}
 .gsc-completion-item:hover { background-color: rgba(139, 31, 40, 0.1) !important; }
 
 /* ----------------------------------
-   하단 VHS 푸터 & API 설정 버튼
+   하단 VHS 푸터
 ----------------------------------- */
 .vhs-footer {
     position: absolute;
-    bottom: 5vh;
-    left: 4vw;
-    right: 4vw;
+    bottom: 5vh; left: 4vw; right: 4vw;
 }
-
 .vhs-label-bar {
-    background: var(--red-dark);
-    color: var(--bg);
-    padding: 10px 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: var(--font-sans);
-    font-size: 0.85rem;
+    background: var(--red-dark); color: var(--bg); padding: 10px 16px;
+    display: flex; justify-content: space-between; align-items: center; font-family: var(--font-sans); font-size: 0.85rem;
 }
-
 .since-btn {
-    background: transparent;
-    border: none;
-    color: var(--bg);
-    font-family: var(--font-serif);
-    font-size: 0.85rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
+    background: transparent; border: none; color: var(--bg);
+    font-family: var(--font-serif); font-size: 0.85rem; cursor: pointer; display: flex; align-items: center;
 }
 .since-btn:hover { opacity: 0.8; }
-
 .vhs-stripes { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
 .stripe { width: 100%; }
 .s-3 { height: 18px; background: var(--red-main); }
@@ -305,61 +241,72 @@ input.gsc-input:focus {
     width: 100%; padding: 12px; border: 1px solid var(--red-dark);
     border-radius: 8px; background: transparent; margin-bottom: 20px; font-family: var(--font-sans);
 }
-.api-input-group input:focus { box-shadow: 0 0 0 2px rgba(139,31,40,0.2); }
 .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; }
-
 .btn { padding: 8px 16px; border-radius: 30px; font-family: var(--font-sans); font-weight: 600; cursor: pointer; font-size: 0.9rem; }
 .btn-filled { background: var(--red-dark); color: var(--bg); border: none; }
 .btn-outline { border: 1.5px solid var(--red-dark); color: var(--red-dark); background: transparent; }
 
-/* 로딩 애니메이션 */
 .loading-spinner {
     display: inline-block; width: 14px; height: 14px;
     border: 2px solid rgba(139, 31, 40, 0.3); border-top-color: var(--red-dark);
-    border-radius: 50%; animation: spin 1s linear infinite;
-    vertical-align: middle; margin-right: 8px;
+    border-radius: 50%; animation: spin 1s linear infinite; vertical-align: middle; margin-right: 8px;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* 반응형 (모바일) */
+/* ----------------------------------
+   모바일 웹 레이아웃 완벽 최적화
+----------------------------------- */
 @media (max-width: 1024px) {
-    .layout-grid { flex-direction: column; }
+    body { overflow-x: hidden; }
+    
+    .layout-grid {
+        flex-direction: column; /* 세로 배치 */
+        display: flex;
+    }
+    
     .fixed-vertical-line { display: none; }
     
     .left-panel {
-        position: relative; width: 100%; height: auto;
-        padding: 40px 24px 20px 24px; border-bottom: 2px solid var(--red-main);
+        position: relative; /* 고정 해제하여 같이 스크롤 되게 */
+        width: 100%;
+        height: auto;
+        padding: 40px 24px 20px 24px;
+        border-bottom: 2px solid var(--red-main);
+        background-color: var(--bg);
+        z-index: 10;
     }
     
-    .vhs-footer {
-        position: relative; bottom: auto; left: auto; right: auto; margin-top: 30px;
-    }
-
     .right-panel {
-        margin-left: 0; width: 100%; padding: 20px 24px 40px 24px;
+        margin-left: 0;
+        width: 100%;
+        min-height: auto;
+        padding: 20px 24px 60px 24px;
+        box-sizing: border-box; /* 패딩이 너비를 초과하지 않게 방지 */
     }
-}
+    
+    .main-title {
+        font-size: 3.5rem;
+        margin-bottom: 1.5rem;
+    }
 
-/* 검색창 구글 로고(워터마크) 배경 강제 제거 */
-input.gsc-input, .gsc-input-box {
-    background-image: none !important;
-}
+    input.gsc-input {
+        font-size: 16px !important; /* iOS 환경에서 인풋 클릭 시 자동 줌인 방지 */
+    }
 
-/* 하단/우측 구글 제공 로고 영역 완전 차단 */
-.gsc-branding, 
-.gcsc-branding, 
-.gsc-branding-text, 
-.gsc-branding-img, 
-.gsc-branding-img-noclear,
-.gsc-branding-text-noclear,
-.gsc-watermark, 
-div.gcsc-branding, 
-td.gsc-branding {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    height: 0 !important;
-    width: 0 !important;
-    position: absolute !important;
-    left: -9999px !important;
+    /* 구글 테이블 찌그러짐 방지 */
+    .gsc-control-wrapper-cse, .gsc-results-wrapper-nooverlay {
+        width: 100% !important;
+        overflow-x: hidden !important;
+    }
+
+    .vhs-footer {
+        position: relative;
+        bottom: auto; left: auto; right: auto;
+        margin-top: 30px;
+        width: 100%;
+    }
+    
+    .gsc-webResult.gsc-result {
+        padding: 20px !important; /* 모바일에서는 여백 살짝 줄이기 */
+    }
 }
