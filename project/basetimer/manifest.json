@@ -4,14 +4,14 @@
   "start_url": "./index.html",
   "id": "BaseTimer",
   "display": "fullscreen",
-  "background_color": "#fafafa",
-  "theme_color": "#fafafa",
+  "background_color": "#F5F7FA",
+  "theme_color": "#F5F7FA",
   "icons": [
     {
       "src": "./img/icon.png",
       "sizes": "1024x1024",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "maskable"
     }
   ]
 }
