@@ -1,0 +1,17 @@
+{
+  "name": "Dasein; 다이자인;",
+  "short_name": "Dasein;",
+  "start_url": "./index.html",
+  "id": "BaseTimer",
+  "display": "fullscreen",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "./img/icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
