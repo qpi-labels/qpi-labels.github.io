@@ -45,7 +45,7 @@
                 <div class="vhs-label-bar">
                     <span class="brand-name">쿼터파이</span>
                     <button class="since-btn" onclick="openApiModal()">
-                        SINCE 2024 <span id="api-status-indicator" style="margin-left:5px; font-size:10px;"></span>
+                        API <span id="api-status-indicator" style="margin-left:5px; font-size:10px;"></span>
                     </button>
                 </div>
                 <div class="vhs-stripes">
@@ -121,7 +121,7 @@
             const summaryBtn = document.getElementById('btn-generate-summary');
 
             if (!GROQ_API_KEY) {
-                summaryContent.innerHTML = '<p>AI 요약을 사용하려면 <strong>SINCE 2024</strong> 버튼을 눌러 API 키를 설정해주세요.</p>';
+                summaryContent.innerHTML = '<p>AI 요약을 사용하려면 <strong>API</strong> 버튼을 눌러 API 키를 설정해주세요.</p>';
                 return;
             }
 
