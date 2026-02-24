@@ -64,10 +64,52 @@ body {
     width: 60%;
     min-height: 100vh;
     padding: 8vh 6vw;
+    position: relative; /* Intro 배치를 위해 */
 }
 
 /* ----------------------------------
-   검색창 커스텀 & 구글 쓰레기 클래스 완전 초기화
+   초기 소개 섹션 (Intro)
+----------------------------------- */
+#intro-section {
+    display: block;
+    margin-top: 2vh;
+    animation: fadeIn 0.8s ease-out;
+}
+
+.intro-heading {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    color: var(--red-dark);
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+.intro-divider {
+    width: 50px;
+    height: 3px;
+    background-color: var(--red-main);
+    margin-bottom: 2rem;
+}
+
+.intro-desc {
+    font-size: clamp(1rem, 1.2vw, 1.2rem);
+    line-height: 1.8;
+    color: var(--text);
+    word-break: keep-all;
+}
+
+.intro-desc b {
+    color: var(--red-dark);
+    font-weight: 700;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ----------------------------------
+   검색창 커스텀 
 ----------------------------------- */
 .search-container {
     width: 100%;
@@ -89,7 +131,7 @@ input.gsc-input {
     border: 1.5px solid var(--red-dark) !important;
     border-radius: 30px !important;
     background-color: var(--bg) !important;
-    background-image: none !important; /* 구글 워터마크 강제 삭제 */
+    background-image: none !important;
     color: var(--text) !important;
     font-size: 1rem !important;
     height: 48px !important;
@@ -150,7 +192,7 @@ input.gsc-input:focus { box-shadow: 0 0 0 3px rgba(139, 31, 40, 0.1) !important;
 #ai-summary-content strong { color: var(--text); font-weight: 700; }
 
 /* ----------------------------------
-   검색 결과 커스텀 (모바일 선 파괴 포함)
+   검색 결과 커스텀
 ----------------------------------- */
 .gsc-results-wrapper-overlay, 
 .gsc-results-wrapper-visible, 
@@ -163,10 +205,9 @@ input.gsc-input:focus { box-shadow: 0 0 0 3px rgba(139, 31, 40, 0.1) !important;
     padding: 0 !important;
 }
 
-/* 모바일 구글 강제 흰 선, 회색 선 완전 박멸 */
 .gsc-results .gsc-cursor-box { border: none !important; background: transparent !important; margin: 20px 0 !important; }
+
 .gsc-webResult.gsc-result {
-    /* 기존에 구글이 넣는 상하 구분선 모두 초기화 후 내 테두리 덮어씌우기 */
     border-top: none !important;
     border-bottom: none !important;
     border-left: none !important;
@@ -183,7 +224,7 @@ input.gsc-input:focus { box-shadow: 0 0 0 3px rgba(139, 31, 40, 0.1) !important;
 .gs-title a, .gs-title a b {
     color: var(--text) !important; text-decoration: none !important;
     font-family: var(--font-serif) !important; font-size: 1.3rem !important; font-weight: 700 !important;
-    word-break: break-word; /* 모바일에서 텍스트 삐져나감 방지 */
+    word-break: break-word;
 }
 .gs-title a:hover { text-decoration: underline !important; }
 
@@ -254,20 +295,20 @@ input.gsc-input:focus { box-shadow: 0 0 0 3px rgba(139, 31, 40, 0.1) !important;
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ----------------------------------
-   모바일 웹 레이아웃 완벽 최적화
+   모바일 웹 레이아웃
 ----------------------------------- */
 @media (max-width: 1024px) {
     body { overflow-x: hidden; }
     
     .layout-grid {
-        flex-direction: column; /* 세로 배치 */
+        flex-direction: column;
         display: flex;
     }
     
     .fixed-vertical-line { display: none; }
     
     .left-panel {
-        position: relative; /* 고정 해제하여 같이 스크롤 되게 */
+        position: relative;
         width: 100%;
         height: auto;
         padding: 40px 24px 20px 24px;
@@ -281,7 +322,6 @@ input.gsc-input:focus { box-shadow: 0 0 0 3px rgba(139, 31, 40, 0.1) !important;
         width: 100%;
         min-height: auto;
         padding: 20px 24px 60px 24px;
-        box-sizing: border-box; /* 패딩이 너비를 초과하지 않게 방지 */
     }
     
     .main-title {
@@ -289,11 +329,8 @@ input.gsc-input:focus { box-shadow: 0 0 0 3px rgba(139, 31, 40, 0.1) !important;
         margin-bottom: 1.5rem;
     }
 
-    input.gsc-input {
-        font-size: 16px !important; /* iOS 환경에서 인풋 클릭 시 자동 줌인 방지 */
-    }
+    input.gsc-input { font-size: 16px !important; }
 
-    /* 구글 테이블 찌그러짐 방지 */
     .gsc-control-wrapper-cse, .gsc-results-wrapper-nooverlay {
         width: 100% !important;
         overflow-x: hidden !important;
@@ -306,7 +343,5 @@ input.gsc-input:focus { box-shadow: 0 0 0 3px rgba(139, 31, 40, 0.1) !important;
         width: 100%;
     }
     
-    .gsc-webResult.gsc-result {
-        padding: 20px !important; /* 모바일에서는 여백 살짝 줄이기 */
-    }
+    .gsc-webResult.gsc-result { padding: 20px !important; }
 }
