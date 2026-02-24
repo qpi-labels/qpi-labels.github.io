@@ -333,7 +333,10 @@ input.gsc-input:focus { box-shadow: 0 0 0 3px rgba(139, 31, 40, 0.1) !important;
 
     .gsc-control-wrapper-cse, .gsc-results-wrapper-nooverlay {
         width: 100% !important;
-        overflow-x: hidden !important;
+    }
+
+    .gsc-wrapper {
+        max-width: 100% !important;
     }
 
     .vhs-footer {
