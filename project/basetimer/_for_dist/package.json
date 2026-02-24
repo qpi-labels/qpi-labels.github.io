@@ -4,7 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
-    "build": "rm -rf dist/* && npx webpack"
+    "build": "rm -rf ./src/* && rsync -av --exclude='_for_dist' ../ ./src/ && rm -rf ./dist/* && npx webpack && rm -rf ../../basetimer_dist/* && cp -r dist/ ../../basetimer_dist/"
   },
   "keywords": [],
   "author": "",
@@ -23,10 +23,5 @@
     "webpack": "^5.101.3",
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^6.0.1"
-  },
-  "dependencies": {
-    "crypto-js": "^4.2.0",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
   }
 }

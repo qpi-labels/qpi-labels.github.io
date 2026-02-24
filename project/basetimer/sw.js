@@ -1,21 +1,12 @@
-const CACHE_NAME = '기준타 1.0.9';
+const CACHE_NAME = '기준타 1.0.10';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
 
-  './style/ambient.css',
-  './style/timer.css',
-  /* 위를 다음으로 교체: './style.css', */
+  './style.css',
 
-  './js/ambient.js',
-  './js/tinycolor.js',
-  './js/timer.js',
-  './js/util.js',
-  './js/data.js',
-  './js/ui.js',
-  './js/render.js',
-  /* 위를 다음으로 교체: './main.js', */
+  './main.js',
   
   './img/icon.ico',
   './sound/crickets.mp3',
