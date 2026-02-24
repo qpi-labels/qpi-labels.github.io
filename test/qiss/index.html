@@ -11,15 +11,14 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Playfair Display (영문 로고용) & Noto Serif KR (한글 세리프용) 로드 -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     
     <script async src="https://cse.google.com/cse.js?cx=b794e851ac2524ee7"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
     
-    <!-- 캐시 갱신 v=1.5 -->
-    <link rel="stylesheet" href="style.css?v=1.5">
+    <!-- 캐시 갱신 v=1.6 -->
+    <link rel="stylesheet" href="style.css?v=1.6">
 </head>
 <body>
     <div class="paper-grain"></div>
@@ -119,6 +118,7 @@
         const GROQ_MODEL = 'meta-llama/llama-4-maverick-17b-128e-instruct'; 
         let currentQuery = '';
         let currentResults = [];
+        let currentResultsString = ''; // 결과 변경 감지용 핵심 변수
 
         function updateApiStatus() {
             const apiKey = localStorage.getItem('GROQ_API_KEY');
@@ -191,29 +191,43 @@
             }
         }
 
+        // 결과 감지 로직 개선 (단순 글자 변경이 아닌 실제 화면 결과물 변경 감지)
         const resultsObserver = new MutationObserver(() => {
             const results = document.querySelectorAll('.gsc-webResult.gsc-result');
             const searchInput = document.querySelector('input.gsc-input');
             const query = searchInput ? searchInput.value.trim() : '';
 
-            // 검색 결과가 감지되면
-            if (results.length > 0) {
-                // 1. 소개 섹션 숨기기
-                const introSection = document.getElementById('intro-section');
-                if (introSection) introSection.style.display = 'none';
+            if (results.length > 0 && query) {
+                // 현재 화면에 떠있는 결과물 추출
+                const extractedResults = Array.from(results).map(el => ({
+                    title: el.querySelector('.gs-title')?.textContent.trim() || '',
+                    snippet: el.querySelector('.gs-snippet')?.textContent.trim() || ''
+                })).slice(0, 10);
 
-                // 2. 새로운 검색어 처리
-                if (query && query !== currentQuery) {
-                    currentQuery = query;
-                    currentResults = Array.from(results).map(el => ({
-                        title: el.querySelector('.gs-title')?.textContent.trim() || '',
-                        snippet: el.querySelector('.gs-snippet')?.textContent.trim() || ''
-                    })).slice(0, 10);
+                // 빈 껍데기가 아닌 제대로 된 결과물이 나왔을 때
+                if (extractedResults.length > 0 && extractedResults[0].title !== '') {
+                    // 현재 결과물들의 내용을 하나의 문자열(고유값)로 변환
+                    const newResultsString = JSON.stringify(extractedResults);
 
-                    const container = document.getElementById('ai-summary-container');
-                    container.style.display = 'block';
-                    document.getElementById('ai-summary-content').innerHTML = '<p style="padding: 10px 0;">위쪽 <strong>연구 주제 추천받기</strong> 버튼을 눌러보세요.</p>';
-                    document.getElementById('btn-generate-summary').innerText = '연구 주제 추천받기';
+                    // 이전 검색결과와 현재 검색결과 내용이 완전히 달라졌을 때만 갱신
+                    if (query !== currentQuery || newResultsString !== currentResultsString) {
+                        currentQuery = query;
+                        currentResults = extractedResults;
+                        currentResultsString = newResultsString;
+
+                        // 1. 소개 섹션 숨기기
+                        const introSection = document.getElementById('intro-section');
+                        if (introSection) introSection.style.display = 'none';
+
+                        // 2. 새로운 결과를 바탕으로 AI 패널 리셋
+                        const container = document.getElementById('ai-summary-container');
+                        container.style.display = 'block';
+                        document.getElementById('ai-summary-content').innerHTML = '<p style="padding: 10px 0;">위쪽 <strong>연구 주제 추천받기</strong> 버튼을 눌러보세요.</p>';
+                        
+                        const summaryBtn = document.getElementById('btn-generate-summary');
+                        summaryBtn.innerText = '연구 주제 추천받기';
+                        summaryBtn.disabled = false;
+                    }
                 }
             }
         });
@@ -262,4 +276,4 @@
         window.addEventListener('DOMContentLoaded', updateApiStatus);
     </script>
 </body>
-</html>
+    </html>
