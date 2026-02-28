@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dasein; Q&A</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
+    <style>
+        :root {
+            --bg: #FEF9E6;
+            --text: #282828;
+            --red-main: #BC1F1F;
+            --border: rgba(188, 31, 31, 0.2);
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Noto Serif KR', serif;
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column; height: 100vh;
+        }
+        header {
+            padding: 20px; border-bottom: 2px solid var(--red-main);
+            text-align: center; background: var(--bg);
+        }
+        h1 { font-family: 'Playfair Display', serif; margin: 0; color: var(--red-main); }
+        
+        #chat-window {
+            flex: 1; overflow-y: auto; padding: 20px;
+            display: flex; flex-direction: column; gap: 20px;
+        }
+        .message { max-width: 80%; padding: 15px; border-radius: 5px; line-height: 1.6; position: relative; }
+        .user { align-self: flex-end; background: #eee; border: 1px solid #ddd; }
+        .ai { align-self: flex-start; background: #fff; border: 1px solid var(--border); box-shadow: 2px 2px 10px rgba(0,0,0,0.05); }
+        .ai::before { content: "Gemma 3;"; font-weight: bold; color: var(--red-main); display: block; margin-bottom: 8px; font-size: 0.8rem; }
+
+        footer { padding: 20px; background: var(--bg); border-top: 1px solid var(--border); }
+        .input-group { max-width: 800px; margin: 0 auto; display: flex; gap: 10px; }
+        input { flex: 1; padding: 12px; border: 1px solid var(--red-main); background: transparent; font-family: inherit; }
+        button { padding: 0 20px; background: var(--red-main); color: white; border: none; cursor: pointer; font-family: inherit; }
+        button:disabled { background: #ccc; }
+
+        .loading { font-style: italic; color: #888; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>테스트</h1>
+    <p>테스트 @2026쿼터파이</p>
+</header>
+
+<footer>
+    <div class="input-group">
+        <input type="text" id="userInput" placeholder="질문을 입력하세요..." onkeypress="if(event.keyCode==13) sendMessage()">
+        <button id="sendBtn" onclick="sendMessage()">질문하기</button>
+    </div>
+</footer>
+
+<script>
+    // --- 설정 ---
+    const OLLAMA_API_URL = "https://qpi-test.loca.lt"; // 본인의 터널 주소
+    const OLLAMA_MODEL = "gemma3:4b";
+    
+    // 대화 내역 저장 (Context 유지를 위함)
+    let chatHistory = [];
+
+    async function sendMessage() {
+        const input = document.getElementById('userInput');
+        const chatWindow = document.getElementById('chat-window');
+        const sendBtn = document.getElementById('sendBtn');
+        const text = input.value.trim();
+
+        if (!text) return;
+
+        // 유저 메시지 표시
+        addMessage('user', text);
+        input.value = '';
+        chatHistory.push({ role: "user", content: text });
+
+        // 로딩 표시
+        const loadingId = 'loading-' + Date.now();
+        const loadingDiv = document.createElement('div');
+        loadingDiv.id = loadingId;
+        loadingDiv.className = 'message ai loading';
+        loadingDiv.innerText = "Gemma 3가 생각 중입니다...";
+        chatWindow.appendChild(loadingDiv);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+
+        sendBtn.disabled = true;
+
+        try {
+            const response = await fetch(`${OLLAMA_API_URL}/api/chat`, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'bypass-tunnel-reminder': 'true' // LocalTunnel 우회용
+                },
+                body: JSON.stringify({
+                    model: OLLAMA_MODEL,
+                    messages: chatHistory,
+                    stream: false
+                })
+            });
+
+            if (!response.ok) throw new Error("서버 연결 실패");
+
+            const data = await response.json();
+            const aiResponse = data.message.content;
+
+            // 로딩 제거 및 AI 답변 표시
+            document.getElementById(loadingId).remove();
+            addMessage('ai', aiResponse);
+            chatHistory.push({ role: "assistant", content: aiResponse });
+
+        } catch (error) {
+            document.getElementById(loadingId).innerText = "오류가 발생했습니다: " + error.message;
+        } finally {
+            sendBtn.disabled = false;
+        }
+    }
+
+    function addMessage(sender, text) {
+        const chatWindow = document.getElementById('chat-window');
+        const div = document.createElement('div');
+        div.className = `message ${sender}`;
+        
+        if (sender === 'ai') {
+            div.innerHTML = marked.parse(text); // 마크다운 렌더링
+        } else {
+            div.innerText = text;
+        }
+        
+        chatWindow.appendChild(div);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+</script>
+
+</body>
+</html>
