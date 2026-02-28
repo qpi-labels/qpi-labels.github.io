@@ -92,7 +92,7 @@
     <script>
         marked.setOptions({ breaks: true, gfm: true });
         
-        const OLLAMA_MODEL = 'gemma3n:e2b'; 
+        const OLLAMA_MODEL = 'gemma3:4b'; 
         let currentQuery = '';
         let currentResults = [];
         let currentResultsString = '';
@@ -137,7 +137,7 @@
 
             summaryBtn.innerText = '분석 중...';
             summaryBtn.disabled = true;
-            summaryContent.innerHTML = '<div class="loading-spinner"></div><p style="display:inline-block; margin:0;">로컬 AI가 사유를 시작합니다...</p>';
+            summaryContent.innerHTML = '<div class="loading-spinner"></div><p style="display:inline-block; margin:0;">AI가 사유를 시작합니다...</p>';
             
             try {
                 let resultsContext = `검색어: ${query}\n\n`;
