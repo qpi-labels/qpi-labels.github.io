@@ -3,35 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#000000">
-    <link rel="manifest" href="manifest.json">
-    <link rel="shortcut icon" type="image/x-icon" href="./logo.ico">
-    
     <title>Dasein;</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
-    
+    <link rel="stylesheet" href="style.css?v=1.9">
     <script async src="https://cse.google.com/cse.js?cx=b794e851ac2524ee7"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
-    
-    <link rel="stylesheet" href="style.css?v=1.7">
 </head>
 <body>
     <div class="paper-grain"></div>
     <div class="fixed-vertical-line"></div>
 
     <div class="layout-grid">
-        
         <aside class="left-panel">
             <h1 class="main-title">Dasein;</h1>
-            
             <div class="search-container">
                 <div class="gcse-searchbox" data-mobileLayout="disabled"></div>
             </div>
-
             <div id="ai-summary-container" style="display: none;">
                 <div class="ai-summary-box">
                     <button id="btn-generate-summary" class="summary-badge" onclick="triggerSummary()">연구 주제 추천받기</button>
@@ -40,18 +26,10 @@
                     </div>
                 </div>
             </div>
-
             <div class="vhs-footer">
-                <div class="vhs-label-bar">
-                    <span class="brand-name">쿼터파이</span>
-                    <button class="since-btn" onclick="openApiModal()">
-                        API <span id="api-status-indicator" style="margin-left:5px; font-size:10px;"></span>
-                    </button>
-                </div>
+                <div class="vhs-label-bar"><span class="brand-name">쿼터파이</span></div>
                 <div class="vhs-stripes">
-                    <div class="stripe s-3"></div>
-                    <div class="stripe s-2"></div>
-                    <div class="stripe s-1"></div>
+                    <div class="stripe s-3"></div><div class="stripe s-2"></div><div class="stripe s-1"></div>
                 </div>
             </div>
         </aside>
@@ -60,154 +38,79 @@
             <div id="intro-section">
                 <h2 class="intro-heading">Being-there.</h2>
                 <div class="intro-divider"></div>
-                <p class="intro-desc">
-                    독일어 <b>Dasein</b>[다자인]은 '거기(Da)에 있음(Sein)'을 의미하며...<br>
-                    (중략) 당신만의 연구 지평을 넓히는 여정, <b>Dasein;</b>이 함께합니다.
-                </p>
+                <p class="intro-desc">사유의 기록을 <b>Dasein;</b>이 함께합니다.</p>
             </div>
             <div class="gcse-searchresults" data-mobileLayout="disabled"></div>
         </main>
-
-    </div>
-
-    <div id="api-modal">
-        <div class="modal-content">
-            <div class="modal-header">Ollama 터널 설정</div>
-            <div class="modal-body">
-                <p style="margin-bottom: 15px; font-size: 0.9rem; line-height: 1.5; color: #555;">
-                    1. 터미널의 <strong>https://...loca.lt</strong> 주소를 입력하세요.<br>
-                    2. 브라우저 새 탭에서 해당 주소에 접속해 <strong>IP 인증</strong>을 먼저 완료해야 합니다.
-                </p>
-                <div class="api-input-group">
-                    <input type="text" id="api-key-input" placeholder="https://your-tunnel.loca.lt">
-                </div>
-            </div>
-            <div class="modal-buttons">
-                <button class="btn btn-outline" onclick="closeApiModal()">취소</button>
-                <button class="btn btn-filled" onclick="saveApiKey()">저장</button>
-            </div>
-        </div>
     </div>
 
     <script>
         marked.setOptions({ breaks: true, gfm: true });
         
+        // --- [설정 하드코딩] ---
+        const OLLAMA_API_URL = "https://qpi-test.loca.lt"; 
         const OLLAMA_MODEL = 'gemma3:4b'; 
+
         let currentQuery = '';
         let currentResults = [];
-        let currentResultsString = '';
-
-        function updateApiStatus() {
-            const apiUrl = localStorage.getItem('OLLAMA_API_URL');
-            document.getElementById('api-status-indicator').innerText = apiUrl ? '🟢' : '⚙️';
-        }
-
-        function openApiModal() {
-            const modal = document.getElementById('api-modal');
-            const savedUrl = localStorage.getItem('OLLAMA_API_URL');
-            if (savedUrl) document.getElementById('api-key-input').value = savedUrl;
-            modal.style.display = 'flex';
-        }
-
-        function closeApiModal() { document.getElementById('api-modal').style.display = 'none'; }
-        
-        function saveApiKey() {
-            let apiUrl = document.getElementById('api-key-input').value.trim();
-            if (apiUrl) {
-                if (apiUrl.endsWith('/')) apiUrl = apiUrl.slice(0, -1);
-                localStorage.setItem('OLLAMA_API_URL', apiUrl); 
-                closeApiModal(); 
-                updateApiStatus(); 
-            } else { alert('URL을 입력해주세요.'); }
-        }
 
         function triggerSummary() {
             if (currentQuery && currentResults.length > 0) generateSummary(currentQuery, currentResults);
         }
 
         async function generateSummary(query, searchResults) {
-            const OLLAMA_API_URL = localStorage.getItem('OLLAMA_API_URL');
             const summaryContent = document.getElementById('ai-summary-content');
             const summaryBtn = document.getElementById('btn-generate-summary');
 
-            if (!OLLAMA_API_URL) {
-                summaryContent.innerHTML = '<p>좌측 하단 <strong>API</strong> 버튼을 눌러 터널 주소를 설정해주세요.</p>';
-                return;
-            }
-
-            summaryBtn.innerText = '분석 중...';
+            summaryBtn.innerText = 'Gemma 3 분석 중...';
             summaryBtn.disabled = true;
-            summaryContent.innerHTML = '<div class="loading-spinner"></div><p style="display:inline-block; margin:0;">AI가 사유를 시작합니다...</p>';
+            summaryContent.innerHTML = '<p>로컬 AI가 사유를 시작합니다...</p>';
             
             try {
                 let resultsContext = `검색어: ${query}\n\n`;
                 searchResults.forEach((res, i) => { resultsContext += `${i + 1}. ${res.title}\n${res.snippet}\n\n`; });
                 
-                const systemPrompt = `당신은 뛰어난 학술 연구 조언가입니다. 제공된 검색 결과를 바탕으로 핵심 동향 요약(3문장)과 독창적인 연구 주제 3~5가지를 추천하세요. 마크다운을 사용하되 인사말은 생략하세요.`;
-
-                // 수정된 Fetch 부분: 'bypass-tunnel-reminder' 헤더 제거
                 const response = await fetch(`${OLLAMA_API_URL}/api/chat`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json' }, // 문제의 헤더 제거
                     body: JSON.stringify({
                         model: OLLAMA_MODEL, 
                         messages: [
-                            { role: 'system', content: systemPrompt },
-                            { role: 'user', content: `학술 데이터:\n${resultsContext}` }
+                            { role: 'system', content: "당신은 학술 조언가입니다. 연구 주제 3가지를 추천하세요." },
+                            { role: 'user', content: resultsContext }
                         ],
                         stream: false 
                     })
                 });
 
-                if (!response.ok) throw new Error('연결 실패 (CORS 또는 터널 인증 확인)');
+                if (!response.ok) throw new Error('연결 실패 (터널 인증 필요)');
                 const data = await response.json();
                 summaryContent.innerHTML = marked.parse(data.message.content);
 
             } catch (error) {
-                summaryContent.innerHTML = `<p>에러: ${error.message}<br><small>터널 주소에 직접 접속하여 'Click to Continue'를 눌렀는지 확인하세요.</small></p>`;
+                summaryContent.innerHTML = `<p>에러: ${error.message}<br><small>브라우저에서 <a href="${OLLAMA_API_URL}" target="_blank">여기</a>를 눌러 IP(1.247.100.230)를 먼저 입력하세요.</small></p>`;
             } finally {
                 summaryBtn.innerText = '다시 추천받기';
                 summaryBtn.disabled = false;
             }
         }
 
-        // --- 검색 결과 감지 및 UI 처리 로직 (기존과 동일) ---
+        // 검색 결과 감지 로직 (기존과 동일)
         const resultsObserver = new MutationObserver(() => {
             const results = document.querySelectorAll('.gsc-webResult.gsc-result');
             const searchInput = document.querySelector('input.gsc-input');
             const query = searchInput ? searchInput.value.trim() : '';
-
             if (results.length > 0 && query) {
-                const extractedResults = Array.from(results).map(el => ({
+                currentQuery = query;
+                currentResults = Array.from(results).map(el => ({
                     title: el.querySelector('.gs-title')?.textContent.trim() || '',
                     snippet: el.querySelector('.gs-snippet')?.textContent.trim() || ''
-                })).slice(0, 10);
-
-                if (extractedResults.length > 0 && extractedResults[0].title !== '') {
-                    const newResultsString = JSON.stringify(extractedResults);
-                    if (query !== currentQuery || newResultsString !== currentResultsString) {
-                        currentQuery = query;
-                        currentResults = extractedResults;
-                        currentResultsString = newResultsString;
-                        document.getElementById('intro-section').style.display = 'none';
-                        document.getElementById('ai-summary-container').style.display = 'block';
-                        document.getElementById('ai-summary-content').innerHTML = '<p>위 버튼을 눌러 연구 주제를 추천받으세요.</p>';
-                        const summaryBtn = document.getElementById('btn-generate-summary');
-                        summaryBtn.innerText = '연구 주제 추천받기';
-                        summaryBtn.disabled = false;
-                    }
-                }
+                })).slice(0, 5);
+                document.getElementById('intro-section').style.display = 'none';
+                document.getElementById('ai-summary-container').style.display = 'block';
             }
         });
         resultsObserver.observe(document.body, { childList: true, subtree: true });
-
-        const uiCleanerObserver = new MutationObserver(() => {
-            const junk = ['.gsc-branding', '.gsc-tabsArea', '.gsc-above-wrapper-area', '.gsc-adBlock'];
-            junk.forEach(sel => document.querySelectorAll(sel).forEach(el => el.style.display = 'none'));
-        });
-        uiCleanerObserver.observe(document.body, { childList: true, subtree: true });
-
-        window.addEventListener('DOMContentLoaded', updateApiStatus);
     </script>
 </body>
 </html>
