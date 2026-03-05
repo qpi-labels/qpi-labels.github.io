@@ -1,3 +1,6 @@
 [submodule "dasein"]
 	path = dasein
 	url = https://github.com/qpi-labels/dasein.git
+[submodule "hack"]
+	path = hack
+	url = https://github.com/qpi-labels/hack.git
