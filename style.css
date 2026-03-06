@@ -148,6 +148,7 @@ body {
 .section-title { font-family: var(--font-serif); font-size: 1.7rem; color: var(--red-dark); margin-bottom: 1.2rem; }
 .section-subtitle { font-family: var(--font-sans); font-size: 1.3rem; color: var(--text); margin-bottom: 1.5rem; }
 .section-body { font-size: 1.1rem; line-height: 1.9; text-align: justify; word-break: keep-all; }
+.section-small { font-size: 0.8rem; line-height: 1.5; text-align: justify; word-break: keep-all; }
 
 .metadata-footer { font-size: 0.85rem; line-height: 1.8; }
 .meta-item-group { display: flex; justify-content: space-between; font-weight: 700; border-bottom: 1.5px solid var(--text); margin-bottom: 10px; padding-bottom: 5px; text-decoration: none; }
