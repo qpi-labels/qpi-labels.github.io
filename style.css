@@ -146,6 +146,7 @@ body {
 .content-wrapper { max-width: 680px; margin: 0 auto; }
 .content-section { margin-bottom: 100px; }
 .section-title { font-family: var(--font-serif); font-size: 1.7rem; color: var(--red-dark); margin-bottom: 1.2rem; }
+.section-subtitle { font-family: var(--font-sans); font-size: 1.3rem; color: var(--text); margin-bottom: 1.5rem; }
 .section-body { font-size: 1.1rem; line-height: 1.9; text-align: justify; word-break: keep-all; }
 
 .metadata-footer { font-size: 0.85rem; line-height: 1.8; }
