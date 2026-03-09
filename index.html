@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="popup-container"></div>
     <div class="paper-grain"></div>
     <div class="fixed-vertical-line"></div>
 
@@ -77,5 +78,37 @@
             </div>
         </footer>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const popupContainer = document.getElementById('popup-container');
+            const hideUntil = localStorage.getItem('hideQpiPopup');
+            const now = new Date().getTime();
+
+            // 오늘 안 보기 설정이 없거나 기간이 만료된 경우에만 fetch
+            if (!hideUntil || now > parseInt(hideUntil)) {
+                fetch('popup.html')
+                    .then(response => {
+                        if (!response.ok) throw new Error("Popup file not found");
+                        return response.text();
+                    })
+                    .then(data => {
+                        popupContainer.innerHTML = data;
+                    })
+                    .catch(err => console.log("팝업 로드 실패:", err));
+            }
+        });
+
+        function closePopup() {
+            const popup = document.getElementById('main-popup');
+            if (popup) popup.style.display = 'none';
+        }
+
+        function closeToday() {
+            // 현재 시간 + 24시간 후의 타임스탬프 저장
+            const expireDate = new Date().getTime() + (24 * 60 * 60 * 1000);
+            localStorage.setItem('hideQpiPopup', expireDate);
+            closePopup();
+        }
+    </script>
 </body>
 </html>
