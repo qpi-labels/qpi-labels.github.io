@@ -14,6 +14,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* index.html의 <style> 또는 style.css 상단 */
+#popup-container {
+    display: none; /* 일단 숨김 */
+}
+
+/* 팝업 레이어의 필수 스타일을 미리 정의 */
+.popup-overlay {
+    position: fixed; 
+    top: 0; left: 0; 
+    width: 100%; height: 100%;
+    z-index: 9999; /* 다른 요소보다 무조건 위로 */
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+    </style>
 </head>
 <body>
     <div id="popup-container"></div>
@@ -80,23 +99,21 @@
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const popupContainer = document.getElementById('popup-container');
-            const hideUntil = localStorage.getItem('hideQpiPopup');
-            const now = new Date().getTime();
+    const popupContainer = document.getElementById('popup-container');
+    const hideUntil = localStorage.getItem('hideQpiPopup');
+    const now = new Date().getTime();
 
-            // 오늘 안 보기 설정이 없거나 기간이 만료된 경우에만 fetch
-            if (!hideUntil || now > parseInt(hideUntil)) {
-                fetch('popup.html')
-                    .then(response => {
-                        if (!response.ok) throw new Error("Popup file not found");
-                        return response.text();
-                    })
-                    .then(data => {
-                        popupContainer.innerHTML = data;
-                    })
-                    .catch(err => console.log("팝업 로드 실패:", err));
-            }
-        });
+    if (!hideUntil || now > parseInt(hideUntil)) {
+        fetch('popup.html')
+            .then(response => response.text())
+            .then(data => {
+                popupContainer.innerHTML = data;
+                // 내용이 삽입된 "후"에 화면에 표시
+                popupContainer.style.display = 'block'; 
+            })
+            .catch(err => console.error("팝업 로드 에러:", err));
+    }
+});
 
         function closePopup() {
             const popup = document.getElementById('main-popup');
