@@ -100,21 +100,20 @@
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-    const popupContainer = document.getElementById('popup-container');
-    const hideUntil = localStorage.getItem('hideQpiPopup');
-    const now = new Date().getTime();
+            const popupContainer = document.getElementById('popup-container');
+            const hideUntil = localStorage.getItem('hideQpiPopup');
+            const now = new Date().getTime();
 
-    if (!hideUntil || now > parseInt(hideUntil)) {
-        fetch('popup.html')
-            .then(response => response.text())
-            .then(data => {
-                popupContainer.innerHTML = data;
-                // 내용이 삽입된 "후"에 화면에 표시
-                popupContainer.style.display = 'block'; 
-            })
-            .catch(err => console.error("팝업 로드 에러:", err));
-    }
-});
+            if (!hideUntil || now > parseInt(hideUntil)) {
+                fetch('popup.html')
+                    .then(response => response.text())
+                    .then(data => {
+                        popupContainer.innerHTML = data;
+                        popupContainer.style.display = 'block'; 
+                })
+                    .catch(err => console.error("팝업 로드 에러:", err));
+            }
+        });
 
         function closePopup() {
             const popup = document.getElementById('main-popup');
@@ -122,7 +121,6 @@
         }
 
         function closeToday() {
-            // 현재 시간 + 24시간 후의 타임스탬프 저장
             const expireDate = new Date().getTime() + (24 * 60 * 60 * 1000);
             localStorage.setItem('hideQpiPopup', expireDate);
             closePopup();
