@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Miku Otamatone - Ultra-High V10.4</title>
+    <title>Miku Otamatone - V10.6 Wide-Range</title>
     <style>
         :root {
             --miku: #39C5BB;
@@ -16,145 +16,111 @@
             font-family: -apple-system, system-ui, sans-serif;
             display: flex; align-items: center; justify-content: center;
             height: 100vh; overflow: hidden; 
-            
-            /* 💡 텍스트 선택 및 시스템 팝업 방지 */
-            user-select: none;
-            -webkit-user-select: none;
-            -ms-user-select: none;
-            -webkit-touch-callout: none;
+            user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
             touch-action: none;
         }
 
         #start-btn {
             padding: 20px 60px; background: var(--miku); border: none;
-            color: #fff; font-size: 1.4rem; font-weight: 900;
-            cursor: pointer; border-radius: 99px; transition: 0.2s;
-            position: absolute; z-index: 1000; box-shadow: 0 10px 40px rgba(57, 197, 187, 0.5);
+            color: #fff; font-size: 1.5rem; font-weight: 900;
+            cursor: pointer; border-radius: 99px; z-index: 1000; box-shadow: 0 10px 40px rgba(57, 197, 187, 0.5);
         }
-
-        #mode-toggle {
-            position: absolute; top: 20px; right: 20px;
-            padding: 10px 20px; background: #fff; border: 2px solid var(--miku);
-            color: var(--miku); border-radius: 20px; font-weight: 800; font-size: 0.9rem;
-            cursor: pointer; z-index: 1001; display: none;
-        }
-        #mode-toggle.active { background: var(--miku); color: #fff; }
 
         #pitch-board {
-            position: absolute; left: 50px; top: 10%; height: 80%; width: 80px;
-            border-right: 1px solid #e0f2f1; z-index: 10;
+            position: absolute; left: 40px; top: 5%; height: 90%; width: 80px;
+            border-right: 2px solid #e0f2f1; z-index: 10; cursor: ns-resize;
         }
         .tick { 
-            position: absolute; right: 0; width: 10px;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex; align-items: center;
-            transform: translateY(50%);
-            pointer-events: none;
+            position: absolute; right: 0; width: 8px; border-bottom: 1px solid #e2e8f0;
+            display: flex; align-items: center; transform: translateY(50%);
         }
-        .tick.natural { width: 25px; border-color: #b2dfdb; }
-        .tick.c-note { width: 50px; border-color: var(--miku); border-width: 2.5px; z-index: 2; }
+        .tick.natural { width: 20px; border-color: #b2dfdb; }
+        .tick.c-note { width: 50px; border-color: var(--miku); border-width: 2.5px; }
         .tick-label { 
-            position: absolute; left: -45px; font-size: 0.75rem; color: #94a3b8; 
-            font-weight: 500; white-space: nowrap;
+            position: absolute; left: -45px; font-size: 0.65rem; color: #94a3b8; font-weight: 700;
         }
-        .tick.c-note .tick-label { color: var(--miku); font-size: 0.95rem; font-weight: 900; left: -55px; }
+        .tick.c-note .tick-label { color: var(--miku); font-size: 0.9rem; left: -55px; }
 
         #pitch-indicator {
-            position: absolute; right: -12px; width: 45px; height: 4px;
-            background-color: var(--miku-bright); bottom: 0%; z-index: 5;
-            box-shadow: 0 0 20px var(--miku-bright);
-            pointer-events: none;
+            position: absolute; right: -12px; width: 45px; height: 6px;
+            background-color: var(--miku-bright); bottom: 50%; z-index: 5;
+            box-shadow: 0 0 20px var(--miku-bright); pointer-events: none;
         }
 
-        #face-container { display: flex; flex-direction: column; align-items: center; margin-left: 60px; opacity: 0; transition: opacity 0.5s; }
+        #face-container { display: flex; flex-direction: column; align-items: center; margin-left: 60px; visibility: hidden; opacity: 0; transition: opacity 0.5s; }
         #face {
-            width: 250px; height: 250px; background-color: #fff; 
-            border: 6px solid var(--miku); border-radius: 50%;
+            width: 240px; height: 240px; background: #fff; border: 6px solid var(--miku); border-radius: 50%;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-        .playing { transform: scale(1.05); border-color: var(--miku-bright) !important; box-shadow: 0 0 80px rgba(57, 197, 187, 0.3); }
+        .playing { transform: scale(1.07); border-color: var(--miku-bright) !important; box-shadow: 0 0 100px rgba(57, 197, 187, 0.4); }
 
-        #mouth {
-            width: 90px; height: 10px; background-color: var(--miku-dark);
-            border-radius: 50px; overflow: hidden; display: flex; align-items: flex-end; justify-content: center;
-            position: relative;
-        }
-        #tongue { width: 60px; height: 45px; background-color: #ff9090; border-radius: 50%; margin-bottom: -22px; opacity: 0; }
+        #mouth { width: 90px; height: 12px; background: var(--miku-dark); border-radius: 50px; position: relative; overflow: hidden; }
+        #tongue { width: 60px; height: 45px; background: #ff9090; border-radius: 50%; position: absolute; bottom: -30px; left: 15px; opacity: 0; }
 
-        .info-panel { margin-top: 55px; text-align: center; color: #64748b; font-size: 0.95rem; }
-        .data-text { font-size: 1.1rem; color: var(--miku); font-weight: 800; }
-        #note-display { font-size: 4rem; color: var(--miku-dark); font-weight: 100; margin-bottom: 5px; }
+        .info-panel { margin-top: 40px; text-align: center; }
+        #note-display { font-size: 4rem; font-weight: 100; color: var(--miku-dark); margin-bottom: 5px; }
+        .status-text { color: var(--miku); font-weight: 900; font-size: 0.8rem; letter-spacing: 1px; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
-    <button id="start-btn">미쿠 초고음 엔진 기동</button>
-    <button id="mode-toggle">노트북 모드 (힌지)</button>
+    <button id="start-btn">광대역 미쿠 엔진 기동</button>
 
     <div id="pitch-board"><div id="pitch-indicator"></div></div>
 
     <div id="face-container">
         <div id="face">
-            <div style="display:flex; gap:50px; margin-bottom:25px;">
-                <div style="width:18px; height:18px; background:var(--miku-dark); border-radius:50%;"></div>
-                <div style="width:18px; height:18px; background:var(--miku-dark); border-radius:50%;"></div>
+            <div style="display:flex; gap:45px; margin-bottom:25px;">
+                <div style="width:16px; height:16px; background:var(--miku-dark); border-radius:50%;"></div>
+                <div style="width:16px; height:16px; background:var(--miku-dark); border-radius:50%;"></div>
             </div>
             <div id="mouth"><div id="tongue"></div></div>
         </div>
         <div class="info-panel">
             <div id="note-display">--</div>
-            <div>CONTROL: <span id="mode-status" class="data-text">HINGE SENSOR</span></div>
-            <div style="margin-top:10px; font-weight:900; color: var(--miku);">ULTRA HIGH TONE MODE (C5-C7)</div>
+            <div class="status-text">RANGE: C4 - F#7 | SPECTRAL V10.6</div>
+            <div style="margin-top:10px; font-size: 0.75rem; color: #94a3b8;">[드래그] 세로: 음정 | 가로: 입 벌리기</div>
         </div>
     </div>
 
     <script>
-        // 우클릭 방지
-        window.oncontextmenu = function(event) { event.preventDefault(); event.stopPropagation(); return false; };
-
         let audioCtx, carrier, modulator, modGain, masterGain, airShelf;
         let formants = [];
         let isStarted = false;
-        let isMobileMode = false;
-        let targetAngle = 90;
-        const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+        let isPlaying = false;
+        let currentPitchRatio = 0.3; 
+        let currentMouthRatio = 0.5;
+        const notesArr = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
-        // 💡 음역대 설정: C5(72) ~ C7(96)
-        const MIN_MIDI = 72;
-        const MIDI_RANGE = 24;
-
-        const startBtn = document.getElementById('start-btn');
-        const modeBtn = document.getElementById('mode-toggle');
-        const face = document.getElementById('face');
-        const pb = document.getElementById('pitch-board');
+        // 💡 3.5옥타브 확장: C4(60) ~ F#7(102)
+        const MIN_MIDI = 60;
+        const MIDI_RANGE = 42; 
 
         async function initAudio() {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             carrier = audioCtx.createOscillator(); carrier.type = 'sine';
             modulator = audioCtx.createOscillator(); modulator.type = 'sawtooth';
-            modGain = audioCtx.createGain(); modGain.gain.value = 160; // 고음역대 보강을 위해 약간 상향
+            modGain = audioCtx.createGain();
 
-            const noiseBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 2, audioCtx.sampleRate);
+            const bufferSize = audioCtx.sampleRate * 2;
+            const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
             const output = noiseBuffer.getChannelData(0);
             for (let i = 0; i < output.length; i++) output[i] = Math.random() * 2 - 1;
             const noiseSrc = audioCtx.createBufferSource(); noiseSrc.buffer = noiseBuffer; noiseSrc.loop = true;
             
-            const noiseFilter = audioCtx.createBiquadFilter();
-            noiseFilter.type = 'highpass'; noiseFilter.frequency.value = 10000;
+            const noiseFilter = audioCtx.createBiquadFilter(); noiseFilter.type = 'highpass'; noiseFilter.frequency.value = 10000;
             const breathNode = audioCtx.createGain(); breathNode.gain.value = 0.035;
 
             const vibrato = audioCtx.createOscillator(); vibrato.frequency.value = 6.4;
-            const vGain = audioCtx.createGain(); vGain.gain.value = 3.5;
+            const vGain = audioCtx.createGain(); vGain.gain.value = 3.8;
             vibrato.connect(vGain); vibrato.start();
             vGain.connect(carrier.frequency); vGain.connect(modulator.frequency);
 
-            const formantFreqs = [850, 1600, 3950, 5500, 8500]; // 고음역대에 맞게 포먼트 소폭 상향
+            const formantFreqs = [800, 1500, 3850, 5200, 8000];
             let lastNode = null;
             formantFreqs.forEach((freq, i) => {
-                const f = audioCtx.createBiquadFilter();
-                f.type = 'peaking'; f.frequency.value = freq;
-                f.Q.value = i === 2 ? 22 : 12;
-                f.gain.value = i >= 2 ? 22 : 12; 
+                const f = audioCtx.createBiquadFilter(); f.type = 'peaking'; f.frequency.value = freq;
+                f.Q.value = i === 2 ? 22 : 12; f.gain.value = i >= 2 ? 22 : 14; 
                 formants.push(f);
                 if (lastNode) lastNode.connect(f);
                 else {
@@ -165,130 +131,102 @@
                 lastNode = f;
             });
 
-            airShelf = audioCtx.createBiquadFilter();
-            airShelf.type = 'highshelf'; airShelf.frequency.value = 8500; airShelf.gain.value = 16;
-
+            airShelf = audioCtx.createBiquadFilter(); airShelf.type = 'highshelf'; airShelf.frequency.value = 8500;
             masterGain = audioCtx.createGain(); masterGain.gain.value = 0;
-            lastNode.connect(airShelf); airShelf.connect(masterGain);
-            masterGain.connect(audioCtx.destination);
+            lastNode.connect(airShelf); airShelf.connect(masterGain); masterGain.connect(audioCtx.destination);
 
             carrier.start(); modulator.start(); noiseSrc.start();
-            updatePhysics();
+            updateEngine();
         }
 
-        async function startSensor() {
-            if (!('Accelerometer' in window)) return;
-            try {
+        function updateEngine() {
+            requestAnimationFrame(updateEngine);
+            if (!isStarted) return;
+
+            // 💡 확장된 3.5옥타브 주파수 계산 (C4 = 261.63Hz 기준)
+            let freq = 261.63 * Math.pow(2, currentPitchRatio * (MIDI_RANGE / 12)); 
+            carrier.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.01);
+            modulator.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.01);
+            modGain.gain.setTargetAtTime(freq * 1.0, audioCtx.currentTime, 0.01);
+
+            document.getElementById('pitch-indicator').style.bottom = (currentPitchRatio * 100) + '%';
+            const semitones = Math.round(12 * Math.log2(freq / 440)) + 57; 
+            document.getElementById('note-display').innerText = notesArr[semitones % 12] + (Math.floor(semitones / 12));
+
+            document.getElementById('mouth').style.height = (12 + (currentMouthRatio * 90)) + 'px';
+            document.getElementById('tongue').style.opacity = currentMouthRatio > 0.3 ? 1 : 0;
+            if(airShelf) {
+                airShelf.gain.setTargetAtTime(14 + (currentMouthRatio * 18), audioCtx.currentTime, 0.01);
+                formants[2].gain.setTargetAtTime(20 + (currentMouthRatio * 12), audioCtx.currentTime, 0.01);
+            }
+        }
+
+        function handlePointer(x, y) {
+            currentMouthRatio = Math.max(0, Math.min(1, x / window.innerWidth));
+            currentPitchRatio = Math.max(0, Math.min(1, 1 - (y - window.innerHeight * 0.05) / (window.innerHeight * 0.9)));
+        }
+
+        document.getElementById('start-btn').onclick = async function() {
+            await initAudio();
+            if ('Accelerometer' in window) {
                 const sensor = new Accelerometer({ frequency: 60 });
                 sensor.addEventListener('reading', () => {
-                    if(!isMobileMode) {
-                        targetAngle = Math.max(0, Math.min(180, Math.abs(Math.atan2(sensor.y, sensor.z) * (180 / Math.PI))));
+                    if(!isPlaying) {
+                        currentPitchRatio = Math.max(0, Math.min(1, 1 - Math.abs(Math.atan2(sensor.y, sensor.z) * (180 / Math.PI)) / 180));
                     }
                 });
                 sensor.start();
-            } catch (e) { console.warn("Sensor fallback."); }
-        }
-
-        function updatePhysics() {
-            requestAnimationFrame(updatePhysics);
-            if (!isStarted) return;
-
-            let ratio = 1 - (targetAngle / 180);
-            // 💡 기준 주파수: C5 (523.25Hz)
-            let freq = 523.25 * Math.pow(2, ratio * 2);
-
-            carrier.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.005);
-            modulator.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.005);
-            modGain.gain.setTargetAtTime(freq * 1.0, audioCtx.currentTime, 0.005);
-            
-            document.getElementById('pitch-indicator').style.bottom = (ratio * 100) + '%';
-            const semitones = Math.round(12 * Math.log2(freq / 440)) + 57; 
-            document.getElementById('note-display').innerText = notes[semitones % 12] + (Math.floor(semitones / 12));
-        }
-
-        function updateVoice(openness) {
-            if (!isStarted) return;
-            document.getElementById('mouth').style.height = (10 + (openness * 100)) + 'px';
-            document.getElementById('tongue').style.opacity = openness > 0.2 ? openness : 0;
-            if(airShelf) {
-                airShelf.gain.setTargetAtTime(16 + (openness * 14), audioCtx.currentTime, 0.01);
-                formants[2].gain.setTargetAtTime(22 + (openness * 12), audioCtx.currentTime, 0.01);
             }
-        }
-
-        startBtn.onclick = async function() {
-            await initAudio();
-            await startSensor();
             isStarted = true;
             this.style.display = 'none';
-            modeBtn.style.display = 'block';
+            document.getElementById('face-container').style.visibility = 'visible';
             document.getElementById('face-container').style.opacity = '1';
         };
 
-        modeBtn.onclick = function() {
-            isMobileMode = !isMobileMode;
-            this.classList.toggle('active');
-            this.innerText = isMobileMode ? "모바일 모드 (터치)" : "노트북 모드 (힌지)";
-            document.getElementById('mode-status').innerText = isMobileMode ? "TOUCH SLIDER" : "HINGE SENSOR";
+        const onStart = (e) => {
+            if (!isStarted) return;
+            isPlaying = true;
+            document.getElementById('face').classList.add('playing');
+            masterGain.gain.setTargetAtTime(0.6, audioCtx.currentTime, 0.01);
+            const move = e.touches ? e.touches[0] : e;
+            handlePointer(move.clientX, move.clientY);
         };
 
-        window.addEventListener('mousedown', () => { if(isStarted){ face.classList.add('playing'); masterGain.gain.setTargetAtTime(0.6, audioCtx.currentTime, 0.01); }});
-        window.addEventListener('mouseup', () => { if(isStarted){ face.classList.remove('playing'); masterGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.02); }});
-        window.addEventListener('mousemove', (e) => {
-            if (!isStarted) return;
-            updateVoice(e.clientX / window.innerWidth);
-        });
+        const onMove = (e) => {
+            if (!isStarted || !isPlaying) return;
+            const move = e.touches ? e.touches[0] : e;
+            handlePointer(move.clientX, move.clientY);
+        };
 
-        window.addEventListener('touchstart', (e) => {
-            if (!isStarted) return;
-            face.classList.add('playing');
-            masterGain.gain.setTargetAtTime(0.6, audioCtx.currentTime, 0.01);
-            handleTouch(e);
-        }, { passive: false });
-
-        window.addEventListener('touchmove', (e) => {
-            if (!isStarted) return;
-            e.preventDefault();
-            handleTouch(e);
-        }, { passive: false });
-
-        window.addEventListener('touchend', () => {
-            if (!isStarted) return;
-            face.classList.remove('playing');
+        const onEnd = () => {
+            isPlaying = false;
+            document.getElementById('face').classList.remove('playing');
             masterGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.02);
-        });
+        };
 
-        function handleTouch(e) {
-            const touch = e.touches[0];
-            const xRatio = touch.clientX / window.innerWidth;
-            updateVoice(xRatio);
-            if (isMobileMode) {
-                const rect = pb.getBoundingClientRect();
-                let p = 1 - (touch.clientY - rect.top) / rect.height;
-                p = Math.max(0, Math.min(1, p));
-                targetAngle = 180 * (1 - p);
-            }
-        }
+        window.addEventListener('mousedown', onStart);
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('mouseup', onEnd);
+        window.addEventListener('touchstart', (e) => { e.preventDefault(); onStart(e); }, { passive: false });
+        window.addEventListener('touchmove', (e) => { e.preventDefault(); onMove(e); }, { passive: false });
+        window.addEventListener('touchend', onEnd);
 
-        // 💡 눈금 생성 (C5 ~ C7)
-        const pbBoard = document.getElementById('pitch-board');
-        pbBoard.innerHTML = '<div id="pitch-indicator"></div>';
+        // 💡 3.5옥타브 눈금 생성
+        const pb = document.getElementById('pitch-board');
         for (let m = MIN_MIDI; m <= MIN_MIDI + MIDI_RANGE; m++) { 
             let p = ((m - MIN_MIDI) / MIDI_RANGE) * 100;
             const t = document.createElement('div');
-            t.className = 'tick'; 
-            t.style.bottom = p + '%';
+            t.className = 'tick'; t.style.bottom = p + '%';
             const m12 = m % 12;
-            const isNatural = ![1, 3, 6, 8, 10].includes(m12);
             if (m12 === 0) t.classList.add('c-note');
-            else if (isNatural) t.classList.add('natural');
-            if (m12 === 0 || isNatural) {
+            else if (![1, 3, 6, 8, 10].includes(m12)) t.classList.add('natural');
+            
+            if (t.classList.contains('natural') || t.classList.contains('c-note')) {
                 const l = document.createElement('span');
-                l.className = 'tick-label';
-                l.innerText = notes[m12] + (Math.floor(m / 12) - 1);
+                l.className = 'tick-label'; l.innerText = notesArr[m12] + (Math.floor(m / 12) - 1);
                 t.appendChild(l);
             }
-            pbBoard.appendChild(t);
+            pb.appendChild(t);
         }
     </script>
 </body>
