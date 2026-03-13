@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Miku Otamatone - Hybrid Mode</title>
+    <title>Miku Otamatone - Final Stable</title>
     <style>
         :root {
             --miku: #39C5BB;
@@ -15,11 +15,16 @@
             margin: 0; background-color: var(--bg); color: var(--miku-dark);
             font-family: -apple-system, system-ui, sans-serif;
             display: flex; align-items: center; justify-content: center;
-            height: 100vh; overflow: hidden; user-select: none;
-            touch-action: none; /* 모바일 브라우저 스크롤/확대 방지 */
+            height: 100vh; overflow: hidden; 
+            
+            /* 💡 텍스트 선택 및 시스템 팝업 방지 CSS */
+            user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            -webkit-touch-callout: none; /* iOS 롱탭 메뉴 방지 */
+            touch-action: none;
         }
 
-        /* 메인 시작 버튼 */
         #start-btn {
             padding: 20px 60px; background: var(--miku); border: none;
             color: #fff; font-size: 1.4rem; font-weight: 900;
@@ -27,19 +32,17 @@
             position: absolute; z-index: 1000; box-shadow: 0 10px 40px rgba(57, 197, 187, 0.5);
         }
 
-        /* 💡 모드 토글 버튼 */
         #mode-toggle {
             position: absolute; top: 20px; right: 20px;
             padding: 10px 20px; background: #fff; border: 2px solid var(--miku);
             color: var(--miku); border-radius: 20px; font-weight: 800; font-size: 0.9rem;
-            cursor: pointer; z-index: 1001; display: none; /* 시작 전엔 숨김 */
+            cursor: pointer; z-index: 1001; display: none;
         }
         #mode-toggle.active { background: var(--miku); color: #fff; }
 
         #pitch-board {
             position: absolute; left: 50px; top: 10%; height: 80%; width: 80px;
             border-right: 1px solid #e0f2f1; z-index: 10;
-            touch-action: none;
         }
         .tick { 
             position: absolute; right: 0; width: 10px;
@@ -83,9 +86,7 @@
         #note-display { font-size: 4rem; color: var(--miku-dark); font-weight: 100; margin-bottom: 5px; }
     </style>
 </head>
-<body>
-
-    <button id="start-btn">미쿠 엔진 기동</button>
+<body oncontextmenu="return false;"> <button id="start-btn">미쿠 엔진 기동</button>
     <button id="mode-toggle">노트북 모드 (힌지)</button>
 
     <div id="pitch-board"><div id="pitch-indicator"></div></div>
@@ -105,10 +106,17 @@
     </div>
 
     <script>
+        // 💡 롱탭 시 브라우저 메뉴가 뜨는 것을 방지하는 JS 보강
+        window.oncontextmenu = function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
+        };
+
         let audioCtx, carrier, modulator, modGain, masterGain, airShelf;
         let formants = [];
         let isStarted = false;
-        let isMobileMode = false; // 💡 모드 상태 변수
+        let isMobileMode = false;
         let targetAngle = 90;
         const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
@@ -173,7 +181,7 @@
             try {
                 const sensor = new Accelerometer({ frequency: 60 });
                 sensor.addEventListener('reading', () => {
-                    if(!isMobileMode) { // 💡 노트북 모드일 때만 센서 값 반영
+                    if(!isMobileMode) {
                         targetAngle = Math.max(0, Math.min(180, Math.abs(Math.atan2(sensor.y, sensor.z) * (180 / Math.PI))));
                     }
                 });
@@ -197,7 +205,6 @@
             document.getElementById('note-display').innerText = notes[semitones % 12] + (Math.floor(semitones / 12));
         }
 
-        // 💡 음성 조작 통합 함수
         function updateVoice(openness) {
             if (!isStarted) return;
             document.getElementById('mouth').style.height = (10 + (openness * 100)) + 'px';
@@ -208,13 +215,6 @@
             }
         }
 
-        // 💡 음정 조작 통합 함수 (0~1 범위의 높이 비율)
-        function updatePitchByRatio(p) {
-            targetAngle = 180 * (1 - p);
-        }
-
-        // --- 이벤트 리스너 ---
-
         startBtn.onclick = async function() {
             await initAudio();
             await startSensor();
@@ -224,7 +224,6 @@
             document.getElementById('face-container').style.opacity = '1';
         };
 
-        // 모드 토글
         modeBtn.onclick = function() {
             isMobileMode = !isMobileMode;
             this.classList.toggle('active');
@@ -232,7 +231,6 @@
             document.getElementById('mode-status').innerText = isMobileMode ? "TOUCH SLIDER" : "HINGE SENSOR";
         };
 
-        // 마우스 컨트롤
         window.addEventListener('mousedown', () => { if(isStarted){ face.classList.add('playing'); masterGain.gain.setTargetAtTime(0.6, audioCtx.currentTime, 0.01); }});
         window.addEventListener('mouseup', () => { if(isStarted){ face.classList.remove('playing'); masterGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.02); }});
         window.addEventListener('mousemove', (e) => {
@@ -240,7 +238,7 @@
             updateVoice(e.clientX / window.innerWidth);
         });
 
-        // 💡 모바일 터치 컨트롤 (터치 연주 및 슬라이더)
+        // 모바일 터치 이벤트
         window.addEventListener('touchstart', (e) => {
             if (!isStarted) return;
             face.classList.add('playing');
@@ -250,7 +248,7 @@
 
         window.addEventListener('touchmove', (e) => {
             if (!isStarted) return;
-            e.preventDefault(); // 스크롤 방지
+            e.preventDefault();
             handleTouch(e);
         }, { passive: false });
 
@@ -263,20 +261,16 @@
         function handleTouch(e) {
             const touch = e.touches[0];
             const xRatio = touch.clientX / window.innerWidth;
-
-            // 1. 입 벌리기 (화면 가로 좌표 반영)
             updateVoice(xRatio);
-
-            // 2. 피치 조절 (모바일 모드일 때만 세로 좌표 반영)
             if (isMobileMode) {
                 const rect = pb.getBoundingClientRect();
                 let p = 1 - (touch.clientY - rect.top) / rect.height;
                 p = Math.max(0, Math.min(1, p));
-                updatePitchByRatio(p);
+                targetAngle = 180 * (1 - p);
             }
         }
 
-        // UI 눈금 생성
+        // 눈금 생성
         const pbBoard = document.getElementById('pitch-board');
         for (let m = MIN_MIDI; m <= MIN_MIDI + MIDI_RANGE; m++) { 
             let p = ((m - MIN_MIDI) / MIDI_RANGE) * 100;
@@ -285,10 +279,9 @@
             t.style.bottom = p + '%';
             const m12 = m % 12;
             const isNatural = ![1, 3, 6, 8, 10].includes(m12);
-            const isC = m12 === 0;
-            if (isC) t.classList.add('c-note');
+            if (m12 === 0) t.classList.add('c-note');
             else if (isNatural) t.classList.add('natural');
-            if (isC || isNatural) {
+            if (m12 === 0 || isNatural) {
                 const l = document.createElement('span');
                 l.className = 'tick-label';
                 l.innerText = notes[m12] + (Math.floor(m / 12) - 1);
