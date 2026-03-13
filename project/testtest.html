@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <style>
+        :root {
+            --miku: #39C5BB;
+            --miku-bright: #00fff2;
+            --miku-dark: #00857d;
+            --bg: #ffffff;
+        }
+
+        body {
+            margin: 0; background-color: var(--bg); color: var(--miku-dark);
+            font-family: -apple-system, system-ui, sans-serif;
+            display: flex; align-items: center; justify-content: center;
+            height: 100vh; overflow: hidden; user-select: none;
+        }
+
+        #start-btn {
+            padding: 20px 60px; background: var(--miku); border: none;
+            color: #fff; font-size: 1.4rem; font-weight: 900;
+            cursor: pointer; border-radius: 99px; transition: 0.2s;
+            position: absolute; z-index: 1000; box-shadow: 0 10px 40px rgba(57, 197, 187, 0.5);
+        }
+        #start-btn:hover { background: var(--miku-dark); transform: scale(1.05); }
+
+        #pitch-board {
+            position: absolute; left: 50px; top: 10%; height: 80%; width: 70px;
+            border-right: 1px solid #e0f2f1; pointer-events: none;
+        }
+        .tick { 
+            position: absolute; right: 0; width: 10px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex; align-items: center;
+            transform: translateY(50%); /* 선의 중앙 정렬 */
+        }
+        .tick.natural { width: 25px; border-color: #b2dfdb; }
+        .tick.c-note { width: 50px; border-color: var(--miku); border-width: 2.5px; z-index: 2; }
+        .tick-label { 
+            position: absolute; left: -45px; font-size: 0.75rem; color: #94a3b8; 
+            font-weight: 500; white-space: nowrap;
+        }
+        .tick.c-note .tick-label { color: var(--miku); font-size: 0.95rem; font-weight: 900; left: -55px; }
+
+        #pitch-indicator {
+            position: absolute; right: -12px; width: 45px; height: 4px;
+            background-color: var(--miku-bright); bottom: 0%; z-index: 5;
+            box-shadow: 0 0 20px var(--miku-bright);
+            transition: bottom 0.05s linear;
+        }
+
+        #face-container { display: flex; flex-direction: column; align-items: center; margin-left: 60px; opacity: 0; transition: opacity 0.5s; }
+        #face {
+            width: 250px; height: 250px; background-color: #fff; 
+            border: 6px solid var(--miku); border-radius: 50%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .playing { transform: scale(1.05); border-color: var(--miku-bright) !important; box-shadow: 0 0 80px rgba(57, 197, 187, 0.3); }
+
+        #mouth {
+            width: 90px; height: 10px; background-color: var(--miku-dark);
+            border-radius: 50px; overflow: hidden; display: flex; align-items: flex-end; justify-content: center;
+            position: relative;
+        }
+        #tongue { width: 60px; height: 45px; background-color: #ff9090; border-radius: 50%; margin-bottom: -22px; opacity: 0; }
+
+        .info-panel { margin-top: 55px; text-align: center; color: #64748b; font-size: 0.95rem; }
+        .data-text { font-size: 1.1rem; color: var(--miku); font-weight: 800; }
+        #note-display { font-size: 4rem; color: var(--miku-dark); font-weight: 100; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+    <button id="start-btn">오타마톤 시작</button>
+
+    <div id="pitch-board"><div id="pitch-indicator"></div></div>
+
+    <div id="face-container">
+        <div id="face">
+            <div style="display:flex; gap:50px; margin-bottom:25px;">
+                <div style="width:18px; height:18px; background:var(--miku-dark); border-radius:50%;"></div>
+                <div style="width:18px; height:18px; background:var(--miku-dark); border-radius:50%;"></div>
+            </div>
+            <div id="mouth"><div id="tongue"></div></div>
+        </div>
+        <div class="info-panel">
+            <div id="note-display">--</div>
+            <div>STABLE ANGLE: <span id="angle-val" class="data-text">0.0°</span></div>
+            <div style="margin-top:10px; font-weight:900; color: var(--miku);">오타마톤 사용을 위해 각도 센서가 있는 노트북 사용이 필요합니다.</div>
+        </div>
+    </div>
+
+    <script>
+        let audioCtx, carrier, modulator, modGain, masterGain, airShelf;
+        let formants = [];
+        let isStarted = false;
+        let targetAngle = 90;
+        const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
+        const MIN_MIDI = 60;
+        const MIDI_RANGE = 24;
+
+        async function initAudio() {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            carrier = audioCtx.createOscillator(); carrier.type = 'sine';
+            modulator = audioCtx.createOscillator(); modulator.type = 'sawtooth';
+            modGain = audioCtx.createGain(); modGain.gain.value = 140;
+
+            const noiseBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 2, audioCtx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < output.length; i++) output[i] = Math.random() * 2 - 1;
+            const noiseSrc = audioCtx.createBufferSource(); noiseSrc.buffer = noiseBuffer; noiseSrc.loop = true;
+            
+            const noiseFilter = audioCtx.createBiquadFilter();
+            noiseFilter.type = 'highpass'; noiseFilter.frequency.value = 9500;
+            const breathNode = audioCtx.createGain(); breathNode.gain.value = 0.035;
+
+            const vibrato = audioCtx.createOscillator(); vibrato.frequency.value = 6.4;
+            const vGain = audioCtx.createGain(); vGain.gain.value = 3.5;
+            vibrato.connect(vGain); vibrato.start();
+            vGain.connect(carrier.frequency); vGain.connect(modulator.frequency);
+
+            const formantFreqs = [800, 1500, 3800, 5200, 7500];
+            let lastNode = null;
+            formantFreqs.forEach((freq, i) => {
+                const f = audioCtx.createBiquadFilter();
+                f.type = 'peaking'; f.frequency.value = freq;
+                f.Q.value = i === 2 ? 22 : 12;
+                f.gain.value = i >= 2 ? 20 : 12; 
+                formants.push(f);
+                if (lastNode) lastNode.connect(f);
+                else {
+                    modulator.connect(modGain); modGain.connect(carrier.frequency);
+                    carrier.connect(f);
+                    noiseSrc.connect(noiseFilter); noiseFilter.connect(breathNode); breathNode.connect(f);
+                }
+                lastNode = f;
+            });
+
+            airShelf = audioCtx.createBiquadFilter();
+            airShelf.type = 'highshelf'; airShelf.frequency.value = 8000; airShelf.gain.value = 14;
+
+            masterGain = audioCtx.createGain(); masterGain.gain.value = 0;
+            lastNode.connect(airShelf); airShelf.connect(masterGain);
+            masterGain.connect(audioCtx.destination);
+
+            carrier.start(); modulator.start(); noiseSrc.start();
+            updatePhysics();
+        }
+
+        async function startSensor() {
+            if (!('Accelerometer' in window)) return;
+            try {
+                const sensor = new Accelerometer({ frequency: 60 });
+                sensor.addEventListener('reading', () => {
+                    targetAngle = Math.max(0, Math.min(180, Math.abs(Math.atan2(sensor.y, sensor.z) * (180 / Math.PI))));
+                });
+                sensor.start();
+            } catch (e) { console.warn("Sensor fallback."); }
+        }
+
+        function updatePhysics() {
+            requestAnimationFrame(updatePhysics);
+            if (!isStarted) return;
+
+            document.getElementById('angle-val').innerText = targetAngle.toFixed(1) + "°";
+            let ratio = 1 - (targetAngle / 180);
+            let freq = 261.63 * Math.pow(2, ratio * 2);
+
+            carrier.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.005);
+            modulator.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.005);
+            modGain.gain.setTargetAtTime(freq * 0.9, audioCtx.currentTime, 0.005);
+            
+            document.getElementById('pitch-indicator').style.bottom = (ratio * 100) + '%';
+            const semitones = Math.round(12 * Math.log2(freq / 440)) + 57; 
+            document.getElementById('note-display').innerText = notes[semitones % 12] + (Math.floor(semitones / 12));
+        }
+
+        document.getElementById('start-btn').onclick = async function() {
+            this.innerText = "기동 중...";
+            await initAudio();
+            await startSensor();
+            isStarted = true;
+            this.style.display = 'none';
+            document.getElementById('face-container').style.opacity = '1';
+        };
+
+        window.addEventListener('mousedown', () => { if(isStarted){ face.classList.add('playing'); masterGain.gain.setTargetAtTime(0.6, audioCtx.currentTime, 0.01); }});
+        window.addEventListener('mouseup', () => { if(isStarted){ face.classList.remove('playing'); masterGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.02); }});
+        
+        window.addEventListener('mousemove', (e) => {
+            if (!isStarted) return;
+            let openness = e.clientX / window.innerWidth;
+            document.getElementById('mouth').style.height = (10 + (openness * 100)) + 'px';
+            document.getElementById('tongue').style.opacity = openness > 0.2 ? openness : 0;
+            if(airShelf) {
+                airShelf.gain.setTargetAtTime(14 + (openness * 12), audioCtx.currentTime, 0.01);
+                formants[2].gain.setTargetAtTime(20 + (openness * 10), audioCtx.currentTime, 0.01);
+            }
+        });
+
+        const pb = document.getElementById('pitch-board');
+        pb.innerHTML = '<div id="pitch-indicator"></div>';
+        for (let m = MIN_MIDI; m <= MIN_MIDI + MIDI_RANGE; m++) { 
+            let p = ((m - MIN_MIDI) / MIDI_RANGE) * 100;
+            const t = document.createElement('div');
+            t.className = 'tick'; 
+            t.style.bottom = p + '%';
+            
+            const m12 = m % 12;
+            const isNatural = ![1, 3, 6, 8, 10].includes(m12);
+            const isC = m12 === 0;
+
+            if (isC) t.classList.add('c-note');
+            else if (isNatural) t.classList.add('natural');
+            
+            if (isC || isNatural) {
+                const l = document.createElement('span');
+                l.className = 'tick-label';
+                l.innerText = notes[m12] + (Math.floor(m / 12) - 1);
+                t.appendChild(l);
+            }
+            pb.appendChild(t);
+        }
+    </script>
+</body>
+</html>
