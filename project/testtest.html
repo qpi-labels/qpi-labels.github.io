@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Miku Otamatone - Final Stable</title>
+    <title>Miku Otamatone - Ultra-High V10.4</title>
     <style>
         :root {
             --miku: #39C5BB;
@@ -17,11 +17,11 @@
             display: flex; align-items: center; justify-content: center;
             height: 100vh; overflow: hidden; 
             
-            /* 💡 텍스트 선택 및 시스템 팝업 방지 CSS */
+            /* 💡 텍스트 선택 및 시스템 팝업 방지 */
             user-select: none;
             -webkit-user-select: none;
             -ms-user-select: none;
-            -webkit-touch-callout: none; /* iOS 롱탭 메뉴 방지 */
+            -webkit-touch-callout: none;
             touch-action: none;
         }
 
@@ -86,7 +86,9 @@
         #note-display { font-size: 4rem; color: var(--miku-dark); font-weight: 100; margin-bottom: 5px; }
     </style>
 </head>
-<body oncontextmenu="return false;"> <button id="start-btn">미쿠 엔진 기동</button>
+<body oncontextmenu="return false;">
+
+    <button id="start-btn">미쿠 초고음 엔진 기동</button>
     <button id="mode-toggle">노트북 모드 (힌지)</button>
 
     <div id="pitch-board"><div id="pitch-indicator"></div></div>
@@ -102,16 +104,13 @@
         <div class="info-panel">
             <div id="note-display">--</div>
             <div>CONTROL: <span id="mode-status" class="data-text">HINGE SENSOR</span></div>
+            <div style="margin-top:10px; font-weight:900; color: var(--miku);">ULTRA HIGH TONE MODE (C5-C7)</div>
         </div>
     </div>
 
     <script>
-        // 💡 롱탭 시 브라우저 메뉴가 뜨는 것을 방지하는 JS 보강
-        window.oncontextmenu = function(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            return false;
-        };
+        // 우클릭 방지
+        window.oncontextmenu = function(event) { event.preventDefault(); event.stopPropagation(); return false; };
 
         let audioCtx, carrier, modulator, modGain, masterGain, airShelf;
         let formants = [];
@@ -120,7 +119,8 @@
         let targetAngle = 90;
         const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
-        const MIN_MIDI = 60;
+        // 💡 음역대 설정: C5(72) ~ C7(96)
+        const MIN_MIDI = 72;
         const MIDI_RANGE = 24;
 
         const startBtn = document.getElementById('start-btn');
@@ -132,7 +132,7 @@
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             carrier = audioCtx.createOscillator(); carrier.type = 'sine';
             modulator = audioCtx.createOscillator(); modulator.type = 'sawtooth';
-            modGain = audioCtx.createGain(); modGain.gain.value = 140;
+            modGain = audioCtx.createGain(); modGain.gain.value = 160; // 고음역대 보강을 위해 약간 상향
 
             const noiseBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 2, audioCtx.sampleRate);
             const output = noiseBuffer.getChannelData(0);
@@ -140,7 +140,7 @@
             const noiseSrc = audioCtx.createBufferSource(); noiseSrc.buffer = noiseBuffer; noiseSrc.loop = true;
             
             const noiseFilter = audioCtx.createBiquadFilter();
-            noiseFilter.type = 'highpass'; noiseFilter.frequency.value = 9500;
+            noiseFilter.type = 'highpass'; noiseFilter.frequency.value = 10000;
             const breathNode = audioCtx.createGain(); breathNode.gain.value = 0.035;
 
             const vibrato = audioCtx.createOscillator(); vibrato.frequency.value = 6.4;
@@ -148,13 +148,13 @@
             vibrato.connect(vGain); vibrato.start();
             vGain.connect(carrier.frequency); vGain.connect(modulator.frequency);
 
-            const formantFreqs = [800, 1500, 3800, 5200, 7500];
+            const formantFreqs = [850, 1600, 3950, 5500, 8500]; // 고음역대에 맞게 포먼트 소폭 상향
             let lastNode = null;
             formantFreqs.forEach((freq, i) => {
                 const f = audioCtx.createBiquadFilter();
                 f.type = 'peaking'; f.frequency.value = freq;
                 f.Q.value = i === 2 ? 22 : 12;
-                f.gain.value = i >= 2 ? 20 : 12; 
+                f.gain.value = i >= 2 ? 22 : 12; 
                 formants.push(f);
                 if (lastNode) lastNode.connect(f);
                 else {
@@ -166,7 +166,7 @@
             });
 
             airShelf = audioCtx.createBiquadFilter();
-            airShelf.type = 'highshelf'; airShelf.frequency.value = 8000; airShelf.gain.value = 14;
+            airShelf.type = 'highshelf'; airShelf.frequency.value = 8500; airShelf.gain.value = 16;
 
             masterGain = audioCtx.createGain(); masterGain.gain.value = 0;
             lastNode.connect(airShelf); airShelf.connect(masterGain);
@@ -194,11 +194,12 @@
             if (!isStarted) return;
 
             let ratio = 1 - (targetAngle / 180);
-            let freq = 261.63 * Math.pow(2, ratio * 2);
+            // 💡 기준 주파수: C5 (523.25Hz)
+            let freq = 523.25 * Math.pow(2, ratio * 2);
 
             carrier.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.005);
             modulator.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.005);
-            modGain.gain.setTargetAtTime(freq * 0.9, audioCtx.currentTime, 0.005);
+            modGain.gain.setTargetAtTime(freq * 1.0, audioCtx.currentTime, 0.005);
             
             document.getElementById('pitch-indicator').style.bottom = (ratio * 100) + '%';
             const semitones = Math.round(12 * Math.log2(freq / 440)) + 57; 
@@ -210,8 +211,8 @@
             document.getElementById('mouth').style.height = (10 + (openness * 100)) + 'px';
             document.getElementById('tongue').style.opacity = openness > 0.2 ? openness : 0;
             if(airShelf) {
-                airShelf.gain.setTargetAtTime(14 + (openness * 12), audioCtx.currentTime, 0.01);
-                formants[2].gain.setTargetAtTime(20 + (openness * 10), audioCtx.currentTime, 0.01);
+                airShelf.gain.setTargetAtTime(16 + (openness * 14), audioCtx.currentTime, 0.01);
+                formants[2].gain.setTargetAtTime(22 + (openness * 12), audioCtx.currentTime, 0.01);
             }
         }
 
@@ -238,7 +239,6 @@
             updateVoice(e.clientX / window.innerWidth);
         });
 
-        // 모바일 터치 이벤트
         window.addEventListener('touchstart', (e) => {
             if (!isStarted) return;
             face.classList.add('playing');
@@ -270,8 +270,9 @@
             }
         }
 
-        // 눈금 생성
+        // 💡 눈금 생성 (C5 ~ C7)
         const pbBoard = document.getElementById('pitch-board');
+        pbBoard.innerHTML = '<div id="pitch-indicator"></div>';
         for (let m = MIN_MIDI; m <= MIN_MIDI + MIDI_RANGE; m++) { 
             let p = ((m - MIN_MIDI) / MIDI_RANGE) * 100;
             const t = document.createElement('div');
