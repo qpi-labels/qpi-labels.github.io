@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Is it Raceweek?</title>
+  <style>
+    /* isitchristmas 특유의 미니멀리즘 스타일 */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #ffffff;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    #answer {
+      font-size: 10rem; /* 화면을 꽉 채우는 거대한 폰트 */
+      font-weight: bold;
+      text-transform: uppercase;
+      user-select: none; /* 드래그 방지 */
+    }
+
+    .yes {
+      color: #ff0000; /* 레이스 위크일 때 빨간색 */
+    }
+
+    .no {
+      color: #000000; /* 평소엔 검은색 */
+    }
+  </style>
+</head>
+<body>
+
+  <div id="answer"></div>
+
+  <script>
+    // 2026 F1 캘린더 기준 레이스 날짜 (현지 결승전 날짜 기준)
+    const raceDates = [
+      "2026-03-08", "2026-03-15", "2026-03-29", "2026-04-12", "2026-04-19",
+      "2026-05-03", "2026-05-24", "2026-06-07", "2026-06-14", "2026-06-28",
+      "2026-07-05", "2026-07-19", "2026-07-26", "2026-08-23", "2026-09-06",
+      "2026-09-13", "2026-09-27", "2026-10-11", "2026-10-25", "2026-11-01",
+      "2026-11-08", "2026-11-21", "2026-11-29", "2026-12-06"
+    ];
+
+    function isRaceWeek() {
+      const today = new Date();
+      
+      for (let dateStr of raceDates) {
+        let raceDate = new Date(dateStr);
+        
+        // 해당 레이스가 있는 주의 '월요일' 계산
+        let dayOfWeek = raceDate.getDay(); // 0(일요일) ~ 6(토요일)
+        let diffToMonday = (dayOfWeek === 0) ? 6 : dayOfWeek - 1;
+        
+        let monday = new Date(raceDate);
+        monday.setDate(raceDate.getDate() - diffToMonday);
+        monday.setHours(0, 0, 0, 0); // 월요일 00:00:00
+        
+        // 해당 레이스가 있는 주의 '일요일' 계산
+        let sunday = new Date(monday);
+        sunday.setDate(monday.getDate() + 6);
+        sunday.setHours(23, 59, 59, 999); // 일요일 23:59:59
+        
+        // 오늘이 그 주의 월~일 사이에 포함되는지 확인
+        if (today >= monday && today <= sunday) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    // 결과 화면에 출력
+    const answerDiv = document.getElementById('answer');
+    if (isRaceWeek()) {
+      answerDiv.textContent = "YES";
+      answerDiv.className = "yes";
+    } else {
+      answerDiv.textContent = "NO";
+      answerDiv.className = "no";
+    }
+  </script>
+</body>
+</html>
