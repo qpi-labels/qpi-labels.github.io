@@ -1,0 +1,150 @@
+[
+    {
+        "id": "1",
+        "title": "Sharpless 2-190",
+        "date": "2026.04.04",
+        "cover": "1.png",
+        "gradient": "linear-gradient(135deg, rgba(82, 37, 43, 0.8) 0%, rgba(44, 44, 46, 0.9) 100%)",
+        "description": "Sharpless 2-190 성운은 카시오페이아자리에 위치한 직경 200광년 크기의 거대한 방출성운이다. 성운 중심부의 젊고 거대한 항성들이 내뿜는 에너지가 주변 가스를 조각하는데, 이 모습이 마치 하트 모양 같다고 하여 '하트 성운'이라고도 불린다.",
+        "appleMusicLink": "https://music.apple.com/kr/playlist/sharpless-2-190/pl.u-76oNlPytqjk9kMR",
+        "tracks": [
+            {
+                "num": 1,
+                "title": "Black Star",
+                "artist": "Radiohead",
+                "link": "#"
+            },
+            {
+                "num": 2,
+                "title": "She Has No Time",
+                "artist": "Keane",
+                "link": "#"
+            },
+            {
+                "num": 3,
+                "title": "No Distance Left to Run",
+                "artist": "Blur",
+                "link": "#"
+            },
+            {
+                "num": 4,
+                "title": "初恋",
+                "artist": "Utada Hikaru",
+                "link": "#"
+            },
+            {
+                "num": 5,
+                "title": "Wish You Were Here",
+                "artist": "Pink Floyd",
+                "link": "#"
+            },
+            {
+                "num": 6,
+                "title": "Bedshaped",
+                "artist": "Keane",
+                "link": "#"
+            },
+            {
+                "num": 7,
+                "title": "Manatsu No Tooriame",
+                "artist": "Utada Hikaru",
+                "link": "#"
+            },
+            {
+                "num": 8,
+                "title": "Don't Leave Me Now",
+                "artist": "Pink Floyd",
+                "link": "#"
+            },
+            {
+                "num": 9,
+                "title": "Subterranean Homesick Alien",
+                "artist": "Radiohead",
+                "link": "#"
+            },
+            {
+                "num": 10,
+                "title": "True Love Waits",
+                "artist": "Radiohead",
+                "link": "#"
+            }
+        ]
+    },
+    {
+        "id": "2",
+        "title": "Eta Carinae⠀⠀⠀",
+        "date": "2026.04.08",
+        "cover": "2.jpg",
+        "gradient": "linear-gradient(135deg, rgba(82, 37, 43, 0.8) 0%, rgba(44, 44, 46, 0.9) 100%)",
+        "description": "Eta Carinae는 초신성 폭발 직전의 항성이 내뿜는 극도로 불안정한 가스와 먼지 구름으로, 우주에서 가장 격렬한 팽창과 파괴적인 에너지를 분출하는 혼돈의 상징이다.",
+        "appleMusicLink": "https://music.apple.com/kr/playlist/eta-carinae/pl.u-V9D7mgahjDRvRA8",
+        "tracks": [
+            {
+                "num": 1,
+                "title": "Bang Bang",
+                "artist": "Green Day",
+                "link": "#"
+            },
+            {
+                "num": 2,
+                "title": "Uprising",
+                "artist": "Muse",
+                "link": "#"
+            },
+            {
+                "num": 3,
+                "title": "Psycho",
+                "artist": "Muse",
+                "link": "#"
+            },
+            {
+                "num": 4,
+                "title": "Is It Any Wonder?",
+                "artist": "Keane",
+                "link": "#"
+            },
+            {
+                "num": 5,
+                "title": "2 + 2 = 5",
+                "artist": "Radiohead",
+                "link": "#"
+            },
+            {
+                "num": 6,
+                "title": "Brain Damage",
+                "artist": "Pink Floyd",
+                "link": "#"
+            },
+            {
+                "num": 7,
+                "title": "Eclipse",
+                "artist": "Pink Floyd",
+                "link": "#"
+            },
+            {
+                "num": 8,
+                "title": "Map of the Problematique",
+                "artist": "Muse",
+                "link": "#"
+            },
+            {
+                "num": 9,
+                "title": "Electioneering",
+                "artist": "Radiohead",
+                "link": "#"
+            },
+            {
+                "num": 10,
+                "title": "Zombie",
+                "artist": "The Cranberries",
+                "link": "#"
+            },
+            {
+                "num": 11,
+                "title": "The Universal",
+                "artist": "Blur",
+                "link": "#"
+            }
+        ]
+    }
+]

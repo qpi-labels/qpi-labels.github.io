@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playlist</title>
+    <style>
+        :root {
+            --bg-color: #1c1c1e;
+            --text-color: #ffffff;
+            --text-secondary: #a1a1a6;
+            --card-bg: rgba(44, 44, 46, 0.6);
+            --red-accent: #ff2d55;
+
+            /* Proportional design tokens (Reference: 1920x1080) */
+            --card-width: 56.25vw;
+            --card-radius: 1.25vw;
+            --inner-radius: 0.73vw;
+            --inner-padding-v: 0.52vw;
+
+            /* Premium Animation Tokens */
+            --transition-premium: 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+            --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            margin: 0;
+            padding: 50px 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            /* Lowered font weight */
+            letter-spacing: -0.02em;
+            margin-bottom: 40px;
+        }
+
+        .playlist-container {
+            width: var(--card-width);
+            max-width: 1080px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* 모바일에서는 너비를 더 확보 (90%) */
+        @media (max-width: 600px) {
+            .playlist-container {
+                width: 90vw;
+            }
+        }
+
+        /* 카드 기본 스타일 */
+        .playlist-card {
+            background-color: var(--card-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--card-radius);
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition-premium);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .playlist-card:hover {
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* 카드 헤더 (접힌 상태 기본뷰) */
+        .card-header {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            gap: 15px;
+        }
+
+        .thumbnail {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--inner-radius);
+            object-fit: cover;
+            transition: var(--transition-premium);
+        }
+
+        .header-info {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-width: 0;
+            gap: 10px;
+        }
+
+        .title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .date {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .chevron {
+            width: 20px;
+            height: 20px;
+            fill: var(--text-secondary);
+            transition: var(--transition-premium);
+            flex-shrink: 0;
+        }
+
+        /* 확장된 콘텐츠 영역 */
+        .card-content-wrapper {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: var(--transition-premium);
+        }
+
+        .card-content {
+            overflow: hidden;
+            padding: 0 20px;
+            opacity: 0;
+            transition: opacity 0.4s ease, padding 0.6s var(--transition-premium);
+        }
+
+        /* 카드 확장 상태 */
+        .playlist-card.expanded {
+            cursor: default;
+        }
+
+        .playlist-card.expanded:hover {
+            transform: none;
+        }
+
+        .playlist-card.expanded .thumbnail {
+            width: 150px;
+            height: 150px;
+            border-radius: var(--inner-radius);
+        }
+
+        .playlist-card.expanded .chevron {
+            transform: rotate(180deg);
+        }
+
+        .playlist-card.expanded .card-header {
+            align-items: flex-start;
+            padding: 30px 20px 20px 20px;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+        }
+
+        /* 썸네일과 나란히 배치하기 위해 헤더 구조 조정 */
+        .playlist-card.expanded .header-info {
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            gap: 10px;
+        }
+
+        .playlist-card.expanded .card-content-wrapper {
+            grid-template-rows: 1fr;
+        }
+
+        .playlist-card.expanded .card-content {
+            padding: 0 20px 30px 20px;
+            opacity: 1;
+        }
+
+        /* 설명 및 재생 버튼 - 네거티브 마진 제거 및 레이아웃 개선 */
+        .description-area {
+            margin-bottom: 30px;
+        }
+
+        .description {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #cccccc;
+            margin-bottom: 20px;
+            display: none;
+            /* 기본적으로 숨김 */
+        }
+
+        .description-area-inner {
+            display: contents;
+            /* 헤더의 그리드/플렉스 영향 받도록 */
+        }
+
+        .playlist-card.expanded .description {
+            display: block;
+            /* 확장 시 보임 */
+        }
+
+        .play-btn {
+            display: none;
+            /* 기본적으로 숨김 */
+            background-color: var(--red-accent);
+            color: white;
+            border: none;
+            padding: var(--inner-padding-v) 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: var(--transition-smooth);
+        }
+
+        .playlist-card.expanded .play-btn {
+            display: inline-flex;
+            /* 확장 시 보임 */
+        }
+
+        .play-btn:hover {
+            background-color: #ff0033;
+        }
+
+        /* 트랙리스트 */
+        .tracklist {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .track-item {
+            display: flex;
+            padding: var(--inner-padding-v) 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.95rem;
+            color: inherit;
+            /* 클릭 불가하도록 커서 및 포인터 이벤트 기본값 유지 */
+        }
+
+        .track-num {
+            width: 30px;
+            color: var(--text-secondary);
+        }
+
+        .track-title {
+            flex: 1;
+        }
+
+        .track-artist {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* 순차 등장 애니메이션 */
+        .playlist-card.expanded .track-item {
+            animation: fadeInUp 0.6s var(--transition-premium) forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 모바일 반응형 조정 */
+        @media (max-width: 600px) {
+            .card-header {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .header-info {
+                width: 100%;
+                order: 2;
+                justify-content: flex-start;
+                gap: 15px;
+            }
+
+            .chevron {
+                order: 1;
+            }
+
+            .playlist-card.expanded .card-header {
+                display: flex;
+                /* 모바일에서는 다시 플렉스로 변경하여 세로 정렬 */
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .playlist-card.expanded .header-info {
+                align-items: center;
+                text-align: center;
+            }
+
+            .description-area {
+                margin-top: 10px;
+                margin-left: 0;
+                text-align: center;
+            }
+        }
+
+        /* 데스크탑에서 설명글 숨기기 제거 - 항상 보이도록 수정 */
+    </style>
+</head>
+
+<body>
+
+    <h1>Playlist</h1>
+    <br><br>
+    <div class="playlist-container" id="playlistContainer">
+        <!-- JS로 렌더링됨 -->
+    </div>
+
+    <script>
+        // 1. JSON 데이터 불러오기
+        async function init() {
+            try {
+                const response = await fetch('./playlist.json');
+                const data = await response.json();
+                renderPlaylists(data);
+            } catch (error) {
+                console.error('Failed to load playlist data:', error);
+            }
+        }
+
+        // 2. 카드 렌더링 함수
+        function renderPlaylists(data) {
+            const container = document.getElementById('playlistContainer');
+            container.innerHTML = '';
+
+            data.forEach(playlist => {
+                let tracksHTML = '';
+                if (playlist.tracks && playlist.tracks.length > 0) {
+                    playlist.tracks.forEach((track, index) => {
+                        tracksHTML += `
+                            <div class="track-item" style="animation-delay: ${0.1 + index * 0.05}s">
+                                <span class="track-num">${track.num}</span>
+                                <span class="track-title">${track.title}</span>
+                                <span class="track-artist">${track.artist}</span>
+                            </div>
+                        `;
+                    });
+                }
+
+                const cardHTML = `
+                    <div class="playlist-card" style="background: ${playlist.gradient};" onclick="toggleCard(this)">
+                        <div class="card-header">
+                            <img src="${playlist.cover}" alt="Cover" class="thumbnail">
+                            <div class="header-info">
+                                <span class="title">${playlist.title}</span>
+                                <span class="date">${playlist.date}</span>
+                                <div class="description-area-inner">
+                                    <div class="description">${playlist.description}</div>
+                                    <a href="${playlist.appleMusicLink}" target="_blank" class="play-btn">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M8 5v14l11-7z"/>
+                                        </svg>
+                                        재생하기
+                                    </a>
+                                </div>
+                            </div>
+                            <svg class="chevron" viewBox="0 0 24 24">
+                                <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                            </svg>
+                        </div>
+                        
+                        <div class="card-content-wrapper">
+                            <div class="card-content" onclick="event.stopPropagation();">
+                                <!-- 설명글을 헤더로 이동함 -->
+                                
+                                ${tracksHTML ? `<ul class="tracklist">${tracksHTML}</ul>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                container.insertAdjacentHTML('beforeend', cardHTML);
+            });
+        }
+
+        // 3. 카드 토글 제어
+        function toggleCard(element) {
+            const allCards = document.querySelectorAll('.playlist-card');
+            allCards.forEach(card => {
+                if (card !== element) card.classList.remove('expanded');
+            });
+            element.classList.toggle('expanded');
+        }
+
+        // 4. 초기화
+        init();
+    </script>
+</body>
+
+</html>
