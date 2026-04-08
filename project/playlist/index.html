@@ -232,6 +232,37 @@
             background-color: #ff0033;
         }
 
+        .play-btn-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .apple-music-text {
+            display: none; /* 기본적으로 숨김 */
+            font-size: 0.62vw;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .playlist-card.expanded .apple-music-text {
+            display: inline; /* 확장 시 보임 */
+        }
+
+        /* 하단 푸터 스타일 */
+        .footer {
+            margin-top: 80px;
+            padding-bottom: 40px;
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: 0.73vw;
+            color: var(--text-secondary);
+            letter-spacing: 0.05em;
+            opacity: 0.6;
+        }
+
         /* 트랙리스트 */
         .tracklist {
             list-style: none;
@@ -317,6 +348,14 @@
                 margin-left: 0;
                 text-align: center;
             }
+
+            .apple-music-text {
+                font-size: 10px; /* 모바일 대응 고정값 */
+            }
+
+            .footer-text {
+                font-size: 12px;
+            }
         }
 
         /* 데스크탑에서 설명글 숨기기 제거 - 항상 보이도록 수정 */
@@ -330,6 +369,10 @@
     <div class="playlist-container" id="playlistContainer">
         <!-- JS로 렌더링됨 -->
     </div>
+
+    <footer class="footer">
+        <div class="footer-text">Listen on Apple Music</div>
+    </footer>
 
     <script>
         // 1. JSON 데이터 불러오기
@@ -371,12 +414,15 @@
                                 <span class="date">${playlist.date}</span>
                                 <div class="description-area-inner">
                                     <div class="description">${playlist.description}</div>
-                                    <a href="${playlist.appleMusicLink}" target="_blank" class="play-btn">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M8 5v14l11-7z"/>
-                                        </svg>
-                                        재생하기
-                                    </a>
+                                    <div class="play-btn-wrapper">
+                                        <a href="${playlist.appleMusicLink}" target="_blank" class="play-btn">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M8 5v14l11-7z"/>
+                                            </svg>
+                                            재생하기
+                                        </a>
+                                        <span class="apple-music-text">Listen on Apple Music</span>
+                                    </div>
                                 </div>
                             </div>
                             <svg class="chevron" viewBox="0 0 24 24">
