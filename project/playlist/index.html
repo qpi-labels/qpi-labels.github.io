@@ -206,8 +206,6 @@
         }
 
         .play-btn {
-            display: none;
-            /* 기본적으로 숨김 */
             background-color: var(--red-accent);
             color: white;
             border: none;
@@ -223,30 +221,24 @@
             transition: var(--transition-smooth);
         }
 
-        .playlist-card.expanded .play-btn {
-            display: inline-flex;
-            /* 확장 시 보임 */
-        }
-
         .play-btn:hover {
             background-color: #ff0033;
         }
 
         .play-btn-wrapper {
-            display: flex;
+            display: none; /* 기본적으로 숨김 */
             align-items: center;
             gap: 12px;
         }
 
+        .playlist-card.expanded .play-btn-wrapper {
+            display: flex; /* 확장 시 보임 */
+        }
+
         .apple-music-text {
-            display: none; /* 기본적으로 숨김 */
             font-size: 0.62vw;
             color: var(--text-secondary);
             font-weight: 400;
-        }
-
-        .playlist-card.expanded .apple-music-text {
-            display: inline; /* 확장 시 보임 */
         }
 
         /* 하단 푸터 스타일 */
