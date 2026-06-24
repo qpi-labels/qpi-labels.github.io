@@ -205,9 +205,39 @@
                     </div>
                 </div>
 
-                <div class="pdf-mb-300">
-                    <!-- Project 1 -->
-                    <article class="pdf-border-bottom pdf-pb-300 pdf-mb-300">
+                <!-- Filter UI -->
+                <div class="pdf-flex-row pdf-gap-100 pdf-mb-300" style="flex-wrap: wrap;" id="project-filters">
+                    <button class="filter-btn" data-filter="all" style="border-radius: 20px; padding: 6px 16px; font-size: 14px; cursor: pointer; border: 1px solid var(--color-functional-red); background-color: var(--color-functional-red); color: white; font-weight: bold; transition: all 0.2s;">전체 보기</button>
+                    <button class="filter-btn" data-filter="디자인 시스템" style="border-radius: 20px; padding: 6px 16px; font-size: 14px; cursor: pointer; border: 1px solid var(--color-border-default); background-color: transparent; color: var(--color-text-primary); font-weight: bold; transition: all 0.2s;">디자인 시스템</button>
+                    <button class="filter-btn" data-filter="웹 서비스" style="border-radius: 20px; padding: 6px 16px; font-size: 14px; cursor: pointer; border: 1px solid var(--color-border-default); background-color: transparent; color: var(--color-text-primary); font-weight: bold; transition: all 0.2s;">웹 서비스</button>
+                    <button class="filter-btn" data-filter="설치형 앱" style="border-radius: 20px; padding: 6px 16px; font-size: 14px; cursor: pointer; border: 1px solid var(--color-border-default); background-color: transparent; color: var(--color-text-primary); font-weight: bold; transition: all 0.2s;">설치형 앱</button>
+                </div>
+
+                <div class="pdf-mb-300" id="project-list">
+                    
+                    <!-- PDF-DS (Moved to Top) -->
+                    <article class="project-item pdf-border-bottom pdf-pb-300 pdf-mb-300" data-category="디자인 시스템">
+                        <span class="pdf-text-label-14-mono pdf-text-red" style="padding: 2px 6px; border: 1px solid var(--color-functional-red); border-radius: 4px; display: inline-block; margin-bottom: 8px;">디자인 시스템</span>
+                        <h3 class="pdf-text-heading-24">PDF-DS 디자인 시스템</h3>
+                        <p class="pdf-text-label-16 pdf-text-muted pdf-mb-150">일관성 있는 디지털 경험의 시작.</p>
+                        
+                        <div class="split-body">
+                            <div class="split-image">
+                                <img src="../OG.png" alt="PDF-DS">
+                            </div>
+                            <div class="split-desc">
+                                <p class="pdf-text-copy-14 pdf-text-muted pdf-mb-200">
+                                    <strong>PDF-DS (Piece Design System)</strong>는 QPI의 모든 프로덕트를 잇는 일관된 디자인 언어입니다.<br>
+                                    컴포넌트의 재사용성을 극대화하여 개발과 디자인의 간극을 좁히고, 가장 빠르고 우아하게 사용자 경험을 구축합니다.
+                                </p>
+                                <a href="https://pdf-ds.qpi.digital" class="pdf-secondary-btn" style="text-decoration: none; display: inline-flex; justify-content: center; align-items: center; padding: 8px 16px; border: 1px solid var(--color-border-default); border-radius: 4px; color: var(--color-text-primary);">바로가기</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Project 1 (Dasein;) -->
+                    <article class="project-item pdf-border-bottom pdf-pb-300 pdf-mb-300" data-category="웹 서비스">
+                        <span class="pdf-text-label-14-mono pdf-text-red" style="padding: 2px 6px; border: 1px solid var(--color-functional-red); border-radius: 4px; display: inline-block; margin-bottom: 8px;">웹 서비스</span>
                         <h3 class="pdf-text-heading-24">Dasein;</h3>
                         <p class="pdf-text-label-16 pdf-text-muted pdf-mb-150">고뇌는 얇게. 통찰은 깊게.</p>
                         
@@ -217,17 +247,57 @@
                             </div>
                             <div class="split-desc">
                                 <p class="pdf-text-copy-14 pdf-text-muted pdf-mb-200">
-                                    <strong>Dasein;</strong> <small>[다자인;]</small>은 연구자의 시간을 오직 사유의 가치로 되돌려 놓습니다. 방대한 학술 데이터의 무게를 덜어내고, 하나의 명료한 통찰을 발견합니다. <strong>Dasein;으로 이제 가장 정제된 결론만을 누리십시오.</strong>
-                                    <br><br>이 모든 경험의 중심에는 한층 진화한 QISS가 흐르고 있습니다. QISS는 검색을 넘어 당신의 연구 맥락을 이해하고 다음 주제까지 제안하는 지능형 엔진입니다. <br><strong>QISS의 학술 전문 플랫폼으로의 비약적인 도약. 스마트함 그 자체.</strong>
+                                    <strong>Dasein;</strong> <small>[다자인;]</small>은 연구자의 시간을 오직 사유의 가치로 되돌려 놓습니다. 방대한 학술 데이터를 덜어내고, 하나의 명료한 통찰을 발견하십시오. 
+                                    <br><br>이 모든 경험의 중심에는 한층 진화한 지능형 엔진 QISS가 함께합니다. 검색을 넘어 연구의 맥락을 짚어내는 학술 전문 플랫폼으로의 도약, 스마트함 그 자체를 경험해 보세요.
                                 </p>
                                 <a href="https://dasein.qpi.digital" class="pdf-secondary-btn" style="text-decoration: none; display: inline-flex; justify-content: center; align-items: center; padding: 8px 16px; border: 1px solid var(--color-border-default); border-radius: 4px; color: var(--color-text-primary);">바로가기</a>
                             </div>
                         </div>
                     </article>
 
+                    <!-- 노벨파이 -->
+                    <article class="project-item pdf-border-bottom pdf-pb-300 pdf-mb-300" data-category="웹 서비스">
+                        <span class="pdf-text-label-14-mono pdf-text-red" style="padding: 2px 6px; border: 1px solid var(--color-functional-red); border-radius: 4px; display: inline-block; margin-bottom: 8px;">웹 서비스</span>
+                        <h3 class="pdf-text-heading-24">노벨파이</h3>
+                        <p class="pdf-text-label-16 pdf-text-muted pdf-mb-150">상상력이 현실이 되는 곳, 웹소설 플랫폼.</p>
+                        
+                        <div class="split-body">
+                            <div class="split-image">
+                                <img src="../OG.png" alt="노벨파이">
+                            </div>
+                            <div class="split-desc">
+                                <p class="pdf-text-copy-14 pdf-text-muted pdf-mb-200">
+                                    <strong>노벨파이</strong>는 누구나 작가가 될 수 있는 차세대 웹소설 연재 플랫폼입니다.<br>
+                                    쾌적한 에디터 환경과 독자 친화적인 뷰어를 통해 오직 이야기에만 온전히 몰입할 수 있는 최적의 창작 생태계를 제공합니다.
+                                </p>
+                                <a href="https://novel.qpi.digital" class="pdf-secondary-btn" style="text-decoration: none; display: inline-flex; justify-content: center; align-items: center; padding: 8px 16px; border: 1px solid var(--color-border-default); border-radius: 4px; color: var(--color-text-primary);">바로가기</a>
+                            </div>
+                        </div>
+                    </article>
 
-                    <!-- Project 3 -->
-                    <article class="pdf-border-bottom pdf-pb-300 pdf-mb-300">
+                    <!-- QPI Chat -->
+                    <article class="project-item pdf-border-bottom pdf-pb-300 pdf-mb-300" data-category="웹 서비스">
+                        <span class="pdf-text-label-14-mono pdf-text-red" style="padding: 2px 6px; border: 1px solid var(--color-functional-red); border-radius: 4px; display: inline-block; margin-bottom: 8px;">웹 서비스</span>
+                        <h3 class="pdf-text-heading-24">QPI Chat</h3>
+                        <p class="pdf-text-label-16 pdf-text-muted pdf-mb-150">누구도 엿볼 수 없는 완벽한 E2EE 메신저.</p>
+                        
+                        <div class="split-body">
+                            <div class="split-image">
+                                <img src="../OG.png" alt="QPI Chat">
+                            </div>
+                            <div class="split-desc">
+                                <p class="pdf-text-copy-14 pdf-text-muted pdf-mb-200">
+                                    <strong>QPI Chat</strong>은 종단간 암호화(End-to-End Encryption)를 기본으로 채택한 가장 안전하고 프라이빗한 채팅 솔루션입니다.<br>
+                                    서버에도 대화 내용이 평문으로 남지 않아, 그 어떤 민감한 정보도 안심하고 주고받을 수 있습니다.
+                                </p>
+                                <a href="https://chat.qpi.digital" class="pdf-secondary-btn" style="text-decoration: none; display: inline-flex; justify-content: center; align-items: center; padding: 8px 16px; border: 1px solid var(--color-border-default); border-radius: 4px; color: var(--color-text-primary);">바로가기</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Project 3 (FreeView) -->
+                    <article class="project-item pdf-border-bottom pdf-pb-300 pdf-mb-300" data-category="설치형 앱">
+                        <span class="pdf-text-label-14-mono pdf-text-red" style="padding: 2px 6px; border: 1px solid var(--color-functional-red); border-radius: 4px; display: inline-block; margin-bottom: 8px;">설치형 앱</span>
                         <h3 class="pdf-text-heading-24">FreeView</h3>
                         <p class="pdf-text-label-16 pdf-text-muted pdf-mb-150">낮말은 새가 듣고, 밤말은 내 기기만 듣는다.</p>
                         
@@ -238,16 +308,36 @@
                             <div class="split-desc">
                                 <p class="pdf-text-copy-14 pdf-text-muted pdf-mb-200">
                                     <strong>FreeView</strong>는 당신의 프라이버시를 위해 가장 정교한 기술을 가장 조용하게 가동합니다.
-                                    <br>DNS 감시 방지와 SNI 파편화 기술은 가로막힌 장벽을 소리 없이 무너뜨리고, 데이터가 외부로 새 나갈 틈을 주지 않습니다.
-                                    <br><strong>인터넷을 향한 당신의 걸음이 누군가의 기록으로 남지 않도록.</strong>
+                                    <br>DNS 감시 방지와 SNI 파편화 기술은 가로막힌 장벽을 소리 없이 무너뜨리며, 인터넷을 향한 당신의 걸음이 누군가의 기록으로 남지 않도록 철저히 보호합니다.
                                 </p>
                                 <a href="https://github.com/qpi-labels/freeview-sni" class="pdf-secondary-btn" style="text-decoration: none; display: inline-flex; justify-content: center; align-items: center; padding: 8px 16px; border: 1px solid var(--color-border-default); border-radius: 4px; color: var(--color-text-primary);">GitHub 리포지토리</a>
                             </div>
                         </div>
                     </article>
 
-                    <!-- Project 4 -->
-                    <article class="pdf-border-bottom pdf-pb-300 pdf-mb-300">
+                    <!-- qdown -->
+                    <article class="project-item pdf-border-bottom pdf-pb-300 pdf-mb-300" data-category="설치형 앱">
+                        <span class="pdf-text-label-14-mono pdf-text-red" style="padding: 2px 6px; border: 1px solid var(--color-functional-red); border-radius: 4px; display: inline-block; margin-bottom: 8px;">설치형 앱</span>
+                        <h3 class="pdf-text-heading-24">qdown</h3>
+                        <p class="pdf-text-label-16 pdf-text-muted pdf-mb-150">가장 직관적인 설치형 영상 다운로더.</p>
+                        
+                        <div class="split-body">
+                            <div class="split-image">
+                                <img src="../OG.png" alt="qdown">
+                            </div>
+                            <div class="split-desc">
+                                <p class="pdf-text-copy-14 pdf-text-muted pdf-mb-200">
+                                    <strong>qdown</strong>은 강력한 yt-dlp 엔진을 바탕으로 제작된 데스크톱 GUI 프로그램입니다.<br>
+                                    명령어 입력의 번거로움 없이 클릭 몇 번으로 유튜브 등 다양한 플랫폼의 고화질 영상과 오디오를 원하는 포맷으로 손쉽게 추출하세요.
+                                </p>
+                                <a href="https://github.com/qpi-labels/qdown" class="pdf-secondary-btn" style="text-decoration: none; display: inline-flex; justify-content: center; align-items: center; padding: 8px 16px; border: 1px solid var(--color-border-default); border-radius: 4px; color: var(--color-text-primary);">GitHub 리포지토리</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Project 4 (스터디카페 예약) -->
+                    <article class="project-item pdf-border-bottom pdf-pb-300 pdf-mb-300" data-category="웹 서비스">
+                        <span class="pdf-text-label-14-mono pdf-text-red" style="padding: 2px 6px; border: 1px solid var(--color-functional-red); border-radius: 4px; display: inline-block; margin-bottom: 8px;">웹 서비스</span>
                         <h3 class="pdf-text-heading-24">충곽 스터디카페 예약</h3>
                         <p class="pdf-text-label-16 pdf-text-muted pdf-mb-150">터치 한 번에 끝나는 좌석 확보.</p>
                         
@@ -257,7 +347,7 @@
                             </div>
                             <div class="split-desc">
                                 <p class="pdf-text-copy-14 pdf-text-muted pdf-mb-200">
-                                    매일 야간자율학습 시간, 1층 언어학습실에서 열리는 충곽 스터디카페를 예약하세요.<br><strong>오픈런 할 필요 없이, 스마트 기기로 간편하게 좌석을 확보할 수 있습니다.</strong>
+                                    매일 야간자율학습 시간, 1층 언어학습실에서 열리는 충곽 스터디카페를 예약하세요.<br><strong>오픈런 할 필요 없이, 스마트 기기 하나로 빠르고 간편하게 좌석을 확보할 수 있습니다.</strong>
                                     <br><br>
                                     <small style="opacity: 0.7;">충곽 스터디카페 예약 시스템은 2025년 한정 서비스로, 2026년 현재는 실제 예약 및 이용이 불가능합니다.</small>
                                 </p>
@@ -266,8 +356,9 @@
                         </div>
                     </article>
 
-                    <!-- Project 5 -->
-                    <article class="pdf-border-bottom pdf-pb-300 pdf-mb-300">
+                    <!-- Project 5 (Project Base) -->
+                    <article class="project-item pdf-border-bottom pdf-pb-300 pdf-mb-300" data-category="웹 서비스">
+                        <span class="pdf-text-label-14-mono pdf-text-red" style="padding: 2px 6px; border: 1px solid var(--color-functional-red); border-radius: 4px; display: inline-block; margin-bottom: 8px;">웹 서비스</span>
                         <h3 class="pdf-text-heading-24">Project Base</h3>
                         <p class="pdf-text-label-16 pdf-text-muted pdf-mb-150">work-in-progress (2026년 공개)</p>
                         
@@ -279,15 +370,16 @@
                                 <p class="pdf-text-copy-14 pdf-text-muted pdf-mb-200">
                                     시계와 나란히 걷는 하늘.<br>24시간 실시간 연동이 선사하는 경이로운 몰입감.
                                     <br><br>
-                                    <small style="opacity: 0.7;">현재 제공되는 기술 데모는 구버전 빌드로, 최적화 등의 문제가 발생할 수 있으며, 최종 배포 버전과 상이할 수 있습니다.<br>제공중인 기술 데모에서는 Exynos 2100을 비롯한 Mali 아키텍처 기반의 GPU 및 일부 저사양 모바일 AP에서 프레임 드랍 및 끊김 현상이 발생하고 있습니다. 최신 빌드에서는 최적화 작업을 통해 이러한 문제를 개선하였습니다.</small>
+                                    <small style="opacity: 0.7;">현재 제공되는 기술 데모는 구버전 빌드로, 최적화 등의 문제가 발생할 수 있으며 최종 배포 버전과 상이할 수 있습니다.<br>제공중인 기술 데모에서는 Exynos 2100을 비롯한 Mali 아키텍처 기반의 GPU 및 일부 저사양 모바일 AP에서 프레임 드랍 및 끊김 현상이 발생하고 있습니다. 최신 빌드에서는 최적화 작업을 통해 이러한 문제를 개선하였습니다.</small>
                                 </p>
                                 <a href="./base_demo" class="pdf-secondary-btn" style="text-decoration: none; display: inline-flex; justify-content: center; align-items: center; padding: 8px 16px; border: 1px solid var(--color-border-default); border-radius: 4px; color: var(--color-text-primary);">기술 데모 바로가기</a>
                             </div>
                         </div>
                     </article>
 
-                    <!-- Project 6 -->
-                    <article class="pdf-border-bottom pdf-pb-300 pdf-mb-300">
+                    <!-- Project 6 (QETS) -->
+                    <article class="project-item pdf-border-bottom pdf-pb-300 pdf-mb-300" data-category="웹 서비스">
+                        <span class="pdf-text-label-14-mono pdf-text-red" style="padding: 2px 6px; border: 1px solid var(--color-functional-red); border-radius: 4px; display: inline-block; margin-bottom: 8px;">웹 서비스</span>
                         <h3 class="pdf-text-heading-24">QETS</h3>
                         <p class="pdf-text-label-16 pdf-text-muted pdf-mb-150">원소 주기율표, 118개의 원소를 한눈에.</p>
                         
@@ -297,90 +389,67 @@
                             </div>
                             <div class="split-desc">
                                 <p class="pdf-text-copy-14 pdf-text-muted pdf-mb-200">
-                                    카테고리별 네온 하이라이트로 더 쉽고, 더 선명하게.
+                                    118개의 원소를 가장 직관적으로. 카테고리별 네온 하이라이트를 통해 복잡한 원소 주기율표를 한눈에 더 쉽고 선명하게 파악할 수 있는 차세대 교육용 도구입니다.
                                 </p>
                                 <a href="https://qets.kro.kr" class="pdf-secondary-btn" style="text-decoration: none; display: inline-flex; justify-content: center; align-items: center; padding: 8px 16px; border: 1px solid var(--color-border-default); border-radius: 4px; color: var(--color-text-primary);">바로가기</a>
                             </div>
                         </div>
                     </article>
                     
-                    <!-- PDF-DS -->
-                    <article class="pdf-border-bottom pdf-pb-300 pdf-mb-300">
-                        <h3 class="pdf-text-heading-24">PDF-DS 디자인 시스템</h3>
-                        <p class="pdf-text-label-16 pdf-text-muted pdf-mb-150">일관성 있는 디지털 경험의 시작.</p>
-                        
-                        <div class="split-body">
-                            <div class="split-image">
-                                <img src="../OG.png" alt="PDF-DS">
-                            </div>
-                            <div class="split-desc">
-                                <p class="pdf-text-copy-14 pdf-text-muted pdf-mb-200">
-                                    <strong>PDF-DS (Piece Design System)</strong>는 QPI의 모든 프로덕트를 잇는 일관된 디자인 언어입니다.<br>
-                                    컴포넌트 재사용성을 극대화하고 개발과 디자인의 간극을 좁혀, 가장 빠르고 우아하게 사용자 경험을 구축합니다.
-                                </p>
-                                <a href="https://pdf-ds.qpi.digital" class="pdf-secondary-btn" style="text-decoration: none; display: inline-flex; justify-content: center; align-items: center; padding: 8px 16px; border: 1px solid var(--color-border-default); border-radius: 4px; color: var(--color-text-primary);">바로가기</a>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- 노벨파이 -->
-                    <article class="pdf-border-bottom pdf-pb-300 pdf-mb-300">
-                        <h3 class="pdf-text-heading-24">노벨파이</h3>
-                        <p class="pdf-text-label-16 pdf-text-muted pdf-mb-150">상상력이 현실이 되는 곳, 웹소설 플랫폼.</p>
-                        
-                        <div class="split-body">
-                            <div class="split-image">
-                                <img src="../OG.png" alt="노벨파이">
-                            </div>
-                            <div class="split-desc">
-                                <p class="pdf-text-copy-14 pdf-text-muted pdf-mb-200">
-                                    <strong>노벨파이</strong>는 누구나 작가가 될 수 있는 차세대 웹소설 연재 플랫폼입니다.<br>
-                                    쾌적한 에디터 환경과 독자 친화적인 뷰어를 통해, 오직 이야기에만 몰입할 수 있는 최적의 창작 생태계를 제공합니다.
-                                </p>
-                                <a href="https://novel.qpi.digital" class="pdf-secondary-btn" style="text-decoration: none; display: inline-flex; justify-content: center; align-items: center; padding: 8px 16px; border: 1px solid var(--color-border-default); border-radius: 4px; color: var(--color-text-primary);">바로가기</a>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- QPI Chat -->
-                    <article class="pdf-border-bottom pdf-pb-300 pdf-mb-300">
-                        <h3 class="pdf-text-heading-24">QPI Chat</h3>
-                        <p class="pdf-text-label-16 pdf-text-muted pdf-mb-150">누구도 엿볼 수 없는 완벽한 E2EE 메신저.</p>
-                        
-                        <div class="split-body">
-                            <div class="split-image">
-                                <img src="../OG.png" alt="QPI Chat">
-                            </div>
-                            <div class="split-desc">
-                                <p class="pdf-text-copy-14 pdf-text-muted pdf-mb-200">
-                                    <strong>QPI Chat</strong>은 종단간 암호화(End-to-End Encryption)를 기본으로 채택한 안전하고 프라이빗한 채팅 솔루션입니다.<br>
-                                    서버에도 대화 내용이 평문으로 남지 않아, 가장 민감한 정보도 안심하고 주고받을 수 있습니다.
-                                </p>
-                                <a href="https://chat.qpi.digital" class="pdf-secondary-btn" style="text-decoration: none; display: inline-flex; justify-content: center; align-items: center; padding: 8px 16px; border: 1px solid var(--color-border-default); border-radius: 4px; color: var(--color-text-primary);">바로가기</a>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- qdown -->
-                    <article>
-                        <h3 class="pdf-text-heading-24">qdown</h3>
-                        <p class="pdf-text-label-16 pdf-text-muted pdf-mb-150">가장 직관적인 설치형 영상 다운로더.</p>
-                        
-                        <div class="split-body">
-                            <div class="split-image">
-                                <img src="../OG.png" alt="qdown">
-                            </div>
-                            <div class="split-desc">
-                                <p class="pdf-text-copy-14 pdf-text-muted pdf-mb-200">
-                                    <strong>qdown</strong>은 강력한 yt-dlp 엔진을 기반으로 구축된 데스크톱 GUI 프로그램입니다.<br>
-                                    명령어 입력의 번거로움 없이 클릭 몇 번으로 유튜브 등 다양한 플랫폼의 고화질 영상과 오디오를 원하는 포맷으로 손쉽게 추출하세요.
-                                </p>
-                                <a href="https://github.com/qpi-labels/qdown" class="pdf-secondary-btn" style="text-decoration: none; display: inline-flex; justify-content: center; align-items: center; padding: 8px 16px; border: 1px solid var(--color-border-default); border-radius: 4px; color: var(--color-text-primary);">GitHub 리포지토리</a>
-                            </div>
-                        </div>
-                    </article>
-
                 </div>
+                
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const filterBtns = document.querySelectorAll('.filter-btn');
+                        const projectItems = document.querySelectorAll('.project-item');
+
+                        // 하단 보더 제거 유틸 (마지막 요소만 제거해서 깔끔하게)
+                        const updateBorders = () => {
+                            const visibleItems = Array.from(projectItems).filter(item => item.style.display !== 'none');
+                            
+                            // 모든 아이템에 보더 추가
+                            projectItems.forEach(item => {
+                                item.classList.add('pdf-border-bottom', 'pdf-pb-300', 'pdf-mb-300');
+                            });
+                            
+                            // 마지막 아이템은 보더 제거
+                            if (visibleItems.length > 0) {
+                                const lastItem = visibleItems[visibleItems.length - 1];
+                                lastItem.classList.remove('pdf-border-bottom', 'pdf-pb-300', 'pdf-mb-300');
+                            }
+                        };
+
+                        filterBtns.forEach(btn => {
+                            btn.addEventListener('click', () => {
+                                // 1. 전체 버튼 스타일 초기화
+                                filterBtns.forEach(b => {
+                                    b.style.backgroundColor = 'transparent';
+                                    b.style.color = 'var(--color-text-primary)';
+                                    b.style.border = '1px solid var(--color-border-default)';
+                                });
+
+                                // 2. 클릭된 버튼 스타일 변경
+                                btn.style.backgroundColor = 'var(--color-functional-red)';
+                                btn.style.color = 'white';
+                                btn.style.border = '1px solid var(--color-functional-red)';
+
+                                // 3. 필터링 로직
+                                const filterValue = btn.getAttribute('data-filter');
+                                projectItems.forEach(item => {
+                                    if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+                                        item.style.display = 'block';
+                                    } else {
+                                        item.style.display = 'none';
+                                    }
+                                });
+                                
+                                updateBorders();
+                            });
+                        });
+                        
+                        updateBorders();
+                    });
+                </script>
 
                 <div class="pdf-border-top pdf-pt-200 pdf-text-label-14-mono pdf-text-muted">
                     Copyright © 2024 QPI. All rights reserved.
