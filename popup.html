@@ -1,20 +1,24 @@
-<div id="main-popup" class="popup-overlay">
-    <div class="popup-content">
-        <div class="popup-header">
-            <h2 class="popup-title">공지사항</h2>
-            <div class="popup-vhs-line"></div>
+<div id="main-popup" class="popup-overlay" style="background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);">
+    <div class="pdf-panel pdf-grid-bg" style="width: 90%; max-width: 460px; padding: 32px; border: 1px solid var(--color-border-default); box-shadow: 0 20px 40px rgba(0,0,0,0.15); border-radius: 8px; animation: pdfModalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+        <div class="pdf-border-bottom pdf-pb-150 pdf-mb-200 pdf-flex-row pdf-justify-between" style="align-items: baseline;">
+            <h2 class="pdf-text-heading-24">공지사항</h2>
+            <span class="pdf-text-label-14-mono pdf-text-red">NOTICE</span>
         </div>
-        <div class="popup-body">
-            안녕하십니까, 쿼터파이입니다.
+        <div class="pdf-text-copy-14 pdf-text-muted pdf-mb-300" style="line-height: 1.7; word-break: keep-all;">
+            안녕하십니까, <strong>QPI</strong>입니다.
             <br><br>Dasein;에서 "연구 주제 추천받기" 기능으로 제공중인 AI 기능을 사용할 수 없는 문제가 발생하고 있습니다.
-            <br><br>AI 기능을 제공중인 서버가 일정 시간 이후 알 수 없는 이유로 멈춰, Faild to Fetch 오류가 발생하고 있습니다.
-            <br><br>현재 원인 파악 및 해결을 위해 최선을 다하고 있습니다.
-            <br><br>더욱 쾌적하고 끊김 없는 서비스 경험을 제공하기 위해 최선을 다하겠습니다. 쿼터파이는 문제 해결을 위해 노력하는 한편, 대안적 방법에 대해서도 다방면으로 탐색하겠습니다.
-            죄송합니다.
+            <br><br>AI 기능을 제공중인 서버가 일정 시간 이후 알 수 없는 이유로 멈춰, <code style="background:var(--color-bg-secondary); padding: 2px 4px; border-radius: 4px;">Failed to Fetch</code> 오류가 발생하고 있습니다.
+            <br><br>더욱 쾌적하고 끊김 없는 서비스 경험을 제공하기 위해 최선을 다하겠습니다. QPI는 문제 해결을 위해 노력하는 한편, 대안적 방법에 대해서도 다방면으로 탐색하겠습니다. 죄송합니다.
         </div>
-        <div class="popup-footer">
-            <button onclick="closeToday()" class="popup-btn">오늘 하루 보지 않기</button>
-            <button onclick="closePopup()" class="popup-btn btn-close">닫기</button>
+        <div class="pdf-flex-row pdf-gap-100">
+            <button onclick="closeToday()" class="pdf-secondary-btn" style="flex: 1; justify-content: center; padding: 10px 16px;">오늘 하루 보지 않기</button>
+            <button onclick="closePopup()" class="pdf-btn-primary" style="background-color: var(--color-functional-red); color: white; border: none; flex: 1; justify-content: center; padding: 10px 16px; font-weight: bold; border-radius: 24px; cursor: pointer;">닫기</button>
         </div>
     </div>
+    <style>
+        @keyframes pdfModalFadeIn {
+            from { opacity: 0; transform: translateY(16px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+    </style>
 </div>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Made with PDF-DS Watermark</title>
+    <!-- ⚠️ 실제 프로젝트의 PDF-DS CSS를 그대로 불러옵니다 ⚠️ -->
+    <link rel="stylesheet" href="/src/index.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        /* 미리보기 화면 컨트롤 용 CSS (실제 캡처 이미지와 무관) */
+        body {
+            background-color: #222;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 50px;
+            margin: 0;
+            overflow-x: hidden;
+            font-family: sans-serif;
+        }
+        
+        .controls {
+            margin-bottom: 30px;
+            text-align: center;
+            color: white;
+            z-index: 100;
+        }
+
+        .canvas-wrapper {
+            transform: scale(0.25);
+            transform-origin: top center;
+            margin-bottom: -1600px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            border-radius: 8px;
+            overflow: hidden;
+            background: white; /* Fallback */
+        }
+
+        /* 4K 캡처 영역 */
+        .canvas {
+            width: 3840px;
+            height: 2160px;
+        }
+        
+        /* 4K 크기에 맞게 패널을 4배 확대 */
+        .watermark-scale {
+            transform: scale(4);
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <h2 style="margin-bottom: 10px;">PDF-DS 오리지널 디자인 워터마크</h2>
+        <p style="margin-bottom: 25px; color: #aaa; font-size: 15px;">이 페이지는 <code>/src/index.css</code>의 실제 클래스들을 그대로 조합해서 만든 "찐" PDF-DS 디자인입니다.</p>
+        <!-- 다운로드 버튼도 PDF-DS 버튼 클래스를 사용! -->
+        <button class="pdf-btn-primary pdf-btn-xl" onclick="download4K()">
+            이미지 저장하기 (3840 x 2160)
+        </button>
+    </div>
+
+    <div class="canvas-wrapper">
+        <!-- 
+            PDF-DS 공식 클래스: 
+            pdf-app: 기본 레이아웃 및 폰트 설정
+            pdf-bg-secondary: 옅은 회색 배경
+            pdf-grid-bg: 블루프린트 패턴 배경
+            pdf-flex-col, pdf-items-center, pdf-justify-center: 정중앙 정렬
+        -->
+        <div class="canvas pdf-app pdf-bg-secondary pdf-grid-bg pdf-flex-col pdf-items-center pdf-justify-center" id="capture-area">
+            
+            <!-- pdf-content-relative: grid보다 위로 올라오도록 z-index 부여 -->
+            <div class="watermark-scale pdf-content-relative">
+                
+                <!-- pdf-panel: 하드웨어 베벨 그림자 패널 -->
+                <div class="pdf-panel pdf-flex-col pdf-items-center" style="padding: var(--space-400) var(--space-600); min-width: 400px;">
+                    
+                    <div class="pdf-text-label-16 pdf-font-mono pdf-mb-150" style="color: var(--color-text-secondary); letter-spacing: 0.1em; text-transform: lowercase;">
+                        made with
+                    </div>
+                    
+                    <div class="pdf-text-heading-72 pdf-text-red">
+                        PDF-DS
+                    </div>
+                    
+                </div>
+                
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        function download4K() {
+            const element = document.getElementById('capture-area');
+            const btn = document.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = "4K 렌더링 중... 잠시만 기다려주세요";
+            btn.style.opacity = '0.5';
+            btn.disabled = true;
+
+            html2canvas(element, {
+                width: 3840,
+                height: 2160,
+                scale: 1, 
+                useCORS: true,
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'pdf-ds-watermark-4k.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+                btn.innerText = originalText;
+                btn.style.opacity = '1';
+                btn.disabled = false;
+            }).catch(err => {
+                console.error(err);
+                alert("이미지 생성 중 오류가 발생했습니다.");
+                btn.innerText = originalText;
+                btn.style.opacity = '1';
+                btn.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>

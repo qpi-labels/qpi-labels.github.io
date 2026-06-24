@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- Outer hardware bevel/shadow (Active Red) -->
+  <rect x="10" y="15" width="100" height="100" rx="28" fill="#941A1A" />
+  
+  <!-- Main red surface (Functional Red) -->
+  <rect x="10" y="5" width="100" height="100" rx="28" fill="#AD1D1D" />
+  
+  <!-- Inner hardware highlight (top edge) -->
+  <path d="M 38 7 L 82 7 A 26 26 0 0 1 108 33 L 108 40 A 26 26 0 0 0 82 14 L 38 14 A 26 26 0 0 0 12 40 L 12 33 A 26 26 0 0 1 38 7 Z" fill="#FFFFFF" opacity="0.4" />
+  
+  <!-- Geometric tactile indicator (White dot) -->
+  <circle cx="60" cy="55" r="16" fill="#FFFFFF" />
+</svg>

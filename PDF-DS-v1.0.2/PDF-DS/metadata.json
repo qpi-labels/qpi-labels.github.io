@@ -1,0 +1,8 @@
+{
+  "name": "PDF-DS Design Guidelines",
+  "description": "Introduction and interactive specifications for the Physical-Digital Fusion Design System (PDF-DS), integrating Dieter Rams principles, high-contrast achromatic layouts, and shape-morphing tactile components.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

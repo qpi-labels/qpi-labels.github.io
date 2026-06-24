@@ -1,23 +1,21 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/x-icon" href="./logo.ico">
-    <title>쿼터파이</title>
-    <meta name="description" content="쿼터파이는 충남과학고등학교 유일의 웹개발 동아리입니다!">
+    <title>QPI</title>
+    <meta name="description" content="QPI는 충남과학고등학교 유일의 웹개발 동아리입니다!">
     <meta property="og:url" content="https://qpi.digital/">
-    <meta property="og:title" content="쿼터파이">
+    <meta property="og:title" content="QPI">
     <meta property="og:type" content="website">
     <meta property="og:logo" content="./logo.ico" />
     <meta property="og:image" content="/OG.png">
-    <meta property="og:description" content="쿼터파이">
+    <meta property="og:description" content="QPI">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" as="style" crossorigin
         href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
-    <link rel="stylesheet" href="style.css">
-
+    <link rel="stylesheet" href="pdf-ds.css">
     <style>
         #popup-container {
             display: none;
@@ -35,75 +33,214 @@
             justify-content: center;
             align-items: center;
         }
+
+        body {
+            background-color: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* VHS Stripe Design */
+        .vhs-sticky-bar {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        .vhs-label-bar {
+            background: #8B1F28;
+            color: #FEF9E6;
+            padding: 10px 12px;
+            display: flex;
+            justify-content: space-between;
+            font-family: "Noto Serif KR", serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+        .vhs-stripes { display: flex; flex-direction: column; gap: 5px; margin-top: 5px; }
+        .stripe { width: 100%; }
+        .s-3 { height: 24px; background: #BC1F1F; }
+        .s-2 { height: 16px; background: #CC5419; }
+        .s-1 { height: 8px; background: #D4A829; }
     </style>
 </head>
-
 <body>
     <div id="popup-container"></div>
-    <div class="paper-grain"></div>
-    <div class="fixed-vertical-line"></div>
-
-    <div class="layout-grid">
-
-        <header class="intro-section">
-            <h1 class="main-slogan">세상을 바꾸는<br>작은 움직임.</h1>
-            <nav class="nav-buttons">
-                <a href="./project/" class="btn btn-filled">프로젝트 보기</a>
-                <a href="./design/" class="btn btn-outline">쿼터파이 설계</a>
-            </nav>
-        </header>
-
-        <div class="vhs-sticky-bar">
-            <div class="vhs-container">
-                <div class="vhs-label-bar">
-                    <span class="url">qpi.digital</span>
-                    <span class="brand-name" style="font-family: --font-sans;">쿼터파이</span>
+    <div class="pdf-app">
+        <!-- SIDEBAR -->
+        <aside class="pdf-sidebar" id="sidebar">
+            <div class="pdf-content-relative pdf-p-300">
+                <div class="pdf-mb-300">
+                    <span class="pdf-text-label-14-mono pdf-text-red pdf-mb-100" style="display: block;">
+                        QPI.DIGITAL
+                    </span>
+                    <div class="pdf-flex-row pdf-justify-between pdf-items-center pdf-mb-100">
+                        <h1 class="pdf-text-heading-32">
+                            QPI
+                        </h1>
+                    </div>
+                    <p class="pdf-text-copy-14 pdf-text-muted">
+                        세상을 바꾸는 작은 움직임. 충남과학고등학교 유일의 웹 개발 동아리입니다.
+                    </p>
                 </div>
-                <div class="vhs-stripes">
-                    <div class="stripe s-3"></div>
-                    <div class="stripe s-2"></div>
-                    <div class="stripe s-1"></div>
+
+                <nav>
+                    <span class="pdf-text-label-14-mono pdf-text-muted pdf-border-bottom pdf-pb-100 pdf-mb-100 pdf-font-bold" style="display: block;">
+                        NAVIGATION INDEX
+                    </span>
+
+                    <div class="pdf-mb-200">
+                        <!-- Nav Item 1 -->
+                        <div class="pdf-nav-item active">
+                            <div class="pdf-flex-row pdf-items-center pdf-gap-150 pdf-overflow-hidden pdf-w-full">
+                                <span class="pdf-text-label-14-mono pdf-text-center pdf-font-bold" style="background-color: var(--color-functional-red); color: var(--color-bg-primary); padding: 4px 8px; border-radius: 2px; min-width: 32px;">
+                                    01
+                                </span>
+                                <div class="pdf-flex-col pdf-overflow-hidden" style="flex: 1;">
+                                    <span class="pdf-text-label-16 pdf-flex-row pdf-items-center pdf-overflow-hidden" style="white-space: nowrap; text-overflow: ellipsis; font-weight: bold; color: var(--color-functional-red);">
+                                        메인 홈
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nav Item 2 (Link) -->
+                        <a href="./project/" style="text-decoration: none; display: block; color: inherit;">
+                            <div class="pdf-nav-item">
+                                <div class="pdf-flex-row pdf-items-center pdf-gap-150 pdf-overflow-hidden pdf-w-full">
+                                    <span class="pdf-text-label-14-mono pdf-text-center pdf-font-bold" style="background-color: var(--color-border-default); color: var(--color-text-secondary); padding: 4px 8px; border-radius: 2px; min-width: 32px;">
+                                        02
+                                    </span>
+                                    <div class="pdf-flex-col pdf-overflow-hidden" style="flex: 1;">
+                                        <span class="pdf-text-label-16 pdf-flex-row pdf-items-center pdf-overflow-hidden" style="white-space: nowrap; text-overflow: ellipsis;">
+                                            프로젝트 보기
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Nav Item 3 (Link) -->
+                        <a href="https://pdf-ds.qpi.digital" style="text-decoration: none; display: block; color: inherit;">
+                            <div class="pdf-nav-item">
+                                <div class="pdf-flex-row pdf-items-center pdf-gap-150 pdf-overflow-hidden pdf-w-full">
+                                    <span class="pdf-text-label-14-mono pdf-text-center pdf-font-bold" style="background-color: var(--color-border-default); color: var(--color-text-secondary); padding: 4px 8px; border-radius: 2px; min-width: 32px;">
+                                        03
+                                    </span>
+                                    <div class="pdf-flex-col pdf-overflow-hidden" style="flex: 1;">
+                                        <span class="pdf-text-label-16 pdf-flex-row pdf-items-center pdf-overflow-hidden" style="white-space: nowrap; text-overflow: ellipsis;">
+                                            QPI 설계 (PDF-DS)
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </nav>
+
+                <!-- Footer info within sidebar -->
+                <div class="pdf-mt-300 pdf-border-top pdf-pt-200">
+                    <div class="pdf-flex-col pdf-gap-100">
+                        <span class="pdf-text-label-14-mono pdf-text-muted">SINCE 2024</span>
+                        <div class="pdf-text-copy-14">
+                            <strong>황석현</strong> <br> <a href="mailto:cnsh32_1218@cnsh.hs.kr" class="pdf-text-red" style="text-decoration: none;">cnsh32_1218@cnsh.hs.kr</a>
+                        </div>
+                        <div class="pdf-text-label-14-mono pdf-text-muted" style="font-size: 11px;">
+                            충청남도 공주시 반포면 마암리 1351-15 (32620)
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <br><br>
+        </aside>
 
-        <main class="main-content">
-            <div class="content-wrapper">
-                <article class="content-section">
-                    <h2 class="section-title">01. 쿼터파이 Since 2024</h2>
-                    <p class="section-body">
-                        <strong>쿼터파이</strong>는 창의적이고 혁신적인 웹 개발 작업을 통해 학생들의 기술적 성장과 협업 능력을 키우는 충남과학고등학교 유일의 웹 개발 동아리입니다..
+        <!-- Mobile Nav Toggle Button -->
+        <div class="pdf-mobile-bottom-bar pdf-fixed pdf-flex-row pdf-justify-center" id="mobile-bottom-bar" style="bottom: 16px; left: 16px; right: 16px; z-index: 1000; display: none;">
+            <button
+                id="mobile-nav-toggle"
+                class="pdf-btn-primary"
+                style="border-radius: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); padding: 12px 24px; background-color: var(--color-functional-red); color: white; border: none; font-weight: bold; cursor: pointer;"
+            >
+                목차 열기
+            </button>
+        </div>
+        <div id="mobile-nav-overlay" class="pdf-fixed pdf-inset-0" style="background-color: rgba(0,0,0,0.5); z-index: 999; display: none;"></div>
+
+        <!-- SPLITTER -->
+        <div class="pdf-splitter"></div>
+
+        <!-- MAIN CONTENT VIEW -->
+        <main id="documentation-scroller" class="pdf-main-view">
+            <div class="pdf-main-content">
+                
+                <!-- VHS Stripe Area -->
+                <div class="vhs-sticky-bar">
+                    <div class="vhs-container">
+                        <div class="vhs-label-bar">
+                            <span class="url">qpi.digital</span>
+                            <span class="brand-name">QPI</span>
+                        </div>
+                        <div class="vhs-stripes">
+                            <div class="stripe s-3"></div>
+                            <div class="stripe s-2"></div>
+                            <div class="stripe s-1"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pdf-panel pdf-grid-bg pdf-mb-300">
+                    <div class="pdf-content-relative">
+                        <span class="pdf-text-label-14-mono pdf-text-red pdf-mb-100" style="display: block;">
+                            QPI INTRODUCTION
+                        </span>
+                        <div class="pdf-flex-row pdf-justify-between" style="align-items: baseline;">
+                            <h2 class="pdf-text-heading-32">
+                                세상을 바꾸는 작은 움직임.
+                            </h2>
+                            <div class="pdf-text-label-14-mono pdf-text-muted">
+                                VER 1.0.0
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pdf-mb-300">
+                    <h3 class="pdf-text-heading-24 pdf-mb-150">01. QPI Since 2024</h3>
+                    <p class="pdf-text-copy-16 pdf-text-muted pdf-mb-300" style="line-height: 1.8;">
+                        <strong class="pdf-text-primary">QPI(Quarter Pie)</strong>는 창의적이고 혁신적인 웹 개발 작업을 통해 학생들의 기술적 성장과 협업 능력을 키우는 <strong class="pdf-text-red">충남과학고등학교 유일의 웹 개발 동아리</strong>입니다. 우리는 단순한 코딩을 넘어, 실제 사용자의 삶을 변화시키는 실용적이고 아름다운 소프트웨어를 만드는 것을 목표로 합니다.
                     </p>
-                </article>
-                <article class="content-section">
-                    <h2 class="section-title">02. 역사</h2>
-                    <p class="section-body">
-                        쿼터파이는 2024년 3월 9일에 창립된 이후, 2025년 처음으로 공식 자율동아리로 등록되었습니다. 이후 쿼터파이는 학생들이 웹 개발에 대한 열정을 공유하고 기술을
-                        향상시키는 공간으로 성장해가고 있습니다.
+
+                    <h3 class="pdf-text-heading-24 pdf-mb-150">02. 핵심 가치 (Core Values)</h3>
+                    <div class="split-body pdf-mb-300">
+                        <div class="split-desc" style="flex: 1;">
+                            <ul class="pdf-text-copy-16 pdf-text-muted" style="line-height: 1.8; margin-left: 20px;">
+                                <li><strong>혁신 (Innovation):</strong> 기존의 틀을 깨고, 새로운 기술과 디자인 패러다임을 지속적으로 탐구합니다.</li>
+                                <li><strong>실용 (Practicality):</strong> 학생과 연구자, 나아가 대중이 겪는 일상적인 문제를 해결하는 프로덕트를 개발합니다.</li>
+                                <li><strong>미학 (Aesthetics):</strong> 모든 결과물은 완벽한 기능과 더불어 직관적이고 아름다운 디자인을 갖추어야 합니다.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3 class="pdf-text-heading-24 pdf-mb-150">03. 주요 활동</h3>
+                    <p class="pdf-text-copy-16 pdf-text-muted pdf-mb-300" style="line-height: 1.8;">
+                        웹 프론트엔드부터 백엔드 인프라, 그리고 UI/UX 디자인까지 풀스택 개발 역량을 기릅니다. 독자적인 디자인 시스템인 <strong>PDF-DS</strong>를 구축하고 유지보수하며, 학술 검색 엔진 <strong>Dasein;</strong>, 웹소설 플랫폼 <strong>노벨파이</strong>, 프라이버시 메신저 <strong>QPI Chat</strong> 등 다양한 실무형 프로젝트를 동시다발적으로 전개하고 있습니다.
                     </p>
-                </article>
+
+                    <h3 class="pdf-text-heading-24 pdf-mb-150">04. 역사</h3>
+                    <p class="pdf-text-copy-16 pdf-text-muted pdf-mb-300" style="line-height: 1.8;">
+                        QPI는 2024년 3월 9일에 창립된 이후, 2025년 처음으로 공식 자율동아리로 등록되었습니다. 짧은 역사 속에서도 폭발적인 결과물들을 선보이며, 충남과학고 내외로 웹 개발에 대한 열정을 확산시키는 중추적인 공간으로 빠르게 성장하고 있습니다.
+                    </p>
+                </div>
+
+                <div class="pdf-border-top pdf-pt-200 pdf-text-label-14-mono pdf-text-muted">
+                    Copyright © 2024 QPI. All rights reserved.
+                </div>
+                
             </div>
         </main>
-
-        <footer class="metadata-footer">
-            <div class="meta-item-group">
-                <span class="meta-label">쿼터파이</span>
-                <span class="meta-value" style="font-family: var(--font-serif);">SINCE 2024</span>
-            </div>
-            <div class="meta-item">
-                <span class="meta-name" style="font-family: var(--font-serif);">황석현</span>
-                <a href="mailto:cnsh32_1218@cnsh.hs.kr" class="meta-email">cnsh32_1218@cnsh.hs.kr</a>
-            </div>
-            <div class="meta-item">
-                <span class="meta-address"
-                    style="font-family: var(--font-serif); color: inherit; text-decoration: none; ">충청남도 공주시 반포면 마암리
-                    1351-15</span>
-                <span class="meta-zip">32620</span>
-            </div>
-        </footer>
     </div>
+
+    <!-- Scripts for mobile toggle and popup -->
     <script>
+        // Popup Logic
         document.addEventListener("DOMContentLoaded", function () {
             const popupContainer = document.getElementById('popup-container');
             const hideUntil = localStorage.getItem('hideQpiPopup');
@@ -118,6 +255,43 @@
                     })
                     .catch(err => console.error("팝업 로드 에러:", err));
             }
+            
+            // Mobile Nav Logic
+            const toggleBtn = document.getElementById('mobile-nav-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobile-nav-overlay');
+            
+            function checkMobile() {
+                if (window.innerWidth < 1200) {
+                    document.getElementById('mobile-bottom-bar').style.display = 'flex';
+                } else {
+                    document.getElementById('mobile-bottom-bar').style.display = 'none';
+                    if (sidebar) sidebar.classList.remove('mobile-nav-open');
+                    if (overlay) overlay.style.display = 'none';
+                    if (toggleBtn) toggleBtn.innerText = '목차 열기';
+                }
+            }
+            
+            window.addEventListener('resize', checkMobile);
+            checkMobile();
+
+            if (toggleBtn && sidebar && overlay) {
+                const toggleNav = () => {
+                    const isOpen = sidebar.classList.contains('mobile-nav-open');
+                    if (isOpen) {
+                        sidebar.classList.remove('mobile-nav-open');
+                        overlay.style.display = 'none';
+                        toggleBtn.innerText = '목차 열기';
+                    } else {
+                        sidebar.classList.add('mobile-nav-open');
+                        overlay.style.display = 'block';
+                        toggleBtn.innerText = '닫기';
+                    }
+                };
+
+                toggleBtn.addEventListener('click', toggleNav);
+                overlay.addEventListener('click', toggleNav);
+            }
         });
 
         function closePopup() {
@@ -130,16 +304,14 @@
             localStorage.setItem('hideQpiPopup', expireDate);
             closePopup();
         }
-
     </script>
     <script type="application/ld+json">
         {
             "@context": "https://schema.org",
             "@type": "WebSite",
-            "name": "쿼터파이",
+            "name": "QPI",
             "url": "https://qpi.digital"
         }
-</script>
+    </script>
 </body>
-
 </html>
