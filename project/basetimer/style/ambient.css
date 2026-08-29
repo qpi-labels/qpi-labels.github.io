@@ -56,8 +56,8 @@ button { font-family: 'Roboto', sans-serif; }
 
 .glass-panel-base {
 	background: var(--glass-bg);
-	backdrop-filter: blur(20px);
-	-webkit-backdrop-filter: blur(20px);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
 	border: 1px solid var(--glass-border);
 	color: var(--text-main);
 	box-shadow: 0 10px 40px rgba(0,0,0,0.25);
@@ -75,12 +75,6 @@ button { font-family: 'Roboto', sans-serif; }
 	h3, p, span, button {
 		transition: color 0.5s;
 	}
-}
-
-/* 성능 모드 시 블러 부하 감소 (가시성은 유지) */
-body.perf-active .glass-panel-base {
-	backdrop-filter: blur(8px);
-	-webkit-backdrop-filter: blur(8px);
 }
 
 .bottom-clock { 

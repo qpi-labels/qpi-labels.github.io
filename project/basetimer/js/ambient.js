@@ -7,8 +7,6 @@ const timeRangeEl = document.getElementById('timeRange');
 const autoCheckEl = document.getElementById('autoCheck');
 
 // --- 성능 보간 변수 ---
-const perfToggleEl = document.getElementById('perfToggle');
-let isPerfMode = localStorage.getItem('qpi_perf_mode_v2') === 'true';
 let frameCounter = -1; // 렌더링 스로틀링용, 첫 프레임은 무조건 렌더
 
 const flareEls = {
@@ -18,17 +16,6 @@ const flareEls = {
 	'mh-1': document.getElementById('mh-1'),
 	'sunFC': document.getElementById('sunFlareCont'),
 	'moonFC': document.getElementById('moonFlareCont')
-};
-
-// 초기 성능 설정 적용
-perfToggleEl.checked = isPerfMode;
-if(isPerfMode) document.body.classList.add('perf-active');
-
-perfToggleEl.onchange = (e) => {
-	isPerfMode = e.target.checked;
-	localStorage.setItem('qpi_perf_mode_v2', isPerfMode);
-	if(isPerfMode) document.body.classList.add('perf-active');
-	else document.body.classList.remove('perf-active');
 };
 
 let manualMinutes = 720, lastTimestamp = performance.now(), currentSpeed = 1;
@@ -297,13 +284,11 @@ function loop(now) {
 
 	requestAnimationFrame(loop);
 
-	// 성능 모드 시 무거운 그래픽 연산 스로틀링 (30프레임당 1회)
-	if (isPerfMode) {
-		if (isCatchingUp || (!autoCheckEl.checked&&Math.abs(currentSpeed)>2)) {
-			if (frameCounter % 2 !== 0) return;
-		} else {
-			if (frameCounter % 30 !== 0) return;
-		}
+	// 무거운 그래픽 연산 스로틀링 (30프레임당 1회)
+	if (isCatchingUp || (!autoCheckEl.checked&&Math.abs(currentSpeed)>2)) {
+		if (frameCounter % 2 !== 0) return;
+	} else {
+		if (frameCounter % 30 !== 0) return;
 	}
 	updateSky(m);
 }
@@ -333,7 +318,7 @@ function animateObject(isStarlink = false) {
 	const duration = (Math.random() * 20000 + 40000) / ((autoCheckEl.checked)?1:Math.min(Math.abs(currentSpeed),256));
 	
 	// 성능 모드 시 객체 수 최적화
-	const count = isStarlink ? (isPerfMode ? 8 : 18) : 1;
+	const count = isStarlink ? 18 : 1;
 	
 	for (let i = 0; i < count; i++) {
 		const delay = isStarlink ? i * (700 + Math.random() * 400) / ((autoCheckEl.checked)?1:Math.min(Math.abs(currentSpeed),256)) : 0; 

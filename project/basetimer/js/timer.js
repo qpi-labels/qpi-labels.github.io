@@ -1,6 +1,3 @@
-import "../style/ambient.css";
-import "../style/timer.css";
-
 import { dateKey, endOfDay, ensureDay, startOfDay } from "./util.js";
 import { renderHUD, renderPanel, renderAll } from "./render.js";
 import { App, initAutoSync, testSpecificTimeSync } from "./data.js";

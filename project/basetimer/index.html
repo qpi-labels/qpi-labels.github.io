@@ -7,7 +7,7 @@
     <meta name="description" content="기쁨을 준비하는 타이머">
     <meta property="og:title" content="기준타 by QPI">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="/project/basetimer_dist/img/btog.png">
+    <meta property="og:image" content="/project/basetimer/img/btog.png">
     <meta property="og:description" content="기쁨을 준비하는 타이머">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -20,11 +20,17 @@
     
     <link rel="stylesheet" href="style/ambient.css">
     <link rel="stylesheet" href="style/timer.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="style.css">
 
     <script src="js/ambient.js" type="text/javascript" defer></script>
     <script src="js/timer.js" type="module"></script>
-    <script src="main.js" type="module"></script>
+    <script>
+        function worshipEcyce() {
+            Array.from(document.getElementsByClassName("secret")).forEach((e) => {
+                console.log("당신은 이끾끼를 강력하게 숭배했습니다. 웹사이트가 감명받아 숨겨진 기능을 드러냅니다.")
+                e.classList.remove("secret");
+            });
+        }
+    </script>
 </head>
 <body>
     <div class="layer sky-base"></div>
@@ -243,7 +249,7 @@
         </div>
     </dialog>
 
-    <button class="glass-panel-base bottom-clock" id="clock" popovertarget="infoPanel" aria-label="Time Settings"><span id="clockT">00:00:00</span></button>
+    <button class="bottom-clock" id="clock" popovertarget="infoPanel" aria-label="Time Settings"><span id="clockT">00:00:00</span></button>
     <dialog popover="auto" class="info-panel glass-panel-base" id="infoPanel">
         <div class="row"><span><b>DATE</b> <span id="infoDate">-</span></span></div>
         <div class="row"><span class="label"><b>RISE</b> <span id="infoRise">-</span></span><span class="label"><b>SET</b> <span id="infoSet">-</span></span></div>
@@ -258,8 +264,6 @@
     
     <button class="fab glass-panel-base" popovertarget="popup" aria-label="Ambience Settings"><svg class="fab-icon" viewBox="0 0 24 24"><path d="M12 15.5A3.5 3.5 0 018.5 12 3.5 3.5 0 0112 8.5 3.5 3.5 0 0115.5 12 3.5 3.5 0 0112 15.5M19.43 12.97C19.47 12.65 19.5 12.33 19.5 12 19.5 11.67 19.47 11.34 19.43 11.03L21.54 9.37C21.73 9.22 21.78 8.95 21.66 8.73L19.66 5.27C19.54 5.05 19.27 4.96 19.05 5.05L16.56 6.05C16.04 5.66 15.47 5.32 14.87 5.07L14.5 2.42C14.46 2.18 14.25 2 14 2H10C9.75 2 9.54 2.18 9.5 2.42L9.13 5.07C8.53 5.32 7.96 5.66 7.44 6.05L4.95 5.05C4.73 4.96 4.46 5.05 4.34 5.27L2.34 8.73C2.21 8.95 2.27 9.22 2.46 9.37L4.57 11.03C4.53 11.34 4.5 12 4.57 11.03 4.5 12.33 4.53 12.65 4.57 12.97L2.46 14.63C2.27 14.78 2.21 15.05 2.34 15.27L4.34 18.73C4.46 18.95 4.73 19.03 4.95 18.95L7.44 17.94C7.96 18.34 8.53 18.68 9.13 18.93L9.5 21.58C9.54 21.82 9.75 22 10 22H14C14.25 22 14.46 21.82 14.5 21.58L14.87 18.93C15.47 18.67 16.04 18.34 16.56 17.94L19.05 18.95C19.27 19.03 19.54 18.95 19.66 18.73L21.66 15.27C21.78 15.05 21.73 14.78 21.54 14.63L19.43 12.97Z"></svg></button>
     <dialog popover="auto" class="popup glass-panel-base" id="popup">
-        <div class="row"><span class="label">Performance Mode</span><label class="switch"><input type="checkbox" id="perfToggle"></label></div>
-        <hr>
         <div class="row"><span class="label">Ambient Night</span><label class="switch"><input type="checkbox" class="soundToggle" value="0"></label></div>
         <div class="row"><span class="label">Ambient Dark</span><label class="switch"><input type="checkbox" class="soundToggle" value="1"></label></div>
         <div class="row secret"><span class="label">Ambient Ambient</span><label class="switch"><input type="checkbox" class="soundToggle" value="2"></label></div>

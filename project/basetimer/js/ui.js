@@ -259,7 +259,7 @@ function maskPanel() {
 	if (h === 0) return;
 	if (st === 0) ui.panelScroll.style.setProperty('--top-mask', 'black');
 	else ui.panelScroll.style.setProperty('--top-mask', 'transparent');
-	if (st+h >= sh-1) ui.panelScroll.style.setProperty('--bottom-mask', 'black');
+	if (st+h >= sh-2) ui.panelScroll.style.setProperty('--bottom-mask', 'black');
 	else ui.panelScroll.style.setProperty('--bottom-mask', 'transparent');
 }
 
